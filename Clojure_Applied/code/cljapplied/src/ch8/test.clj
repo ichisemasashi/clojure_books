@@ -1,0 +1,16 @@
+;---
+; Excerpted from "Clojure Applied",
+; published by The Pragmatic Bookshelf.
+; Copyrights apply to this code. It may not be used to create training material, 
+; courses, books, articles, and the like. Contact us if you are in doubt.
+; We make no guarantees that this code is fit for any purpose. 
+; Visit http://www.pragmaticprogrammer.com/titles/vmclojeco for more book information.
+;---
+(ns ch8.test
+  (:require [clojure.test :refer :all]))
+
+;
+(deftest test-range
+  (is (= '(0 1 2 3 4) (range 5))
+    "Got 0-indexed sequence when only end specified."))
+;

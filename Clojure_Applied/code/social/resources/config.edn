@@ -1,0 +1,4 @@
+{:twitter {:user "u1" :password "p1"}
+ :facebook {:user "u2" :password "p2"}
+ :knowledge {:rule-set :basic}
+ :approvals {}}
