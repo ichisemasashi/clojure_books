@@ -13,3 +13,5 @@
 [セクション4：Idiomatic ClojureScript](004_00.md)
 
 [セクション5：ClojureScriptアプリケーション](005_00.md)
+
+www.DeepL.com/Translator（無料版）で翻訳しました。
