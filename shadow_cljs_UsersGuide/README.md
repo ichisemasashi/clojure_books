@@ -1,6 +1,9 @@
 
+
+
 Shadow CLJS User’s Guide
 
+[原文サイト](https://shadow-cljs.github.io/docs/UsersGuide.html)
 
 # 1. Introduction
 
@@ -95,13 +98,13 @@ project.clj
 
 
 Example 1. Specify dependencies
-```
+```Clojure
 {:dependencies [[lib "1.0"]]}
 ```
 
 
 Example 2. Add source paths
-```
+```Clojure
 {...
  :source-paths ["src"]
  ...}
@@ -111,7 +114,7 @@ Example 2. Add source paths
 
 
 Example 3. Nested option
-```
+```Clojure
 {...
  :builds {:build-id {...
                      :output-dir "resources/public/js"}}}
@@ -141,12 +144,12 @@ $ npx create-cljs-project my-project
 すでに `package.json` があり、shadow-cljs を追加したいだけの場合は、次のコマンドを実行してください。
 
 NPM
-```
+```bash
 $ npm install -save-dev shadow-cljs
 ```
 
 Yarn
-```
+```bash
 $ yarn add --dev shadow-cljs
 ```
 
@@ -455,6 +458,116 @@ REPLは、Clojure(Script)コードを扱うときに持つべき非常に強力�
 ```bash
 $ shadow-cljs node-repl
 ```
+
+これは、すでに接続されている `node` プロセスで、空の CLJS REPL を開始します。
+
+重要なこと
+Node REPLを終了すると、`node`プロセスもキルされます!
+
+`node-repl`では、追加の設定なしで開始することができます。これは、通常の手段、すなわち `(require '[your.core :as x])` を通じて、あなたの全てのコードにアクセスします。ビルドに接続されていないので、ファイルが変更されてもコードの自動再構築は行われず、ホットリロードも提供しません。
+
+### 4.1.2. Browser REPL
+
+```bash
+$ shadow-cljs browser-repl
+```
+
+これは空のCLJS REPLを起動し、コードが実行される関連するブラウザ・ウィンドウを開きます。ブラウザ上で実行されるだけでなく、上記の `node-repl` と同じ機能を持っています。
+
+重要なこと
+ブラウザ・ウィンドウを閉じると、REPLは動作しなくなります。
+
+### 4.1.3. Build-specific REPL
+
+`node-repl`と`browser-repl`は、特定のビルド構成なしに動作します。つまり、あなたが指示したことだけを実行しますが、それだけでは何もできません。
+
+特定のものをビルドしたい場合は、提供されているビルドターゲットの1つを使ってビルドを設定する必要があります。ほとんどのターゲットは、ClojureScript REPLに必要なコードを自動的に注入します。追加の設定は必要ありません。ビルドCLJS REPLが動作するためには、次の2つが必要です。
+
+1. ビルド用の実行中の `watch` 。
+2. `:target`のJSランタイムに接続する。つまり、`:browser`ターゲットを使用している場合は、生成されたJSがロードされたブラウザを開く必要があります。node.jsのビルドの場合は、`node`プロセスを実行することになります。
+
+両方が揃ったら、コマンドラインまたはClojure REPLからCLJS REPLに接続できます。
+
+CLI
+```bash
+$ shadow-cljs watch build-id
+...
+
+# different terminal
+$ shadow-cljs cljs-repl build-id
+shadow-cljs - connected to server
+[3:1]~cljs.user=>
+```
+
+
+REPL
+```bash
+$ shadow-cljs clj-repl
+...
+[2:0]~shadow.user=> (shadow/watch :browser)
+[:browser] Configuring build.
+[:browser] Compiling ...
+[:browser] Build completed. (341 files, 1 compiled, 0 warnings, 3,19s)
+:watching
+[2:0]~shadow.user=> (shadow/repl :browser)
+[2:1]~cljs.user=>
+```
+
+> ヒント
+> REPLを終了するには、`:repl/quit`と入力してください。これはREPLを終了するだけで、ウォッチは実行中のままです。
+
+> ヒント
+> 複数の `watch` 「ワーカー」を並行して実行し、いつでもそれらの REPL に接続/切断することができます。
+
+No connected runtime error.
+```bash
+[3:1]~cljs.user=> (js/alert "foo")
+There is no connected JS runtime.
+```
+
+これが表示された場合、ブラウザでアプリを開くか、`node`プロセスを開始する必要があります。
+
+## 4.2. Clojure REPL
+
+提供されている ClojureScript REPL に加えて、Clojure REPL も提供されています。これは、`shadow-cljs`プロセスを制御し、他のすべてのビルドコマンドを実行するために使用できます。Clojure REPLから始めて、いつでもCLJS REPLにアップグレードすることができます（そして元に戻すこともできます）。
+
+Running from the CLI
+```bash
+$ shadow-cljs clj-repl
+...
+shadow-cljs - REPL - see (help), :repl/quit to exit
+[1:0]~shadow.user=>
+```
+
+`shadow.cljs.devtools.api` 名前空間には、CLI とほぼ 1:1 で対応する関数があります。デフォルトでは `shadow` という名前でエイリアスされています。
+
+Example commands
+```Clojure
+;; shadow-cljs watch foo
+(shadow.cljs.devtools.api/watch :foo)
+;; this is identical, due to the provided ns alias
+(shadow/watch :foo)
+;; shadow-cljs watch foo --verbose
+(shadow/watch :foo {:verbose true})
+;; shadow-cljs compile foo
+(shadow/compile :foo)
+;; shadow-cljs release foo
+(shadow/release :foo)
+
+;; shadow-cljs browser-repl
+(shadow/browser-repl)
+;; shadow-cljs node-repl
+(shadow/node-repl)
+;; shadow-cljs cljs-repl foo
+(shadow/repl :foo)
+
+;; Once you are in a CLJS REPL you can use
+:repl/quit
+;; or
+:cljs/quit
+;; to drop back down to CLJ.
+```
+
 
 
 
