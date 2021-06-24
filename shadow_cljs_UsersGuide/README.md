@@ -1,6 +1,9 @@
 
+
+
 Shadow CLJS User’s Guide
 
+[原文サイト](https://shadow-cljs.github.io/docs/UsersGuide.html)
 
 # 1. Introduction
 
@@ -95,13 +98,13 @@ project.clj
 
 
 Example 1. Specify dependencies
-```
+```Clojure
 {:dependencies [[lib "1.0"]]}
 ```
 
 
 Example 2. Add source paths
-```
+```Clojure
 {...
  :source-paths ["src"]
  ...}
@@ -111,7 +114,7 @@ Example 2. Add source paths
 
 
 Example 3. Nested option
-```
+```Clojure
 {...
  :builds {:build-id {...
                      :output-dir "resources/public/js"}}}
@@ -141,12 +144,12 @@ $ npx create-cljs-project my-project
 すでに `package.json` があり、shadow-cljs を追加したいだけの場合は、次のコマンドを実行してください。
 
 NPM
-```
+```bash
 $ npm install -save-dev shadow-cljs
 ```
 
 Yarn
-```
+```bash
 $ yarn add --dev shadow-cljs
 ```
 
@@ -530,7 +533,6 @@ There is no connected JS runtime.
 
 提供されている ClojureScript REPL に加えて、Clojure REPL も提供されています。これは、`shadow-cljs`プロセスを制御し、他のすべてのビルドコマンドを実行するために使用できます。Clojure REPLから始めて、いつでもCLJS REPLにアップグレードすることができます（そして元に戻すこともできます）。
 
-
 Running from the CLI
 ```bash
 $ shadow-cljs clj-repl
@@ -540,7 +542,6 @@ shadow-cljs - REPL - see (help), :repl/quit to exit
 ```
 
 `shadow.cljs.devtools.api` 名前空間には、CLI とほぼ 1:1 で対応する関数があります。デフォルトでは `shadow` という名前でエイリアスされています。
-
 
 Example commands
 ```Clojure
