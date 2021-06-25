@@ -572,12 +572,70 @@ Example commands
 
 ### 4.2.1. Embedded
 
+また、他の CLJ プロセスの中から完全に `shadow-cljs` を使用することも可能です。クラスパスに `thheller/shadow-cljs` がロードされていれば、問題ありません。
 
+Example using lein repl
+```Clojure
+$ lein repl
+nREPL server started on port 57098 on host 127.0.0.1 - nrepl://127.0.0.1:57098
+REPL-y 0.4.3, nREPL 0.6.0
+Clojure 1.10.0
+...
 
+user=> (require '[shadow.cljs.devtools.server :as server])
+nil
+user=> (server/start!)
+...
+:shadow.cljs.devtools.server/started
+user=> (require '[shadow.cljs.devtools.api :as shadow])
+nil
+user=> (shadow/compile :foo)
+...
+```
 
+`(shadow.cljs.devtools.server/stop!)`を実行することで、組み込みサーバを停止することができます。これにより、実行中のすべてのビルドプロセスも停止します。
 
+> 重要事項
+> CLJS REPL に切り替えたい場合は、サーバーの起動に使用したツールで追加の設定が必要になる場合があります。`lein` はデフォルトで nREPL を使用するので、追加の nREPL `:middleware` を設定する必要があります。`clj`を使用する場合は、nREPLを使用しないので、問題ありません。
 
+# 5. Configuration
 
+`shadow-cljs` の設定は、プロジェクトのルートディレクトリにある `shadow-cljs.edn` ファイルで行います。デフォルトのファイルは `shadow-cljs init` を実行することで作成することができます。このファイルには、いくつかのグローバルな設定を含むマップと、すべてのビルドのための `:builds` エントリが含まれています。
+
+```Clojure
+{:source-paths [...]
+ :dependencies [...]
+ :builds {...}}
+ ```
+
+ 設定例は以下のようになります。
+
+ ```Clojure
+{:dependencies
+ [[reagent "0.8.0-alpha2"]]
+
+ :source-paths
+ ["src"]
+
+ :builds
+ {:app {:target :browser
+        :output-dir "public/js"
+        :asset-path "/js"
+        :modules {:main {:entries [my.app]}}}}}
+ ```
+
+この例のファイル構造は次のようになります。
+
+```
+.
+├── package.json
+├── shadow-cljs.edn
+└── src
+    └── my
+        └── app.cljs
+```
+
+## 5.1. Source Paths
 
 
 
