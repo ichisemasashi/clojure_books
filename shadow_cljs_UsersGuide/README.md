@@ -637,9 +637,241 @@ user=> (shadow/compile :foo)
 
 ## 5.1. Source Paths
 
+`:source-paths` は、JVMのクラスパスを設定します。コンパイラはこの設定を使って、Clojure(Script)のソースファイル(例:`.cljs`)を探します。
+
+すべてのファイルを1つのソースパスに入れることは問題ありませんが、ソースファイルを特定の方法で「グループ化」したい場合は、複数のパスを使用することができます。例えば、テストを別々にしたい場合などに便利です。
 
 
 
+Using multiple source paths
+```Clojure
+{:source-paths ["src/main" "src/test"]
+ ...}
+```
+
+
+File Structure
+```
+.
+├── package.json
+├── shadow-cljs.edn
+└── src
+    └── main
+        └── my
+            └── app.cljs
+    └── test
+        └── my
+            └── app_test.cljs
+```
+
+ソースファイルを拡張子で分けることはお勧めしません（例：`src/clj`, `src/cljs`, `src/cljc`）。なぜかCLJSプロジェクトのテンプレートではこの方法が広く使われていますが、かえって使いづらくなってしまいます。
+
+## 5.2. Dependencies
+### 5.2.1. Clojure(Script)
+
+依存関係は、`shadow-cljs.edn` 設定ファイルのルートにある `:dependencies` キーで管理されます。依存関係は `lein` や `boot` のような他の Clojure ツールが使用するのと同じ記法で宣言されます。
+
+それぞれの依存関係は `[library-name "version-string"]` を使ったベクターとして書かれ、1つの外側のベクターに入れ子になっています。
+
+
+Example :dependencies
+```Clojure
+{:source-paths ["src"]
+ :dependencies [[reagent "0.9.1"]]
+ :builds ...}
+```
+
+ソースパスは設定全体で一度しか指定されていないことに注意してください。システムは、名前空間の依存関係グラフを使って、あるビルドの最終出力にどのコードが必要かを判断します。
+
+### 5.2.2. JavaScript
+
+`shadow-cljs` は JavaScript の依存関係を管理するために `npm` エコシステムと完全に統合されています。
+
+依存関係の管理には `npm` や `yarn` を使用することができますが、それぞれのドキュメントを参照してください。
+
+
+npm 	https://docs.npmjs.com/
+
+yarn 	https://yarnpkg.com/en/docs
+
+どちらも、プロジェクトディレクトリ内の `package.json` ファイルで依存関係を管理します。`npm` で入手できるほとんどすべてのパッケージには、そのインストール方法が説明されています。これらの説明は、現在では `shadow-cljs` にも適用されています。
+
+
+Installing a JavaScript package
+```bash
+# npm
+$ npm install the-thing
+
+# yarn
+$ yarn add the-thing
+```
+
+それ以上は何も必要ありません。依存関係は `package.json` ファイルに追加され、これを使って管理されます。
+
+> ヒント
+> もし、まだ `package.json` がない場合は、コマンドラインから `npm init` を実行してください。
+
+#### Missing JS Dependency?
+
+JSの依存関係の欠落に関連するエラーに遭遇するかもしれません。ほとんどのClojureScriptライブラリは、CLJSJSを使用することを想定しているため、使用する`npm`パッケージをまだ宣言していません。つまり、ライブラリが適切に `:npm-deps` を宣言するまで、`npm` パッケージを手動でインストールする必要があります。
+
+```
+The required JS dependency "react" is not available, it was required by ...
+```
+
+つまり、`npm install react`をしなければならないということです。
+
+> ヒント
+> `react`の場合は、おそらく以下の3つのパッケージが必要です。`npm install react react-dom create-react-class`. 
+
+## 5.3. User Configuration
+
+ほとんどの設定はプロジェクト自身で `shadow-cljs.edn` を通して行われますが、いくつかの設定はユーザに依存します。CIDER のようなツールは、追加の `cider-nrepl` 依存関係を必要とするかもしれませんが、`shadow-cljs.edn` を通してその依存関係を追加した場合、Cursive を使用している別のチームメンバーにとっては無意味なものとなります。
+
+制限付きのコンフィグオプションのセットを `~/.shadow-cljs/config.edn` に追加することができ、このユーザーのマシン上でビルドされたすべてのプロジェクトに適用されます。
+
+依存関係を追加するには、通常の `:dependencies` キーを使用します。ここで追加された依存関係は、すべてのプロジェクトに適用されることに注意してください。依存関係は最小限にして、ツール関連の依存関係だけをここに置くようにしてください。ビルドに関連するものはすべて `shadow-cljs.edn` に置いておくべきで、そうしないと他のユーザーがコンパイルできない可能性があります。これらの依存関係は、`deps.edn` や `lein` を使用する際にも自動的に追加されます。
+
+
+Example ~/.shadow-cljs/config.edn
+```Clojure
+{:dependencies
+ [[cider/cider-nrepl "0.21.1"]]}
+;; このバージョンは古くなっている可能性があります。利用可能なものを確認してください。
+```
+
+`deps.edn` を使って依存関係を解決する際に、追加のエイリアスを有効にしたい場合があります。これは `:deps-aliases` で行うことができます。
+
+```Clojure
+;; shadow-cljs.edn in project
+{:deps {:aliases [:cljs]}}
+
+;; ~/.shadow-cljs/config.edn
+{:deps-aliases [:cider]}
+```
+
+これにより、`deps.edn` を使用しているプロジェクトでは、`shadow-cljs` コマンドが `[:cider :cljs]` のエイリアスを使用するようになります。これは、あなたの `~/.clojure/deps.edn` に追加の `:cider` エイリアスがある場合に便利かもしれません。
+
+デフォルトでは、`shadow-cljs` サーバーモードでは、組み込みの nREPL サーバーを起動しますが、これは必要ないかもしれません。ユーザコンフィグで `:nrepl false` を設定することで、これを無効にすることができます。
+
+ユーザーコンフィグで現在受け入れられている唯一の値は :open-file-command です。他のオプションは現在のところ何の効果もありません。
+
+## 5.4. Server Options
+
+このセクションでは、`shadow-cljs` サーバーインスタンスを構成するその他のオプションについて説明します。これらはオプションです。
+
+### nREPL
+
+`shadow-cljs`サーバはTCP経由でnREPLサーバを提供しています。起動時のメッセージを見ると、nREPLのポートが表示されており、そのポートは`target/shadow-cljs/nrepl.port`にも格納されています。
+
+```
+$ shadow-cljs watch app
+shadow-cljs - HTTP server available at http://localhost:8600
+shadow-cljs - server version: <version> running at http://localhost:9630
+shadow-cljs - nREPL server started on port 64967
+shadow-cljs - watching build :app
+[:app] Configuring build.
+[:app] Compiling ...
+```
+
+`shadow-cljs.edn`でポートや追加のミドルウェアを設定することができます。
+
+```Clojure
+{...
+ :nrepl {:port 9000
+         :middleware []} ; 名前空間で修飾されたシンボルのオプションリスト
+ ...}
+```
+
+`~/.nrepl/nrepl.edn` にあるデフォルトのグローバル設定ファイルや、ローカルの `.nrepl.edn` も起動時に読み込まれ、`:middleware` の設定に使用できます。
+ポピュラーなミドルウェアである cider-nrepl がクラスパス上にある場合 (例: `:dependencies` に含まれている場合)、自動的に使用されます。追加の設定は必要ありません。これを無効にするには、`:nrepl {:cider false}`を設定します。
+
+`nrepl` オプションで `:init-ns` を設定することで、接続時に起動する名前空間を設定することができます。デフォルトでは `shadow.user` となります。
+
+```Clojure
+{...
+ :nrepl {:init-ns my.repl}
+ ...}
+```
+
+nREPLサーバーは、`:nrepl false`を設定することで無効にすることができます。
+
+#### nREPL Usage
+
+nREPLサーバーに接続すると、接続は常にClojure REPLとして開始されます。CLJS REPLへの切り替えは、非nREPLバージョンと同様に動作します。まず、与えられたビルドの `watch` を開始する必要があり、次に、現在の nREPL セッションをそのビルドに切り替えるために、このビルドを選択する必要があります。ビルドを選択すると、すべてがClojureではなくClojureScriptで評価されます。
+
+```Clojure
+(shadow/watch :the-build)
+(shadow/repl :the-build)
+```
+
+> ヒント
+> Clojureに戻るには、`:cljs/quit`を使う。
+
+#### Embedded nREPL Server
+
+独自のnREPLサーバを提供する他のツール（例：`lein`）に`shadow-cljs`を組み込んで使用する場合には、`shadow-cljs`ミドルウェアを設定する必要があります。そうしないと、CLJ と CLJS の REPL 間で切り替えることができません。
+
+
+Example Leiningen project.clj
+```Clojure
+(defproject my-amazing-project "1.0.0"
+  ...
+  :repl-options
+  {:init-ns shadow.user ;; or any of your choosing
+   :nrepl-middleware
+   [shadow.cljs.devtools.server.nrepl/middleware]}
+  ...)
+```
+
+> ヒント
+> CLJS REPLを使用する前に、手動で埋め込みサーバーを起動する必要があります。
+
+### 5.4.2. Socket REPL
+
+Clojure Socket REPLは、サーバーモードで自動的に起動され、デフォルトでランダムなポートを使用します。ツールは、ポート番号を含む `.shadow-cljs/socket-repl.port` をチェックすることで、起動されたポートを見つけることができます。
+
+また、`shadow-cljs.edn`を使って固定のポートを設定することもできます。
+
+```Clojure
+{...
+ :socket-repl
+ {:port 9000}
+ ...}
+```
+
+Socket REPLは、`:socket-repl false`を設定することで無効にすることができます。
+
+### 5.4.3. SSL
+
+`shadow-cljs`のHTTPサーバはSSLをサポートしています。これには、一致する秘密鍵と証明書を提供する Java Keystore が必要です。
+
+
+`shadow-cljs.edn` with SSL configured
+```Clojure
+{...
+ :ssl {:keystore "ssl/keystore.jks"
+       :password "shadow-cljs"}
+ ...}
+```
+
+上記はデフォルトですので、これらを使用したい場合は、`:ssl {}`を設定するだけで問題ありません。
+
+java `keytool` コマンドでキーストアを作成することができます。信頼できる自己署名証明書を作成することも可能ですが、やや複雑です。
+
+- LinuxとWindows用の[OpenSSL](https://gist.github.com/jchandra74/36d5f8d0e11960dd8f80260801109ab0)の説明(WSL経由)
+-  [macOS](https://certsimple.com/blog/localhost-ssl-fix)の手順
+
+作成した `Certificates.p12` (macOS) または `localhost.pfx` (Linux, Windows) ファイルは、`keytool` ユーティリティーを使って、必要な `keystore.jks` にすることができます。
+
+```bash
+$ keytool -importkeystore -destkeystore keystore.jks -srcstoretype PKCS12 -srckeystore localhost.pfx
+```
+
+> 重要
+> 証明書は、"localhost"（または使用するホスト）のSAN（Subject Alternative Name）で生成する必要があります。Chrome が証明書を信頼して警告を表示しないようにするには、SAN が必要です。エクスポート時に使用するパスワードは、キーストアに割り当てられたパスワードと一致する必要があります。
+
+### 5.4.4. Primary HTTP(S)
 
 
 
