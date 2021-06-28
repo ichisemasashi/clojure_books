@@ -873,6 +873,266 @@ $ keytool -importkeystore -destkeystore keystore.jks -srcstoretype PKCS12 -srcke
 
 ### 5.4.4. Primary HTTP(S)
 
+`shadow-cljs`サーバは、1つのプライマリHTTPサーバを起動します。これは、Hot Reload および REPL クライアントで使用される UI および Web ソケットを提供するために使用されます。デフォルトでは、9630 番ポートで待ち受けます。そのポートが使用されている場合、開いているポートが見つかるまで、1つずつ増やして再試行します。
+
+
+Startup message indicating the Port used
+```
+shadow-cljs - server running at http://0.0.0.0:9630
+```
+
+`ssl`が設定されている場合、サーバーは代わりに`https://`で利用できます。
+
+
+ヒント
+	サーバは `:ssl` を使用すると、自動的に HTTP/2 をサポートします。
+
+代わりに独自のポートを設定したい場合は、`:http` の設定で行うことができます。
+
+
+
+`shadow-cljs.edn` with `:http` config
+```Clojure
+{...
+ :http {:port 12345
+        :host "my.machine.local"}
+ ...}
+```
+
+`:ssl` は、サーバーを `https://` のみに切り替えます。もし、`http://` のバージョンを維持したい場合は、別の `:ssl-port` を設定することができます。
+
+```Clojure
+{...
+ :http {:port 12345
+        :ssl-port 23456
+        :host "localhost"}
+ ...}
+ ```
+
+ ### 5.4.5. Development HTTP(S)
+
+ `shadow-cljs`では、`:dev-http`という設定項目で、追加の基本的なHTTPサーバを提供することができます。デフォルトでは、これらは設定されたパスからすべての静的ファイルを提供し、リソースが見つからない場合には `index.html` にフォールバックします (これは、ブラウザのプッシュステートを使用するアプリケーションを開発する際に、一般的に求められるものです)。
+
+これらのサーバは、`shadow-cljs` がサーバモードで動作しているときに自動的に起動されます。これらのサーバーはどのビルドにも特定されておらず、それぞれに固有の `:output-dir` が使用されている限り、複数のビルドのファイルを提供するために使用することができます。
+
+> 重要な点
+>
+> これらは静的ファイルを扱う一般的な Web サーバです。これらはライブリロードやREPLのロジックには必要ありません。どんなウェブサーバでも良いのですが、これらは単に利便性のために提供されています。
+
+
+Basic example serving the public directory via http://localhost:8000
+```Clojure
+{...
+ :dev-http {8000 "public"}
+ :builds {...}}
+```
+
+`:dev-http` は `port-number` から `config` へのマップを期待しています。この `config` は、最も一般的なシナリオに対応したいくつかのショートカットをサポートしています。
+
+
+Serve directory from filesystem root
+```Clojure
+:dev-http {8000 "public"}
+```
+
+Serve from classpath root
+```Clojure
+:dev-http {8000 "classpath:public"}
+```
+
+これは、クラスパス上の `public/index.html` から `/index.html` へのリクエストを見つけようとするものです。これは `.jar` ファイルの中のファイルを含む可能性があります。
+
+Serve from multiple roots
+```Clojure
+:dev-http {8000 ["a" "b" "classpath:c"]}
+```
+
+
+
+これはまず、クラスパス上の `<project-root>/a/index.html` 、 `<project-root>/b/index.html` 、 `c/index.html` の順に検索を試みます。見つからない場合は、デフォルトのハンドラが呼び出されます。
+
+より長い設定バージョンでは、マップが必要で、サポートされているオプションは次のとおりです。
+
+`:root`
+
+(文字列) リクエストを処理するパスです。`classpath:` で始まるパスは、ファイルシステムではなく classpath からリクエストを処理します。すべてのファイルシステムのパスは、プロジェクトのルートからの相対パスです。
+
+`:roots`
+
+(文字列のベクトル) 複数のルートパスが必要な場合は、`:root`の代わりに使用します。
+
+`:ssl-port`
+
+`:ssl`が設定されている場合、ssl接続にはこのポートを使用し、通常のHTTPサーバは通常のポートを使用します。`ssl-port` が設定されておらず、`:ssl` が設定されている場合、デフォルトのポートは SSL リクエストのみをサーバーします。
+
+`:host`
+
+オプションです。リッスンするホスト名を指定します。デフォルトは localhost です。
+
+`:handler`
+
+オプションです。完全に修飾されたシンボルです。与えられたリクエストに対してリソースが見つからない場合に使用される `(defn handler [req] resp)` です。デフォルトでは、`shadow.http.push-state/handle`となります。
+
+
+次の 2 つのオプションは、デフォルトの組み込みハンドラを使用する場合にのみ適用され、通常は変更する必要はありません。
+
+`:push-state/headers`
+
+(オプション) 応答する HTTP ヘッダーのマップです。デフォルトは`text/html`の標準ヘッダです。
+
+`:push-state/index`
+
+(オプション) 応答するファイルです。デフォルトは `index.html` です。
+
+```Clojure
+{...
+ :dev-http
+ {8080 {:root "public"
+        :handler my.app/handler}}}
+```
+
+#### Reverse Proxy Support
+
+デフォルトでは、開発サーバーはローカルでリクエストを処理しようとしますが、外部のウェブサーバーを使用してリクエストを処理したい場合もあります（例：APIリクエスト）。これは `:proxy-url` で設定できます。
+
+```Clojure
+{...
+ :dev-http
+ {8000
+  {:root "public"
+   :proxy-url "https://some.host"}}}
+```
+
+`http://localhost:8000/api/foo` へのリクエストは、代わりに `https://some.host/api/foo` が返すコンテンツを提供します。ローカルファイルを持たないすべてのリクエストは、プロキシされたサーバーによって提供されます。
+
+接続処理を設定する追加のオプションは以下の通りです。
+
+`:proxy-rewrite-host-header`
+
+boolean, デフォルトは true です。オリジナルの Host ヘッダを使用するか、それとも `:proxy-url` のものを使用するかを決定します。 上記の例では、`localhost` vs `some.host` を使用します。
+
+`:proxy-reuse-x-forwarded`
+
+boolean, デフォルトは false です。プロキシが自分自身を`X-Forwarded-For`のリストに追加するか、新しいリストを開始するかを設定する。
+
+`:proxy-max-connection-retries`
+
+int, デフォルトは1です。
+
+`:proxy-max-request-time`
+
+ms単位の整数、デフォルトは30000です。30秒のリクエストタイムアウト。
+
+## 5.5. JVM Configuration
+
+`shadow-cljs.edn` が JVM の起動に使用される場合、JVM に直接渡される追加のコマンドライン引数を設定できます。たとえば、shadow-cljs が使用する RAM の量を減らしたり増やしたりしたい場合があります。
+
+これは、文字列のベクトルを期待する `shadow-cljs.edn` のルートで `:jvm-opts` を構成することによって行われます。
+
+
+Example limited RAM use to 1GB
+```Clojure
+{:source-paths [...]
+ :dependencies [...]
+ :jvm-opts ["-Xmx1G"]
+ :builds ...}
+```
+
+JVMに渡すことができる引数は、バージョンによって異なりますが、ここに例示されています。RAMの割り当てが少なすぎたり多すぎたりすると、パフォーマンスが低下する可能性がありますのでご注意ください。通常は、デフォルトの設定で十分です。
+
+> 重要事項
+> `deps.edn`や`project.clj`を使用する場合、 `:jvm-opts`をそこで設定する必要があります。
+
+# 6. Build Configuration
+
+`shadow-cljs.edn` には `:builds` セクションも必要です。Builds は、ビルド ID をキーとしたビルドのマップでなければなりません。
+
+
+A configuration file with a build map.
+```Clojure
+{:dependencies [[some-library "1.2.1"] ...]
+ :source-paths ["src"]
+ :builds
+ {:app   {:target     :browser
+          ... browser-specific options ...}
+  :tests {:target :karma
+          ... karma-specific options ...}}}
+```
+
+各ビルドは、コンパイラがビルドするアーティファクトを記述します。ビルドターゲットは `shadow-cljs` の拡張可能な機能であり、コンパイラにはすでにかなりの数のものが付属しています。
+
+## 6.1. Build Target
+
+`shadow-cljs` の各ビルドでは、コードをどこで実行するかを定義する `:target` を定義する必要があります。ブラウザと `node.js` のためのデフォルトのビルドインがあります。これらはすべて、`:dev` モードと `:release` モードを持つという基本的なコンセプトを共有しています。 `:dev` モードは、高速コンパイル、ライブコードリロード、REPL など、通常の開発に必要なすべての機能を提供します。 `:release` モードは、本番用に最適化された出力を生成します。
+
+ターゲットについては、それぞれの章で説明します。
+
+ここでは、そのいくつかを紹介します。
+
+`:browser`
+
+Webブラウザで実行するのに適したコードを出力します。
+
+`:bootstrap`
+
+ブートストラップされた cljs 環境で実行するのに適したコードを出力する。
+
+`:browser-test`
+
+テストをスキャンして必要なファイルを決定し、ブラウザで実行するのに適したテストを出力する。
+
+`:karma`
+
+    テストをスキャンして必要なファイルを決定し、karma-runnerと互換性のあるテストを出力します。Karmaを参照してください。
+
+`:node-library`
+
+    ノードライブラリとして使用するのに適したコードを出力します。
+
+`:node-script`
+
+    ノードスクリプトとして使用するのに適したコードを出力する。
+
+`:npm-module`
+
+    NPMモジュールとして使用するためのコードを出力します。
+
+残りのビルドオプションは、選択したターゲットによって異なるため、各ターゲットについてはそれぞれの章で詳しく説明します。
+
+## 6.2. Development Options
+
+各ビルド `:target` は、通常、いくつかの開発サポートを提供します。これらは、各 `:build` の `:devtools` キーにまとめられています。
+
+### 6.2.1. REPL
+
+
+
+
+
+
+
+
+
+
+www.DeepL.com/Translator（無料版）で翻訳しました。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+www.DeepL.com/Translator（無料版）で翻訳しました。
+
 
 
 
