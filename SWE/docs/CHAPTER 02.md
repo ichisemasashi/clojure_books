@@ -3,235 +3,290 @@
 Written by Brian Fitzpatrick
 Edited by Riona MacNamara
 
-Because this chapter is about the cultural and social aspects of software engineering at Google, it makes sense to begin by focusing on the one variable over which you definitely have control: you.
-People are inherently imperfect  --- we like to say that humans are mostly a collection of intermittent bugs. But before you can understand the bugs in your coworkers, you need to understand the bugs in yourself. We’re going to ask you to think about your own reactions, behaviors, and attitudes --- and in return, we hope you gain some real insight into how to become a more efficient and successful software engineer who spends less energy dealing with people --- related problems and more time writing great code.
-The critical idea in this chapter is that software development is a team endeavor. And to succeed on an engineering team --- or in any other creative collaboration --- you need to reorganize your behaviors around the core principles of humility, respect, and trust.
-Before we get ahead of ourselves, let’s begin by observing how software engineers tend to behave in general.
+この章では、Googleでのソフトウェアエンジニアリングの文化的、社会的側面について説明しますが、まず、あなたが確実にコントロールできる変数である「あなた」に焦点を当てます。
+
+人間は本質的に不完全です。私たちは、人間はほとんど断続的なバグの集合体であると言いたいのです。しかし、同僚のバグを理解する前に、自分自身のバグを理解する必要があります。この章では、あなた自身の反応、行動、態度について考えていただきます。そして、その結果、より効率的で成功したソフトウェア・エンジニアになるための真の洞察を得ていただきたいと思います。あなたは、人に関連する問題に対処するエネルギーを減らし、優れたコードを書くための時間を増やすことができます。
+
+この章で重要なのは、ソフトウェア開発はチームで行うものだということです。そして、エンジニアリングチーム、あるいはその他の創造的な共同作業で成功するためには、謙虚さ、尊敬、信頼という基本原則に基づいて自分の行動を再編成する必要があります。
+
+前置きが長くなりましたが、まずはソフトウェアエンジニアが一般的にどのような行動をとりがちなのかを観察してみましょう。
 
 ## Help Me Hide My Code
 
-For the past 20 years, my colleague Ben(*1) and I have spoken at many programming conferences. In 2006, we launched Google’s (now deprecated) open source Project Hosting service, and at first, we used to get lots of questions and requests about the product. But around mid-2008, we began to notice a trend in the sort of requests we were getting:
+この20年間、同僚のBen(*1)と私は多くのプログラミングカンファレンスで講演してきました。2006年には、Googleのオープンソースサービス「Project Hosting」（現在は廃止）を開始しましたが、当初は多くの質問やリクエストを受けました。しかし、2008年半ば頃から、リクエストの内容に傾向が見られるようになりました。
 
-  “Can you please give Subversion on Google Code the ability to hide specific branches?”
-
-  “Can you make it possible to create open source projects that start out hidden to the world and then are revealed when they’re ready?”
-
-  “Hi, I want to rewrite all my code from scratch, can you please wipe all the history?”
+  "Subversion on Google Codeで、特定のブランチを隠す機能をつけてくれませんか？"
+  "最初は世界に隠れていて、準備ができたら公開されるようなオープンソースプロジェクトを作れるようにしてもらえませんか？"
+  “あの、私のコードを一からすべて書き直したいんだけど、全履歴を消していただけませんか?"
 
 
-Can you spot a common theme to these requests?
-The answer is insecurity. People are afraid of others seeing and judging their work in progress. In one sense, insecurity is just a part of human nature --- nobody likes to be criticized, especially for things that aren’t finished. Recognizing this theme tipped us off to a more general trend within software development: insecurity is actually a symptom of a larger problem.
+これらのリクエストには共通のテーマがあるのがわかりますか？
 
-## The Genius Myth
+その答えは「不安」です。進行中の仕事を他人に見られ、判断されることを恐れているのです。ある意味では、不安は人間の本質の一部であり、誰もが批判されることを好まない、特に完成していないものに対しては。しかし、私たちはこのテーマに気付き、ソフトウェア開発におけるより一般的な傾向に気付きました。つまり、不安はより大きな問題の症状であるということです。
 
-Many humans have the instinct to find and worship idols. For software engineers, those might be Linus Torvalds, Guido Van Rossum, Bill Gates --- all heroes who changed the world with heroic feats. Linus wrote Linux by himself, right?
-Actually, what Linus did was write just the beginnings of a proof-of-concept Unix-like kernel and show it to an email list. That was no small accomplishment, and it was definitely an impressive achievement, but it was just the tip of the iceberg. Linux is hundreds of times bigger than that initial kernel and was developed by thousands of smart people. Linus’ real achievement was to lead these people and coordinate their work; Linux is the shining result not of his original idea, but of the collective labor of the community. (And Unix itself was not entirely written by Ken Thompson and Dennis Ritchie, but by a group of smart people at Bell Labs.)
-On that same note, did Guido Van Rossum personally write all of Python? Certainly, he wrote the first version. But hundreds of others were responsible for contributing to subsequent versions, including ideas, features, and bug fixes. Steve Jobs led an entire team that built the Macintosh, and although Bill Gates is known for writing a BASIC interpreter for early home computers, his bigger achievement was building a successful company around MS-DOS. Yet they all became leaders and symbols of the collective achievements of their communities. The Genius Myth is the tendency that we as humans need to ascribe the success of a team to a single person/leader.
-And what about Michael Jordan?
-It’s the same story. We idolized him, but the fact is that he didn’t win every basketball game by himself. His true genius was in the way he worked with his team. The team’s coach, Phil Jackson, was extremely clever, and his coaching techniques are legendary.
-He recognized that one player alone never wins a championship, and so he assembled an entire “dream team” around MJ. This team was a well-oiled machine ---  at least as impressive as Michael himself.
-So, why do we repeatedly idolize the individual in these stories? Why do people buy products endorsed by celebrities? Why do we want to buy Michelle Obama’s dress or Michael Jordan’s shoes?
-Celebrity is a big part of it. Humans have a natural instinct to find leaders and role models, idolize them, and attempt to imitate them. We all need heroes for inspiration, and the programming world has its heroes, too. The phenomenon of “techie- celebrity” has almost spilled over into mythology. We all want to write something world-changing like Linux or design the next brilliant programming language.
-Deep down, many engineers secretly wish to be seen as geniuses. This fantasy goes something like this:
+## 天才の神話
 
-- You are struck by an awesome new concept.
-- You vanish into your cave for weeks or months, slaving away at a perfect implementation of your idea.
-- You then “unleash” your software on the world, shocking everyone with your genius.
-- Your peers are astonished by your cleverness.
-- People line up to use your software.
-- Fame and fortune follow naturally.
+多くの人間は、本能的に偶像を見つけて崇拝する。ソフトウェアエンジニアにとっては、リーナス・トーバルズ、ギド・ヴァン・ロッサム、ビル・ゲイツなど、いずれも英雄的な偉業で世界を変えたヒーローがそれにあたる。リーナスさんは自分でLinuxを書いたんですよね？
 
-But hold on: time for a reality check. You’re probably not a genius.
-No offense, of course ---  we’re sure that you’re a very intelligent person. But do you realize how rare actual geniuses really are? Sure, you write code, and that’s a tricky skill. But even if you are a genius, it turns out that that’s not enough. Geniuses still make mistakes, and having brilliant ideas and elite programming skills doesn’t guarantee that your software will be a hit. Worse, you might find yourself solving only analytical problems and not human problems. Being a genius is most definitely not an excuse for being a jerk: anyone --- genius or not --- with poor social skills tends to be a poor teammate. The vast majority of the work at Google (and at most companies!) doesn’t require genius-level intellect, but 100% of the work requires a minimal level of social skills. What will make or break your career, especially at a company like Google, is how well you collaborate with others.
-It turns out that this Genius Myth is just another manifestation of our insecurity. Many programmers are afraid to share work they’ve only just started because it means peers will see their mistakes and know the author of the code is not a genius.
-To quote a friend:
+実際、リーナスがやったことは、Unixライクなカーネルの概念実証を書いて、それをメールリストに公開しただけだ。それは小さなことではなく、確かに素晴らしい業績でしたが、それは氷山の一角に過ぎません。Linuxはその初期カーネルの何百倍もの規模を持ち、何千人もの賢い人々によって開発されました。リーナスの本当の功績は、これらの人々をリードし、彼らの仕事を調整することでした。Linuxは、彼の独創的なアイデアではなく、コミュニティの総力を結集した輝かしい成果なのです。(Linuxは、彼の独創的なアイデアではなく、コミュニティの集合的な労働の結果として輝いているのです。)
+
+同じことですが、Guido Van RossumはPythonのすべてを個人的に書いたのでしょうか？確かに、彼は最初のバージョンを書きました。しかし、その後のバージョンには、アイデア、機能、バグ修正など、何百人もの人が貢献しています。スティーブ・ジョブズはチーム全体を率いてマッキントッシュを開発しましたし、ビル・ゲイツは初期の家庭用コンピュータのBASICインタープリタを書いたことで知られていますが、彼の大きな功績はMS-DOSを中心に会社を成功させたことです。天才神話とは、人間がチームの成功を一人の人間やリーダーに求めてしまう傾向のことです。
+
+では、マイケル・ジョーダンはどうでしょうか？
+
+これも同じです。私たちは彼を崇拝していますが、彼はすべてのバスケットボールの試合に一人で勝ったわけではないのです。彼の真の天才性は、チームとの協力関係にあったのです。チームのコーチであるフィル・ジャクソンは非常に賢く、そのコーチングテクニックは伝説となっています。
+
+彼は、一人の選手だけでは決して優勝できないことを認識しており、MJを中心に「ドリームチーム」を結成しました。このチームは、少なくともマイケル自身と同じくらい素晴らしい、整備された機械だったのです。
+
+では、なぜ私たちはこのような物語の中の個人を繰り返し偶像化するのでしょうか？なぜ、人々は有名人が推薦する商品を買うのでしょうか？ミシェル・オバマのドレスやマイケル・ジョーダンの靴を買いたいと思うのはなぜだろう？
+
+それには有名人の存在が大きく関わっています。人間には、リーダーやロールモデルを見つけ、崇拝し、真似しようとする自然な本能があります。プログラミングの世界にもヒーローがいるのだ。「技術者の有名人」という現象は、ほとんど神話にまで及んでいる。私たちは皆、Linuxのような世界を変えるものを書きたい、次の素晴らしいプログラミング言語を設計したいと思っています。
+
+多くの技術者は、心の底では「天才」と思われたいと思っている。その夢は、次のようなものだ。
+
+- あなたは、素晴らしい新しいコンセプトを思いついた。
+- 数週間から数ヶ月間、洞窟にこもって自分のアイデアを完璧に実装することに没頭する。
+- そして、そのソフトウェアを世界に向けて "解き放つ "と、その天才的な才能で皆を驚かせる。
+- あなたの仲間は、あなたの賢さに驚かされます。
+- あなたのソフトウェアを使うために人々が列をなす。
+- 名声と富が自然にもたらされる。
+
+しかし、ちょっと待ってください。現実を確認してみましょう。あなたはおそらく天才ではないのです。
+
+もちろん、あなたが非常に知的な人であることは間違いありません。しかし、実際の天才がどれほど稀であるかを理解していますか？確かに、あなたはコードを書いていますし、それはトリッキーなスキルです。しかし、たとえあなたが天才であっても、それだけでは十分ではないことがわかります。天才であってもミスはしますし、素晴らしいアイデアや優れたプログラミング技術があっても、ソフトウェアがヒットするとは限りません。さらに言えば、人間の問題ではなく、分析的な問題だけを解決することになるかもしれません。天才であることは、決して嫌な奴であることの言い訳にはなりません。天才であろうとなかろうと、社会性に乏しい人は、チームメイトとしては不適格になりがちです。グーグル（そしてほとんどの企業）の仕事の大半は、天才レベルの知性を必要としませんが、100％の仕事は最低限の社会性を必要とします。特にグーグルのような会社では、どれだけ他の人と協力して仕事をするかがキャリアを左右します。
+
+この「天才神話」は、私たちの不安感の表れにすぎないことがわかりました。多くのプログラマーは、着手したばかりの仕事を共有することを恐れています。それは、同僚が自分のミスを見て、コードの作者が天才ではないと知ってしまうからです。
+
+ある友人の言葉を引用します。
 
 ```
-I know I get SERIOUSLY insecure about people looking before something is done. Like they are going to seriously judge me and think I’m an idiot.
+何かが完成する前に人に見られることにすごく不安を感じることがあるんだ。何かをする前に人に見られていると、深刻な不安に襲われます。
 ```
 
-This is an extremely common feeling among programmers, and the natural reaction is to hide in a cave, work, work, work, and then polish, polish, polish, sure that no one will see your goof-ups and that you’ll still have a chance to unveil your masterpiece when you’re done. Hide away until your code is perfect.
-Another common motivation for hiding your work is the fear that another programmer might take your idea and run with it before you get around to working on it. By keeping it secret, you control the idea.
-We know what you’re probably thinking now: so what? Shouldn’t people be allowed to work however they want?
-Actually, no. In this case, we assert that you’re doing it wrong, and it is a big deal. Here’s why.
+これはプログラマーの間では非常に一般的な感覚で、自然な反応として、洞窟に隠れて仕事をして、仕事をして、仕事をして、磨いて、磨いて、磨いて、誰にも失敗を見られないようにして、完成したときには傑作を披露するチャンスがあるようにするのです。自分のコードが完璧になるまで隠しておくのです。
 
-## Hiding Considered Harmful
+自分の作品を隠すもう一つの理由は、自分が作業を始める前に、他のプログラマーが自分のアイデアを使ってしまうのではないかという不安です。秘密にすることで、アイデアをコントロールすることができます。
 
-If you spend all of your time working alone, you’re increasing the risk of unnecessary failure and cheating your potential for growth. Even though software development is deeply intellectual work that can require deep concentration and alone time, you must play that off against the value (and need!) for collaboration and review.
-First of all, how do you even know whether you’re on the right track?
-Imagine you’re a bicycle-design enthusiast, and one day you get a brilliant idea for a completely new way to design a gear shifter. You order parts and proceed to spend weeks holed up in your garage trying to build a prototype. When your neighbor ---  also a bike advocate ---  asks you what’s up, you decide not to talk about it. You don’t want anyone to know about your project until it’s absolutely perfect. Another few months go by and you’re having trouble making your prototype work correctly. But because you’re working in secrecy, it’s impossible to solicit advice from your mechanically inclined friends.
-Then, one day your neighbor pulls his bike out of his garage with a radical new gear-shifting mechanism. Turns out he’s been building something very similar to your invention, but with the help of some friends down at the bike shop. At this point, you’re exasperated. You show him your work. He points out that your design had some simple flaws --- ones that might have been fixed in the first week if you had shown him. There are a number of lessons to learn here.
+今、あなたが何を考えているかはわかっています。自分の好きなように仕事をすることは許されないのでは？
 
-## Early Detection
+と思われるかもしれませんが、実はそうではありません。この場合、私たちはあなたが間違ったことをしていると主張し、それは大きな問題です。その理由はこうだ。
 
-If you keep your great idea hidden from the world and refuse to show anyone anything until the implementation is polished, you’re taking a huge gamble. It’s easy to make fundamental design mistakes early on. You risk reinventing wheels.(*2) And you forfeit the benefits of collaboration, too: notice how much faster your neighbor moved by working with others? This is why people dip their toes in the water before jumping in the deep end: you need to make sure that you’re working on the right thing, you’re doing it correctly, and it hasn’t been done before. The chances of an early misstep are high. The more feedback you solicit early on, the more you lower this risk.(*3) Remember the tried-and-true mantra of “Fail early, fail fast, fail often.”
-Early sharing isn’t just about preventing personal missteps and getting your ideas vetted. It’s also important to strengthen what we call the bus factor of your project.
+##  隠すことは有害である
+
+一人で仕事をしていると、不必要な失敗のリスクが高まり、成長の可能性を失ってしまいます。ソフトウェア開発は深い知的作業であり、深い集中力と一人の時間を必要としますが、コラボレーションやレビューの価値（そして必要性！）と相殺する必要があります。
+
+まず第一に、自分が正しい道を歩んでいるかどうかをどうやって知ることができるでしょうか。
+
+例えば、あなたが自転車のデザインをしていて、ある日、ギアシフターの全く新しいデザイン方法について素晴らしいアイデアを思いついたとします。部品を注文し、ガレージにこもって何週間も試作品を作っていました。近所の人（自転車愛好家）に何かあったのかと聞かれても、あなたはそのことを話さないことにしました。完全に完成するまでは、このプロジェクトを誰にも知られたくないのです。さらに数ヶ月が経ち、あなたは試作品を正しく動作させることができませんでした。しかし、秘密にしているので、機械に詳しい友人にアドバイスを求めることもできません。
+
+そんなある日、隣人がガレージから自転車を引っ張り出してきて、斬新なギアシフト機構を搭載していました。彼は、自転車屋の友人たちの助けを借りて、あなたの発明とよく似たものを作っていたことがわかりました。この時点で、あなたは苛立ちを覚えました。彼に自分の作品を見せます。彼は、あなたのデザインにはいくつかの簡単な欠陥があることを指摘しましたが、それはあなたが彼に見せていれば最初の1週間で修正できたかもしれません。ここではいくつかの教訓が得られます。
+
+## 早期発見
+
+素晴らしいアイデアを世間から隠しておき、実装が洗練されるまで誰にも見せないというのは、大きな賭けをしていることになります。初期の段階では、基本的な設計ミスを犯しやすいのです。また、共同作業の利点も失われてしまいます（*2）。自分がやっていることが正しいかどうか、正しくできているかどうか、これまでになかったことかどうかを確認する必要があるからです。初期の段階では、失敗する可能性が高いのです。(*3）"Fail early, fail fast, fail often "という言葉があります。
+
+早期共有は、個人的な失敗を防ぎ、アイデアを吟味してもらうためだけではありません。また、プロジェクトのバスファクターと呼ばれる要素を強化することも重要です。
 
 ## The Bus Factor
 
 ```
-Bus factor (noun): the number of people that need to get hit by a bus before your project is completely doomed.
+バス・ファクター(名詞): プロジェクトが完全に破滅するまでにバスに轢かれる必要のある人の数。
 ```
 
-How dispersed is the knowledge and know-how in your project? If you’re the only person who understands how the prototype code works, you might enjoy good job security  --- but if you get hit by a bus, the project is toast. If you’re working with a colleague, however, you’ve doubled the bus factor. And if you have a small team designing and prototyping together, things are even better ---  the project won’t be marooned when a team member disappears. Remember: team members might not literally be hit by buses, but other unpredictable life events still happen. Someone might get married, move away, leave the company, or take leave to care for a sick relative. Ensuring that there is at least good documentation in addition to a primary and a secondary owner for each area of responsibility helps future-proof your project’s success and increases your project’s bus factor. Hopefully most engineers recognize that it is better to be one part of a successful project than the critical part of a failed project.
-Beyond the bus factor, there’s the issue of overall pace of progress. It’s easy to forget that working alone is often a tough slog, much slower than people want to admit. How much do you learn when working alone? How fast do you move? Google and Stack Overflow are great sources of opinions and information, but they’re no substitute for actual human experience. Working with other people directly increases the collective wisdom behind the effort. When you become stuck on something absurd, how much time do you waste pulling yourself out of the hole? Think about how different the experience would be if you had a couple of peers to look over your shoulder and tell you ---  instantly ---  how you goofed and how to get past the problem. This is exactly why teams sit together (or do pair programming) in software engineering companies. Programming is hard. Software engineering is even harder. You need that second pair of eyes.
+あなたのプロジェクトでは、知識やノウハウがどれくらい分散していますか？もし、あなたがプロトタイプのコードがどのように動作するかを理解している唯一の人間であれば、仕事の安全性は高いかもしれませんが、もしあなたがバスに轢かれてしまったら、プロジェクトは破滅してしまいます。しかし、同僚と一緒に仕事をしていれば、バスに轢かれる可能性は2倍になります。少人数のチームで設計や試作を行っている場合は、さらに有利です。チームメンバーがいなくなっても、プロジェクトが置き去りにされることはありません。チームメンバーが文字通りバスに轢かれることはないかもしれませんが、その他の予測不可能なライフイベントは起こります。誰かが結婚するかもしれないし、引っ越すかもしれないし、会社を辞めるかもしれないし、病気の親戚の世話をするために休暇を取るかもしれない。各責任分野のプライマリーオーナーとセカンダリーオーナーに加えて、少なくとも優れた文書があることを確認することは、プロジェクトの成功を将来にわたって保証し、プロジェクトのバスファクターを高めることにつながります。多くのエンジニアは、失敗したプロジェクトの重要な部分を担うよりも、成功したプロジェクトの一部を担う方が良いことを認識していると思います。
 
-## Pace of Progress
+バスファクターの他にも、全体的な進捗ペースの問題があります。一人で仕事をしていると忘れがちですが、一人で仕事をするのは大変なことで、人々が認めたがっているよりもずっと遅いのです。一人で仕事をしていると、どれだけ勉強になるか？どれくらいの速さで動けるのか？GoogleやStack Overflowは、意見や情報の素晴らしい情報源ですが、実際の人間の経験にはかないません。他の人と一緒に作業することで、その作業の背後にある集合的な知恵を直接増やすことができます。不条理なことに行き詰まったとき、どれだけの時間を無駄にしているでしょうか。もし、何人かの仲間があなたの肩越しに、あなたがどのように失敗したのか、どうすれば問題を解決できるのかを即座に教えてくれたとしたら、経験はどれほど違ったものになるでしょうか。これこそが、ソフトウェアエンジニアリング会社でチームが一緒に座っている（あるいはペアプログラミングをしている）理由なのです。プログラミングは難しい。ソフトウェアエンジニアリングはさらに難しい。そのためには第二の目が必要なのです。
 
-Here’s another analogy. Think about how you work with your compiler. When you sit down to write a large piece of software, do you spend days writing 10,000 lines of code, and then, after writing that final, perfect line, press the “compile” button for the very first time? Of course you don’t. Can you imagine what sort of disaster would result? Programmers work best in tight feedback loops: write a new function, compile. Add a test, compile. Refactor some code, compile. This way, we discover and fix typos and bugs as soon as possible after generating code. We want the compiler at our side for every little step; some environments can even compile our code as we type. This is how we keep code quality high and make sure our software is evolving correctly, bit by bit. The current DevOps philosophy toward tech productivity is explicit about these sorts of goals: get feedback as early as possible, test as early as possible, and think about security and production environments as early as possible. This is all bundled into the idea of “shifting left” in the developer workflow; the earlier we find a problem, the cheaper it is to fix it.
-The same sort of rapid feedback loop is needed not just at the code level, but at the whole-project level, too. Ambitious projects evolve quickly and must adapt to changing environments as they go. Projects run into unpredictable design obstacles or political hazards, or we simply discover that things aren’t working as planned. Requirements morph unexpectedly. How do you get that feedback loop so that you know the instant your plans or designs need to change? Answer: by working in a team. Most engineers know the quote, “Many eyes make all bugs shallow,” but a better version might be, “Many eyes make sure your project stays relevant and on track.” People working in caves awaken to discover that while their original vision might be complete, the world has changed and their project has become irrelevant.
+## 進歩の速さ
+
+もうひとつの例えを紹介しましょう。コンパイラとの付き合い方を考えてみましょう。大きなソフトウェアを書こうとしたとき、何日もかけて1万行のコードを書き、最後の完璧な1行を書いた後で、初めて「コンパイル」ボタンを押すでしょうか？もちろん、そんなことはしません。その結果、どんな惨事が起こるか想像できますか？プログラマーはタイトなフィードバックループの中で最もよく働きます：新しい関数を書いてコンパイル。新しい関数を書いて、コンパイルして、テストを追加して、コンパイルして。コードをリファクタリングしてコンパイルする。このようにして、コードを生成した後、できるだけ早くタイプミスやバグを発見し、修正するのです。環境によっては、私たちがコードを入力している間にコンパイルしてくれるものもあります。このようにして、コードの品質を高く保ち、ソフトウェアが少しずつ正しく進化していくことを確認しています。現在の技術生産性向上のためのDevOpsの考え方は、このような目標を明確にしています。「できるだけ早い段階でフィードバックを得る」「できるだけ早い段階でテストを行う」「できるだけ早い段階でセキュリティや本番環境について考える」。これらはすべて、開発者のワークフローにおける「左側へシフト」という考え方に集約されています。問題を早期に発見すればするほど、安価に修正することができます。
+
+コードレベルだけでなく、プロジェクト全体においても、同様の迅速なフィードバックループが必要です。野心的なプロジェクトは進化が早く、変化する環境に対応しながら進めていかなければなりません。プロジェクトは、予測できない設計上の障害や政治的な問題にぶつかったり、単に計画通りに動いていないことがわかったりします。また、要件も予期せず変化します。どうすれば、計画や設計を変更しなければならない瞬間を知るためのフィードバックループを得ることができるでしょうか？答えは、チームで仕事をすることです。「多くの目があれば、すべてのバグは浅くなる」という言葉をエンジニアの多くは知っていますが、「多くの目があれば、あなたのプロジェクトが適切で軌道に乗っていることを確認できる」という言葉の方がいいかもしれません。洞窟で作業していた人が目を覚ますと、当初のビジョンは完成していたかもしれませんが、世界は変わり、自分のプロジェクトは無意味なものになっていました。
 
 -----
-### Case Study: Engineers and Offices
+### ケーススタディ エンジニアとオフィス
 
-Twenty-five years ago, conventional wisdom stated that for an engineer to be productive, they needed to have their own office with a door that closed. This was supposedly the only way they could have big, uninterrupted slabs of time to deeply concentrate on writing reams of code.
-I think that it’s not only unnecessary for most engineers(*4) to be in a private office, it’s downright dangerous. Software today is written by teams, not individuals, and a high-bandwidth, readily available connection to the rest of your team is even more valuable than your internet connection. You can have all the uninterrupted time in the world, but if you’re using it to work on the wrong thing, you’re wasting your time.
-Unfortunately, it seems that modern-day tech companies (including Google, in some cases) have swung the pendulum to the exact opposite extreme. Walk into their offices and you’ll often find engineers clustered together in massive rooms ---  a hundred or more people together ---  with no walls whatsoever. This “open floor plan” is now a topic of huge debate and, as a result, hostility toward open offices is on the rise. The tiniest conversation becomes public, and people end up not talking for risk of annoying dozens of neighbors. This is just as bad as private offices!
-We think the middle ground is really the best solution. Group teams of four to eight people together in small rooms (or large offices) to make it easy (and non-embarrassing) for spontaneous conversation to happen.
-Of course, in any situation, individual engineers still need a way to filter out noise and interruptions, which is why most teams I’ve seen have developed a way to communicate that they’re currently busy and that you should limit interruptions. Some of us used to work on a team with a vocal interrupt protocol: if you wanted to talk, you would say “Breakpoint Mary,” where Mary was the name of the person you wanted to talk to. If Mary was at a point where she could stop, she would swing her chair around and listen. If Mary was too busy, she’d just say “ack,” and you’d go on with other things until she finished with her current head state.
-Other teams have tokens or stuffed animals that team members put on their monitor to signify that they should be interrupted only in case of emergency. Still other teams give out noise-canceling headphones to engineers to make it easier to deal with background noise ---  in fact, in many companies, the very act of wearing headphones is a common signal that means “don’t disturb me unless it’s really important.” Many engineers tend to go into headphones-only mode when coding, which may be useful for short spurts but, if used all the time, can be just as bad for collaboration as walling yourself off in an office.
-Don’t misunderstand us ---  we still think engineers need uninterrupted time to focus on writing code, but we think they need a high-bandwidth, low-friction connection to their team just as much. If less-knowledgeable people on your team feel that there’s a barrier to asking you a question, it’s a problem: finding the right balance is an art.
+25年前、エンジニアが生産性を上げるためには、ドアの閉まらない自分のオフィスを持つことが必要だというのが常識でした。膨大な量のコードを書くことに集中するための、途切れない大きな時間を確保するためには、この方法しかないと考えられていました。
+
+私は、多くのエンジニア(*4)にとって、個人のオフィスは必要ないどころか、非常に危険だと思っています。今日のソフトウェアは個人ではなくチームで書かれています。そして、チームの他のメンバーと広帯域ですぐに接続できることは、インターネット回線よりも価値があります。時間はいくらあっても足りませんが、その時間を使って間違った作業をしていたら、時間の無駄です。
+
+残念なことに、現代のハイテク企業（Googleを含む）は、この振り子を正反対に振っているように見えます。オフィスに入ると、エンジニアたちが壁のない巨大な部屋（100人以上が一緒にいる）に集まっていることが多い。この「オープン・フロア・プラン」は現在、大きな議論の対象となっており、その結果、オープン・オフィスに対する敵意が高まっています。些細な会話が公になり、何十人もの隣人に迷惑をかける恐れがあるため、人々は結局口をきかなくなってしまう。これでは、プライベートオフィスと同じではないか。
+
+私たちは、中間的な解決策がベストだと考えています。4〜8人のチームを小さな部屋（または大きなオフィス）に集め、自然発生的な会話が起こりやすいように（恥ずかしくないように）するのです。
+
+もちろん、どのような状況であっても、個々のエンジニアにはノイズや邪魔者を排除する方法が必要です。そのため、私が見てきたほとんどのチームでは、「今は忙しいので、邪魔者は制限してください」というコミュニケーション方法を開発してきました。私たちの中には、声による割り込みプロトコルを採用しているチームで働いていた人もいます。話をしたいときには、「Breakpoint Mary」と言います。メアリーが止められるポイントにいる場合は、椅子を振り回して話を聞く。メアリーが忙しければ、「ack」と言って、彼女が今の頭の状態を終えるまで、他のことをするのです。
+
+他のチームでは、トークンやぬいぐるみを用意して、チームメンバーがモニターの上に置くことで、緊急の場合にのみ中断してよいというサインを出しています。実際、多くの企業では、ヘッドフォンをつけることが「よほど重要なこと以外は邪魔しないでください」という共通のシグナルになっています。多くのエンジニアは、コーディングの際にヘッドフォンだけで作業をする傾向があります。短時間であれば便利ですが、ずっと使っていると、オフィスで壁に囲まれているのと同じように、コラボレーションに悪影響を及ぼします。
+
+誤解しないでいただきたいのですが、私たちはエンジニアにはコードを書くことに集中できる時間が必要だと考えていますが、それと同じくらいチームとの広帯域で摩擦の少ない接続も必要だと考えています。もし、あなたのチームのあまり知識のない人たちが、あなたに質問するのに障害があると感じているなら、それは問題です。適切なバランスを見つけることは芸術です。
+
 -----
 
-## In Short, Don’t Hide
+## 要するに、隠さないこと
 
-So, what “hiding” boils down to is this: working alone is inherently riskier than working with others. Even though you might be afraid of someone stealing your idea or thinking you’re not intelligent, you should be much more concerned about wasting huge swaths of your time toiling away on the wrong thing.
-Don’t become another statistic.
+つまり、「隠れる」ということは、「一人で仕事をすることは、他人と一緒に仕事をするよりも本質的にリスクが高い」ということです。誰かにアイデアを盗まれたり、知性がないと思われたりすることを恐れるかもしれませんが、それよりも、間違ったことに没頭して膨大な時間を無駄にしてしまうことの方がはるかに心配すべきです。
 
-## It’s All About the Team
+他の統計データにならないように。
 
-So, let’s back up now and put all of these ideas together.
-The point we’ve been hammering away at is that, in the realm of programming, lone craftspeople are extremely rare --- and even when they do exist, they don’t perform superhuman achievements in a vacuum; their world-changing accomplishment is almost always the result of a spark of inspiration followed by a heroic team effort.
-A great team makes brilliant use of its superstars, but the whole is always greater than the sum of its parts. But creating a superstar team is fiendishly difficult.
-Let’s put this idea into simpler words: software engineering is a team endeavor.
-This concept directly contradicts the inner Genius Programmer fantasy so many of us hold, but it’s not enough to be brilliant when you’re alone in your hacker’s lair. You’re not going to change the world or delight millions of computer users by hiding and preparing your secret invention. You need to work with other people. Share your vision. Divide the labor. Learn from others. Create a brilliant team.
-Consider this: how many pieces of widely used, successful software can you name that were truly written by a single person? (Some people might say “LaTeX,” but it’s hardly “widely used,” unless you consider the number of people writing scientific papers to be a statistically significant portion of all computer users!)
-High-functioning teams are gold and the true key to success. You should be aiming for this experience however you can.
+## It's All About the Team
 
-## The Three Pillars of Social Interaction
+さて、ここで話を戻して、これらのアイデアをまとめてみましょう。
 
-So, if teamwork is the best route to producing great software, how does one build (or find) a great team?
-To reach collaborative nirvana, you first need to learn and embrace what I call the “three pillars” of social skills. These three principles aren’t just about greasing the wheels of relationships; they’re the foundation on which all healthy interaction and collaboration are based:
+これまで述べてきたことは、プログラミングの世界では、孤高の職人は非常に稀であり、たとえ存在したとしても、超人的な成果を上げることはできないということです。
 
-* Pillar 1: Humility
-  * You are not the center of the universe (nor is your code!). You’re neither omniscient nor infallible. You’re open to self-improvement.
-* Pillar 2: Respect
-  * You genuinely care about others you work with. You treat them kindly and appreciate their abilities and accomplishments.
-* Pillar 3: Trust
-  * You believe others are competent and will do the right thing, and you’re OK with letting them drive when appropriate.(*5)
+優れたチームはスーパースターを見事に活用しますが、全体は常に部分の総和よりも大きいのです。しかし、スーパースターチームを作ることは、非常に難しいことです。
 
-If you perform a root-cause analysis on almost any social conflict, you can ultimately trace it back to a lack of humility, respect, and/or trust. That might sound implausible at first, but give it a try. Think about some nasty or uncomfortable social situation currently in your life. At the basest level, is everyone being appropriately humble? Are people really respecting one another? Is there mutual trust?
+この考えをもっとシンプルな言葉で表現すると、「ソフトウェアエンジニアリングはチームで行うもの」ということになります。
 
-## Why Do These Pillars Matter?
+この考え方は、私たちの多くが抱いている天才プログラマーという幻想とは真っ向から対立するものですが、ハッカーの巣窟で一人で輝いているだけでは十分ではありません。秘密の発明品を隠して準備するだけでは、世界を変えたり、何百万人ものコンピューターユーザーを喜ばせたりすることはできません。他の人と一緒に仕事をする必要があります。自分のビジョンを共有する。作業を分担しましょう。他人から学ぶ。優秀なチームを作りましょう。
 
-When you began this chapter, you probably weren’t planning to sign up for some sort of weekly support group. We empathize. Dealing with social problems can be difficult: people are messy, unpredictable, and often annoying to interface with. Rather than putting energy into analyzing social situations and making strategic moves, it’s tempting to write off the whole effort. It’s much easier to hang out with a predictable compiler, isn’t it? Why bother with the social stuff at all?
-Here’s a quote from a famous lecture by Richard Hamming:
+考えてみてください。広く使われ、成功を収めているソフトウェアの中で、本当に一人で書いたものはいくつありますか？ 「LaTeX」と答える人もいるかもしれませんが、科学論文を書いている人の数がコンピュータユーザー全体の統計的に有意な部分であると考えない限り、「広く使われている」とは言えませんよね。
 
-  By taking the trouble to tell jokes to the secretaries and being a little friendly, I got superb secretarial help. For instance, one time for some idiot reason all the reproducing services at Murray Hill were tied up. Don’t ask me how, but they were. I wanted something done. My secretary called up somebody at Holmdel, hopped [into] the company car, made the hour-long trip down and got it reproduced, and then came back. It was a payoff for the times I had made an effort to cheer her up, tell her jokes and be friendly; it was that little extra work that later paid off for me. By realizing you have to use the system and studying how to get the system to do your work, you learn how to adapt the system to your desires.
+高機能のチームは金になり、成功への真の鍵となります。このような経験をすることを、できる限り目指すべきです。
 
-The moral is this: do not underestimate the power of playing the social game. It’s not about tricking or manipulating people; it’s about creating relationships to get things done. Relationships always outlast projects. When you’ve got richer relationships with your coworkers, they’ll be more willing to go the extra mile when you need them.
+## ソーシャル・インタラクションの3つの柱
 
-## Humility, Respect, and Trust in Practice
+では、チームワークが優れたソフトウェアを生み出すための最良の方法であるならば、どのようにして優れたチームを作る（あるいは見つける）ことができるのでしょうか？
 
-All of this preaching about humility, respect, and trust sounds like a sermon. Let’s come out of the clouds and think about how to apply these ideas in real-life situations. We’re going to examine a list of specific behaviors and examples that you can start with. Many of them might sound obvious at first, but after you begin thinking about them, you’ll notice how often you (and your peers) are guilty of not following them --- we’ve certainly noticed this about ourselves!
+コラボレーションの境地に到達するためには、まず私がソーシャルスキルの「3つの柱」と呼ぶものを学び、身につける必要があります。この3つの原則は、単に人間関係の歯車に油を差すだけではなく、健全な相互作用とコラボレーションの基盤となるものです。
+
+* 第1の柱：謙虚さ
+  * あなたは宇宙の中心ではありません（あなたのコードもそうです！）。あなたは全知全能でも無謬でもありません。あなたは自己改善に前向きです。
+* 第2の柱：尊敬の念
+  * あなたは、一緒に働く人たちを心から大切にします。親切に接し、その能力や成果を評価する。
+* 第3の柱：信頼
+  * 他人は有能で正しいことをすると信じ、必要に応じて運転を任せることができる(*5)
+
+ほとんどの社会的紛争の原因を分析すると、最終的には、謙虚さ、尊敬、信頼の欠如に帰結します。信じられないかもしれませんが、試してみてください。今、あなたの身の回りで起こっている嫌なこと、不快なことを考えてみてください。最も基本的なレベルでは、誰もが適切な謙虚さを持っていますか？人々は本当にお互いを尊重していますか？お互いの信頼関係はありますか？
+
+## Why Do these Pillars Matter?
+
+この章を書き始めたとき、あなたは毎週サポートグループに登録するつもりはなかったでしょう。私たちは共感します。社会的な問題に対処するのは難しいことです。人間は厄介で、予測不可能で、付き合うのが面倒くさいことが多いからです。社会の状況を分析して戦略的に行動することにエネルギーを注ぐよりも、その努力をすべて帳消しにしてしまいたくなります。予測可能なコンパイラと付き合う方がずっと簡単でしょう？なぜ社会的なことを気にするのか？
+
+リチャード・ハミングの有名な講演からの引用です。
+
+  わざわざ秘書にジョークを言ったり、少し親しみを持って接したりすることで、見事に秘書の助けを得ることができました。例えば、ある時、何か馬鹿げた理由で、マレーヒルの全ての複製サービスが拘束されたことがあった。なぜかと聞かれても困るが、そうなのだ。私は何かして欲しいと思った。私の秘書がホルムデルの誰かに電話して、社用車に飛び乗って1時間かけて行って、複製してもらって帰ってきた。それまで、彼女を励ましたり、冗談を言ったりして仲良くしていたことが報われたのです。このようなちょっとした努力が、後になって自分のためになりました。システムを使わなければならないことを認識し、システムに自分の仕事をさせる方法を研究することで、システムを自分の希望に合わせることができるようになるのです。
+
+モラルとしては、ソーシャルゲームの力を過小評価してはいけないということです。人を騙したり操ったりするのではなく、物事を成し遂げるための人間関係を作ることが大切なのです。人間関係は常にプロジェクトよりも長持ちします。同僚との関係が豊かになれば、あなたが必要としているときに、彼らはより一層の努力をしてくれるでしょう。
+
+## 謙虚さ、尊敬、信頼を実践する
+
+謙虚さ、尊敬、信頼についての説教は、まるでお説教のようです。ここでは、これらの考え方を実際の生活の中でどのように適用するかを考えてみましょう。ここでは、具体的な行動とその例を挙げていきますので、ぜひ参考にしてください。最初は当たり前のことのように思えるかもしれませんが、考え始めてみると、自分（や仲間）がどれだけそれらに従っていないかということに気づくでしょう。
 
 ### Lose the ego
 
-OK, this is sort of a simpler way of telling someone without enough humility to lose their ’tude. Nobody wants to work with someone who consistently behaves like they’re the most important person in the room. Even if you know you’re the wisest person in the discussion, don’t wave it in people’s faces. For example, do you always feel like you need to have the first or last word on every subject? Do you feel the need to comment on every detail in a proposal or discussion? Or do you know somebody who does these things?
-Although it’s important to be humble, that doesn’t mean you need to be a doormat; there’s nothing wrong with self-confidence. Just don’t come off like a know-it-all. Even better, think about going for a “collective” ego, instead; rather than worrying about whether you’re personally awesome, try to build a sense of team accomplishment and group pride. For example, the Apache Software Foundation has a long history of creating communities around software projects. These communities have incredibly strong identities and reject people who are more concerned with self- promotion.
-Ego manifests itself in many ways, and a lot of the time, it can get in the way of your productivity and slow you down. Here’s another great story from Hamming’s lecture that illustrates this point perfectly (emphasis ours):
+これは、謙虚さが足りない人に「態度を変えろ」と言うための、よりシンプルな方法のようなものです。自分がその場で最も重要な人物であるかのように一貫して振る舞う人とは、誰も一緒に仕事をしたくありません。たとえ自分がその場で一番賢いとわかっていても、それを人に向かって振りかざさないでください。例えば、どんな話題でも常に自分が最初か最後に発言しなければならないと思っていませんか？企画書や議論の細部にまでコメントしなければならないと思っていませんか？あるいは、そのような人を知っていますか？
 
-  John Tukey almost always dressed very casually. He would go into an important office and it would take a long time before the other fellow realized that this is a first-class man and he had better listen. For a long time, John has had to overcome this kind of hostility. It’s wasted effort! I didn’t say you should conform; I said, “The appearance of conforming gets you a long way.” If you chose to assert your ego in any number of ways, “I am going to do it my way,” you pay a small steady price throughout the whole of your professional career. And this, over a whole lifetime, adds up to an enormous amount of needless trouble. [...] By realizing you have to use the system and studying how to get the system to do your work, you learn how to adapt the system to your desires. Or you can fight it steadily, as a small, undeclared war, for the whole of your life.
+謙虚であることは大切ですが、それはあなたが従順である必要があるということではなく、自信を持つことは悪いことではありません。自信を持つことは悪いことではありませんが、知ったかぶりをしてはいけません。自分がすごいかどうかを気にするのではなく、チームとしての達成感やグループとしての誇りを高めることを意識するといいでしょう。例えば、Apache Software Foundationは、ソフトウェアプロジェクトを中心にコミュニティを形成してきた長い歴史を持っています。これらのコミュニティは非常に強いアイデンティティーを持っており、自己顕示欲の強い人を拒絶します。
 
-### Learn to give and take criticism
+エゴはさまざまな形で現れますが、多くの場合、生産性の向上を妨げ、スピードを低下させる原因となります。ハミングの講演の中で、この点をよく表している話があります（強調しています）。
 
-A few years ago, Joe started a new job as a programmer. After his first week, he really began digging into the codebase. Because he cared about what was going on, he started gently questioning other teammates about their contributions. He sent simple code reviews by email, politely asking about design assumptions or pointing out places where logic could be improved. After a couple of weeks, he was summoned to his director’s office. “What’s the problem?” Joe asked. “Did I do something wrong?” The director looked concerned: “We’ve had a lot of complaints about your behavior, Joe. Apparently, you’ve been really harsh toward your teammates, criticizing them left and right. They’re upset. You need to tone it down.” Joe was utterly baffled. Surely, he thought, his code reviews should have been welcomed and appreciated by his peers. In this case, however, Joe should have been more sensitive to the team’s widespread insecurity and should have used a subtler means to introduce code reviews into the culture --- perhaps even something as simple as discussing the idea with the team in advance and asking team members to try it out for a few weeks.
-In a professional software engineering environment, criticism is almost never personal --- it’s usually just part of the process of making a better project. The trick is to make sure you (and those around you) understand the difference between a constructive criticism of someone’s creative output and a flat-out assault against someone’s character. The latter is useless --- it’s petty and nearly impossible to act on. The former can (and should!) be helpful and give guidance on how to improve. And, most important, it’s imbued with respect: the person giving the constructive criticism genuinely cares about the other person and wants them to improve themselves or their work. Learn to respect your peers and give constructive criticism politely. If you truly respect someone, you’ll be motivated to choose tactful, helpful phrasing --- a skill acquired with much practice. We cover this much more in Chapter 9.
-On the other side of the conversation, you need to learn to accept criticism as well. This means not just being humble about your skills, but trusting that the other person has your best interests (and those of your project!) at heart and doesn’t actually think you’re an idiot. Programming is a skill like anything else: it improves with practice. If a peer pointed out ways in which you could improve your juggling, would you take it as an attack on your character and value as a human being? We hope not. In the same way, your self-worth shouldn’t be connected to the code you write --- or any creative project you build. To repeat ourselves: you are not your code. Say that over and over. You are not what you make. You need to not only believe it yourself, but get your coworkers to believe it, too.
-For example, if you have an insecure collaborator, here’s what not to say: “Man, you totally got the control flow wrong on that method there. You should be using the standard xyzzy code pattern like everyone else.” This feedback is full of antipatterns: you’re telling someone they’re “wrong” (as if the world were black and white), demanding they change something, and accusing them of creating something that goes against what everyone else is doing (making them feel stupid). Your coworker will immediately be put on the offense, and their response is bound to be overly emotional.
-A better way to say the same thing might be, “Hey, I’m confused by the control flow in this section here. I wonder if the xyzzy code pattern might make this clearer and easier to maintain?” Notice how you’re using humility to make the question about you, not them. They’re not wrong; you’re just having trouble understanding the code. The suggestion is merely offered up as a way to clarify things for poor little you while possibly helping the project’s long-term sustainability goals. You’re also not demanding anything --- you’re giving your collaborator the ability to peacefully reject the suggestion. The discussion stays focused on the code itself, not on anyone’s value or coding skills.
+  ジョン・チューキーは、いつもとてもカジュアルな服装をしていました。彼は重要なオフィスに行くと、相手が「この人は一流の人だから話を聞いたほうがいい」と気づくまでに長い時間がかかってしまう。ジョンは長い間、このような敵意を克服しなければならなかった。無駄な努力ですよね。私は「合わせろ」とは言っていません。「合わせているように見えることが、あなたを遠ざける」と言ったのです。もしあなたが「私は私のやり方でやる」と様々な方法で自分のエゴを主張することを選んだとしたら、あなたはプロとしてのキャリア全体を通して、小さな安定した代償を払うことになります。そして、それが一生続くと、膨大な量の無用なトラブルに発展してしまうのです。(中略)システムを使わなければならないことに気づき、システムに自分の仕事をさせる方法を研究することで、システムを自分の望みに合わせる方法を学ぶのです。あるいは、小さな宣戦布告されていない戦争として、一生をかけて地道に戦うこともできます。
+
+### 批判をすること、されることを学ぶ
+
+数年前、ジョーはプログラマーとして新しい仕事を始めました。最初の1週間が過ぎた頃、彼はコードベースを徹底的に調べ始めました。彼は何が起こっているのか気になり、他のチームメイトの貢献度について優しく質問し始めました。簡単なコードレビューをメールで送り、設計上の仮定を丁寧に尋ねたり、ロジックを改善できる箇所を指摘したりした。数週間後、彼はディレクターのオフィスに呼ばれました。"何が問題なんだ？" とジョーは尋ねた。「何か悪いことをしましたか？部長は心配そうな顔をした。部長は心配そうな顔をして、「ジョー、君の行動について多くの苦情が寄せられている。どうやら、君はチームメイトに対して本当に厳しく、右往左往しているようだ。チームメイトは動揺している。あなたはそれを抑制する必要があります」。ジョーは全く困惑していた。確かに、彼のコードレビューは仲間から歓迎され、評価されるべきものだと思った。しかし、この場合、ジョーはチームに蔓延している不安感をもっと敏感に察知し、コードレビューを文化に導入するための微妙な手段を用いるべきだった。
+
+プロのソフトウェアエンジニアリングの環境では、批判はほとんど個人的なものではありません。重要なのは、誰かの創造的な成果に対する建設的な批判と、誰かの人格に対する明白な攻撃との違いを、自分（および周囲の人々）が理解することです。後者は意味がありません。些細なことであり、行動に移すことはほぼ不可能です。前者は、役に立つこともあるし、改善するための指針となるべきものです。建設的な批判をする人は、相手のことを心から心配し、自分自身や仕事を向上させたいと思っているのです。仲間を尊重し、建設的な批判を丁寧に行うことを学びましょう。相手を心から尊敬していれば、機転の利いた有益な表現を選ぼうとするはずです。この点については、第9章で詳しく説明します。
+
+会話の反対側では、批判を受け入れることも学ぶ必要があります。これは、自分のスキルを謙遜するだけでなく、相手が自分の利益（そしてプロジェクトの利益）を第一に考えていて、自分のことを本当にバカだと思っていないことを信じることです。プログラミングは他のものと同じように、練習すれば上達する技術です。同僚があなたのジャグリングの上達法を指摘したら、それはあなたの人格や人間としての価値に対する攻撃だと思うでしょうか？そうは思いませんよね。それと同じように、あなたの自己価値は、あなたが書いたコードやあなたが作ったクリエイティブなプロジェクトとは関係ないはずです。繰り返しになりますが、あなたはあなたのコードではありません。何度も何度もそう言ってください。あなたはあなたが作ったものではありません。自分自身がそう信じているだけでなく、同僚にもそう信じてもらう必要があるのです。
+
+例えば、自信のない協力者がいる場合、言ってはいけない言葉があります。「お前、あのメソッドの制御フロー、完全に間違ってるぞ。他の人たちと同じように、標準的なxyzzyコードパターンを使うべきだよ。」 このフィードバックはアンチパターンに満ちています：あなたは誰かに「間違っている」と言い（まるで世界が白か黒かのように）、何かを変えるように要求し、他の人がやっていることに反するものを作ったと非難しています（彼らを馬鹿にしています）。同僚はすぐに反感を抱き、過剰に感情的な反応をすることになるでしょう。
+
+同じことを言うにしても、もっといい言い方があります。「ねえ、私はこのセクションの制御フローに困惑しているんだ。xyzzyコードパターンを使えば、より明確になり、メンテナンスも楽になるのではないでしょうか？」 謙虚な姿勢で、質問を相手ではなく自分のことにしていることに注目してください。彼らは間違っていません。あなたはコードを理解するのに苦労しているだけです。この提案は、プロジェクトの長期的な持続可能性の目標を助けながら、かわいそうなあなたのために物事を明確にする方法として提示されているに過ぎません。また、あなたは何かを要求しているわけではありません。あなたは協力者に、その提案を平和的に拒否する能力を与えているのです。議論はコード自体に集中し、誰かの価値やコーディングスキルにはこだわらない。
 
 ### Fail fast and iterate
 
-There’s a well-known urban legend in the business world about a manager who makes a mistake and loses an impressive $10 million. He dejectedly goes into the office the next day and starts packing up his desk, and when he gets the inevitable “the CEO wants to see you in his office” call, he trudges into the CEO’s office and quietly slides a piece of paper across the desk.
+ビジネスの世界では、あるマネージャーがミスをして1000万ドルの大損をしたという都市伝説がよく知られています。翌日、落ち込んでオフィスに行き、机の上を片付け始めた彼は、「CEOがオフィスで会いたがっている」という必然的な電話を受けると、CEOのオフィスに足を運び、静かに一枚の紙を机の上に滑らせました。
 
-  “What’s this?” asks the CEO.
-  “My resignation,” says the executive. “I assume you called me in here to fire me.”
-  “Fire you?” responds the CEO, incredulously. “Why would I fire you? I just spent $10 million training you!”(*6)
+  CEOは、「これは何だ？」
+  「私の辞表です」と彼は言った。「私をクビにするために呼んだのでしょう」
+  「クビにする？" CEOは信じられない様子で答えた。「なぜ私があなたを解雇するのか？1,000万ドルかけて君を育てたのに！」(*6)。
 
-It’s an extreme story, to be sure, but the CEO in this story understands that firing the executive wouldn’t undo the $10 million loss, and it would compound it by losing a valuable executive who he can be very sure won’t make that kind of mistake again.
-At Google, one of our favorite mottos is that “Failure is an option.” It’s widely recognized that if you’re not failing now and then, you’re not being innovative enough or taking enough risks. Failure is viewed as a golden opportunity to learn and improve for the next go-around.(*7) In fact, Thomas Edison is often quoted as saying, “If I find 10,000 ways something won’t work, I haven’t failed. I am not discouraged, because every wrong attempt discarded is another step forward.”
-Over in Google X --- the division that works on “moonshots” like self-driving cars and internet access delivered by balloons --- failure is deliberately built into its incentive system. People come up with outlandish ideas and coworkers are actively encouraged to shoot them down as fast as possible. Individuals are rewarded (and even compete) to see how many ideas they can disprove or invalidate in a fixed period of time. Only when a concept truly cannot be debunked at a whiteboard by all peers does it proceed to early prototype.
+確かに極端な話ですが、この話のCEOは、幹部を解雇しても1,000万ドルの損失は元に戻らず、二度とこのような失敗をしないと確信できる貴重な幹部を失うことで、さらに損失が拡大することを理解しているのです。
 
-## Blameless Post-Mortem Culture
+Googleでは、"Failure is an option "というモットーを掲げています。失敗をしないということは、十分な革新性やリスクを取っていないということだと広く認識されています。実際、エジソンは「うまくいかない方法を1万通り見つけても、失敗したことにはならない。私は落胆しない。なぜなら、間違った試みを捨てるたびに、また一歩前進することができるからだ」という言葉を残しています（*7）。
 
-The key to learning from your mistakes is to document your failures by performing a root-cause analysis and writing up a “postmortem,” as it’s called at Google (and many other companies). Take extra care to make sure the postmortem document isn’t just a useless list of apologies or excuses or finger-pointing --- that’s not its purpose. A proper postmortem should always contain an explanation of what was learned and what is going to change as a result of the learning experience. Then, make sure that the postmortem is readily accessible and that the team really follows through on the proposed changes. Properly documenting failures also makes it easier for other people (present and future) to know what happened and avoid repeating history. Don’t erase your tracks --- light them up like a runway for those who follow you!
-A good postmortem should include the following:
+自動運転車や気球によるインターネット接続などの「ムーンショット」に取り組む部門であるGoogle Xでは、インセンティブシステムに失敗が意図的に組み込まれています。人々は突飛なアイデアを出し、同僚はそれをできるだけ早く打ち砕くように積極的に働きかけます。また、一定期間内にどれだけ多くのアイデアを否定できるかを競うこともあります。ホワイトボードに書かれたアイデアを全員で否定できなかった場合のみ、そのアイデアは初期のプロトタイプに進みます。
 
-- A brief summary of the event
-- A timeline of the event, from discovery through investigation to resolution
-- The primary cause of the event
-- Impact and damage assessment
-- A set of action items (with owners) to fix the problem immediately
-- A set of action items to prevent the event from happening again
-- Lessons learned
+## 非難されない死後の文化
 
-### Learn patience
+失敗から学ぶための鍵は、原因分析を行い、Googleや他の多くの企業では「Postmortem」と呼ばれているように、失敗を文書化することです。「ポストモーテム」は、謝罪や言い訳、責任のなすりつけ合いのようなものにならないよう、細心の注意を払う必要があります。適切なポストモーテムには、何が学ばれたのか、その結果何が変わるのかという説明が必ず含まれていなければなりません。そして、ポストモーテムにすぐにアクセスできるようにし、チームが提案された変更を実際に実行するようにします。また、失敗を適切に文書化することで、他の人々（現在および未来の人々）が何が起こったのかを知り、歴史を繰り返さないようにすることができます。自分の足跡を消さずに、後に続く人たちのために滑走路のように照らしてあげてください。
 
-Years ago, I was writing a tool to convert CVS repositories to Subversion (and later, Git). Due to the vagaries of CVS, I kept unearthing bizarre bugs. Because my longtime friend and coworker Karl knew CVS quite intimately, we decided we should work together to fix these bugs.
-A problem arose when we began pair programming: I’m a bottom-up engineer who is content to dive into the muck and dig my way out by trying a lot of things quickly and skimming over the details. Karl, however, is a top-down engineer who wants to get the full lay of the land and dive into the implementation of almost every method on the call stack before proceeding to tackle the bug. This resulted in some epic interpersonal conflicts, disagreements, and the occasional heated argument. It got to the point at which the two of us simply couldn’t pair-program together: it was too frustrating for us both.
-That said, we had a longstanding history of trust and respect for each other. Combined with patience, this helped us work out a new method of collaborating. We would sit together at the computer, identify the bug, and then split up and attack the problem from two directions at once (top-down and bottom-up) before coming back together with our findings. Our patience and willingness to improvise new working styles not only saved the project, but also our friendship.
+良いポストモーテムには、以下のものが含まれます。
+
+- イベントの簡単な概要
+- 事件の発見から調査、解決までのタイムライン
+- 事象の主な原因
+- 影響とダメージの評価
+- 問題を直ちに解決するためのアクションアイテム(オーナーを含む)
+- 問題の再発を防止するための一連の行動項目
+- 教訓
+
+### 忍耐力を身につける
+
+数年前、私はCVSリポジトリをSubversion（後にはGit）に変換するツールを書いていました。CVSの気まぐれさのために、私は奇妙なバグを発見し続けていました。私の長年の友人であり同僚でもあるKarlはCVSを熟知していたので、これらのバグを一緒に解決しようと決めました。
+
+しかし、ペアプログラミングを始めてから問題が発生しました。私はボトムアップ型のエンジニアで、泥の中に飛び込んでは、すぐにいろいろなことを試して、細かいところは省略して掘っていくことに満足しています。一方、カールはトップダウン型のエンジニアで、バグに取り組む前に、土地の全体像を把握し、コールスタック上のほとんどすべてのメソッドの実装にまで踏み込みたいと考えていました。その結果、人と人との間で大きな衝突や意見の相違が生じ、時には激しい口論になることもありました。お互いにイライラしてしまい、一緒にペアプログラミングをすることができませんでした。
+
+とはいえ、私たちは長年にわたってお互いを信頼し、尊重し合ってきました。忍耐力があったからこそ、新しい共同作業の方法を編み出すことができたのです。一緒にコンピューターに向かってバグを特定した後、手分けしてトップダウンとボトムアップの2つの方向から同時に問題に取り組み、結果をまとめて戻ってくるのです。私たちの忍耐力と即興的な新しい作業スタイルは、プロジェクトだけでなく、私たちの友情をも救ったのです。
 
 ### Be open to influence
 
-The more open you are to influence, the more you are able to influence; the more vulnerable you are, the stronger you appear. These statements sound like bizarre contradictions. But everyone can think of someone they’ve worked with who is just maddeningly stubborn --- no matter how much people try to persuade them, they dig their heels in even more. What eventually happens to such team members? In our experience, people stop listening to their opinions or objections; instead, they end up “routing around” them like an obstacle everyone takes for granted. You certainly don’t want to be that person, so keep this idea in your head: it’s OK for someone else to change your mind. In the opening chapter of this book, we said that engineering is inherently about trade-offs. It’s impossible for you to be right about everything all the time unless you have an unchanging environment and perfect knowledge, so of course you should change your mind when presented with new evidence. Choose your battles carefully: to be heard properly, you first need to listen to others. It’s better to do this listening before putting a stake in the ground or firmly announcing a decision --- if you’re constantly changing your mind, people will think you’re wishy-washy.
-The idea of vulnerability can seem strange, too. If someone admits ignorance of the topic at hand or the solution to a problem, what sort of credibility will they have in a group? Vulnerability is a show of weakness, and that destroys trust, right?
-Not true. Admitting that you’ve made a mistake or you’re simply out of your league can increase your status over the long run. In fact, the willingness to express vulnerability is an outward show of humility, it demonstrates accountability and the willingness to take responsibility, and it’s a signal that you trust others’ opinions. In return, people end up respecting your honesty and strength. Sometimes, the best thing you can do is just say, “I don’t know.”
-Professional politicians, for example, are notorious for never admitting error or ignorance, even when it’s patently obvious that they’re wrong or unknowledgeable about a subject. This behavior exists primarily because politicians are constantly under attack by their opponents, and it’s why most people don’t believe a word that politicians say. When you’re writing software, however, you don’t need to be continually on the defensive --- your teammates are collaborators, not competitors. You all have the same goal.
+影響を受けることにオープンであればあるほど、より多くの影響を与えることができ、脆弱であればあるほど、より強く見えます。これらの言葉は奇妙な矛盾のように聞こえます。しかし、誰でも一緒に仕事をしたことがある人の中には、どうしようもなく頑固な人を思い浮かべることができます。このような人はどうなるのでしょうか。私たちの経験では、彼らの意見や反対意見に耳を貸さなくなり、誰もが当然と思っている障害物のように、彼らを "迂回 "させてしまうのです。そうならないためにも、「自分の意見を誰かが変えてくれてもいいんだ」ということを頭に入れておきましょう。本書の冒頭で、「エンジニアリングとは本質的にトレードオフの関係にある」と述べました。不変の環境と完璧な知識を持っていない限り、常にすべてが正しいということはあり得ません。ですから、新しい証拠を提示されたら、もちろん考えを変えるべきです。慎重に戦いを選ぶ：きちんと話を聞いてもらうためには、まず自分が人の話を聞く必要があります。自分の考えを変えてばかりいると、「弱気だな」と思われてしまうからだ。
+
+「傷つきやすい」というのも不思議な感じがします。もし誰かが、話題や問題の解決策について無知であることを認めたら、その人はグループの中でどのような信頼を得ることができるでしょうか？脆弱性は弱さの象徴であり、信頼を失うことになるのではないでしょうか？
+
+そんなことはありません。自分がミスをしたことや、自分が手に負えないことを認めることは、長い目で見れば自分の地位を高めることにつながります。実際、弱さを積極的に表現することは、謙虚さの表れであり、説明責任と責任を取る意思を示し、他人の意見を信頼していることを示すシグナルでもあります。その結果、人々はあなたの誠実さと強さを尊敬するようになります。時には、"I don't know "と言うことが最善の方法である場合もあります。
+
+例えば、プロの政治家は、自分が間違っていることや知識がないことが明らかな場合でも、決して間違いや無知を認めないことで有名です。このような行動は、政治家が常に相手から攻撃を受けているために存在するものであり、多くの人が政治家の言うことを信じない理由でもあります。しかし、ソフトウェアを作っているときは、常に守りに入る必要はありません。チームメイトはライバルではなく、協力者です。皆、同じ目標を持っているのですから。
 
 ## Being Googley
 
-At Google, we have our own internal version of the principles of “humility, respect, and trust” when it comes to behavior and human interactions.
-From the earliest days of our culture, we often referred to actions as being “Googley” or “not Googley.” The word was never explicitly defined; rather, everyone just sort of took it to mean “don’t be evil” or “do the right thing” or “be good to each other.” Over time, people also started using the term “Googley” as an informal test for culture-fit whenever we would interview a candidate for an engineering job, or when writing internal performance reviews of one another. People would often express opinions about others using the term; for example, “the person coded well, but didn’t seem to have a very Googley attitude.”
-Of course, we eventually realized that the term “Googley” was being overloaded with meaning; worse yet, it could become a source of unconscious bias in hiring or evaluations. If “Googley” means something different to every employee, we run the risk of the term starting to mean “is just like me.” Obviously, that’s not a good test for hiring  --- we don’t want to hire people “just like me,” but people from a diverse set of backgrounds and with different opinions and experiences. An interviewer’s personal desire to have a beer with a candidate (or coworker) should never be considered a valid signal about somebody else’s performance or ability to thrive at Google.
-Google eventually fixed the problem by explicitly defining a rubric for what we mean by “Googleyness” --- a set of attributes and behaviors that we look for that represent strong leadership and exemplify “humility, respect, and trust”:
+Googleでは、行動や人との関わり方について、「謙虚さ、尊敬、信頼」の原則を独自に社内で定めています。
 
-* Thrives in ambiguity
-  * Can deal with conflicting messages or directions, build consensus, and make progress against a problem, even when the environment is constantly shifting.
-* Values feedback
-  * Has humility to both receive and give feedback gracefully and understands how valuable feedback is for personal (and team) development.
-* Challenges status quo
-  * Is able to set ambitious goals and pursue them even when there might be resistance or inertia from others.
-* Puts the user first
-  * Has empathy and respect for users of Google’s products and pursues actions that are in their best interests.
-* Cares about the team
-  * Has empathy and respect for coworkers and actively works to help them without being asked, improving team cohesion.
-* Does the right thing
-  * Has a strong sense of ethics about everything they do; willing to make difficult or inconvenient decisions to protect the integrity of the team and product.
+Googleの文化の初期の頃から、行動のことを "Googleらしい "とか "Googleらしくない "とか言っていました。この言葉は明確に定義されていたわけではなく、誰もが「悪いことをしない」「正しいことをする」「お互いに良い関係を築く」といった意味で使っていました。そのうちに、エンジニア職の候補者を面接するときや、社内でお互いの業績評価をするときに、カルチャーフィットの非公式なテストとして「Googley」という言葉が使われるようになりました。例えば、「あの人はコーディングは上手だが、あまりGoogleyな態度をとっていないようだ」というように、相手に対する意見をこの言葉で表現することが多かった。
 
-Now that we have these best-practice behaviors better defined, we’ve begun to shy away from using the term “Googley.” It’s always better to be specific about expectations!
+もちろん、"Googley "という言葉には過剰な意味が含まれており、最悪の場合、採用や評価における無意識のバイアスの原因となることに気付きました。もし「Googley」の意味が社員ごとに違っていたら、「私と同じです」という意味になってしまう危険性があります。「私のような人」ではなく、「多様なバックグラウンドを持ち、さまざまな意見や経験を持つ人」を採用したいのです。面接官が候補者（または同僚）と一緒にビールを飲みたいという個人的な願望は、他の人のパフォーマンスやGoogleで成功する能力についての有効なシグナルと考えるべきではありません。
 
-## Conclusion
+この問題を解決するために、グーグルは「グーグルらしさ」を明確に定義しました。それは、強力なリーダーシップを発揮し、「謙虚さ、尊敬、信頼」を体現する一連の属性や行動を求めるものです。
 
-The foundation for almost any software endeavor  --- of almost any size ---  is a well- functioning team. Although the Genius Myth of the solo software developer still persists, the truth is that no one really goes it alone. For a software organization to stand the test of time, it must have a healthy culture, rooted in humility, trust, and respect that revolves around the team, rather than the individual. Further, the creative nature of software development requires that people take risks and occasionally fail; for people to accept that failure, a healthy team environment must exist.
+* 曖昧さの中で成功する
+  * 矛盾するメッセージや方向性に対処し、合意を形成し、環境が常に変化している場合でも、問題を解決することができる。
+* フィードバックを大切にする
+  * 優雅にフィードバックを受け取り、与えることができる謙虚さを持ち、個人（およびチーム）の成長にとってフィードバックがいかに貴重であるかを理解しています。
+* 現状維持への挑戦
+  * 野心的な目標を設定し、他者からの抵抗や惰性があっても、それを追求することができます。
+* ユーザーを第一に考える
+  * グーグル製品のユーザーに共感と敬意を持ち、ユーザーの利益になる行動を追求する。
+* チームを大切にする
+  * 同僚への共感と敬意を持ち、頼まれなくても積極的に協力し、チームの結束力を高める。
+* 正しいことをする
+  * チームと製品の整合性を守るために、困難な決定や不都合な決定を下すことを厭わない。
 
-## TL;DRs
+これらのベスト・プラクティスの行動をより明確に定義した今、私たちは "Googley "という言葉を使うのをためらうようになりました。期待されていることを具体的に示すことは、常に重要なことなのです。
 
-• Be aware of the trade-offs of working in isolation.
-• Acknowledge the amount of time that you and your team spend communicating and in interpersonal conflict. A small investment in understanding personalities and working styles of yourself and others can go a long way toward improving productivity.
-• If you want to work effectively with a team or a large organization, be aware of your preferred working style and that of others.
+## 結論
+
+どんな規模のソフトウェアであっても、その基盤となるのは、うまく機能しているチームです。ソフトウェア開発者は一人で仕事をしているという「天才神話」はいまだに根強く残っていますが、実際には誰も一人で仕事をしているわけではありません。ソフトウェア組織が時の試練に耐えるためには、個人ではなくチームを中心とした謙虚さ、信頼、尊敬に根ざした健全な文化が必要です。さらに、ソフトウェア開発の創造性は、人々がリスクを取り、時には失敗することを必要とします。人々が失敗を受け入れるためには、健全なチーム環境が存在しなければなりません。
+
+## TL;DR
+
+- 孤立して作業することのトレードオフを認識する。
+- あなたやあなたのチームがコミュニケーションや対人関係に費やす時間の長さを認識しましょう。自分や他の人の個性や仕事のスタイルを理解するための小さな投資は、生産性の向上に大きく貢献します。
+- チームや大きな組織で効果的に仕事をしたい場合は、自分と他の人の好みのワークスタイルを意識しましょう。
 
 
 
 
 ----
 
-1 Ben Collins-Sussman, also an author within this book.
-2 Literally, if you are, in fact, a bike designer.
-3 I should note that sometimes it’s dangerous to get too much feedback too early in the process if you’re still unsure of your general direction or goal.
-4 I do, however, acknowledge that serious introverts likely need more peace, quiet, and alone time than most people and might benefit from a quieter environment, if not their own office.
-5 This is incredibly difficult if you’ve been burned in the past by delegating to incompetent people.
-6 You can find a dozen variants of this legend on the web, attributed to different famous managers.
-7 By the same token, if you do the same thing over and over and keep failing, it’s not failure, it’s incompetence.
+1 ベン・コリンズ＝サスマン、本書の著者でもある。
+2 文字通り、あなたが実際に自転車デザイナーであるならば、です。
+3 自分の方向性や目標が定まっていない場合、プロセスの早い段階で多くのフィードバックを得るのは危険な場合があることを指摘しておきます。
+4 しかし、深刻な内向的な性格の人は、普通の人よりも平穏で静かな一人の時間を必要としている可能性が高く、自分のオフィスとまではいかなくても、より静かな環境を必要としていることは認めています。
+5 過去に無能な人に任せて痛い目にあったことがある人には、これは非常に難しいことです。
+6 ウェブ上には、この伝説の様々なバリエーションがあり、それぞれの有名経営者が語っています。
+7 同様に、同じことを何度もやって失敗し続けるなら、それは失敗ではなく、無能です。
 
 
