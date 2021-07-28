@@ -1,130 +1,151 @@
-# Knowledge Sharing
+# 知識の共有
 
 Written by Nina Chen and Mark Barolak
 Edited by Riona MacNamara
 
-Your organization understands your problem domain better than some random person on the internet; your organization should be able to answer most of its own questions. To achieve that, you need both experts who know the answers to those questions and mechanisms to distribute their knowledge, which is what we’ll explore in this chapter. These mechanisms range from the utterly simple (Ask questions; Write down what you know) to the much more structured, such as tutorials and classes. Most importantly, however, your organization needs a culture of learning, and that requires creating the psychological safety that permits people to admit to a lack of knowledge.
+あなたの組織は、インターネット上のランダムな人よりも、あなたの問題領域をよく理解しており、あなたの組織は自分自身の質問のほとんどに答えることができるはずです。そのためには、質問の答えを知っている専門家と、その知識を配布する仕組みが必要です。これらのメカニズムは、（質問をする、知っていることを書き留める）という極めて単純なものから、チュートリアルやクラスのようなはるかに構造的なものまで様々です。しかし、最も重要なことは、組織が学習する文化を持つことであり、そのためには、人々が知識の欠如を認めることができる心理的な安全性を作り出す必要がある。
 
-## Challenges to Learning
+## 学習への挑戦
 
-Sharing expertise across an organization is not an easy task. Without a strong culture of learning, challenges can emerge. Google has experienced a number of these challenges, especially as the company has scaled:
+組織全体で専門知識を共有することは、簡単なことではありません。学習するという強い文化がなければ、課題が出てきます。Googleは、特に会社の規模が大きくなるにつれて、このような課題を数多く経験してきました。
 
-* Lack of psychological safety
-  * An environment in which people are afraid to take risks or make mistakes in front of others because they fear being punished for it. This often manifests as a culture of fear or a tendency to avoid transparency.
-* Information islands
-  * Knowledge fragmentation that occurs in different parts of an organization that don’t communicate with one another or use shared resources. In such an environment, each group develops its own way of doing things.(*1) This often leads to the following:
-  * Information fragmentation
-    * Each island has an incomplete picture of the bigger whole.
-  * Information duplication
-    * Each island has reinvented its own way of doing something.
-  * Information skew
-    * Each island has its own ways of doing the same thing, and these might or might not conflict.
-* Single point of failure (SPOF)
-  * A bottleneck that occurs when critical information is available from only a single person. This is related to bus factor, which is discussed in more detail in Chapter 2.
-  * SPOFs can arise out of good intentions: it can be easy to fall into a habit of “Let me take care of that for you.” But this approach optimizes for short-term efficiency (“It’s faster for me to do it”) at the cost of poor long-term scalability (the team never learns how to do whatever it is that needs to be done). This mindset also tends to lead to all-or-nothing expertise.
-* All-or-nothing expertise
-  * A group of people that is split between people who know “everything” and novices, with little middle ground. This problem often reinforces itself if experts always do everything themselves and don’t take the time to develop new experts through mentoring or documentation. In this scenario, knowledge and responsibilities continue to accumulate on those who already have expertise, and new team members or novices are left to fend for themselves and ramp up more slowly.
-* Parroting
-  * Mimicry without understanding. This is typically characterized by mindlessly copying patterns or code without understanding their purpose, often under the assumption that said code is needed for unknown reasons.
+* 心理的安全性の欠如
+  * 罰を受けることを恐れて、人前でリスクを取ったり、ミスをしたりすることができない環境。これはしばしば、恐怖の文化や透明性を避ける傾向として現れます。
+* 情報の島
+  * 組織の中で、相互に連絡を取らず、共有のリソースを使用しない異なる部分で発生する知識の断片化。このような環境では、それぞれのグループが独自のやり方を確立しています(*1)。 このような環境では、次のようなことがよく起こります。
+  * 情報の断片化
+    * 情報の断片化：それぞれの島が全体を把握できていない。
+  * 情報の重複
+    * それぞれの島が自分のやり方を再構築する。
+  * 情報の偏り
+    * それぞれの島には同じことをする独自の方法があり、それらは衝突するかもしれませんし、しないかもしれません。
+* シングルポイントオブフェイル(SPOF)
+  * 重要な情報が一人の人間からしか得られない場合に発生するボトルネックのこと。これは、第2章で詳しく説明するバスファクターと関連しています。
+  * SPOFは善意で発生することもあります。"私に任せてください "という習慣に陥りがちです。しかし、このアプローチは、短期的な効率性（「私がやったほうが早い」）を最適化しますが、長期的なスケーラビリティが損なわれます（チームは、やらなければならないことがあっても、そのやり方を学ぶことができません）。また、このような考え方は、All-or-nothingの専門知識につながりがちです。
+* All-or-nothing 専門知識
+  * 何でも知っている人と初心者に分かれ、中間がほとんどない集団のこと。この問題は、専門家が常にすべてを自分で行い、メンタリングやドキュメンテーションを通じて新しい専門家を育成する時間を取らない場合に、さらに深刻化します。このシナリオでは、すでに専門知識を持っている人に知識と責任が蓄積されていき、新しいチームメンバーや初心者は自力で何とかしなければならず、成長が遅れることになります。
+* オウム返し
+  * 理解せずに真似をすること。これは一般的に、目的を理解せずにパターンやコードを無意識にコピーすることを特徴とし、しばしばそのコードが未知の理由で必要であると仮定する。
 * Haunted graveyards
-  * Places, often in code, that people avoid touching or changing because they are afraid that something might go wrong. Unlike the aforementioned parroting, haunted graveyards are characterized by people avoiding action because of fear and superstition.
+  * 何か問題が起こるのではないかと恐れて、人々が触ったり変更したりするのを避ける場所、しばしばコードの中にあります。前述のパロディとは異なり、Haunted graveyardsは、人々が恐怖や迷信のために行動を避けるという特徴があります。
 
-In the rest of this chapter, we dive into strategies that Google’s engineering organizations have found to be successful in addressing these challenges.
+本章の残りの部分では、Googleのエンジニアリング組織がこれらの課題に対処するために成功した戦略を紹介します。
 
-## Philosophy
+## 哲学
 
-Software engineering can be defined as the multiperson development of multiversion programs.(*2) People are at the core of software engineering: code is an important output but only a small part of building a product. Crucially, code does not emerge spontaneously out of nothing, and neither does expertise. Every expert was once a novice: an organization’s success depends on growing and investing in its people.
-Personalized, one-to-one advice from an expert is always invaluable. Different team members have different areas of expertise, and so the best teammate to ask for any given question will vary. But if the expert goes on vacation or switches teams, the team can be left in the lurch. And although one person might be able to provide personalized help for one-to-many, this doesn’t scale and is limited to small numbers of “many.”
-Documented knowledge, on the other hand, can better scale not just to the team but to the entire organization. Mechanisms such as a team wiki enable many authors to share their expertise with a larger group. But even though written documentation is more scalable than one-to-one conversations, that scalability comes with some trade- offs: it might be more generalized and less applicable to individual learners’ situations, and it comes with the added maintenance cost required to keep information relevant and up to date over time.
-Tribal knowledge exists in the gap between what individual team members know and what is documented. Human experts know these things that aren’t written down. If we document that knowledge and maintain it, it is now available not only to somebody with direct one-to-one access to the expert today, but to anybody who can find and view the documentation.
-So in a magical world in which everything is always perfectly and immediately documented, we wouldn’t need to consult a person any more, right? Not quite. Written knowledge has scaling advantages, but so does targeted human help. A human expert can synthesize their expanse of knowledge. They can assess what information is applicable to the individual’s use case, determine whether the documentation is still relevant, and know where to find it. Or, if they don’t know where to find the answers, they might know who does.
+ソフトウェアエンジニアリングとは、多バージョンのプログラムを多人数で開発することと定義できます(*2)。コードは重要なアウトプットですが、製品を作る上ではごく一部に過ぎません。重要なのは、コードは何もないところから自然に出てくるものではなく、また専門知識もないということです。専門家もかつては初心者でした。組織の成功は、人材の成長と投資にかかっているのです。
 
-Tribal and written knowledge complement each other. Even a perfectly expert team with perfect documentation needs to communicate with one another, coordinate with other teams, and adapt their strategies over time. No single knowledge-sharing approach is the correct solution for all types of learning, and the particulars of a good mix will likely vary based on your organization. Institutional knowledge evolves over time, and the knowledge-sharing methods that work best for your organization will likely change as it grows. Train, focus on learning and growth, and build your own stable of experts: there is no such thing as too much engineering expertise.
+専門家からの一対一のアドバイスは、常に貴重なものです。チームのメンバーによって専門分野が異なるため、どのような質問をするのが最適かは異なります。しかし、専門家が休暇を取ったり、チームを変えたりすると、チームは孤立してしまいます。また、一人の人間が一対多の個人的なヘルプを提供することはできるかもしれませんが、これはスケールしませんし、少数の "多 "に限定されます。
 
-## Setting the Stage: Psychological Safety
+一方、文書化された知識は、チームだけではなく、組織全体へのスケールアップにも有効です。チームウィキのような仕組みを使えば、多くの著者が自分の専門知識をより大きなグループと共有することができます。しかし、文書化された知識は一対一の会話よりも拡張性が高いとはいえ、その拡張性にはいくつかのトレードオフがある。一般化されていて個々の学習者の状況には適用できないかもしれないし、長期間にわたって情報を適切に更新し続けるためのメンテナンスコストもかかる。
 
-Psychological safety is critical to promoting a learning environment.
-To learn, you must first acknowledge that there are things you don’t understand. We should welcome such honesty rather than punish it. (Google does this pretty well, but sometimes engineers are reluctant to admit they don’t understand something.)
-An enormous part of learning is being able to try things and feeling safe to fail. In a healthy environment, people feel comfortable asking questions, being wrong, and learning new things. This is a baseline expectation for all Google teams; indeed, our research has shown that psychological safety is the most important part of an effective team.
+部族的な知識は、個々のチームメンバーが知っていることと、文書化されていることの間のギャップに存在します。人間の専門家は、文書化されていないことを知っています。その知識を文書化して維持すれば、その専門家と直接1対1で接することができる人だけでなく、文書を見つけて見ることができる人なら誰でも利用できるようになります。
 
-## Mentorship
+では、すべてが常に完璧ですぐに文書化される魔法の世界では、人に相談する必要はなくなるのでしょうか？そうではありません。文書化された知識にはスケールメリットがありますが、対象となる人間の助けも同様です。人間の専門家は、その膨大な知識を統合することができます。その人のユースケースにどのような情報が当てはまるのかを評価し、そのドキュメントが今も有効かどうかを判断し、どこにあるのかを知ることができるのです。また、彼らが答えを見つける場所を知らなくても、知っている人を知っているかもしれません。
 
-At Google, we try to set the tone as soon as a “Noogler” (new Googler) engineer joins the company. One important way of building psychological safety is to assign Nooglers a mentor --- someone who is not their team member, manager, or tech lead ---  whose responsibilities explicitly include answering questions and helping the Noogler ramp up. Having an officially assigned mentor to ask for help makes it easier for the newcomer and means that they don’t need to worry about taking up too much of their coworkers’ time.
-A mentor is a volunteer who has been at Google for more than a year and who is available to advise on anything from using Google infrastructure to navigating Google culture. Crucially, the mentor is there to be a safety net to talk to if the mentee doesn’t know whom else to ask for advice. This mentor is not on the same team as the mentee, which can make the mentee feel more comfortable about asking for help in tricky situations.
-Mentorship formalizes and facilitates learning, but learning itself is an ongoing process. There will always be opportunities for coworkers to learn from one another, whether it’s a new employee joining the organization or an experienced engineer learning a new technology. With a healthy team, teammates will be open not just to answering but also to asking questions: showing that they don’t know something and learning from one another.
+部族間の知識と文書化された知識はお互いに補完し合います。文書化された完璧なエキスパートチームであっても、互いにコミュニケーションをとり、他のチームと調整し、時間の経過とともに戦略を変えていく必要があります。すべてのタイプの学習に適した知識共有の方法はなく、組織によって最適な組み合わせは異なります。組織の知識は時間とともに進化するため、組織にとって最適な知識共有の方法は、組織の成長とともに変化する可能性があります。トレーニングを行い、学習と成長に焦点を当て、独自のエキスパート集団を構築してください。
 
-## Psychological Safety in Large Groups
+## Setting the Stage: 心理的安全性
 
-Asking a nearby teammate for help is easier than approaching a large group of mostly strangers. But as we’ve seen, one-to-one solutions don’t scale well. Group solutions are more scalable, but they are also scarier. It can be intimidating for novices to form a question and ask it of a large group, knowing that their question might be archived for many years. The need for psychological safety is amplified in large groups. Every member of the group has a role to play in creating and maintaining a safe environment that ensures that newcomers are confident asking questions and up-and- coming experts feel empowered to help those newcomers without the fear of having their answers attacked by established experts.
-The most important way to achieve this safe and welcoming environment is for group interactions to be cooperative, not adversarial. Table 3-1 lists some examples of recommended patterns (and their corresponding antipatterns) of group interactions.
+学習環境を整えるためには、心理的安全性が重要です。
 
-Table 3-1. Group interaction patterns
-| Recommended patterns (cooperative) | Antipatterns (adversarial) |
+学ぶためには、まず自分が理解できないことがあることを認めなければなりません。私たちは、そのような正直さを罰するのではなく、歓迎すべきです。(Googleはこの点をよく理解していますが、エンジニアは理解していないことを認めたがらないことがあります。)
+
+学ぶということは、何かに挑戦し、失敗しても大丈夫だと思えることが非常に重要です。健全な環境では、人々は安心して質問したり、間違ったことをしたり、新しいことを学んだりすることができます。実際、心理的安全性は効果的なチームにとって最も重要な要素であることが、グーグルの調査で明らかになっています。
+
+## メンターシップ
+
+グーグルでは、「ヌーグラー」（新しいグーグル人）と呼ばれるエンジニアが入社してきた時点で、その調子を整えようとしています。心理的な安全性を構築するための重要な方法の1つは、ヌーグラーにメンターを割り当てることです。メンターは、チームメンバー、マネージャー、技術リーダーではなく、質問に答えたり、ヌーグラーが立ち上がるのを支援することを明確に責務としています。メンターがいることで、新人は助けを求めやすくなり、同僚の時間を奪うことを心配しなくてもよくなります。
+
+メンターとは、グーグルに1年以上勤務しているボランティアのことで、グーグルのインフラの使い方やグーグルの文化を理解するためのアドバイスをしてくれます。重要なのは、メンティーが他に誰に相談していいかわからないときに、メンターがセーフティネットとして相談に乗ってくれることです。このメンターはメンティーと同じチームではないので、メンティーは厄介な状況でも安心して助けを求めることができます。
+
+メンターシップは学習を公式化し、促進するものですが、学習自体は継続的なプロセスでもあります。組織に加わった新入社員であれ、新しい技術を学んでいる経験豊富なエンジニアであれ、同僚が互いに学び合う機会は常にあります。健全なチームであれば、チームメイトは質問に答えるだけでなく、知らないことを教えてもらい、お互いに学び合うことができます。
+
+## 大人数での心理的安全性
+
+近くにいるチームメイトに助けを求めるのは、ほとんど見知らぬ人ばかりの大集団に近づくよりも簡単です。しかし、これまで見てきたように、1対1の解決策では拡張性がありません。グループでの解決策は拡張性がありますが、怖さもあります。初心者にとって、質問を作って大勢の人に尋ねることは、その質問が何年も保存されるかもしれないと思うと、怖くてできません。大人数のグループでは、心理的な安全性の必要性が高まります。初心者が自信を持って質問でき、新進気鋭の専門家が既存の専門家に自分の答えを攻撃される心配をせずに、新参者を助ける力を得られるような安全な環境を作り、維持するために、グループのメンバー全員が役割を担っている。
+
+このような安全で快適な環境を実現するための最も重要な方法は、グループの相互作用が敵対的ではなく協力的であることである。表3-1は、グループ相互作用の推奨パターン（およびそれに対応するアンチパターン）のいくつかの例を示している。
+
+表3-1. グループの相互作用パターン
+| 推奨パターン(協力) | アンチパターン(敵対的) |
 |:---|:---|
-| Basic questions or mistakes are guided in the proper direction | Basic questions or mistakes are picked on, and the person asking the question is chastised |
-| Explanations are given with the intent of helping the person asking the question learn | Explanations are given with the intent of showing off one’s own knowledge | 
-| Responses are kind, patient, and helpful | Responses are condescending, snarky, and unconstructive |
-| Interactions are shared discussions for finding solutions | Interactions are arguments with “winners” and “losers” |
+| 基本的な疑問やミスを適切な方向に導く | 基本的な質問や間違いが取り上げられ、質問者が叱られる |
+| 説明は、質問者の学習に役立つことを意図して行われます。 | 自分の知識を誇示するために説明をする | 
+| 対応が親切、忍耐強い、親切 | 対応は慇懃無礼で鼻持ちならない、建設的でないものです。 |
+| インタラクションは、解決策を見出すための共有された議論です。 | インタラクションは、"勝者 "と "敗者 "がいる議論である。 |
 
-These antipatterns can emerge unintentionally: someone might be trying to be helpful but is accidentally condescending and unwelcoming. We find the Recurse Center’s social rules to be helpful here:
+このようなアンチパターンは、意図せずに発生することがあります。誰かが親切にしようとしているのに、誤って慇懃無礼な態度をとってしまうことがあるのです。ここでは、Recurse Centerの社会的ルールが役に立ちます。
 
-* No feigned surprise (“What?! I can’t believe you don’t know what the stack is!”)
-  * Feigned surprise is a barrier to psychological safety and makes members of the group afraid of admitting to a lack of knowledge.
-* No “well-actuallys”
-  * Pedantic corrections that tend to be about grandstanding rather than precision.
-* No back-seat driving
-  * Interrupting an existing discussion to offer opinions without committing to the conversation.
-* No subtle “-isms” (“It’s so easy my grandmother could do it!”)
-  * Small expressions of bias (racism, ageism, homophobia) that can make individuals feel unwelcome, disrespected, or unsafe.
+* 驚いたふりをしない（「えっ、スタックが何か知らないなんて信じられない！」）。
+  * 驚きを装うことは、心理的安全性の障害となり、グループのメンバーは知識の欠如を認めることを恐れます。
+* "well-actually "を使わない
+  * 正確さよりも大げさになりがちな衒学的な修正。
+* バックシートドライビングの禁止
+  * 既存の議論を中断して、会話にコミットすることなく意見を述べること。
+* 微妙な「-イズム」（「おばあちゃんにもできるくらい簡単だよ！」）の禁止
+  * 歓迎されていない、軽蔑されている、安全でないと個人が感じるような小さな偏見（人種差別、年齢差別、同性愛嫌悪）の表現。
 
 ## Growing Your Knowledge
 
-Knowledge sharing starts with yourself. It is important to recognize that you always have something to learn. The following guidelines allow you to augment your own personal knowledge.
+知識の共有は、まず自分自身から始まります。常に学ぶべきことがあることを認識することが重要です。以下のガイドラインは、あなたが自分自身の知識を増やすためのものです。
 
-## Ask Questions
+## 質問する
 
-If you take away only a single thing from this chapter, it is this: always be learning; always be asking questions.
-We tell Nooglers that ramping up can take around six months. This extended period is necessary to ramp up on Google’s large, complex infrastructure, but it also reinforces the idea that learning is an ongoing, iterative process. One of the biggest mistakes that beginners make is not to ask for help when they’re stuck. You might be tempted to struggle through it alone or feel fearful that your questions are “too simple.” “I just need to try harder before I ask anyone for help,” you think. Don’t fall into this trap! Your coworkers are often the best source of information: leverage this valuable resource.
-There is no magical day when you suddenly always know exactly what to do in every situation --- there’s always more to learn. Engineers who have been at Google for years still have areas in which they don’t feel like they know what they are doing, and that’s OK! Don’t be afraid to say “I don’t know what that is; could you explain it?” Embrace not knowing things as an area of opportunity rather than one to fear.(*3)
-It doesn’t matter whether you’re new to a team or a senior leader: you should always be in an environment in which there’s something to learn. If not, you stagnate (and should find a new environment).
-It’s especially critical for those in leadership roles to model this behavior: it’s important not to mistakenly equate “seniority” with “knowing everything.” In fact, the more you know, the more you know you don’t know. Openly asking questions(*4) or expressing gaps in knowledge reinforces that it’s OK for others to do the same.
+この章から得られるものが一つだけあるとすれば、それは「常に学び、常に質問をする」ということです。
 
-On the receiving end, patience and kindness when answering questions fosters an environment in which people feel safe looking for help. Making it easier to overcome the initial hesitation to ask a question sets the tone early: reach out to solicit questions, and make it easy for even “trivial” questions to get an answer. Although engineers could probably figure out tribal knowledge on their own, they’re not here to work in a vacuum. Targeted help allows engineers to be productive faster, which in turn makes their entire team more productive.
+私たちは、Nooglerたちに、立ち上げには約6ヶ月かかると言っています。これは、Googleの大規模で複雑なインフラに対応するために必要な期間ですが、同時に、学習は継続的かつ反復的なプロセスであるという考えを強化するためでもあります。初心者が陥りがちなミスのひとつに、行き詰まったときに助けを求めないことがあります。一人で解決しようとしたり、自分の質問が "単純すぎる "と恐れたりすることがあるかもしれません。「誰かに助けを求める前に、もっと頑張らないと」と思うかもしれません。しかし、これではいけません。同僚が最高の情報源であることが多いので、この貴重なリソースを活用してください。
+
+どんな状況でも、突然、何をすべきか正確にわかるようになる魔法のような日はありませんし、学ぶべきことは常にあります。Googleで何年も働いているエンジニアでも、自分が何をしているのか分からない分野があるものですが、それは構いません。恐れずに "それが何なのかわかりませんが、説明してもらえますか？"と言ってください。知らないことを恐れるのではなく、チャンスだと思ってください(*3)。
+
+新入社員であろうと、シニアリーダーであろうと、常に学ぶべきことがある環境に身を置くべきである。そうでなければ、停滞してしまいます（新しい環境を探すべきです）。
+
+特に、リーダーとしての役割を担う人は、この行動の模範となることが重要です。「年長者」を「何でも知っている」と誤解してはいけません。実際には、知れば知るほど、知らないことが多くなるものです。質問(*4)や知識の不足を率直に伝えることで、他の人も同じことをしてもいいんだという意識を持つことができます。
+
+また、質問を受ける側も、根気よく親切に答えてあげることで、安心して相談できる環境が整います。質問をするのをためらう気持ちを抑えて、積極的に質問をし、些細な質問にも答えられるようにしておくことが大切なのです。エンジニアは部族的な知識を自分で理解することができるかもしれませんが、彼らは孤立して仕事をするためにいるわけではありません。的確なサポートがあれば、エンジニアの生産性が向上し、チーム全体の生産性も向上します。
 
 ## Understand Context
 
-Learning is not just about understanding new things; it also includes developing an understanding of the decisions behind the design and implementation of existing things. Suppose that your team inherits a legacy codebase for a critical piece of infrastructure that has existed for many years. The original authors are long gone, and the code is difficult to understand. It can be tempting to rewrite from scratch rather than spend time learning the existing code. But instead of thinking “I don’t get it” and ending your thoughts there, dive deeper: what questions should you be asking?
-Consider the principle of “Chesterson’s fence”: before removing or changing something, first understand why it’s there.
+学習とは、単に新しいものを理解することだけではなく、既存のものの設計や実装の背後にある意思決定を理解することも含まれます。例えば、あなたのチームが何年も前から存在する重要なインフラのレガシーコードベースを引き継いだとします。オリジナルの作者はとっくに亡くなっていて、コードは理解しにくいものです。既存のコードを学ぶのに時間をかけるよりも、ゼロから書き直したいと思うかもしれません。しかし、「わからない」と思ってそこで考えを終わらせるのではなく、もっと深く掘り下げてみましょう：どんな質問をすればいいのか？
 
-> In the matter of reforming things, as distinct from deforming them, there is one plain and simple principle; a principle which will probably be called a paradox. There exists in such a case a certain institution or law; let us say, for the sake of simplicity, a fence or gate erected across a road. The more modern type of reformer goes gaily up to it and says, “I don’t see the use of this; let us clear it away.” To which the more intelligent type of reformer will do well to answer: “If you don’t see the use of it, I certainly won’t let you clear it away. Go away and think. Then, when you can come back and tell me that you do see the use of it, I may allow you to destroy it.”
+「チェスターソンの柵」の原則を考えてみましょう。何かを削除したり変更したりする前に、まずなぜそれがあるのかを理解するのです。
 
-This doesn’t mean that code can’t lack clarity or that existing design patterns can’t be wrong, but engineers have a tendency to reach for “this is bad!” far more quickly than is often warranted, especially for unfamiliar code, languages, or paradigms. Google is not immune to this. Seek out and understand context, especially for decisions that seem unusual. After you’ve understood the context and purpose of the code, consider whether your change still makes sense. If it does, go ahead and make it; if it doesn’t, document your reasoning for future readers.
-Many Google style guides explicitly include context to help readers understand the rationale behind the style guidelines instead of just memorizing a list of arbitrary rules. More subtly, understanding the rationale behind a given guideline allows authors to make informed decisions about when the guideline shouldn’t apply or whether the guideline needs updating. See Chapter 8.
+> 物事を変形させるのではなく、改革するという問題には、一つの単純明快な原則があります。それは、おそらくパラドックスと呼ばれるであろう原則です。このような場合には、ある種の制度や法律が存在しています。単純化のために、道路を横切って建てられたフェンスやゲートのことを考えてみましょう。現代的なタイプの改革者は、そのフェンスに近づいて、「こんなものは使い道がない、なくしてしまおう」と言います。これに対して、より知的なタイプの改革者は、こう答えるのがよいでしょう。「もし、あなたがそれの用途を見出せないなら、私は確かにあなたにそれを片付けさせません。どこかに行って考えなさい。そして、戻ってきて、使い道があると言ってくれたら、壊してもいいかもしれません」。
 
-## Scaling Your Questions: Ask the Community
+これは、コードが明確でなかったり、既存のデザインパターンが間違っていたりすることがないという意味ではありませんが、エンジニアは、特に慣れないコードや言語、パラダイムに対しては、正当な理由がある場合よりもはるかに早く「これはダメだ！」と言ってしまう傾向があります。Googleもこの傾向があります。特に、普通ではないと思われる決定については、文脈を探り、理解します。コードの文脈と目的を理解した後、その変更がまだ意味のあるものかどうかを考えます。意味がある場合はそのまま変更し、意味がない場合はその理由を文書化して後の読者に伝えます。
 
-Getting one-to-one help is high bandwidth but necessarily limited in scale. And as a learner, it can be difficult to remember every detail. Do your future self a favor: when you learn something from a one-to-one discussion, write it down.
-Chances are that future newcomers will have the same questions you had. Do them a favor, too, and share what you write down.
-Although sharing the answers you receive can be useful, it’s also beneficial to seek help not from individuals but from the greater community. In this section, we examine different forms of community-based learning. Each of these approaches --- group chats, mailing lists, and question-and-answer systems --- have different trade-offs and complement one another. But each of them enables the knowledge seeker to get help from a broader community of peers and experts and also ensures that answers are broadly available to current and future members of that community.
+Googleのスタイルガイドの多くは、恣意的なルールのリストを暗記するのではなく、読者がスタイルガイドラインの背景にある理由を理解できるよう、文脈を明示しています。さらに言えば、あるガイドラインの背後にある理論的根拠を理解することで、著者は、そのガイドラインを適用すべきでない場合や、ガイドラインの更新が必要な場合に、十分な情報に基づいた判断を下すことができます。第8章をご覧ください。
 
-### Group Chats
+## Scaling Your Questions: コミュニティに聞く
 
-When you have a question, it can sometimes be difficult to get help from the right person. Maybe you’re not sure who knows the answer, or the person you want to ask is busy. In these situations, group chats are great, because you can ask your question to many people at once and have a quick back-and-forth conversation with whoever is available. As a bonus, other members of the group chat can learn from the question and answer, and many forms of group chat can be automatically archived and searched later.
-Group chats tend to be devoted either to topics or to teams. Topic-driven group chats are typically open so that anyone can drop in to ask a question. They tend to attract experts and can grow quite large, so questions are usually answered quickly. Team- oriented chats, on the other hand, tend to be smaller and restrict membership. As a result, they might not have the same reach as a topic-driven chat, but their smaller size can feel safer to a newcomer.
-Although group chats are great for quick questions, they don’t provide much structure, which can make it difficult to extract meaningful information from a conversation in which you’re not actively involved. As soon as you need to share information outside of the group, or make it available to refer back to later, you should write a document or email a mailing list.
+一対一でサポートを受けることは、帯域は広くても規模は限られています。また、学習者としては、すべての詳細を覚えておくことは難しいでしょう。一対一のディスカッションで何かを学んだら、それを書き留めておいてください。
 
-### Mailing Lists
+将来の自分のためにも、1対1のディスカッションで何かを学んだら、それを書き留めておきましょう。その人たちのためにも、メモしたものを共有しましょう。
 
-Most topics at Google have a topic-users@ or topic-discuss@ Google Groups mailing list that anyone at the company can join or email. Asking a question on a public mailing list is a lot like asking a group chat: the question reaches a lot of people who could potentially answer it and anyone following the list can learn from the answer. Unlike group chats, though, public mailing lists are easy to share with a wider audience: they are packaged into searchable archives, and email threads provide more structure than group chats. At Google, mailing lists are also indexed and can be discovered by Moma, Google’s intranet search engine.
-When you find an answer to a question you asked on a mailing list, it can be tempting to get on with your work. Don’t do it! You never know when someone will need the same information in the future, so it’s a best practice to post the answer back to the list.
-Mailing lists are not without their trade-offs. They’re well suited for complicated questions that require a lot of context, but they’re clumsy for the quick back-and- forth exchanges at which group chats excel. A thread about a particular problem is generally most useful while it is active. Email archives are immutable, and it can be hard to determine whether an answer discovered in an old discussion thread is still relevant to a present-day situation. Additionally, the signal-to-noise ratio can be lower than other mediums like formal documentation because the problem that someone is having with their specific workflow might not be applicable to you.
+受け取った答えを共有することも有益ですが、個人ではなくコミュニティに助けを求めることも有益です。このセクションでは、コミュニティ・ベースド・ラーニングのさまざまな形態を紹介します。グループチャット、メーリングリスト、質疑応答システムなど、それぞれのアプローチには異なるトレードオフがあり、お互いに補完し合っています。しかし、これらのアプローチは、知識を求める人が、仲間や専門家のより広いコミュニティから助けを得ることを可能にし、また、そのコミュニティの現在および将来のメンバーが回答を広く利用できるようにするものである。
+
+### グループチャット
+
+質問があるときに、適切な人に助けを求めるのは難しいことがあります。誰が答えを知っているのかわからない、聞きたい人が忙しいなどの理由からです。そんなとき、グループチャットはとても便利です。一度に多くの人に質問をすることができ、手の空いている人とすぐに会話をすることができます。おまけに、グループチャットの他のメンバーは、その質問と回答から学ぶことができますし、多くの形式のグループチャットは自動的にアーカイブされ、後で検索することができます。
+
+グループチャットは、トピックまたはチームのいずれかに専念する傾向があります。トピック中心のグループチャットは、通常、誰もが質問をするために立ち寄ることができるように開かれています。専門家が集まる傾向にあり、かなりの規模になることもあるので、質問にはすぐに答えられるのが普通です。一方、チーム指向のチャットは小規模で、メンバーを限定する傾向があります。その結果、トピック中心のチャットほどのリーチはありませんが、その小ささは新規参入者にとって安心感があります。
+
+グループチャットは素早い質問には適していますが、あまり構造化されていないため、自分が積極的に参加していない会話から意味のある情報を引き出すことが難しくなります。グループの外で情報を共有したり、後で参照できるようにしたりする必要がある場合は、すぐに文書を書いたり、メーリングリストにメールを送ったりするべきです。
+
+### メーリングリスト
+
+Google のほとんどのトピックには、topic-users@ や topic-discuss@ といった Google Groups のメイ リングリストがあり、社内の誰もが参加したりメールを送ったりすることができます。公開されているメーリングリストで質問をすることは、グループチャットで質問をするのとよく似ています。質問が多くの人に届き、その質問に答えられる可能性があり、メーリングリストをフォローしている人はその答えから学ぶことができます。しかし、グループチャットとは異なり、公開されたメーリングリストはより多くの人と共有することができます。Googleでは、メーリングリストはインデックス化されており、Googleのイントラネット検索エンジンであるMomaで検索することができます。
+
+メーリングリストで質問したことに対する答えが見つかると、仕事に取り掛かりたくなることがあります。しかし、それはやめましょう。将来、誰かが同じ情報を必要とするかどうかはわかりませんから、答えをメーリングリストに投稿するのが最善の方法です。
+
+メーリングリストには、トレードオフがないわけではありません。多くの背景を必要とする複雑な質問には適していますが、グループチャットが得意とする迅速な前後関係のやり取りには不便です。特定の問題に関するスレッドは、通常、そのスレッドがアクティブである間が最も有効です。電子メールのアーカイブは不変であり、古いスレッドで見つけた答えが現在の状況に関連しているかどうかを判断するのは難しいことです。また、誰かが自分のワークフローで抱えている問題は、自分には当てはまらないかもしれないので、正式なドキュメントのような他のメディアよりもS/N比が低くなることがあります。
 
 ---
 
 ### Email at Google
 
 Google culture is infamously email-centric and email-heavy. Google engineers receive hundreds of emails (if not more) each day, with varying degrees of actionability. Nooglers can spend days just setting up email filters to deal with the volume of notifications coming from groups that they’ve been autosubscribed to; some people just give up and don’t try to keep up with the flow. Some groups CC large mailing lists onto every discussion by default, without trying to target information to those who are likely to be specifically interested in it; as a result, the signal-to-noise ratio can be a real problem.
-Google tends toward email-based workflows by default. This isn’t necessarily because email is a better medium than other communications options --- it often isn’t --- rather, it’s because that’s what our culture is accustomed to. Keep this in mind as your organization considers what forms of communication to encourage or invest in.
+Google tends toward email-based workflows by default. This isn’t necessarily because email is a better medium than other communications options—it often isn’t—rather, it’s because that’s what our culture is accustomed to. Keep this in mind as your organization considers what forms of communication to encourage or invest in.
 
 ---
 
@@ -161,7 +182,7 @@ In this section, we focus on spotting opportunities for contributing to and crea
 ### Updating documentation
 
 The first time you learn something is the best time to see ways that the existing documentation and training materials can be improved. By the time you’ve absorbed and understood a new process or system, you might have forgotten what was difficult or what simple steps were missing from the “Getting Started” documentation. At this stage, if you find a mistake or omission in the documentation, fix it! Leave the campground cleaner than you found it,(*7) and try to update the documents yourself, even when that documentation is owned by a different part of the organization.
-At Google, engineers feel empowered to update documentation regardless of who owns it --- and we often do --- even if the fix is as small as correcting a typo. This level of community upkeep increased notably with the introduction of g3doc,(*8) which made it much easier for Googlers to find a documentation owner to review their suggestion. It also leaves an auditable trail of change history no different than that for code.
+At Google, engineers feel empowered to update documentation regardless of who owns it—and we often do—even if the fix is as small as correcting a typo. This level of community upkeep increased notably with the introduction of g3doc,(*8) which made it much easier for Googlers to find a documentation owner to review their suggestion. It also leaves an auditable trail of change history no different than that for code.
 
 ### Creating documentation
 
@@ -185,14 +206,14 @@ Ensuring that expertise is appropriately shared across the organization becomes 
 
 ### Cultivating a Knowledge-Sharing Culture
 
-Organizational culture is the squishy human thing that many companies treat as an afterthought. But at Google, we believe that focusing on the culture and environment first(*9) results in better outcomes than focusing on only the output --- such as the code ---  of that environment.
+Organizational culture is the squishy human thing that many companies treat as an afterthought. But at Google, we believe that focusing on the culture and environment first(*9) results in better outcomes than focusing on only the output—such as the code— of that environment.
 Making major organizational shifts is difficult, and countless books have been written on the topic. We don’t pretend to have all the answers, but we can share specific steps Google has taken to create a culture that promotes learning.
 See the book Work Rules!(*10) for a more in-depth examination of Google’s culture.
 
 #### Respect
 
 The bad behavior of just a few individuals can make an entire team or community unwelcoming. In such an environment, novices learn to take their questions elsewhere, and potential new experts stop trying and don’t have room to grow. In the worst cases, the group reduces to its most toxic members. It can be difficult to recover from this state.
-Knowledge sharing can and should be done with kindness and respect. In tech, tolerance --- or worse, reverence --- of the “brilliant jerk” is both pervasive and harmful, but being an expert and being kind are not mutually exclusive. The Leadership section of Google’s software engineering job ladder outlines this clearly:
+Knowledge sharing can and should be done with kindness and respect. In tech, tolerance—or worse, reverence—of the “brilliant jerk” is both pervasive and harmful, but being an expert and being kind are not mutually exclusive. The Leadership section of Google’s software engineering job ladder outlines this clearly:
 
   Although a measure of technical leadership is expected at higher levels, not all leadership is directed at technical problems. Leaders improve the quality of the people around them, improve the team’s psychological safety, create a culture of teamwork and collaboration, defuse tensions within the team, set an example of Google’s culture and values, and make Google a more vibrant and exciting place to work. Jerks are not good leaders.
 
@@ -209,7 +230,7 @@ Our software engineering ladder, which we use to calibrate rewards like compensa
 
 > See Chapters 5 and 6 for more on leadership.
 
-Job ladder expectations are a top-down way to direct a culture, but culture is also formed from the bottom up. At Google, the peer bonus program is one way we embrace the bottom-up culture. Peer bonuses are a monetary award and formal recognition that any Googler can bestow on any other Googler for above-and-beyond work.(*11) For example, when Ravi sends a peer bonus to Julia for being a top contributor to a mailing list --- regularly answering questions that benefit many readers --- he is publicly recognizing her knowledge-sharing work and its impact beyond her team. Because peer bonuses are employee driven, not management driven, they can have an important and powerful grassroots effect.
+Job ladder expectations are a top-down way to direct a culture, but culture is also formed from the bottom up. At Google, the peer bonus program is one way we embrace the bottom-up culture. Peer bonuses are a monetary award and formal recognition that any Googler can bestow on any other Googler for above-and-beyond work.(*11) For example, when Ravi sends a peer bonus to Julia for being a top contributor to a mailing list—regularly answering questions that benefit many readers—he is publicly recognizing her knowledge-sharing work and its impact beyond her team. Because peer bonuses are employee driven, not management driven, they can have an important and powerful grassroots effect.
 Similar to peer bonuses are kudos: public acknowledgement of contributions (typically smaller in impact or effort than those meriting a peer bonus) that boost the visibility of peer-to-peer contributions.
 When a Googler gives another Googler a peer bonus or kudos, they can choose to copy additional groups or individuals on the award email, boosting recognition of the peer’s work. It’s also common for the recipient’s manager to forward the award email to the team to celebrate one another’s achievements.
 A system in which people can formally and easily recognize their peers is a powerful tool for encouraging peers to keep doing the awesome things they do. It’s not the bonus that matters: it’s the peer acknowledgement.
@@ -217,7 +238,7 @@ A system in which people can formally and easily recognize their peers is a powe
 ### Establishing Canonical Sources of Information
 
 Canonical sources of information are centralized, company-wide corpuses of information that provide a way to standardize and propagate expert knowledge. They work best for information that is relevant to all engineers within the organization, which is otherwise prone to information islands. For example, a guide to setting up a basic developer workflow should be made canonical, whereas a guide for running a local Frobber instance is more relevant just to the engineers working on Frobber.
-Establishing canonical sources of information requires higher investment than maintaining more localized information such as team documentation, but it also has broader benefits. Providing centralized references for the entire organization makes broadly required information easier and more predictable to find and counters problems with information fragmentation that can arise when multiple teams grappling with similar problems produce their own --- often conflicting --- guides.
+Establishing canonical sources of information requires higher investment than maintaining more localized information such as team documentation, but it also has broader benefits. Providing centralized references for the entire organization makes broadly required information easier and more predictable to find and counters problems with information fragmentation that can arise when multiple teams grappling with similar problems produce their own—often conflicting—guides.
 Because canonical information is highly visible and intended to provide a shared understanding at the organizational level, it’s important that the content is actively maintained and vetted by subject matter experts. The more complex a topic, the more critical it is that canonical content has explicit owners. Well-meaning readers might see that something is out of date but lack the expertise to make the significant structural changes needed to fix it, even if tooling makes it easy to suggest updates.
 Creating and maintaining centralized, canonical sources of information is expensive and time consuming, and not all content needs to be shared at an organizational level. When considering how much effort to invest in this resource, consider your audience. Who benefits from this information? You? Your team? Your product area? All engineers?
 
@@ -275,7 +296,7 @@ Code review is mandatory at Google. Every changelist (CL)(*18) requires readabil
 > See Chapter 9 for an overview of the Google code review process and what Approval means in this context.
 
 Within Google, having readability certification is commonly referred to as “having readability” for a language. Engineers with readability have demonstrated that they consistently write clear, idiomatic, and maintainable code that exemplifies Google’s best practices and coding style for a given language. They do this by submitting CLs through the readability process, during which a centralized group of readability reviewers review the CLs and give feedback on how much it demonstrates the various areas of mastery. As authors internalize the readability guidelines, they receive fewer and fewer comments on their CLs until they eventually graduate from the process and formally receive readability. Readability brings increased responsibility: engineers with readability are trusted to continue to apply their knowledge to their own code and to act as reviewers for other engineers’ code.
-Around 1 to 2% of Google engineers are readability reviewers. All reviewers are volunteers, and anyone with readability is welcome to self-nominate to become a readability reviewer. Readability reviewers are held to the highest standards because they are expected not just to have deep language expertise, but also an aptitude for teaching through code review. They are expected to treat readability as first and foremost a mentoring and cooperative process, not a gatekeeping or adversarial one. Readability reviewers and CL authors alike are encouraged to have discussions during the review process. Reviewers provide relevant citations for their comments so that authors can learn about the rationales that went into the style guidelines (“Chesterson’s fence”). If the rationale for any given guideline is unclear, authors should ask for clarification (“ask questions”). Readability is deliberately a human-driven process that aims to scale knowledge in a standardized yet personalized way. As a complementary blend of written and tribal knowledge, readability combines the advantages of written documentation, which can be accessed with citable references, with the advantages of expert human reviewers, who know which guidelines to cite. Canonical guidelines and language recommendations are comprehensively documented --- which is good! --- but the corpus of information is so large(*19) that it can be overwhelming, especially to newcomers.
+Around 1 to 2% of Google engineers are readability reviewers. All reviewers are volunteers, and anyone with readability is welcome to self-nominate to become a readability reviewer. Readability reviewers are held to the highest standards because they are expected not just to have deep language expertise, but also an aptitude for teaching through code review. They are expected to treat readability as first and foremost a mentoring and cooperative process, not a gatekeeping or adversarial one. Readability reviewers and CL authors alike are encouraged to have discussions during the review process. Reviewers provide relevant citations for their comments so that authors can learn about the rationales that went into the style guidelines (“Chesterson’s fence”). If the rationale for any given guideline is unclear, authors should ask for clarification (“ask questions”). Readability is deliberately a human-driven process that aims to scale knowledge in a standardized yet personalized way. As a complementary blend of written and tribal knowledge, readability combines the advantages of written documentation, which can be accessed with citable references, with the advantages of expert human reviewers, who know which guidelines to cite. Canonical guidelines and language recommendations are comprehensively documented—which is good!—but the corpus of information is so large(*19) that it can be overwhelming, especially to newcomers.
 
 ### Why Have This Process?
 
@@ -289,9 +310,9 @@ These benefits come with some costs: readability is a heavyweight process compar
 - Scaling disadvantages of being a human-driven process. Limited to scaling linearly to organization growth because it depends on human reviewers doing specialized code reviews.
 
 The question, then, is whether the benefits outweigh the costs. There’s also the factor of time: the full effect of the benefits versus the costs are not on the same timescale. The program makes a deliberate trade-off of increased short-term code-review latency and upfront costs for the long-term payoffs of higher-quality code, repository-wide code consistency, and increased engineer expertise. The longer timescale of the benefits comes with the expectation that code is written with a potential lifetime of years, if not decades.(*21)
-As with most --- or perhaps all --- engineering processes, there’s always room for improvement. Some of the costs can be mitigated with tooling. A number of readability comments address issues that could be detected statically and commented on automatically by static analysis tooling. As we continue to invest in static analysis, readability reviewers can increasingly focus on higher-order areas, like whether a particular block of code is understandable by outside readers who are not intimately familiar with the codebase instead of automatable detections like whether a line has trailing whitespace.
+As with most—or perhaps all—engineering processes, there’s always room for improvement. Some of the costs can be mitigated with tooling. A number of readability comments address issues that could be detected statically and commented on automatically by static analysis tooling. As we continue to invest in static analysis, readability reviewers can increasingly focus on higher-order areas, like whether a particular block of code is understandable by outside readers who are not intimately familiar with the codebase instead of automatable detections like whether a line has trailing whitespace.
 But aspirations aren’t enough. Readability is a controversial program: some engineers complain that it’s an unnecessary bureaucratic hurdle and a poor use of engineer time. Are readability’s trade-offs worthwhile? For the answer, we turned to our trusty Engineering Productivity Research (EPR) team.
-The EPR team performed in-depth studies of readability, including but not limited to whether people were hindered by the process, learned anything, or changed their behavior after graduating. These studies showed that readability has a net positive impact on engineering velocity. CLs by authors with readability take statistically significantly less time to review and submit than CLs by authors who do not have readability.(*22) Self-reported engineer satisfaction with their code quality --- lacking more objective measures for code quality --- is higher among engineers who have readability versus those who do not. A significant majority of engineers who complete the program report satisfaction with the process and find it worthwhile. They report learning from reviewers and changing their own behavior to avoid readability issues when writing and reviewing code.
+The EPR team performed in-depth studies of readability, including but not limited to whether people were hindered by the process, learned anything, or changed their behavior after graduating. These studies showed that readability has a net positive impact on engineering velocity. CLs by authors with readability take statistically significantly less time to review and submit than CLs by authors who do not have readability.(*22) Self-reported engineer satisfaction with their code quality—lacking more objective measures for code quality—is higher among engineers who have readability versus those who do not. A significant majority of engineers who complete the program report satisfaction with the process and find it worthwhile. They report learning from reviewers and changing their own behavior to avoid readability issues when writing and reviewing code.
 
 > For an in-depth look at this study and Google’s internal engineering productivity research, see Chapter 7.
 
@@ -315,7 +336,7 @@ Knowledge is in some ways the most important (though intangible) capital of a so
 
 1 In other words, rather than developing a single global maximum, we have a bunch of local maxima.
 2 David Lorge Parnas, Software Engineering: Multi-person Development of Multi-version Programs (Heidelberg: Springer-Verlag Berlin, 2011).
-3 Impostor syndrome is not uncommon among high achievers, and Googlers are no exception --- in fact, a majority of this book’s authors have impostor syndrome. We acknowledge that fear of failure can be difficult for those with impostor syndrome and can reinforce an inclination to avoid branching out.
+3 Impostor syndrome is not uncommon among high achievers, and Googlers are no exception—in fact, a majority of this book’s authors have impostor syndrome. We acknowledge that fear of failure can be difficult for those with impostor syndrome and can reinforce an inclination to avoid branching out.
 4 See “How to ask good questions.”
 5 https://talksat.withgoogle.com and https://www.youtube.com/GoogleTechTalks, to name a few.
 7 See “The Boy Scout Rule” and Kevlin Henney, 97 Things Every Programmer Should Know (Boston: O’Reilly, 2010).
