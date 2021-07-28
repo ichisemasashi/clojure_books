@@ -142,47 +142,52 @@ Google のほとんどのトピックには、topic-users@ や topic-discuss@ �
 
 ---
 
-### Email at Google
+### Googleでのメール
 
-Google culture is infamously email-centric and email-heavy. Google engineers receive hundreds of emails (if not more) each day, with varying degrees of actionability. Nooglers can spend days just setting up email filters to deal with the volume of notifications coming from groups that they’ve been autosubscribed to; some people just give up and don’t try to keep up with the flow. Some groups CC large mailing lists onto every discussion by default, without trying to target information to those who are likely to be specifically interested in it; as a result, the signal-to-noise ratio can be a real problem.
-Google tends toward email-based workflows by default. This isn’t necessarily because email is a better medium than other communications options—it often isn’t—rather, it’s because that’s what our culture is accustomed to. Keep this in mind as your organization considers what forms of communication to encourage or invest in.
+Google の文化は、悪名高いように、メール中心でメールを多用しています。Google のエンジニアは毎日何百通ものメールを受け取りますが、そのアクションの度合いは様々です。自動登録したグループから送られてくる大量の通知に対応するために、メールフィルターの設定だけで何日も費やしてしまうNooglerもいますし、あきらめて流れに乗らない人もいます。一部のグループでは、大規模なメーリングリストをデフォルトですべてのディスカッションに参加させ、特に興味を持ちそうな人に情報を絞り込もうとしません。
+
+Googleはデフォルトでメールベースのワークフローを採用しています。これは、必ずしもメールが他のコミュニケーション手段よりも優れているからというわけではありません（しばしばそうではありません）。このことを念頭に置いて、どのようなコミュニケーション手段を奨励したり、投資したりするかを検討してみてください。
 
 ---
 
-### YAQS: Question-and-Answer Platform
+### YAQS: 質問・回答プラットフォーム
 
-YAQS (“Yet Another Question System”) is a Google-internal version of a Stack Overflow–like website, making it easy for Googlers to link to existing or work-in-progress code as well as discuss confidential information.
-Like Stack Overflow, YAQS shares many of the same advantages of mailing lists and adds refinements: answers marked as helpful are promoted in the user interface, and users can edit questions and answers so that they remain accurate and useful as code and facts change. As a result, some mailing lists have been superseded by YAQS, whereas others have evolved into more general discussion lists that are less focused on problem solving.
+YAQS ("Yet Another Question System")は、Stack OverflowのようなウェブサイトのGoogle内部版で、Googlerが既存のコードやワークインプログレスのコードにリンクしたり、機密情報を話し合ったりすることを容易にします。
 
-## Scaling Your Knowledge: You Always Have Something to Teach
+YAQSはStack Overflowと同様に、メーリングリストの利点を多く共有し、さらに改良を加えています。有用であるとマークされた回答はユーザーインターフェースで促進され、ユーザーは質問と回答を編集することができるため、コードや事実が変化しても正確で有用な回答を維持することができます。その結果、いくつかのメーリングリストはYAQSに取って代わられましたが、他のメーリングリストは問題解決に焦点を当てていない、より一般的なディスカッションリストに進化しました。
 
-Teaching is not limited to experts, nor is expertise a binary state in which you are either a novice or an expert. Expertise is a multidimensional vector of what you know: everyone has varying levels of expertise across different areas. This is one of the reasons why diversity is critical to organizational success: different people bring different perspectives and expertise to the table (see Chapter 4). Google engineers teach others in a variety of ways, such as office hours, giving tech talks, teaching classes, writing documentation, and reviewing code.
+## Scaling Your Knowledge: 教えるべきことは常にある
 
-### Office Hours
+教えることは専門家に限ったことではありませんし、専門知識は初心者か専門家かの二元的な状態ではありません。専門知識とは、自分が何を知っているかという多次元的なベクトルであり、誰もがさまざまな分野でさまざまなレベルの専門知識を持っています。これが、組織の成功に多様性が欠かせない理由の一つです。人によって異なる視点や専門知識がもたらされるからです（第4章参照）。グーグルのエンジニアは、オフィスアワー、技術講演、授業、ドキュメントの作成、コードのレビューなど、さまざまな方法で人に教えています。
 
-Sometimes it’s really important to have a human to talk to, and in those instances, office hours can be a good solution. Office hours are a regularly scheduled (typically weekly) event during which one or more people make themselves available to answer questions about a particular topic. Office hours are almost never the first choice for knowledge sharing: if you have an urgent question, it can be painful to wait for the next session for an answer; and if you’re hosting office hours, they take up time and need to be regularly promoted. That said, they do provide a way for people to talk to an expert in person. This is particularly useful if the problem is still ambiguous enough that the engineer doesn’t yet know what questions to ask (such as when they’re just starting to design a new service) or whether the problem is about something so specialized that there just isn’t documentation on it.
+### オフィスアワー
 
-### Tech Talks and Classes
+時には、人間と話をすることが本当に重要なことがあります。そのような場合には、オフィスアワーが有効な手段となります。オフィスアワーとは、定期的に（通常は毎週）開催されるイベントで、1人または複数の人が特定のトピックについての質問に答えるために自分の席を用意します。緊急の質問がある場合、次のセッションまで回答を待つのは苦痛ですし、オフィスアワーを開催する場合は、時間がかかり、定期的に宣伝する必要があります。しかし、オフィスアワーは、専門家と直接話をすることができます。例えば、新しいサービスの設計を始めたばかりで、何を質問すればいいのかわからないような曖昧な問題の場合や、ドキュメントがないような特殊な問題の場合には、特に有効です。
 
-Google has a robust culture of both internal and external(*5) tech talks and classes. Our engEDU (Engineering Education) team focuses on providing Computer Science education to many audiences, ranging from Google engineers to students around the world. At a more grassroots level, our g2g (Googler2Googler) program lets Googlers sign up to give or attend talks and classes from fellow Googlers.(*6) The program is wildly successful, with thousands of participating Googlers teaching topics from the technical (e.g., “Understanding Vectorization in Modern CPUs”) to the just-for-fun (e.g., “Beginner Swing Dance”).
-Tech talks typically consist of a speaker presenting directly to an audience. Classes, on the other hand, can have a lecture component but often center on in-class exercises and therefore require more active participation from attendees. As a result, instructor-led classes are typically more demanding and expensive to create and maintain than tech talks and are reserved for the most important or difficult topics. That said, after a class has been created, it can be scaled relatively easily because many instructors can teach a class from the same course materials. We’ve found that classes tend to work best when the following circumstances exist:
+### 技術講演と授業
 
-- The topic is complicated enough that it’s a frequent source of misunderstanding. Classes take a lot of work to create, so they should be developed only when they’re addressing specific needs.
-- The topic is relatively stable. Updating class materials is a lot of work, so if the subject is rapidly evolving, other forms of sharing knowledge will have a better bang for the buck.
-- The topic benefits from having teachers available to answer questions and provide personalized help. If students can easily learn without directed help, self- serve mediums like documentation or recordings are more efficient. A number of introductory classes at Google also have self-study versions.
-- There is enough demand to offer the class regularly. Otherwise, potential learners will get the information they need in other ways rather than waiting for the class. At Google, this is particularly a problem for small, geographically remote offices.
+Googleでは、社内外(*5)で技術講演や授業を行う文化が根付いています。engEDU (Engineering Education) チームは、グーグルのエンジニアから世界中の学生まで、多くの人々にコンピュータサイエンスの教育を提供することに注力しています。このプログラムは大きな成功を収めており、何千人ものグーグル社員が、技術的なトピック（例：「最新のCPUにおけるベクタライゼーションの理解」）から、気軽に楽しめるトピック（例：「初心者向けのスウィングダンス」）まで、さまざまなトピックを教えています(*6)。
 
-### Documentation
+技術講演では、講演者が聴衆に向かって直接プレゼンテーションを行うのが一般的です。一方、クラスは、講義の要素もありますが、クラス内での演習が中心となるため、参加者の積極的な参加が必要となります。そのため、インストラクター主導のクラスは、テックトークに比べて作成や維持にかかる費用が大きく、最も重要で難しいテーマに限られます。しかし、クラスを作成した後は、多くのインストラクターが同じ教材を使ってクラスを教えることができるため、比較的簡単に規模を拡大することができます。私たちは、次のような状況下で、クラスが最も効果的に機能することを発見しました。
 
-Documentation is written knowledge whose primary goal is to help its readers learn something. Not all written knowledge is necessarily documentation, although it can be useful as a paper trail. For example, it’s possible to find an answer to a problem in a mailing list thread, but the primary goal of the original question on the thread was to seek answers, and only secondarily to document the discussion for others.
-In this section, we focus on spotting opportunities for contributing to and creating formal documentation, from small things like fixing a typo to larger efforts such as documenting tribal knowledge.
+- このテーマは複雑なので、誤解が生じることが多い。クラスの作成には多大な労力を要するため、特定のニーズに対応する場合にのみ開発すべきである。
+- トピックが比較的安定している。クラスの教材を更新するのは大変なので、テーマが急速に進化している場合は、他の方法で知識を共有した方が効果的です。
+- 教師が質問に答えたり、個人的なサポートをしたりすることで、そのトピックにメリットがある。生徒が指示された助けを借りずに簡単に学べる場合は、ドキュメントや録音のようなセルフサービス型の媒体の方が効率的です。Googleの入門講座にも自習用のものが多数あります。
+- そのクラスを定期的に提供するだけの需要があります。そうでなければ、潜在的な学習者は、授業を待たずに他の方法で必要な情報を手に入れてしまうだろう。グーグルでは、地理的に離れた小規模なオフィスでは、特にこの点が問題となる。
 
-> For a more comprehensive discussion of documentation, see Chapter 10.
+### ドキュメント
 
-### Updating documentation
+ドキュメンテーションとは、読者が何かを学ぶのを助けることを主な目的とした、書かれた知識のことです。文書化された知識のすべてが必ずしも文書化されているわけではありませんが、文書化された知識は記録として有用な場合があります。例えば、メーリングリストのスレッドで問題の答えを見つけることは可能ですが、スレッドでの最初の質問の主な目的は、答えを探すことであり、他の人のために議論を記録することは二の次でした。
 
-The first time you learn something is the best time to see ways that the existing documentation and training materials can be improved. By the time you’ve absorbed and understood a new process or system, you might have forgotten what was difficult or what simple steps were missing from the “Getting Started” documentation. At this stage, if you find a mistake or omission in the documentation, fix it! Leave the campground cleaner than you found it,(*7) and try to update the documents yourself, even when that documentation is owned by a different part of the organization.
-At Google, engineers feel empowered to update documentation regardless of who owns it—and we often do—even if the fix is as small as correcting a typo. This level of community upkeep increased notably with the introduction of g3doc,(*8) which made it much easier for Googlers to find a documentation owner to review their suggestion. It also leaves an auditable trail of change history no different than that for code.
+このセクションでは、タイプミスの修正のような小さなことから、部族間の知識の文書化のような大きな取り組みまで、正式な文書に貢献したり作成したりする機会を見つけることに焦点を当てます。
+
+> ドキュメントについてのより包括的な議論は、第10章を参照してください。
+
+### ドキュメントの更新
+
+最初に何かを学んだときは、既存のドキュメントやトレーニング教材を改善するための最良のタイミングです。新しいプロセスやシステムを吸収して理解した頃には、何が難しかったのか、「はじめに」のドキュメントに欠けていた簡単なステップは何だったのか、忘れてしまっているかもしれません。この段階で、もし資料に間違いや抜けがあれば、それを修正しましょう。また、ドキュメントの所有者が組織内の別の場所であっても、自分でドキュメントを更新するようにしましょう(*7)。
+
+グーグルでは、エンジニアはドキュメントの所有者が誰であるかに関わらず、ドキュメントを更新する権限を与えられていると感じており、タイプミスを修正する程度の小さな修正であっても、しばしば更新している。このようなコミュニティの維持管理は、g3doc(*8)の導入により、グーグルのエンジニアが自分の提案をレビューしてくれるドキュメントの所有者を見つけるのが非常に簡単になったことで顕著になりました。また、コードと同じように、変更履歴を監査可能な形で残すことができます。
 
 ### Creating documentation
 
