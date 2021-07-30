@@ -1,36 +1,44 @@
-# Engineering for Equity
+# 公平性のためのエンジニアリング
 
 Written by Demma Rodriguez
 Edited by Riona MacNamara
 
 
-In earlier chapters, we’ve explored the contrast between programming as the production of code that addresses the problem of the moment, and software engineering as the broader application of code, tools, policies, and processes to a dynamic and ambiguous problem that can span decades or even lifetimes. In this chapter, we’ll discuss the unique responsibilities of an engineer when designing products for a broad base of users. Further, we evaluate how an organization, by embracing diversity, can design systems that work for everyone, and avoid perpetuating harm against our users.
-As new as the field of software engineering is, we’re newer still at understanding the impact it has on underrepresented people and diverse societies. We did not write this chapter because we know all the answers. We do not. In fact, understanding how to engineer products that empower and respect all our users is still something Google is learning to do. We have had many public failures in protecting our most vulnerable users, and so we are writing this chapter because the path forward to more equitable products begins with evaluating our own failures and encouraging growth.
-We are also writing this chapter because of the increasing imbalance of power between those who make development decisions that impact the world and those who simply must accept and live with those decisions that sometimes disadvantage already marginalized communities globally. It is important to share and reflect on what we’ve learned so far with the next generation of software engineers. It is even more important that we help influence the next generation of engineers to be better than we are today.
-Just picking up this book means that you likely aspire to be an exceptional engineer. You want to solve problems. You aspire to build products that drive positive outcomes for the broadest base of people, including people who are the most difficult to reach. To do this, you will need to consider how the tools you build will be leveraged to change the trajectory of humanity, hopefully for the better.
+これまでの章では、その時々の問題を解決するためにコードを作成するプログラミングと、数十年、あるいは一生をかけて取り組まなければならないダイナミックで曖昧な問題に対して、コード、ツール、ポリシー、プロセスなどを幅広く適用するソフトウェアエンジニアリングとの対比について説明してきました。本章では、広範なユーザーを対象とした製品を設計する際に、エンジニアが果たすべき独自の責任について説明します。さらに、多様性を受け入れることで、組織がどのようにして誰にでも役立つシステムを設計し、ユーザーに対する被害を永続させないようにするかを評価します。
 
-## Bias Is the Default
+ソフトウェアエンジニアリングの分野は新しいものですが、その分野が社会的弱者や多様な社会に与える影響を理解することは、まだまだ新しいと言えます。私たちは、すべての答えを知っているからこの章を書いたわけではありません。そうではないのです。実際、すべてのユーザーに力を与え、尊重するような製品を作る方法を理解することは、Googleがまだ学んでいるところです。私たちは、最も弱い立場にあるユーザーを守るために多くの失敗をしてきました。だからこそ、より公平な製品への道は、自らの失敗を評価し、成長を促すことから始まると考え、この章を書いています。
 
-When engineers do not focus on users of different nationalities, ethnicities, races, genders, ages, socioeconomic statuses, abilities, and belief systems, even the most talented staff will inadvertently fail their users. Such failures are often unintentional; all people have certain biases, and social scientists have recognized over the past several decades that most people exhibit unconscious bias, enforcing and promulgating existing stereotypes. Unconscious bias is insidious and often more difficult to mitigate than intentional acts of exclusion. Even when we want to do the right thing, we might not recognize our own biases. By the same token, our organizations must also recognize that such bias exists and work to address it in their workforces, product development, and user outreach.
-Because of bias, Google has at times failed to represent users equitably within their products, with launches over the past several years that did not focus enough on underrepresented groups. Many users attribute our lack of awareness in these cases to the fact that our engineering population is mostly male, mostly White or Asian, and certainly not representative of all the communities that use our products. The lack of representation of such users in our workforce(*1) means that we often do not have the requisite diversity to understand how the use of our products can affect underrepresented or vulnerable users.
+また、世界に影響を与える開発決定を下す人々と、その決定を受け入れて生きていかなければならない人々との間の力関係がますます不均衡になってきているため、この章を書いています。これまでに学んだことを次世代のソフトウェアエンジニアと共有し、振り返ることは重要です。また、次世代のエンジニアに影響を与え、現在の私たちよりも優れた人材を育成することは、さらに重要なことです。
+
+この本を手に取るだけでも、あなたは優れたエンジニアになりたいと思っているはずです。問題を解決したいと思っている。到達するのが最も困難な人々を含む、より多くの人々にポジティブな結果をもたらす製品を作りたいと思っているはずです。そのためには、自分が作ったツールがどのように活用され、人類の軌道を変えていくのか、できれば良い方向に持っていきたいと考えているはずです。
+
+## バイアスはデフォルト
+
+エンジニアが、国籍、民族、人種、性別、年齢、社会経済的地位、能力、信念体系などが異なるユーザーに焦点を当てていない場合、どんなに優秀なスタッフでも、不注意でユーザーの期待を裏切ってしまうことがあります。このような失敗は意図的ではないことが多い。すべての人は特定の偏見を持っており、社会科学者たちは過去数十年の間に、ほとんどの人が無意識の偏見を持ち、既存の固定観念を強要し、広めていることを認識している。無意識の偏見は陰湿で、意図的な排除行為よりも軽減するのが難しい場合があります。正しいことをしたいと思っていても、自分の偏見に気づかないことがあります。同様に、組織もそのような偏見が存在することを認識し、従業員、製品開発、ユーザーへの働きかけの中で、その偏見に対処しなければなりません。
+
+Googleは、過去数年間に発売した製品において、偏見のために、ユーザーを公平に代表することができなかったことがあります。多くのユーザーは、グーグルのエンジニアの多くが男性で、白人やアジア人が多く、グーグル製品を使用するすべてのコミュニティを代表していないことが、このようなケースに対するグーグルの認識不足の原因だと考えています。このようなユーザーが当社の従業員に含まれていない(*1)ということは、当社製品の使用が社会的弱者にどのような影響を与えるかを理解するのに必要な多様性がないことを意味しています。
 
 ---
 
-### Case Study: Google Misses the Mark on Racial Inclusion
+### ケーススタディ 人種の取り込みに失敗したGoogle
 
-In 2015, software engineer Jacky Alciné pointed out(*2) that the image recognition algorithms in Google Photos were classifying his black friends as “gorillas.” Google was slow to respond to these mistakes and incomplete in addressing them.
-What caused such a monumental failure? Several things:
-- Image recognition algorithms depend on being supplied a “proper” (often meaning “complete”) dataset. The photo data fed into Google’s image recognition algorithm was clearly incomplete. In short, the data did not represent the population.
-- Google itself (and the tech industry in general) did not (and does not) have much black representation,(*3) and that affects decisions subjective in the design of such algorithms and the collection of such datasets. The unconscious bias of the organization itself likely led to a more representative product being left on the table.
-- Google’s target market for image recognition did not adequately include such underrepresented groups. Google’s tests did not catch these mistakes; as a result, our users did, which both embarrassed Google and harmed our users.
+2015年、ソフトウェアエンジニアのジャッキー・アルシネは、Googleフォトの画像認識アルゴリズムが、黒人の友人を "ゴリラ "と分類していることを指摘しました(*2)。グーグルはこうしたミスへの対応が遅く、不完全だった。
 
-As late as 2018, Google still had not adequately addressed the underlying problem.(*4)
+このような重大な失敗の原因は何か。いくつか理由がある。
+
+- 画像認識アルゴリズムは、「適切な」（多くの場合「完全な」という意味）データセットが提供されることに依存している。Googleの画像認識アルゴリズムに投入された写真データは、明らかに不完全なものでした。つまり、そのデータは人口を代表するものではなかったのだ。
+- グーグル社（およびハイテク産業全般）には、黒人の代表者があまりいなかった（現在もいない）(*3)ため、このようなアルゴリズムの設計やデータセットの収集において、主観的な判断に影響を与えている。組織自体の無意識のバイアスにより、より代表的な製品がテーブルの上に残されてしまったのだろう。
+- グーグルの画像認識のターゲット市場には、このような代表性の低いグループが十分に含まれていなかった。Googleのテストではこれらのミスを発見できず、結果的にユーザーがミスを犯してしまい、Googleに恥をかかせ、ユーザーにも損害を与えてしまいました。
+
+2018年になっても、Googleは根本的な問題に適切に対処していませんでした(*4)。
 
 -----
 
-In this example, our product was inadequately designed and executed, failing to properly consider all racial groups, and as a result, failed our users and caused Google bad press. Other technology suffers from similar failures: autocomplete can return offensive or racist results. Google’s Ad system could be manipulated to show racist or offensive ads. YouTube might not catch hate speech, though it is technically outlawed on that platform.
-In all of these cases, the technology itself is not really to blame. Autocomplete, for example, was not designed to target users or to discriminate. But it was also not resilient enough in its design to exclude discriminatory language that is considered hate speech. As a result, the algorithm returned results that caused harm to our users. The harm to Google itself should also be obvious: reduced user trust and engagement with the company. For example, Black, Latinx, and Jewish applicants could lose faith in Google as a platform or even as an inclusive environment itself, therefore undermining Google’s goal of improving representation in hiring.
-How could this happen? After all, Google hires technologists with impeccable education and/or professional experience --- exceptional programmers who write the best code and test their work. “Build for everyone” is a Google brand statement, but the truth is that we still have a long way to go before we can claim that we do. One way to address these problems is to help the software engineering organization itself look like the populations for whom we build products.
+この例では、製品の設計と実行が不適切で、すべての人種を適切に考慮することができず、その結果、ユーザーを失望させ、Googleに悪評をもたらしました。オートコンプリートは、攻撃的または人種差別的な結果を返す可能性があります。Googleの広告システムは、人種差別的または攻撃的な広告を表示するように操作される可能性があります。YouTubeでは、ヘイトスピーチが技術的に禁止されているにもかかわらず、キャッチできない場合があります。
+
+これらのケースでは、テクノロジー自体にはあまり責任はありません。例えば、オートコンプリートは、ユーザーをターゲットにしたり、差別したりするために設計されたものではありません。しかし、ヘイトスピーチとされる差別的な言葉を除外するほどの弾力性のある設計でもありませんでした。その結果、アルゴリズムはユーザーに害を与える結果を返してしまいました。また、Google自体の害も明らかなはずです。ユーザーの信頼と会社へのエンゲージメントの低下です。例えば、黒人、ラテン系、ユダヤ系の応募者は、プラットフォームとしての Google、あるいは包括的な環境そのものへの信頼を失い、その結果、採用における代表性を向上させるという Google の目標が損なわれる可能性があります。
+
+なぜこのようなことが起こるのでしょうか？結局のところ、グーグルは非の打ちどころのない学歴や職歴を持つ技術者を採用しています。最高のコードを書き、自分の仕事をテストする優れたプログラマーです。"Build for everyone "はGoogleのブランドステートメントですが、実際のところ、私たちがそうだと主張できるようになるまでには、まだ長い道のりがあるのです。これらの問題に対処する一つの方法は、ソフトウェアエンジニアリングの組織自体が、製品を作る対象となる人々と同じように見えるようにすることです。
 
 ## Understanding the Need for Diversity
 

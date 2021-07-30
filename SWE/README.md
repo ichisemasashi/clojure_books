@@ -14,6 +14,9 @@ PART II 文化
 
 [ch03: Knowledge Sharing](docs/CHAPTER%2003.md)
 
+[ch04: Engineering for Equity](docs/CHAPTER%2004.md)
+
+
 
 
 www.DeepL.com/Translator（無料版）で翻訳しました。
