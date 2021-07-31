@@ -16,7 +16,7 @@ PART II 文化
 
 [ch04: Engineering for Equity](docs/CHAPTER%2004.md)
 
-
+[ch05: How to Lead a Team](docs/CHAPTER%2005.md)
 
 
 www.DeepL.com/Translator（無料版）で翻訳しました。
