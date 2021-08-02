@@ -1,12 +1,14 @@
-# How to Lead a Team
+# チームリーダーとしての心得
 
 Written by Brian Fitzpatrick
 Edited by Riona MacNamara
 
 
-We’ve covered a lot of ground so far on the culture and composition of teams writing software, and in this chapter, we’ll take a look at the person ultimately responsible for making it all work.
-No team can function well without a leader, especially at Google, where engineering is almost exclusively a team endeavor. At Google, we recognize two different leadership roles. A Manager is a leader of people, whereas a Tech Lead leads technology efforts. Although the responsibilities of these two roles require similar planning skills, they require quite different people skills.
-A boat without a captain is nothing more than a floating waiting room: unless someone grabs the rudder and starts the engine, it’s just going to drift along aimlessly with the current. A piece of software is just like that boat: if no one pilots it, you’re left with a group of engineers burning up valuable time, just sitting around waiting for something to happen (or worse, still writing code that you don’t need). Although this chapter is about people management and technical leadership, it is still worth a read if you’re an individual contributor because it will likely help you understand your own leaders a bit better.
+ソフトウェアを開発するチームの文化や構成について説明してきましたが、この章では、チームをうまく機能させるための最終的な責任者について説明します。
+
+チームはリーダーなしではうまく機能しません。特にグーグルでは、エンジニアリングはほとんどがチームで行われます。Googleでは、2つの異なるリーダーの役割を認識しています。マネージャーは人のリーダーであり、テックリードは技術面でのリーダーです。この2つの役割の責任は、似たような計画能力を必要としますが、必要とされる人間力は全く異なります。
+
+船長のいない船は、ただの待合室のようなものです。誰かが舵を取り、エンジンをかけなければ、流れに乗ってあてもなく漂っているだけです。誰も操縦しなければ、エンジニアたちは貴重な時間を浪費し、何かが起こるのをただ座って待っているだけになってしまいます。本章は人材管理と技術的なリーダーシップについて書かれていますが、個人で貢献している方には、自分のリーダーをよりよく理解するためにも、一読の価値があります。
 
 ## Managers and Tech Leads (and Both)
 
