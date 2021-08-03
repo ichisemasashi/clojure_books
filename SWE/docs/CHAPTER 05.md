@@ -10,64 +10,78 @@ Edited by Riona MacNamara
 
 船長のいない船は、ただの待合室のようなものです。誰かが舵を取り、エンジンをかけなければ、流れに乗ってあてもなく漂っているだけです。誰も操縦しなければ、エンジニアたちは貴重な時間を浪費し、何かが起こるのをただ座って待っているだけになってしまいます。本章は人材管理と技術的なリーダーシップについて書かれていますが、個人で貢献している方には、自分のリーダーをよりよく理解するためにも、一読の価値があります。
 
-## Managers and Tech Leads (and Both)
+## マネージャーとテックリード(そしてその両方)
 
-Whereas every engineering team generally has a leader, they acquire those leaders in different ways. This is certainly true at Google; sometimes an experienced manager comes in to run a team, and sometimes an individual contributor is promoted into a leadership position (usually of a smaller team).
-In nascent teams, both roles will sometimes be filled by the same person: a Tech Lead Manager (TLM). On larger teams, an experienced people manager will step in to take on the management role while a senior engineer with extensive experience will step into the tech lead role. Even though manager and tech lead each play an important part in the growth and productivity of an engineering team, the people skills required to succeed in each role are wildly different.
+すべてのエンジニアリングチームには一般的にリーダーがいますが、リーダーの獲得方法はそれぞれ異なります。経験豊富なマネージャーがチームを仕切ることもあれば、個人的な貢献者が（通常はより小さなチームの）リーダーに昇格することもあります。
 
-### The Engineering Manager
+設立間もないチームでは、両方の役割を同じ人が担当することもあります。大規模なチームでは、経験豊富なピープルマネージャーがマネジメントの役割を担い、豊富な経験を持つシニアエンジニアがテックリードの役割を担うことになります。マネージャーとテックリードは、それぞれがエンジニアリングチームの成長と生産性において重要な役割を担っていますが、それぞれの役割で成功するために必要なヒューマンスキルは大きく異なります。
 
-Many companies bring in trained people managers who might know little to nothing about software engineering to run their engineering teams. Google decided early on, however, that its software engineering managers should have an engineering background. This meant hiring experienced managers who used to be software engineers, or training software engineers to be managers (more on this later).
-At the highest level, an engineering manager is responsible for the performance, productivity, and happiness of every person on their team --- including their tech lead ---  while still making sure that the needs of the business are met by the product for which they are responsible. Because the needs of the business and the needs of individual team members don’t always align, this can often place a manager in a difficult position.
+### エンジニアリングマネージャー
 
-### The Tech Lead
+多くの企業では、ソフトウェアエンジニアリングについてほとんど何も知らない、訓練されたピープルマネージャーをエンジニアリングチームの運営に導入しています。しかし、グーグルは早くから、ソフトウェアエンジニアリングのマネージャーはエンジニアリングのバックグラウンドを持つべきだと考えていました。つまり、ソフトウェアエンジニアだった経験豊富なマネージャーを採用したり、ソフトウェアエンジニアをマネージャーにするためのトレーニングを行ったりしたのである（詳細は後述）。
 
-The tech lead (TL) of a team --- who will often report to the manager of that team --- is responsible for (surprise!) the technical aspects of the product, including technology decisions and choices, architecture, priorities, velocity, and general project management (although on larger teams they might have program managers helping out with this). The TL will usually work hand in hand with the engineering manager to ensure that the team is adequately staffed for their product and that engineers are set to work on tasks that best match their skill sets and skill levels. Most TLs are also individual contributors, which often forces them to choose between doing something quickly themselves or delegating it to a team member to do (sometimes) more slowly. The latter is most often the correct decision for the TL as they grow the size and capability of their team.
+最高レベルのエンジニアリングマネージャーは、技術リーダーを含むチームのすべての人のパフォーマンス、生産性、幸福に責任を持ち、同時に自分が担当する製品がビジネスのニーズを満たしていることを確認します。ビジネスのニーズとチームメンバーのニーズは必ずしも一致しないため、マネージャーはしばしば困難な立場に立たされます。
 
-### The Tech Lead Manager
+### テックリード
 
-On small and nascent teams for which engineering managers need a strong technical skill set, the default is often to have a TLM: a single person who can handle both the people and technical needs of their team. Sometimes, a TLM is a more senior person, but more often than not, the role is taken on by someone who was, until recently, an individual contributor.
-At Google, it’s customary for larger, well-established teams to have a pair of leaders ---  one TL and one engineering manager --- working together as partners. The theory is that it’s really difficult to do both jobs at the same time (well) without completely burning out, so it’s better to have two specialists crushing each role with dedicated focus.
-The job of TLM is a tricky one and often requires the TLM to learn how to balance individual work, delegation, and people management. As such, it usually requires a high degree of mentoring and assistance from more experienced TLMs. (In fact, we recommend that in addition to taking a number of classes that Google offers on this subject, a newly minted TLM seek out a senior mentor who can advise them regularly as they grow into the role.)
+チームのテックリード（TL）は、多くの場合、そのチームのマネージャーの直属となりますが、技術的な決定や選択、アーキテクチャ、優先順位、速度、プロジェクト管理全般など、製品の技術的な側面に責任を負います（大きなチームでは、プログラムマネージャーがこれを支援している場合もあります）。TLは通常、エンジニアリングマネージャーと協力して、チームがその製品に対して十分な人員を確保し、エンジニアがそれぞれのスキルセットやスキルレベルに最も適したタスクに取り組めるようにします。ほとんどのTLは個人貢献者でもあります。そのため、何かを素早く自分で行うか、チームメンバーに委ねて（時には）ゆっくりと行うかの選択を迫られることがよくあります。チームの規模や能力が大きくなるにつれ、TLにとっては後者の方が正しい判断であることがほとんどです。
 
+### テックリードマネージャー
 
-----
+エンジニアリングマネージャーが強力な技術的スキルセットを必要としている小規模で初期のチームでは、しばしばTLMを置くことがデフォルトとなっています。TLMは年長者が務めることもありますが、多くの場合、つい最近まで個人で貢献していた人がその役割を担います。
 
-#### Case Study: Influencing Without Authority
+グーグルでは、大規模で確立されたチームでは、TLとエンジニアリングマネージャーという2人のリーダーがパートナーとして一緒に働くことが習慣になっています。理論的には、完全に燃え尽きることなく2つの仕事を同時に（うまく）こなすのは非常に難しいので、2人のスペシャリストがそれぞれの役割を集中的にこなす方が良いということです。
 
-It’s generally accepted that you can get folks who report to you to do the work that you need done for your products, but it’s different when you need to get people outside of your organization --- or heck, even outside of your product area sometimes --- to do something that you think needs to be done. This “influence without authority” is one of the most powerful leadership traits that you can develop.
-For example, for years, Jeff Dean, senior engineering fellow and possibly the most well-known Googler inside of Google, led only a fraction of Google’s engineering team, but his influence on technical decisions and direction reaches to the ends of the entire engineering organization and beyond (thanks to his writing and speaking outside of the company).
-Another example is a team that I started called The Data Liberation Front: with a team of less than a half-dozen engineers, we managed to get more than 50 Google products to export their data through a product that we launched called Google Takeout. At the time, there was no formal directive from the executive level at Google for all products to be a part of Takeout, so how did we get hundreds of engineers to contribute to this effort? By identifying a strategic need for the company, showing how it linked to the mission and existing priorities of the company, and working with a small group of engineers to develop a tool that allowed teams to quickly and easily integrate with Takeout.
+TLMの仕事は厄介なもので、個人作業、委任、人の管理のバランスの取り方を学ぶ必要があります。そのため、通常、経験豊富なTLMからの高度な指導と支援が必要である。(実際、グーグルが提供しているこのテーマのクラスを受講するだけでなく、新しくTLMになった人は、役割の成長に合わせて定期的にアドバイスをくれる先輩メンターを探すことをお勧めします)。
+
 
 ----
 
-## Moving from an Individual Contributor Role to a Leadership Role
+#### ケーススタディ 権威なき影響力
 
-Whether or not they’re officially appointed, someone needs to get into the driver’s seat if your product is ever going to go anywhere, and if you’re the motivated, impatient type, that person might be you. You might find yourself sucked into helping your team resolve conflicts, make decisions, and coordinate people. It happens all the time, and often by accident. Maybe you never intended to become a “leader,” but somehow it happened anyway. Some people refer to this affliction as “manageritis.”
-Even if you’ve sworn to yourself that you’ll never become a manager, at some point in your career, you’re likely to find yourself in a leadership position, especially if you’ve been successful in your role. The rest of this chapter is intended to help you understand what to do when this happens.
-We’re not here to attempt to convince you to become a manager, but rather to help show why the best leaders work to serve their team using the principles of humility, respect, and trust. Understanding the ins and outs of leadership is a vital skill for influencing the direction of your work. If you want to steer the boat for your project and not just go along for the ride, you need to know how to navigate, or you’ll run yourself (and your project) onto a sandbar.
+一般的に、製品のために必要な仕事を部下にしてもらうことはできますが、組織の外にいる人たち、さらには製品エリアの外にいる人たちにも、自分が必要だと思うことをしてもらう必要がある場合は、話が違ってきます。この「権威なき影響力」は、あなたが身につけることのできる最も強力なリーダーシップ特性のひとつです。
+
+例えば、シニア・エンジニアリング・フェローであり、グーグルで最も有名なグーグラーであるジェフ・ディーンは、長年にわたってグーグルのエンジニアリングチームのほんの一部を率いていたにすぎないが、技術的な決定や方向性に対する彼の影響力は、エンジニアリング組織全体の末端やそれ以上にまで及んでいる（彼が社外で執筆したり講演したりしているおかげである）。
+
+もうひとつの例は、私が立ち上げた「The Data Liberation Front」というチームです。6人以下のエンジニアで構成されたチームで、「Google Takeout」という製品を立ち上げて、50以上のGoogle製品にデータをエクスポートさせることに成功しました。当時、Googleの役員レベルから全製品をTakeoutに参加させるという正式な指示は出ていませんでしたが、どうやって数百人のエンジニアにこの活動に貢献してもらったのでしょうか？会社の戦略的ニーズを特定し、それが会社のミッションや既存の優先事項とどのように関連しているかを示し、少人数のエンジニアと協力して、チームが迅速かつ容易にTakeoutと統合できるツールを開発しました。
+
+----
+
+## 個人的な貢献者としての役割からリーダーシップを発揮するために
+
+正式に任命されているかどうかに関わらず、製品が軌道に乗るには誰かが運転席に座る必要があります。あなたがやる気のあるせっかちなタイプなら、それはあなたかもしれません。気がつけば、チーム内の対立を解決したり、意思決定をしたり、人を調整したりすることに夢中になっているかもしれません。それはよくあることで、たいていは偶然です。あなたは「リーダー」になるつもりはなかったかもしれませんが、なぜかそうなってしまったのです。このような状況を「マネージャー炎」と呼ぶ人もいます。
+
+「自分は絶対にマネージャーにはならない」と心に誓っていたとしても、キャリアの中でいつかはリーダーシップを発揮する立場になる可能性がありますし、特にその役割で成功している場合はなおさらです。この章の残りの部分は、そのような状況になったときに何をすべきかを理解していただくためのものです。
+
+ここでは、管理職になるように説得するのではなく、なぜ最高のリーダーが、謙虚さ、尊敬、信頼の原則を用いてチームのために働くのかを示すことを目的としています。リーダーシップの本質を理解することは、仕事の方向性に影響を与えるための重要なスキルです。自分のプロジェクトのために船を操縦し、ただ乗っているだけではなく、航海の仕方を知っていなければ、自分自身（そしてプロジェクト）を中洲に追いやってしまうことになります。
 
 ### The Only Thing to Fear Is...Well, Everything
 
-Aside from the general sense of malaise that most people feel when they hear the word “manager,” there are a number of reasons that most people don’t want to become managers. The biggest reason you’ll hear in the software development world is that you spend much less time writing code. This is true whether you become a TL or an engineering manager, and I’ll talk more about this later in the chapter, but first, let’s cover some more reasons why most of us avoid becoming managers.
-If you’ve spent the majority of your career writing code, you typically end a day with something you can point to --- whether it’s code, a design document, or a pile of bugs you just closed --- and say, “That’s what I did today.” But at the end of a busy day of “management,” you’ll usually find yourself thinking, “I didn’t do a damned thing today.” It’s the equivalent of spending years counting the number of apples you picked each day and changing to a job growing bananas, only to say to yourself at the end of each day, “I didn’t pick any apples,” happily ignoring the flourishing banana trees sitting next to you. Quantifying management work is more difficult than counting widgets you turned out, but just making it possible for your team to be happy and productive is a big measure of your job. Just don’t fall into the trap of counting apples when you’re growing bananas.(*1)
-Another big reason for not becoming a manager is often unspoken but rooted in the famous “Peter Principle,” which states that “In a hierarchy every employee tends to rise to his level of incompetence.” Google generally avoids this by requiring that a person perform the job above their current level for a period of time (i.e., to “exceeds expectations” at their current level) before being promoted to that level. Most people have had a manager who was incapable of doing their job or was just really bad at managing people,(*2) and we know some people who have worked only for bad managers. If you’ve been exposed only to crappy managers for your entire career, why would you ever want to be a manager? Why would you want to be promoted to a role that you don’t feel able to do?
-There are, however, great reasons to consider becoming a TL or manager. First, it’s a way to scale yourself. Even if you’re great at writing code, there’s still an upper limit to the amount of code you can write. Imagine how much code a team of great engineers could write under your leadership! Second, you might just be really good at it --- many people who find themselves sucked into the leadership vacuum of a project discover that they’re exceptionally skilled at providing the kind of guidance, help, and air cover a team or a company needs. Someone has to lead, so why not you?
+多くの人が「マネージャー」という言葉を聞いて感じる一般的な倦怠感を除けば、多くの人がマネージャーになりたくないと思う理由はいくつかあります。ソフトウェア開発の世界でよく聞かれる最大の理由は、コードを書く時間が大幅に減ることです。これは、TLになってもエンジニアリングマネージャーになっても同じで、このことについては本章の後半で詳しく説明しますが、まず、ほとんどの人がマネージャーになることを避ける理由をもう少し取り上げましょう。
 
-### Servant Leadership
+もしあなたがキャリアの大半をコードを書くことに費やしてきたのであれば、通常、1日の終わりには、コードであれ、設計書であれ、閉じたばかりのバグの山であれ、何かを指し示して「今日はこれをやった」と言うことができます。しかし、忙しい「管理」の一日の終わりには、たいてい「今日は何もしなかった」と思うことになるでしょう。それは、何年もかけてリンゴの収穫数を数えていたのに、バナナを栽培する仕事に転職して、毎日の終わりに「リンゴを一個も採れなかった」と言いながら、隣のバナナの木が繁茂しているのを嬉しそうに無視しているようなものだ。マネジメントの仕事を数値化することは、自分が作ったウィジェットを数えるよりも難しいですが、チームが幸せで生産的であることを可能にすることだけでも、あなたの仕事の大きな尺度となります。ただ、バナナを育てているときにリンゴを数えているようなことにはならないように(*1)。
 
-There seems to be a sort of disease that strikes managers in which they forget about all the awful things their managers did to them and suddenly begin doing these same things to “manage” the people that report to them. The symptoms of this disease include, but are by no means limited to, micromanaging, ignoring low performers, and hiring pushovers. Without prompt treatment, this disease can kill an entire team. The best advice I received when I first became a manager at Google was from Steve Vinter, an engineering director at the time. He said, “Above all, resist the urge to manage.” One of the greatest urges of the newly minted manager is to actively “manage” their employees because that’s what a manager does, right? This typically has disastrous consequences.
-The cure for the “management” disease is a liberal application of “servant leadership,” which is a nice way of saying the most important thing you can do as a leader is to serve your team, much like a butler or majordomo tends to the health and well-being of a household. As a servant leader, you should strive to create an atmosphere of humility, respect, and trust. This might mean removing bureaucratic obstacles that a team member can’t remove by themselves, helping a team achieve consensus, or even buying dinner for the team when they’re working late at the office. The servant leader fills in the cracks to smooth the way for their team and advises them when necessary, but still isn’t afraid of getting their hands dirty. The only managing that a servant leader does is to manage both the technical and social health of the team; as tempting as it might be to focus on purely the technical health of the team, the social health of the team is just as important (but often infinitely more difficult to manage).
+管理職にならないもう一つの大きな理由は、よく言われることですが、有名な「ピーター・プリンシプル」に根ざしています。グーグルでは一般的に、そのレベルに昇進する前に、一定期間、現在のレベル以上の仕事をこなすこと（つまり、現在のレベルで「期待を超える」こと）を要求することで、これを回避している。ほとんどの人は、自分の仕事ができないマネージャーや、人を管理するのが本当に下手なマネージャーを経験したことがあるだろうし(*2)、下手なマネージャーの下でしか働いたことがない人もいるはずだ。もし、あなたがキャリアの中でずっとひどいマネージャーの下で働いてきたとしたら、なぜマネージャーになりたいと思うでしょうか？自分にはできないと思うような役割に昇進したいと思うでしょうか？
 
-## The Engineering Manager
+しかし、TLやマネージャーになることを検討する大きな理由があります。まず、自分をスケールアップする方法です。コードを書くのが得意な人でも、書けるコードの量には上限があります。あなたのリーダーシップのもと、優秀なエンジニアのチームがどれだけのコードを書けるか想像してみてください。第二に、あなたはそれが本当に得意なのかもしれません。プロジェクトのリーダーシップの空白に吸い込まれるようにして気付いた人の多くは、チームや会社が必要としているガイダンスやヘルプ、エアカバーを提供することが非常に得意であることに気付きます。誰かがリードしなければならないのだから、あなたがリードすればいいのです。
 
-So, what is actually expected of a manager at a modern software company? Before the computing age, “management” and “labor” might have taken on almost antagonistic roles, with the manager wielding all of the power and labor requiring collective action to achieve its own ends. But that isn’t how modern software companies work.
+### サーバント・リーダーシップ
 
-### Manager Is a Four-Letter Word
+管理職になると、自分の上司にされたひどい仕打ちを忘れてしまい、急に自分の部下を管理するために同じことをし始める、という病気があるようです。この病気の症状には、マイクロマネジメント、ローパフォーマーの無視、押し売りの雇用などがありますが、これらに限定されるものではありません。この病気は、早急に治療しなければ、チーム全体を死に至らしめることになります。私がグーグルで初めてマネージャーになったときに受けた最高のアドバイスは、当時のエンジニアリング・ディレクターであるスティーブ・ヴィンターの言葉でした。彼は、「何よりも、管理したいという衝動を抑えなさい」と言いました。マネージャーになったばかりの人の最大の欲求の一つは、積極的に社員を「管理」することです。これは典型的には悲惨な結果をもたらします。
 
-Before talking about the core responsibilities of an engineering manager at Google, let’s review the history of managers. The present-day concept of the pointy-haired manager is partially a carryover, first from military hierarchy and later adopted by the Industrial Revolution --- more than a hundred years ago! Factories began popping up everywhere, and they required (usually unskilled) workers to keep the machines going. Consequently, these workers required supervisors to manage them, and because it was easy to replace these workers with other people who were desperate for a job, the managers had little motivation to treat their employees well or improve conditions for them. Whether humane or not, this method worked well for many years when the employees had nothing more to do than perform rote tasks.
-Managers frequently treated employees in the same way that cart drivers would treat their mules: they motivated them by alternately leading them forward with a carrot, and, when that didn’t work, whipping them with a stick. This carrot-and-stick method of management survived the transition from the factory(*3) to the modern office, where the stereotype of the tough-as-nails manager-as-mule-driver flourished in the middle part of the twentieth century when employees would work at the same job for years and years.
-This continues today in some industries --- even in industries that require creative thinking and problem solving --- despite numerous studies suggesting that the anachronistic carrot and stick is ineffective and harmful to the productivity of creative people. Whereas the assembly-line worker of years past could be trained in days and replaced at will, software engineers working on large codebases can take months to get up to speed on a new team. Unlike the replaceable assembly-line worker, these people need nurturing, time, and space to think and create.
+「管理」の病を治すには、「サーバントリーダーシップ」を積極的に取り入れることです。これは、リーダーとして最も重要なことは、執事やマジョルドモが家庭の健康や幸福に気を配るのと同じように、チームに奉仕することであると言い換えることができます。サーバント・リーダーとして、あなたは、謙虚さ、尊敬、信頼の雰囲気を作り出すよう努力すべきです。これは、チームメンバーが一人では取り除くことのできない官僚的な障害を取り除くこと、チームがコンセンサスを得られるように支援すること、あるいはチームがオフィスで残業しているときに夕食をおごることなどを意味します。サーバント・リーダーは、チームの円滑な運営のために隙間を埋め、必要に応じて助言を与えますが、自分の手が汚れることを恐れません。サーバント・リーダーが行う唯一の管理は、チームの技術的な健康と社会的な健康の両方を管理することです。純粋にチームの技術的な健康だけに焦点を当てたくなるかもしれませんが、チームの社会的な健康も同じくらい重要です（しかし、管理するのは限りなく難しいことが多い）。
+
+## エンジニアリングマネージャー
+
+では、現代のソフトウェア企業では、実際にどのようなマネージャーが求められているのでしょうか。コンピュータ時代以前は、「経営」と「労働」は拮抗した関係にあり、経営者がすべての権力を行使し、労働者は自分の目的を達成するために集団行動を必要としていたかもしれない。しかし、現代のソフトウェア会社はそうではありません。
+
+### マネージャーは4文字の言葉
+
+グーグルのエンジニアリング・マネージャーの主な仕事内容を説明する前に、マネージャーの歴史を振り返ってみましょう。現在のように髪の毛がとがったマネージャーという概念は、軍隊の階級制度から引き継がれたもので、その後、100年以上前の産業革命で採用されました。いたるところに工場ができ、機械を動かすために（たいていは未熟な）労働者が必要になりました。その結果、労働者を管理する上司が必要となり、また、これらの労働者は仕事を求めている他の人々と簡単に入れ替わることができるため、管理者は従業員を大切に扱ったり、彼らのために条件を改善したりするモチベーションがほとんどありませんでした。人道的かどうかは別にして、この方法は、従業員が暗黙の作業をする以外にすることがなかった長年の間、うまく機能していた。
+
+経営者はしばしば、荷車の運転手がラバを扱うのと同じように従業員を扱っていた。つまり、ニンジンで従業員を前進させ、それがうまくいかないときは棒で鞭打つことで、従業員のモチベーションを高めていたのである。この方法は、工場(*3)から近代的なオフィスへの移行期にも生き残り、20世紀中頃には、同じ仕事を何年も続けることで、「ラバの運転手のようなタフなマネージャー」という固定観念が広まったのです。
+
+このような時代錯誤の「アメとムチ」は、創造的な人々の生産性には効果がなく、有害であることが多くの研究で指摘されているにもかかわらず、創造的な思考や問題解決を必要とする産業でさえも、今日も続いている。数年前の組立ラインの労働者が数日で訓練を受け、自由に交代することができたのに対し、大規模なコードベースを扱うソフトウェアエンジニアは、新しいチームに慣れるまでに数ヶ月を要します。交換可能な組立ラインの労働者とは異なり、これらの人々には、考え、創造するための育成、時間、空間が必要です。
 
 ### Today’s Engineering Manager
 
