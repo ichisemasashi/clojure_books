@@ -283,22 +283,25 @@ Googleに入社して間もなく、当時のCEOだったエリック・シュ�
 
 指示を与えることは非常に簡単です。必要なのは、何をすべきかという基本的な理解と、簡単な整理整頓のスキル、そして管理可能なタスクに分割するための十分な調整力です。これらのツールがあれば、方向性を必要としているエンジニアに十分な指示を与えることができます。モチベーションについては、もう少し詳しく説明する必要があります。
 
-## Intrinsic Versus Extrinsic Motivation
+## 内発的動機付けと外発的動機付け
 
-There are two types of motivation: extrinsic, which originates from outside forces (such as monetary compensation), and intrinsic, which comes from within. In his book Drive,(*10) Dan Pink explains that the way to make people the happiest and most productive isn’t to motivate them extrinsically (e.g., throw piles of cash at them); rather, you need to work to increase their intrinsic motivation. Dan claims you can increase intrinsic motivation by giving people three things: autonomy, mastery, and purpose.(*11)
-A person has autonomy when they have the ability to act on their own without someone micromanaging them.(*12) With autonomous employees (and Google strives to hire mostly autonomous engineers), you might give them the general direction in which they need to take the product but leave it up to them to decide how to get there. This helps with motivation not only because they have a closer relationship with the product (and likely know better than you how to build it), but also because it gives them a much greater sense of ownership of the product. The bigger their stake is in the success of the product, the greater their interest is in seeing it succeed.
-Mastery in its basest form simply means that you need to give someone the opportunity to improve existing skills and learn new ones. Giving ample opportunities for mastery not only helps to motivate people, it also makes them better over time, which makes for stronger teams.(*13) An employee’s skills are like the blade of a knife: you can spend tens of thousands of dollars to find people with the sharpest skills for your team, but if you use that knife for years without sharpening it, you will wind up with a dull knife that is inefficient, and in some cases useless. Google gives ample opportunities for engineers to learn new things and master their craft so as to keep them sharp, efficient, and effective.
-Of course, all the autonomy and mastery in the world isn’t going to help motivate someone if they’re doing work for no reason at all, which is why you need to give their work purpose. Many people work on products that have great significance, but they’re kept at arm’s length from the positive effects their products might have on their company, their customers, or even the world. Even for cases in which the product might have a much smaller impact, you can motivate your team by seeking the reason for their efforts and making this reason clear to them. If you can help them to see this purpose in their work, you’ll see a tremendous increase in their motivation and productivity.(*14) One manager we know keeps a close eye on the email feedback that Google gets for its product (one of the “smaller-impact” products), and whenever she sees a message from a customer talking about how the company’s product has helped them personally or helped their business, she immediately forwards it to the engineering team. This not only motivates the team, but also frequently inspires team members to think about ways in which they can make their product even better.
+モチベーションには、金銭的な報酬など外部から与えられる「外発的」なものと、自分の内側から与えられる「内発的」なものがあります。ダン・ピンクは著書『ドライブ』（*10）の中で、人を最も幸せにし、最も生産的にするには、外発的な動機づけ（例えば、現金を山のように投入する）ではなく、内発的な動機づけを高める努力が必要だと説いています。ダンは、内発的動機を高めるには、人に「自律性」「支配性」「目的」の3つを与えることだと主張しています(*11)。
 
-## Conclusion
+自律性のある社員（グーグルでは自律性のあるエンジニアを多く採用しています）には、製品の方向性を示した上で、どうやってそこに到達するかを彼らに任せることができます。これは、彼らが製品とより密接な関係を持っているため（そして、おそらくあなたよりも製品の作り方をよく知っているため）、モチベーションの向上に役立つだけでなく、製品に対するオーナーシップをより強く感じることができるからです。製品の成功に対する彼らの関心が高ければ高いほど、成功を見届けたいという気持ちも強くなります。
 
-Leading a team is a different task than that of being a software engineer. As a result, good software engineers do not always make good managers, and that’s OK ---  effective organizations allow productive career paths for both individual contributors and people managers. Although Google has found that software engineering experience itself is invaluable for managers, the most important skills an effective manager brings to the table are social ones. Good managers enable their engineering teams by helping them work well, keeping them focused on proper goals, and insulating them from problems outside the group, all while following the three pillars of humility, trust, and respect.
+マスタリーとは、簡単に言えば、既存のスキルを向上させたり、新しいスキルを学んだりする機会を与えることです。社員のスキルは包丁の刃のようなもので、何万ドルもかけて最も鋭いスキルを持った人をチームに採用しても、その包丁を何年も研がずに使い続ければ、効率の悪い、場合によっては使い物にならない鈍い包丁になってしまう。グーグルでは、エンジニアが新しいことを学び、技術を習得する機会を十分に与えているので、常に鋭く、効率的で、効果的な仕事ができるのです。
+
+もちろん、意味もなく仕事をしている人には、いくら自律性や熟練性があってもモチベーションは上がりません。多くの人は、大きな意味を持つ製品を作っているにもかかわらず、その製品が会社や顧客、さらには世界に良い影響を与えることから遠ざけられています。その製品が与える影響が小さい場合でも、チームが努力する理由を求め、その理由を明確にすることで、チームのモチベーションを高めることができます。私たちが知っているあるマネージャーは、グーグルが自社製品（「影響が小さい」製品のひとつ）に寄せられるメールのフィードバックに目を光らせており、自社製品が個人的にどのように役立ったか、あるいはビジネスにどのように貢献したかを語るお客様からのメッセージを見つけると、すぐにエンジニアリングチームに転送します。これは、チームのモチベーションを高めるだけでなく、チームメンバーが自分たちの製品をさらに良くするための方法を考えるきっかけになることも多い。
+
+## 結論
+
+チームを率いるということは、ソフトウェアエンジニアとしての仕事とは異なるものです。結果として、優れたソフトウェアエンジニアが必ずしも優れたマネージャーになるとは限りません。効果的な組織では、個人貢献者とピープルマネージャーの両方に生産的なキャリアパスが用意されています。グーグルでは、ソフトウェアエンジニアリングの経験そのものがマネージャーにとって貴重であることがわかっているが、効果的なマネージャーがもたらす最も重要なスキルは、社会的なものである。優れたマネージャーは、謙虚さ、信頼、尊敬の3つの柱を守りながら、エンジニアリングチームがうまく仕事ができるように支援し、適切な目標に集中させ、グループ外の問題から隔離することで、チームに貢献します。
 
 ## TL;DRs
 
-- Don’t “manage” in the traditional sense; focus on leadership, influence, and serving your team.
-- Delegate where possible; don’t DIY (Do It Yourself).
-- Pay particular attention to the focus, direction, and velocity of your team.
+- 伝統的な意味での「管理」ではなく、リーダーシップ、影響力、そしてチームへの奉仕に焦点を当てる。
+- 可能な限り委任し、DIY（Do It Yourself）はしないこと。
+- チームの焦点、方向性、速度に特に注意してください。
 
 
 
@@ -312,18 +315,18 @@ Leading a team is a different task than that of being a software engineer. As a 
 
 ------
 
-1 Another difference that takes getting used to is that the things we do as managers typically pay off over a longer timeline.
-2 Yet another reason companies shouldn’t force people into management as part of a career path: if an engineer is able to write reams of great code and has no desire at all to manage people or lead a team, by forcing them into a management or TL role, you’re losing a great engineer and gaining a crappy manager. This is not only a bad idea, but it’s actively harmful.
-3 For more fascinating information on optimizing the movements of factory workers, read up on Scientific Management or Taylorism, especially its effects on worker morale.
-4 If you have kids, the odds are good that you can remember with startling clarity the first time you said something to your child that made you stop and exclaim (perhaps even aloud), “Holy crap, I’ve become my mother.”
-5 Public criticism of an individual is not only ineffective (it puts people on the defense), but rarely necessary, and most often is just mean or cruel. You can be sure the rest of the team already knows when an individual has failed, so there’s no need to rub it in.
-6 See also “Rubber duck debugging.”
-7 Attempting to achieve 100% consensus can also be harmful. You need to be able to decide to proceed even if not everyone is on the same page or there is still some uncertainty.
-8 Google also runs an annual employee survey called “Googlegeist” that rates employee happiness across many dimensions. This provides good feedback but isn’t what we would call “simple.”
-9 To gain a better understanding of just how “undoable” technical changes can be, see Chapter 22.
-10 See Dan’s fantastic TED talk on this subject.
-11 This assumes that the people in question are being paid well enough that income is not a source of stress.
-12 This assumes that you have people on your team who don’t need micromanagement.
-13 Of course, it also means they’re more valuable and marketable employees, so it’s easier for them to pick up and leave you if they’re not enjoying their work. See the pattern in “Track Happiness” on page 99.
-14 Adam M. Grant, “The Significance of Task Significance: Job Performance Effects, Relational Mechanisms, and Boundary Conditions,” Journal of Applied Psychology, 93, No. 1 (2018), http://bit.ly/task_significance.
+1 慣れないうちは、マネージャーとしての仕事は、より長い時間をかけて成果を上げていくものだということです。
+2 企業がキャリアパスの一環として管理職になることを強要すべきではないもう一つの理由は、エンジニアが優れたコードを大量に書くことができても、人を管理したりチームを率いたりすることに全く興味がない場合、管理職やTLの役割を強要することは、優れたエンジニアを失い、くだらない管理職を得ることになるからです。これは良くない考えであるだけでなく、有害なことでもあります。
+3 工場労働者の動きを最適化するためのより魅力的な情報については、科学的管理またはテイラリズム、特に労働者のモラルに対する影響について読んでみてください。
+4 もしあなたに子供がいれば、初めて自分の子供に何かを言ったときに、立ち止まって（おそらく声に出して）「なんてこった、俺は母親になったんだ」と叫んだことを驚くほどはっきりと覚えている可能性が高いです。
+5 公的に個人を批判することは、効果がないだけでなく（人々を擁護することになる）、必要なことはほとんどなく、ほとんどの場合、ただの意地悪や残酷なものです。個人が失敗したときには、チームの他のメンバーがすでに知っているはずなので、わざわざ批判する必要はありません。
+6 "Rubber duck debugging "も参照してください。
+7 100%のコンセンサスを得ようとすることは、有害なことでもあります。全員の意見が一致していなくても、不確実性が残っていても、進めることを決められるようにする必要があります。
+8 グーグルでは、毎年「Googlegeist」という社員アンケートを実施しており、様々な角度から社員の幸福度を評価しています。これは良いフィードバックになりますが、私たちが "シンプル "と呼ぶものではありません。
+9 技術的な変更がいかに「元に戻せない」ものであるかについての理解を深めるために、第22章を参照してください。
+10 このテーマに関するダンの素晴らしいTEDトークをご覧ください。
+11 ここでは、問題となっている人々が、収入がストレスの原因とならない程度に十分な報酬を得ていることを前提としています。
+12 これは、マイクロマネジメントを必要としない人がチームにいることを前提としています。
+13 もちろん、彼らがより価値のある市場性のある社員であることも意味しているので、仕事が楽しくなければ、あなたを拾って去っていくことも容易になる。99ページの「幸福度を追跡する」のパターンをご覧ください。
+14 アダム・M・グラント「タスクの意義」。Job Performance Effects, Relational Mechanisms, and Boundary Conditions," Journal of Applied Psychology, 93, No.1 (2018), http://bit.ly/task_significance.
 
