@@ -18,5 +18,12 @@ PART II 文化
 
 [ch05: How to Lead a Team](docs/CHAPTER%2005.md)
 
+[Ch06: Leading at Scale](docs/CHAPTER%2006.md)
+
+
+
+
+
+
 
 www.DeepL.com/Translator（無料版）で翻訳しました。
