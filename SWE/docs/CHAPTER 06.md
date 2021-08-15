@@ -3,63 +3,72 @@
 Written by Ben Collins-Sussman
 Edited by Riona MacNamara
 
-In Chapter 5, we talked about what it means to go from being an “individual contributor” to being an explicit leader of a team. It’s a natural progression to go from leading one team to leading a set of related teams, and this chapter talks about how to be effective as you continue along the path of engineering leadership.
-As your role evolves, all the best practices still apply. You’re still a “servant leader”; you’re just serving a larger group. That said, the scope of problems you’re solving becomes larger and more abstract. You’re gradually forced to become “higher level.” That is, you’re less and less able to get into the technical or engineering details of things, and you’re being pushed to go “broad” rather than “deep.” At every step, this process is frustrating: you mourn the loss of these details, and you come to realize that your prior engineering expertise is becoming less and less relevant to your job. Instead, your effectiveness depends more than ever on your general technical intuition and ability to galvanize engineers to move in good directions.
-The process is often demoralizing --- until one day you notice that you’re actually having much more impact as a leader than you ever had as an individual contributor. It’s a satisfying but bittersweet realization.
-So, assuming that we understand the basics of leadership, what it does it take to scale yourself into a really good leader? That’s what we talk about here, using what we call “the three Always of leadership”: Always Be Deciding, Always Be Leaving, Always Be Scaling.
+第5章では、「個人的な貢献者」から「チームの明確なリーダー」になるとはどういうことかをお話しました。1つのチームを率いることから、関連する一連のチームを率いることになるのは自然な流れです。本章では、エンジニアリング・リーダーシップの道を歩み続ける中で、どのようにすれば効果的なのかを説明します。
 
-## Always Be Deciding
+あなたの役割が進化しても、ベストプラクティスはすべて適用されます。あなたは今でも "サーバント・リーダー "であり、より大きなグループに仕えているだけなのです。しかし、あなたが解決する問題の範囲は、より大きく、より抽象的になっていきます。あなたは徐々に "ハイレベル "になることを余儀なくされます。つまり、技術的なことにはあまり興味が持てなくなり、"ディープ "ではなく "ブロード "になることが求められるのです。細かい部分が失われていくのを嘆き、それまでのエンジニアリングの専門知識が自分の仕事にあまり関係なくなってきていることを実感します。むしろ、技術的な直感力や、エンジニアに良い方向に向かわせる能力が、これまで以上に重要になってくるのです。
 
-Managing a team of teams means making ever more decisions at ever-higher levels. Your job becomes more about high-level strategy rather than how to solve any specific engineering task. At this level, most of the decisions you’ll make are about finding the correct set of trade-offs.
+このようなプロセスにはしばしば落胆させられますが、ある日、自分が個人として貢献していたときよりも、リーダーとしての影響力がはるかに大きいことに気づくのです。満足感はありますが、ほろ苦い実感です。
 
-### The Parable of the Airplane
+さて、リーダーシップの基本を理解したとして、本当に優れたリーダーになるためには何が必要なのでしょうか？ここでは、私たちが「リーダーシップの3つの要素」と呼んでいるものを使って、そのことをお話しします。「常に決断する」「常に去る」「常にスケールする」ということです。
 
-Lindsay Jones is a friend of ours who is a professional theatrical sound designer and composer. He spends his life flying around the United States, hopping from production to production, and he’s full of crazy (and true) stories about air travel. Here’s one of our favorite stories:
+## 常に決断すること
 
- It’s 6 a.m., we’re all boarded on the plane and ready to go. The captain comes on the PA system and explains to us that, somehow, someone has overfilled the fuel tank by 10,000 gallons. Now, I’ve flown on planes for a long time, and I didn’t know that such a thing was possible. I mean, if I overfill my car by a gallon, I’m gonna have gas all over my shoes, right?
- Well, so anyway, the captain then says that we have two options: we can either wait for the truck to come suck the fuel back out of the plane, which is going to take over an hour, or twenty people have to get off the plane right now to even out the weight.
- No one moves.
- Now, there’s this guy across the aisle from me in first class, and he is absolutely livid. He reminds me of Frank Burns on M*A*S*H; he’s just super indignant and sputtering everywhere, demanding to know who’s responsible. It’s an amazing showcase, it’s like he’s Margaret Dumont in the Marx Brothers movies.
- So, he grabs his wallet and pulls out this massive wad of cash! And he’s like “I cannot be late for this meeting!! I will give $40 to any person who gets off this plane right now!”
- Sure enough, people take him up on it. He gives out $40 to 20 people (which is $800 in cash, by the way!) and they all leave.
- So, now we’re all set and we head out to the runway, and the captain comes back on the PA again. The plane’s computer has stopped working. No one knows why. Now we gotta get towed back to the gate.
- Frank Burns is apoplectic. I mean, seriously, I thought he was gonna have a stroke. He’s cursing and screaming. Everyone else is just looking at each other.
- We get back to the gate and this guy is demanding another flight. They offer to book him on the 9:30, which is too late. He’s like, “Isn’t there another flight before 9:30?”
- The gate agent is like, “Well, there was another flight at 8, but it’s all full now. They’re closing the doors now.”
- And he’s like, “Full?! Whaddya mean it’s full? There’s not one open seat on that plane?!?!?!”
- The gate agent is like, “No sir, that plane was wide open until 20 passengers showed up out of nowhere and took all the seats. They were the happiest passengers I’ve ever seen, they were laughing all the way down the jet bridge.”
- It was a very quiet ride on the 9:30 fligh.
+チームの中のチームを管理するということは、より高いレベルでより多くの意思決定を行うことを意味します。あなたの仕事は、特定のエンジニアリングタスクを解決する方法よりも、ハイレベルな戦略が重要になります。このレベルでは、ほとんどの意思決定は、正しいトレードオフを見つけることです。
 
-This story is, of course, about trade-offs. Although most of this book focuses on various technical trade-offs in engineering systems, it turns out that trade-offs also apply to human behaviors. As a leader, you need to make decisions about what your teams should do each week. Sometimes the trade-offs are obvious (“if we work on this project, it delays that other one...”); sometimes the trade-offs have unforeseeable consequences that can come back to bite you, as in the preceding story.
-At the highest level, your job as a leader --- either of a single team or a larger organization --- is to guide people toward solving difficult, ambiguous problems. By ambiguous, we mean that the problem has no obvious solution and might even be unsolvable. Either way, the problem needs to be explored, navigated, and (hopefully) wrestled into a state in which it’s under control. If writing code is analogous to chopping down trees, your job as a leader is to “see the forest through the trees” and find a workable path through that forest, directing engineers toward the important trees. There are three main steps to this process. First, you need to identify the blinders; next, you need to identify the trade-offs; and then you need to decide and iterate on a solution.
+### 飛行機の例え
 
-### Identify the Blinders
+Lindsay Jonesは私たちの友人で、プロの劇場用サウンドデザイナー兼作曲家です。彼はアメリカ中を飛び回り、プロダクションからプロダクションへと移動する生活を送っているので、飛行機にまつわるクレイジーな（そして真実の）話をたくさんしてくれます。その中でも特にお気に入りの話を紹介します。
 
-When you first approach a problem, you’ll often discover that a group of people has already been wrestling with it for years. These folks have been steeped in the problem for so long that they’re wearing “blinders” --- that is, they’re no longer able to see the forest. They make a bunch of assumptions about the problem (or solution) without realizing it. “This is how we’ve always done it,” they’ll say, having lost the ability to consider the status quo critically. Sometimes, you’ll discover bizarre coping mechanisms or rationalizations that have evolved to justify the status quo. This is where you  --- with fresh eyes --- have a great advantage. You can see these blinders, ask questions, and then consider new strategies. (Of course, being unfamiliar with the problem isn’t a requirement for good leadership, but it’s often an advantage.)
+ 午前6時、私たちは全員飛行機に乗り込み、出発の準備をしています。機長がPAシステムを使って、誰かが燃料タンクに1万ガロンの燃料を入れすぎたと説明した。私は長い間、飛行機に乗ってきましたが、そのようなことが可能だとは知りませんでした。車の燃料を1ガロンも入れすぎたら、靴の中がガスだらけになってしまうでしょう？
+ 1時間以上かかるトラックが燃料を飛行機から吸い上げてくれるのを待つか、重量を均等にするために20人が今すぐ飛行機から降りるか、だ。
+ 誰も動かない。
+ さて、ファーストクラスの通路を挟んで向かい側にいる男性がいるのですが、彼は本当に怒り狂っています。彼はM*A*S*Hのフランク・バーンズを思い起こさせるような感じで、非常に憤慨していて、いたるところで口をとがらせ、誰が責任を負うのかを要求しています。まるでマルクス・ブラザーズの映画に出てくるマーガレット・デュモンのように、素晴らしい見せ場を作っている。
+ そこで彼は財布を手に取り、大量の札束を取り出した！ そして、「このミーティングに遅れるわけにはいかない！」と言ったのです。「今、この飛行機から降りてきた人には40ドルを差し上げます！」と。
+ 案の定、人々は彼の話に乗った。彼は20人に40ドルを配り（ちなみに800ドルの現金です！）、みんな降りていきました。
+ さて、準備が整い、滑走路に向かうと、再び機長がPAに戻ってきた。飛行機のコンピューターが動かなくなった。原因は誰にもわからない。今すぐゲートまで牽引してもらわなければならない。
+ フランク・バーンズは絶句した。マジで脳卒中になるかと思ったよ。罵声と悲鳴を上げている。他のみんなはお互いに見ているだけだ。
+ ゲートに戻ると、この男は別の便を要求している。彼らは9時30分発の便を予約しようとしましたが、それでは遅すぎます。彼は「9:30より前の便はないのか」と言いました。
+ ゲートエージェントは、「8時台に別のフライトがあったのですが、今は全部満席です。彼らは今、ドアを閉めています」。
+ すると彼は「満席？満席ってなんだ？あの飛行機には空席が一つもないのか！？
+ ゲートエージェントは、「いいえ、あの飛行機は、20人の乗客がどこからともなく現れて、すべての席を取るまでは、大きく開いていました。彼らは私が今まで見た中で最も幸せな乗客で、ジェットブリッジを降りるまでずっと笑っていました」。
+ 9時30分発の飛行機はとても静かだった。
 
-### Identify the Key Trade-Offs
+この話はもちろん、トレードオフについてです。本書では、エンジニアリングシステムにおけるさまざまな技術的なトレードオフに焦点を当てていますが、トレードオフは人間の行動にも当てはまることがわかりました。リーダーであるあなたは、チームが毎週何をすべきかを決定しなければなりません。トレードオフが明白な場合もあれば（「このプロジェクトに取り組めば、他のプロジェクトが遅れる...」）、先ほどの話のように、トレードオフが予想外の結果をもたらし、あなたを苦しめることになる場合もあります。
 
-By definition, important and ambiguous problems do not have magic “silver bullet” solutions. There’s no answer that works forever in all situations. There is only the best answer for the moment, and it almost certainly involves making trade-offs in one direction or another. It’s your job to call out the trade-offs, explain them to everyone, and then help decide how to balance them.
+最高レベルのリーダーとしてのあなたの仕事は、1つのチームであれ、より大きな組織であれ、困難で曖昧な問題を解決するために人々を導くことです。曖昧な問題とは、明らかな解決策がなく、解決不可能な問題であることを意味します。いずれにしても、問題を調査し、ナビゲートし、（願わくば）コントロールできる状態にまで持っていく必要があります。コードを書くことが木を切ることに似ているとすれば、リーダーの仕事は「木を見て森を見る」ことであり、その森の中で実行可能な道を見つけ、エンジニアを重要な木に向かわせることです。このプロセスには、大きく分けて3つのステップがあります。まず、目隠しをすること、次にトレードオフを見極めること、そして解決策を決定し、繰り返し実行することです。
 
-### Decide, Then Iterate
+### 目隠しをする
 
-After you understand the trade-offs and how they work, you’re empowered. You can use this information to make the best decision for this particular month. Next month, you might need to reevaluate and rebalance the trade-offs again; it’s an iterative process. This is what we mean when we say Always Be Deciding.
-There’s a risk here. If you don’t frame your process as continuous rebalancing of trade-offs, your teams are likely to fall into the trap of searching for the perfect solution, which can then lead to what some call “analysis paralysis.” You need to make your teams comfortable with iteration. One way of doing this is to lower the stakes and calm nerves by explaining: “We’re going to try this decision and see how it goes. Next month, we can undo the change or make a different decision.” This keeps folks flexible and in a state of learning from their choices.
+ある問題に初めて取り組んだとき、すでに何年もその問題に取り組んでいるグループがあることに気づくことがあります。これらの人々は、あまりにも長い間その問題に浸ってきたため、「目隠し」をしているのです。彼らは、問題（あるいは解決策）について、気づかないうちに多くの仮定をしています。批判的に現状を検討する能力を失った彼らは、「これはいつものやり方だ」と言います。時には現状を正当化するために進化してきた奇妙な対処法や合理化を発見することもあるでしょう。ここでは、新鮮な目を持つあなたが大きなアドバンテージを持っています。このような目隠しを見て、疑問を持ち、新しい戦略を考えることができます。(もちろん、問題に精通していないことが優れたリーダーシップの条件ではありませんが、多くの場合、それが利点となります）。)
+
+### 重要なトレードオフを特定する
+
+定義上、重要で曖昧な問題には、魔法のような「銀の弾丸」のような解決策はありません。すべての状況で永遠に通用する答えはありません。あるのはその時のベストな答えだけで、それはほぼ間違いなく、ある方向へのトレードオフを伴うものです。トレードオフを指摘し、皆に説明し、そのバランスをどうとるかを決めるのがあなたの仕事です。
+
+### 決断して、繰り返す
+
+トレードオフとその仕組みを理解した後は、力が湧いてきます。この情報をもとに、その月に最適な判断を下すことができます。来月になれば、トレードオフを再評価し、バランスを調整する必要があるかもしれません。これが、「常に決断を」という言葉の意味です。
+
+ここにはリスクがあります。トレードオフのバランスを継続的に調整するようにプロセスを設定しないと、チームは完璧なソリューションを探すという罠に陥る可能性があり、それは「分析麻痺」と呼ばれるものになるかもしれません。そのためには、チームがイテレーションに慣れ親しむ必要があります。そのためには、「今日はこんなことをやってみようと思います」と説明して、緊張感を和らげるのが一つの方法です。「この決定をしてみて、どうなるか見てみよう。来月になれば、この変更を元に戻すこともできるし、別の決定をすることもできます。そうすることで、人々は柔軟性を保ち、自分の選択から学ぶことができるのです。
 
 ----
 
-### Case Study: Addressing the “Latency” of Web Search
+### ケーススタディ ウェブ検索の「レイテンシー」への対応
 
-In managing a team of teams, there’s a natural tendency to move away from a single product and to instead own a whole “class” of products, or perhaps a broader problem that crosses products. A good example of this at Google has to do with our oldest product, Web Search.
-For years, thousands of Google engineers have worked on the general problem of making search results better --- improving the “quality” of the results page. But it turns out that this quest for quality has a side effect: it gradually makes the product slower. Once upon a time, Google’s search results were not much more than a page of 10 blue links, each representing a relevant website. Over the past decade, however, thousands of tiny changes to improve “quality” have resulted in ever-richer results: images, videos, boxes with Wikipedia facts, even interactive UI elements. This means the servers need to do much more work to generate information: more bytes are being sent over the wire; the client (usually a phone) is being asked to render ever-more-complex HTML and data. Even though the speed of networks and computers have markedly increased over a decade, the speed of the search page has become slower and slower: its latency has increased. This might not seem like a big deal, but the latency of a product has a direct effect (in aggregate) on users’ engagement and how often they use it. Even increases in rendering time as small as 10 ms matter. Latency creeps up slowly. This is not the fault of a specific engineering team, but rather represents a long, collective poisoning of the commons. At some point, the overall latency of Web Search grows until its effect begins to cancel out the improvements in user engagement that came from the improvements to the “quality” of the results.
-A number of leaders struggled with this issue over the years but failed to address the problem systematically. The blinders everyone wore assumed that the only way to deal with latency was to declare a latency “code yellow”(*1) every two or three years, during which everyone dropped everything to optimize code and speed up the product. Although this strategy would work temporarily, the latency would begin creeping up again just a month or two later, and soon return to its prior levels.
-So what changed? At some point, we took a step back, identified the blinders, and did a full reevaluation of the trade-offs. It turns out that the pursuit of “quality” has not one, but two different costs. The first cost is to the user: more quality usually means more data being sent out, which means more latency. The second cost is to Google: more quality means doing more work to generate the data, which costs more CPU time in our servers --- what we call “serving capacity.” Although leadership had often trodden carefully around the trade-off between quality and capacity, it had never treated latency as a full citizen in the calculus. As the old joke goes, “Good, Fast, Cheap --- pick two.” A simple way to depict the trade-offs is to draw a triangle of tension between Good (Quality), Fast (Latency), and Cheap (Capacity), as illustrated in Figure 6-1.
+複数のチームを管理していると、単一の製品から離れて、製品の「クラス」全体、あるいは製品を横断するより広い問題を所有するようになる傾向があります。Googleの場合は、最も古い製品であるウェブ検索がその良い例です。
+
+何年もの間、何千人ものGoogleエンジニアが、検索結果をより良いものにするという一般的な問題に取り組んできました。つまり、検索結果ページの「品質」を向上させるのです。しかし、この品質の追求には副作用があり、製品の動作が徐々に遅くなることが判明した。かつて、Googleの検索結果は、それぞれが関連するウェブサイトを表す10個の青いリンクのページ以上のものではありませんでした。しかし、この10年間で、「品質」を向上させるために何千もの小さな変更を加えた結果、画像、動画、ウィキペディアの情報を記載したボックス、さらにはインタラクティブなUI要素など、検索結果はますます高度なものになってきました。これは、サーバーが情報を生成するために、より多くの仕事をしなければならないことを意味します。より多くのバイトがワイヤー上で送信され、クライアント（通常は携帯電話）はこれまで以上に複雑なHTMLやデータのレンダリングを求められます。この10年間でネットワークやコンピューターの速度は格段に向上しましたが、検索ページの速度はどんどん遅くなり、レイテンシーも大きくなっています。大したことではないと思われるかもしれませんが、製品のレイテンシーは、ユーザーのエンゲージメントや使用頻度に直接影響します（全体として）。レンダリング時間の増加は、10ms程度の小さなものでも問題となります。レイテンシーはゆっくりと上昇していきます。これは、特定のエンジニアリングチームのせいではなく、長い間の集団的な汚染の結果です。ある時点で、ウェブ検索の全体的なレイテンシーが大きくなり、その影響で、検索結果の「質」の向上によって得られたユーザーエンゲージメントの改善が打ち消されるようになる。
+
+何人ものリーダーが長年にわたってこの問題に取り組んできたが、組織的に対処することはできなかった。皆が身につけていた目隠しは、レイテンシーに対処する唯一の方法は、2〜3年ごとにレイテンシーの「コードイエロー」(*1)を宣言し、皆がコードの最適化と製品のスピードアップに全力を尽くすことだと考えていた。この作戦は一時的には有効だが、1〜2ヵ月後には再びレイテンシーが上昇し始め、すぐに元のレベルに戻ってしまう。
+
+では、何が変わったのでしょうか？ある時点で、私たちは一歩下がって目隠しをし、トレードオフを全面的に再評価しました。その結果、「品質」を追求することには、1つではなく、2つの異なるコストがかかることがわかりました。1つ目のコストはユーザーに対するもので、品質が高ければ高いほど、より多くのデータが送信されることになり、その分、遅延も大きくなります。2つ目のコストは、Googleにとってのコストです。品質が高ければ高いほど、データを生成するために多くの作業を行うことになり、サーバーのCPU時間が増えることになります。品質とキャパシティのトレードオフについては、これまでもリーダーシップを発揮して慎重に検討してきましたが、レイテンシーを計算の中で完全に市民権を得ているとは言えませんでした。古いジョークにあるように、「良いもの、速いもの、安いもの......2つ選べ」というわけだ。トレードオフを表現する簡単な方法は、図6-1に示されているように、Good（品質）、Fast（レイテンシー）、Cheap（容量）の間に緊張のトライアングルを描くことです。
 
 ![fig06-1](../img/Fig6-1.png)
-Figure 6-1. Trade-offs within Web Search; pick two!
+Figure 6-1. ウェブ検索におけるトレードオフ：2つの選択
 
-That’s exactly what was happening here. It’s easy to improve any one of these traits by deliberately harming at least one of the other two. For example, you can improve quality by putting more data on the search results page --- but doing so will hurt capacity and latency. You can also do a direct trade-off between latency and capacity by changing the traffic load on your serving cluster. If you send more queries to the cluster, you get increased capacity in the sense that you get better utilization of the CPUs --- more bang for your hardware buck. But higher load increases resource contention within a computer, making the average latency of a query worse. If you deliberately decrease a cluster’s traffic (run it “cooler”), you have less serving capacity overall, but each query becomes faster.
-The main point here is that this insight --- a better understanding of all the trade-offs ---  allowed us to start experimenting with new ways of balancing. Instead of treating latency as an unavoidable and accidental side effect, we could now treat it as a first-class goal along with our other goals. This led to new strategies for us. For example, our data scientists were able to measure exactly how much latency hurt user engagement. This allowed them to construct a metric that pitted quality-driven improvements to short-term user engagement against latency-driven damage to long-term user engagement. This approach allows us to make more data-driven decisions about product changes. For example, if a small change improves quality but also hurts latency, we can quantitatively decide whether the change is worth launching or not. We are always deciding whether our quality, latency, and capacity changes are in balance, and iterating on our decisions every month.
+それはまさにここで起きていたことです。これらの特性のうち、どれか1つを改善するには、他の2つの特性のうち少なくとも1つを意図的に害することが簡単にできます。例えば、検索結果ページにより多くのデータを載せることで品質を向上させることができますが、そうすると容量とレイテンシーが損なわれます。レイテンシーとキャパシティの直接的なトレードオフを行うには、サービングクラスタのトラフィック負荷を変更することもできます。より多くのクエリをクラスタに送信すると、CPUの利用率が向上するという意味で容量が増加し、ハードウェアのコストに見合った効果が得られます。しかし、負荷が高いとコンピュータ内のリソースの競合が激しくなり、クエリの平均レイテンシーが悪化します。クラスタのトラフィックを意図的に減少させる（クールに運用する）と、全体的な処理能力は低下しますが、各クエリは高速化します。
+
+ここで重要なのは、この洞察、つまりすべてのトレードオフに対する理解が深まったことで、バランスをとるための新しい方法を試すことができるようになったということです。遅延を避けられない偶発的な副作用として扱うのではなく、他の目標と同様に第一級の目標として扱うことができるようになったのです。これにより、新たな戦略が生まれました。例えば、データサイエンティストは、レイテンシーによってユーザーエンゲージメントがどれだけ低下するかを正確に測定することができました。これにより、品質に起因する短期的なユーザーエンゲージメントの向上と、レイテンシーに起因する長期的なユーザーエンゲージメントの低下を比較する指標を構築することができました。このアプローチにより、製品の変更について、よりデータに基づいた判断ができるようになりました。例えば、ある小さな変更が品質を向上させる一方でレイテンシーを悪化させた場合、その変更を開始する価値があるかどうかを定量的に判断することができます。私たちは、品質、レイテンシー、容量の変更がバランスよく行われているかどうかを常に判断し、毎月その判断を繰り返しています。
 
 ----
 
