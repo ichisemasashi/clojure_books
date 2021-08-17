@@ -123,91 +123,105 @@ Figure 6-1. ウェブ検索におけるトレードオフ：2つの選択
 
 よくある間違いは、あるチームが一般的な問題ではなく、特定の製品を担当することです。製品とは、問題に対する解決策です。解決策の寿命は短く、製品はより良い解決策に取って代わられることがあります。しかし、問題は、うまく選択すれば、永遠に残るものです。チームのアイデンティティを特定のソリューションに固定してしまうと（「私たちはGitリポジトリを管理するチームです」）、時間の経過とともに様々な問題が発生します。もし、エンジニアの大部分が新しいバージョンコントロールシステムに切り替えたいと思ったらどうしますか？そのチームは、たとえそれが組織にとって最善の道ではないとしても、自分たちの解決策を守り、変化に抵抗して「頑張る」ことになるでしょう。解決策がチームのアイデンティティと自己価値の一部になっているため、チームは目隠しに固執します。チームが問題を所有する代わりに（例えば、「我々は会社にバージョンコントロールを提供するチームである」）、時間をかけて様々なソリューションを試すことができるようになります。
 
-## Always Be Scaling
+## 常にスケーリングする
 
-A lot of leadership books talk about “scaling” in the context of learning to “maximize your impact” --- strategies to grow your team and influence. We’re not going to discuss those things here beyond what we’ve already mentioned. It’s probably obvious that building a self-driving organization with strong leaders is already a great recipe for growth and success.
-Instead, we’re going to discuss team scaling from a defensive and personal point of view rather than an offensive one. As a leader, your most precious resource is your limited pool of time, attention, and energy. If you aggressively build out your teams’ responsibilities and power without learning to protect your personal sanity in the process, the scaling is doomed to fail. And so we’re going to talk about how to effectively scale yourself through this process.
+多くのリーダーシップの本では、「スケーリング」について、「自分の影響力を最大化する」ための学習---チームや影響力を大きくするための戦略---という文脈で語られています。ここでは、これまで述べてきたこと以上の話はしません。強力なリーダーを擁する自走式の組織を構築することが、成長と成功のための素晴らしいレシピであることは、おそらく明白でしょう。
 
-### The Cycle of Success
+代わりに、攻撃的な視点ではなく、防御的かつ個人的な視点からチームのスケーリングについて説明します。リーダーとして最も貴重な資源は、限られた時間、注意、エネルギーです。もしあなたが、自分の正気を守ることなく、積極的にチームの責任と権限を拡大するなら、スケーリングは失敗する運命にあります。そこで今回は、自分自身を効果的にスケーリングする方法をご紹介します。
 
-When a team tackles a difficult problem, there’s a standard pattern that emerges, a particular cycle. It looks like this:
+### 成功のサイクル
 
-- Analysis
-  - First, you receive the problem and start to wrestle with it. You identify the blinders, find all the trade-offs, and build consensus about how to manage them.
-- Struggle
-  - You start moving on the work, whether or not your team thinks it’s ready. You prepare for failures, retries, and iteration. At this point, your job is mostly about herding cats. Encourage your leaders and experts on the ground to form opinions and then listen carefully and devise an overall strategy, even if you have to “fake it” at first.(*3)
-- Traction
-  - Eventually your team begins to figure things out. You’re making smarter decisions, and real progress is made. Morale improves. You’re iterating on trade-offs, and the organization is beginning to drive itself around the problem. Nice job!
-- Reward
-  - Something unexpected happens. Your manager takes you aside and congratulates you on your success. You discover your reward isn’t just a pat on the back, but a whole new problem to tackle. That’s right: the reward for success is more work... and more responsibility! Often, it’s a problem that is similar or adjacent to the first one, but equally difficult.
+チームが困難な問題に取り組むとき、ある種の標準的なパターン、つまりサイクルが生まれます。それは次のようなものです。
 
-So now you’re in a pickle. You’ve been given a new problem, but (usually) not more people. Somehow you need to solve both problems now, which likely means that the original problem still needs to be managed with half as many people in half the time. You need the other half of your people to tackle the new work! We refer to this final step as the compression stage: you’re taking everything you’ve been doing and compressing it down to half the size.
-So really, the cycle of success is more of a spiral (see Figure 6-2). Over months and years, your organization is scaling by tackling new problems and then figuring out how to compress them so that it can take on new, parallel struggles. If you’re lucky, you’re allowed to hire more people as you go. More often than not, though, your hiring doesn’t keep pace with the scaling. Larry Page, one of Google’s founders, would probably refer to this spiral as “uncomfortably exciting.”
+- 分析
+  - まず、問題を受け取り、それとの格闘を始めます。目のつけどころを見極め、すべてのトレードオフを見つけ出し、それらをどのように管理するかについてコンセンサスを得る。
+- 闘争
+  - チームが準備できたと思っているかどうかに関わらず、作業を開始します。失敗、リトライ、イテレーションに備えます。この時点では、あなたの仕事はほとんど猫の手も借りたい状態です。リーダーや現場の専門家に意見を求め、最初は "ごまかし "でもいいから耳を傾け、全体の戦略を練りましょう（※3）。
+- トラクション
+  - やがて、チームは物事を理解し始めます。より賢明な判断ができるようになり、真の進歩が見られるようになります。士気も高まります。トレードオフを繰り返し、組織は問題解決に向けて自走するようになりました。お疲れ様でした
+- 報酬
+  - 思いがけないことが起こります。上司があなたを囲み、成功を祝福してくれます。褒められただけではなく、全く新しい問題に取り組むことになったのです。そうです。成功の報酬は、より多くの仕事...そしてより多くの責任なのです。多くの場合、それは最初の問題と似たり寄ったりで、同じくらい難しい問題です。
+
+困ったことになりましたね。新しい問題を与えられたが、（通常は）人数は増えない。どうにかして両方の問題を解決しなければなりませんが、それはおそらく、元の問題を半分の人数で半分の時間で処理しなければならないことを意味します。新しい仕事に取り組むためには、残りの半分の人員が必要なのです。この最終段階を「圧縮段階」と呼んでいますが、今までやってきたことを半分の大きさに圧縮するわけです。
+
+つまり、成功のサイクルは、スパイラルのようなものなのです（図6-2参照）。数ヶ月から数年かけて、組織は新しい問題に取り組み、その問題を圧縮する方法を見つけ出して、新しい並行した問題に取り組めるようにすることでスケールアップしていきます。運が良ければ、その過程で人を増やすことができます。しかし、多くの場合、採用がスケールアップに追いついていないのが現状です。Googleの創業者の一人であるラリー・ペイジは、このスパイラルを「uncomfortably exciting」と表現するでしょう。
 
 ![fig06-2](../img/Fig6-2.png)
 
-Figure 6-2. The spiral of success
+Figure 6-2. 成功のスパイラル
 
-The spiral of success is a conundrum --- it’s something that’s difficult to manage, and yet it’s the main paradigm for scaling a team of teams. The act of compressing a problem isn’t just about figuring out how to maximize your team’s efficiency, but also about learning to scale your own time and attention to match the new breadth of responsibility.
+成功のスパイラルというのは難問です。管理が難しいものであると同時に、チームの中でチームを拡大するための主要なパラダイムでもあります。問題を圧縮するという行為は、チームの効率を最大化する方法を考えるだけでなく、新たな責任の範囲に合わせて自分の時間と注意を拡大することを学ぶことでもあります。
 
-### Important Versus Urgent
+### 重要なことと緊急なこと
 
-Think back to a time when you weren’t yet a leader, but still a carefree individual contributor. If you used to be a programmer, your life was likely calmer and more panic- free. You had a list of work to do, and each day you’d methodically work down your list, writing code and debugging problems. Prioritizing, planning, and executing your work was straightforward.
-As you moved into leadership, though, you might have noticed that your main mode of work became less predictable and more about firefighting. That is, your job became less proactive and more reactive. The higher up in leadership you go, the more escalations you receive. You are the “finally” clause in a long list of code blocks! All of your means of communication --- email, chat rooms, meetings --- begin to feel like a Denial-of-Service attack against your time and attention. In fact, if you’re not mindful, you end up spending 100% of your time in reactive mode. People are throwing balls at you, and you’re frantically jumping from one ball to the next, trying not to let any of them hit the ground.
-A lot of books have discussed this problem. The management author Stephen Covey is famous for talking about the idea of distinguishing between things that are important versus things that are urgent. In fact, it was US President Dwight D. Eisenhower who popularized this idea in a famous 1954 quote:
+あなたがまだリーダーではなく、気楽な個人貢献者だった頃のことを思い出してみてください。もしあなたがプログラマーだったら、もっと穏やかでパニックのない生活を送っていたことでしょう。やるべきことのリストがあって、毎日、コードを書いたり、問題をデバッグしたりしながら、リストを几帳面に書き進めていました。仕事の優先順位を決め、計画を立て、実行することは簡単でした。
 
- I have two kinds of problems, the urgent and the important. The urgent are not important, and the important are never urgent.
+しかし、リーダーシップを発揮するようになると、自分の主な仕事のやり方が予測可能なものではなくなり、消火活動のようなものになっていることに気づいたかもしれません。つまり、あなたの仕事はプロアクティブではなく、リアクティブになったのです。リーダーになればなるほど、エスカレーションが増えていきます。あなたは、コードブロックの長いリストの中の「最後の」条項です。電子メール、チャットルーム、会議など、すべてのコミュニケーション手段が、あなたの時間と注意力に対するサービス拒否攻撃のように感じられるようになりました。実際、意識していなければ、時間の100％を反応モードで過ごすことになります。人々があなたにボールを投げつけ、あなたは必死になってボールからボールへと飛び移り、ボールが地面に落ちないようにしているのです。
 
-This tension is one of the biggest dangers to your effectiveness as a leader. If you let yourself slip into pure reactive mode (which happens almost automatically), you spend every moment of your life on urgent things, but almost none of those things are important in the big picture. Remember that your job as a leader is to do things that only you can do, like mapping a path through the forest. Building that meta- strategy is incredibly important, but almost never urgent. It’s always easier to respond to that next urgent email.
-So how can you force yourself to work mostly on important things, rather than urgent things? Here are a few key techniques:
+この問題については、多くの書籍で取り上げられています。経営学者のスティーブン・コヴィーは、「重要なことと緊急なことを区別する」というアイデアを語ったことで有名です。実は、この考え方を広めたのは、1954年に発表されたドワイト・D・アイゼンハワー米国大統領の名言である。
 
-- Delegate
-  - Many of the urgent things you see can be delegated back to other leaders in your organization. You might feel guilty if it’s a trivial task; or you might worry that handing off an issue is inefficient because it might take those other leaders longer to fix. But it’s good training for them, and it frees up your time to work on important things that only you can do.
-- Schedule dedicated time
-  - Regularly block out two hours or more to sit quietly and work only on important- but-not-urgent things --- things like team strategy, career paths for your leaders, or how you plan to collaborate with neighboring teams.
-- Find a tracking system that works
-  - There are dozens of systems for tracking and prioritizing work. Some are software based (e.g., specific “to-do” tools), some are pen-and-paper based (the “Bullet Journal” method), and some systems are agnostic to implementation. In this last category, David Allen’s book, Getting Things Done, is quite popular among engineering managers; it’s an abstract algorithm for working through tasks and maintaining a prized “inbox zero.” The point here is to try these different systems and determine what works for you. Some of them will click with you and some will not, but you definitely need to find something more effective than tiny Post- It notes decorating your computer screen.
+ 私には2種類の問題があります。緊急のものと重要なものです。緊急のものは重要ではなく、重要なものは決して緊急ではありません。
 
-### Learn to Drop Balls
+この緊張感は、リーダーとしての効果を発揮する上での最大の危険性のひとつです。もし自分が純粋なリアクティブ・モードに陥ってしまうと（ほとんど自動的にそうなってしまう）、人生のあらゆる瞬間を緊急性の高いものに費やしてしまいますが、それらのものは大局的にはほとんど重要ではありません。リーダーとしてのあなたの仕事は、森の中に道を作るように、あなたにしかできないことをすることだということを忘れないでください。メタ戦略の構築は非常に重要ですが、緊急性はほとんどありません。それよりも、次の緊急メールに返信するほうが簡単です。
 
-There’s one more key technique for managing your time, and on the surface it sounds radical. For many, it contradicts years of engineering instinct. As an engineer, you pay attention to detail; you make lists, you check things off lists, you’re precise, and you finish what you start. That’s why it feels so good to close bugs in a bug tracker, or whittle your email down to inbox zero. But as a leader of leaders, your time and attention are under constant attack. No matter how much you try to avoid it, you end up dropping balls on the floor --- there are just too many of them being thrown at you. It’s overwhelming, and you probably feel guilty about this all the time.
-So, at this point, let’s step back and take a frank look at the situation. If dropping some number of balls is inevitable, isn’t it better to drop certain balls deliberately rather than accidentally? At least then you have some semblance of control.
-Here’s a great way to do that.
-Marie Kondo is an organizational consultant and the author of the extremely popular book The Life-Changing Magic of Tidying Up. Her philosophy is about effectively decluttering all of the junk from your house, but it works for abstract clutter as well.
-Think of your physical possessions as living in three piles. About 20% of your things are just useless --- things that you literally never touch anymore, and all very easy to throw away. About 60% of your things are somewhat interesting; they vary in importance to you, and you sometimes use them, sometimes not. And then about 20% of your possessions are exceedingly important: these are the things you use all the time, that have deep emotional meaning, or, in Ms. Kondo’s words, spark deep “joy” just holding them. The thesis of her book is that most people declutter their lives incorrectly: they spend time tossing the bottom 20% in the garbage, but the remaining 80% still feels too cluttered. She argues that the true work of decluttering is about identifying the top 20%, not the bottom 20%. If you can identify only the critical things, you should then toss out the other 80%. It sounds extreme, but it’s quite effective. It is greatly freeing to declutter so radically.
-It turns out that you can also apply this philosophy to your inbox or task list --- the barrage of balls being thrown at you. Divide your pile of balls into three groups: the bottom 20% are probably neither urgent nor important and very easy to delete or ignore. There’s a middle 60%, which might contain some bits of urgency or importance, but it’s a mixed bag. At the top, there’s 20% of things that are absolutely, critically important.
-And so now, as you work through your tasks, do not try to tackle the top 80% --- you’ll still end up overwhelmed and mostly working on urgent-but-not-important tasks. Instead, mindfully identify the balls that strictly fall in the top 20% --- critical things that only you can do --- and focus strictly on them. Give yourself explicit permission to drop the other 80%.
-It might feel terrible to do so at first, but as you deliberately drop so many balls, you’ll discover two amazing things. First, even if you don’t delegate that middle 60% of tasks, your subleaders often notice and pick them up automatically. Second, if something in that middle bucket is truly critical, it ends up coming back to you anyway, eventually migrating up into the top 20%. You simply need to trust that things below your top-20% threshold will either be taken care of or evolve appropriately. Meanwhile, because you’re focusing only on the critically important things, you’re able to scale your time and attention to cover your group’s ever-growing responsibilities.
+では、緊急性の高いものではなく、重要なものに集中して取り組むようにするにはどうすればいいのでしょうか。いくつかの重要なテクニックをご紹介しましょう。
 
-### Protecting Your Energy
+- 委任
+  - あなたが目にした緊急性の高い事柄の多くは、組織内の他のリーダーに委ねることができます。些細なタスクであれば罪悪感を感じるかもしれませんし、問題の解決に他のリーダーが時間をかける可能性があるため、問題を委ねることは非効率的だと心配するかもしれません。しかし、他のリーダーにとっては良いトレーニングになりますし、自分の時間を確保して、自分にしかできない重要な仕事に取り組むことができます。
+- 専用の時間を設ける
+  - 定期的に2時間以上の時間を確保し、静かに座って、チーム戦略、リーダーのキャリアパス、近隣のチームとの連携方法など、緊急ではないが重要なことだけに取り組むようにしましょう。
+- 自分に合ったトラッキングシステムを見つける
+  - 仕事をトラッキングしたり、優先順位をつけたりするシステムは何十種類もあります。ソフトウェアベースのもの（例えば、特定の「to-do」ツール）、ペンと紙を使ったもの（「バレットジャーナル」方式）、そしてシステムの導入にこだわらないものもあります。この最後のカテゴリーでは、デビッド・アレンの著書『Getting Things Done』がエンジニアリングマネージャーの間で非常に人気があります。これは、タスクを処理し、自慢の「受信トレイゼロ」を維持するための抽象的なアルゴリズムです。ここで重要なのは、これらの異なるシステムを試して、自分に合うものを見極めることです。しかし、コンピュータの画面を飾る小さなメモよりも効果的なものを見つける必要があるのは間違いありません。
 
-We’ve talked about protecting your time and attention --- but your personal energy is the other piece of the equation. All of this scaling is simply exhausting. In an environment like this, how do you stay charged and optimistic?
-Part of the answer is that over time, as you grow older, your overall stamina builds up. Early in your career, working eight hours a day in an office can feel like a shock; you come home tired and dazed. But just like training for a marathon, your brain and body build up larger reserves of stamina over time.
-The other key part of the answer is that leaders gradually learn to manage their energy more intelligently. It’s something they learn to pay constant attention to. Typically, this means being aware of how much energy you have at any given moment, and making deliberate choices to “recharge” yourself at specific moments, in specific ways. Here are some great examples of mindful energy management:
+### ボールを落とすことを学ぶ
 
-- Take real vacations
-  - A weekend is not a vacation. It takes at least three days to “forget” about your work; it takes at least a week to actually feel refreshed. But if you check your work email or chats, you ruin the recharge. A flood of worry comes back into your mind, and all of the benefit of psychological distancing dissipates. The vacation recharges only if you are truly disciplined about disconnecting.(*4) And, of course, this is possible only if you’ve built a self-driving organization.
-- Make it trivial to disconnect
-  - When you disconnect, leave your work laptop at the office. If you have work communications on your phone, remove them. For example, if your company uses G Suite (Gmail, Google Calendar, etc.), a great trick is to install these apps in a “work profile” on your phone. This causes a second set of work-badged apps to appear on your phone. For example, you’ll now have two Gmail apps: one for personal email, one for work email. On an Android phone, you can then press a single button to disable the entire work profile at once. All the work apps gray out, as if they were uninstalled, and you can’t “accidentally” check work messages until you re-enable the work profile.
-- Take real weekends, too
-  - A weekend isn’t as effective as a vacation, but it still has some rejuvenating power. Again, this recharge works only if you disconnect from work communications. Try truly signing out on Friday night, spend the weekend doing things you love, and then sign in again on Monday morning when you’re back in the office.
-- Take breaks during the day
-  - Your brain operates in natural 90-minute cycles.(*5) Use the opportunity to get up and walk around the office, or spend 10 minutes walking outside. Tiny breaks like this are only tiny recharges, but they can make a tremendous difference in your stress levels and how you feel over the next two hours of work.
-- Give yourself permission to take a mental health day
-  - Sometimes, for no reason, you just have a bad day. You might have slept well, eaten well, exercised --- and yet you are still in a terrible mood anyway. If you’re a leader, this is an awful thing. Your bad mood sets the tone for everyone around you, and it can lead to terrible decisions (emails you shouldn’t have sent, overly harsh judgements, etc.). If you find yourself in this situation, just turn around and go home, declaring a sick day. Better to get nothing done that day than to do active damage.
+時間を管理するために、もう一つ重要なテクニックがあります。それは、一見すると過激に聞こえます。多くの人にとって、それは長年のエンジニアとしての本能に反するものです。エンジニアは細部にまで気を配ります。リストを作り、リストにチェックを入れ、正確に、始めたことは最後までやり遂げようとします。だからこそ、バグトラッカーでバグを解決したり、メールの受信箱をゼロにしたりすると、とても気持ちがいいのです。しかし、リーダーの中のリーダーとして、あなたの時間と注意は常に攻撃されています。どんなに避けようとしても、結局はボールを床に落としてしまいます。圧倒的な数のボールがあなたに投げつけられているのです。
 
-In the end, managing your energy is just as important as managing your time. If you learn to master these things, you’ll be ready to tackle the broader cycle of scaling responsibility and building a self-sufficient team.
+さて、ここで一歩下がって、この状況を率直に見てみましょう。ある程度の数のボールを落とすことが避けられないのであれば、あるボールを偶然ではなく意図的に落とした方が良いのではないでしょうか？そうすれば、ある程度のコントロールが可能になります。
 
-## Conclusion
+そのための素晴らしい方法があります。
 
-Successful leaders naturally take on more responsibility as they progress (and that’s a good and natural thing). Unless they effectively come up with techniques to properly make decisions quickly, delegate when needed, and manage their increased responsibility, they might end up feeling overwhelmed. Being an effective leader doesn’t mean that you need to make perfect decisions, do everything yourself, or work twice as hard. Instead, strive to always be deciding, always be leaving, and always be scaling.
+近藤麻理恵さんは、『人生が変わる片づけの魔法』という大人気の本の著者であり、整理収納コンサルタントです。彼女の哲学は、家の中のガラクタを効果的に断捨離することですが、抽象的な散らかりにも有効です。
+
+あなたの持ち物は、3つの山に分かれていると考えてみてください。あなたの物の約20％は、ただの無駄なものです。文字通り、あなたがもう触れることのないもので、すべて簡単に捨てることができます。あなたの持ち物の約60％は、やや興味深いもので、あなたにとっての重要性は様々で、使うときもあれば使わないときもあります。そして、約20％の物は、非常に重要な物です。これは、いつも使っている物で、深い感情的な意味を持ち、近藤さんの言葉を借りれば、持っているだけで深い「喜び」を感じる物です。近藤さんの本のテーマは、多くの人が間違った断捨離をしているということです。下から2割のものをゴミ箱に捨てることに時間をかけても、残りの8割はまだ散らかっていると感じているのです。彼女は、本当の断捨離とは、下の20％ではなく、上の20％を見極めることだと主張します。重要なものだけを特定できたら、残りの8割は捨ててしまえばいいのです。極端な言い方ですが、効果は絶大です。ここまで思い切った断捨離をすると、とても気持ちが楽になります。
+
+この哲学は、あなたの受信トレイやタスクリストにも適用できることがわかりました。ボールの山を3つのグループに分けてみましょう。下の20％は、おそらく緊急でも重要でもなく、削除したり無視したりするのがとても簡単なものです。中間の60％は、緊急性や重要性のあるものが含まれているかもしれませんが、混ざっています。一番上には、絶対的に重要なものが20％あります。
+
+そうすると、タスクを処理する際に、上の80％に取り組もうとしないでください。そうすると、圧倒されてしまい、ほとんどが緊急だが重要ではないタスクを処理することになります。それよりも、上位20％に入る重要なこと、つまり自分にしかできないことを意識して見つけ出し、それに集中することです。残りの80％を捨ててもいいという明確な許可を自分に与えてください。
+
+最初は嫌な感じがするかもしれませんが、意図的に多くのボールを落としていくうちに、2つの素晴らしいことを発見します。1つ目は、中間の60％のタスクを委任しなくても、サブリーダーが気づいて自動的に拾ってくれることです。2つ目は、中間のバケツに入っているものが本当に重要なものであれば、どのみちあなたのところに戻ってきて、最終的には上位20％に移行します。トップ20％以下のものは、適切に処理されるか、あるいは適切に進化すると信じていればよいのです。一方で、重要なことだけに集中しているので、増え続けるグループの責任をカバーするために、時間と注意を拡大することができます。
+
+### 自分のエネルギーを守る
+
+ここまで、時間と注意力を守ることについて説明してきましたが、もうひとつの重要な要素は、個人のエネルギーです。このような環境では、どのようにしてエネルギーを補給し、楽観的でいることができるでしょうか。このような環境の中で、どうやってエネルギーを維持し、楽観的になることができるでしょうか？
+
+その答えのひとつは、年齢を重ねるごとに、全体的なスタミナがついてくることです。仕事を始めたばかりの頃は、1日8時間のオフィスワークがショックで、家に帰ると疲れてボーッとしてしまうことがあります。しかし、マラソンの練習と同じように、脳も体も時間をかけてスタミナを蓄えていくのです。
+
+もう1つの重要なポイントは、リーダーは自分のエネルギーをより賢く管理することを徐々に学んでいくということです。それは、常に注意を払うようになることです。具体的には、現在の自分のエネルギー量を把握し、特定の瞬間に特定の方法で「充電」することを意図的に選択することです。マインドフルなエネルギー管理の素晴らしい例をいくつかご紹介しましょう。
+
+- 本物のバケーションを取る
+  - 週末だけでは休暇とは言えません。仕事を「忘れる」ためには最低3日、実際にリフレッシュするためには最低1週間は必要です。しかし、仕事のメールやチャットをチェックしてしまうと、せっかくの充電が台無しになってしまいます。心配事が次々と頭に浮かんできて、心理的に距離を置くことのメリットがすべて消えてしまいます。バケーションの充電は、本当に自分を律して断ち切らなければならないのです(*4)。もちろん、これは自走する組織を構築してこそ可能なことです。
+- 切り離すことを些細なことにする
+  - 接続を切るときは、仕事用のノートパソコンをオフィスに置いておく。スマホに仕事用の通信が入っている場合は、それを外します。例えば、あなたの会社がG Suite（Gmail、Googleカレンダーなど）を使用している場合、これらのアプリを携帯電話の「仕事用プロファイル」にインストールするのが良い方法です。これにより、2つ目の仕事用のアプリがスマホに表示されます。例えば、Gmailのアプリを2つ用意して、1つは個人用のメール、もう1つは仕事用のメールとします。Android端末では、ボタンを1つ押すだけで、仕事用のアプリを一斉に無効にすることができます。すべての仕事用アプリは、あたかもアンインストールされたかのようにグレーアウトし、仕事用プロファイルを再び有効にするまでは、仕事用メッセージを「誤って」チェックすることはできません。
+- 本当の週末も大切に
+  - 週末は、休暇ほどの効果はありませんが、若返りの効果はあります。ただし、この場合も、仕事の連絡を断ち切ることが必要です。金曜日の夜にサインアウトして、週末は自分の好きなことをして過ごし、月曜日の朝にサインインして会社に戻ってくる、という方法を試してみてください。
+- 1日のうちに休憩をとる
+  - 脳は90分サイクルで動いています(*5)。立ち上がってオフィス内を歩いたり、10分ほど外を歩いたりしてみてください。このような小さな休憩は小さな充電に過ぎませんが、ストレスレベルや次の2時間の仕事での気分に大きな違いをもたらします。
+- メンタルヘルスデーの許可を自分に与える
+  - 時には、理由もなく嫌なことがあるものです。よく寝て、よく食べて、よく運動したはずなのに、それでも気分が悪い。あなたがリーダーであれば、これは大変なことです。あなたの機嫌の悪さは、周りの人たちのトーンを決めてしまい、ひどい決断（送るべきではないメール、過度に厳しい判断など）につながってしまいます。もしこのような状況に陥った場合は、病欠を宣言して家に帰りましょう。積極的にダメージを与えるよりも、その日は何もしないほうがいいのです。
+
+結局のところ、エネルギーの管理は、時間の管理と同じくらい重要です。これらのことをマスターすれば、責任を拡大し、自給自足のチームを構築するという幅広いサイクルに取り組む準備ができます。
+
+## 結論
+
+成功しているリーダーは、成長するにつれ、自然と責任が重くなっていきます（それは良いことであり、自然なことでもあります）。しかし、迅速な意思決定、必要な時の委任、増えた責任の管理などを適切に行うためのテクニックを効果的に身につけていなければ、圧倒されてしまうことになるかもしれません。効果的なリーダーになるためには、完璧な意思決定をしたり、すべてのことを自分で行ったり、2倍の努力をしたりする必要はありません。それよりも、常に決断し、常に残し、常にスケーリングすることを心がけてください。
 
 
 ## TL;DRs
 
-- Always Be Deciding: Ambiguous problems have no magic answer; they’re all about finding the right trade-offs of the moment, and iterating.
-- Always Be Leaving: Your job, as a leader, is to build an organization that automatically solves a class of ambiguous problems --- over time --- without you needing to be present.
-- Always Be Scaling: Success generates more responsibility over time, and you must proactively manage the scaling of this work in order to protect your scarce resources of personal time, attention, and energy.
+- 常に決断すること。曖昧な問題には、魔法のような答えはありません。その場その場で適切なトレードオフを見つけ、それを繰り返していくことが大切です。
+- Always Be Leaving: リーダーであるあなたの仕事は、ある種の曖昧な問題を、あなたがいなくても時間をかけて自動的に解決する組織を作ることです。
+- 常にスケーリングする。成功すればするほど、より多くの責任が発生します。あなたは、個人の時間、注意、エネルギーという希少資源を守るために、この仕事のスケーリングを積極的に管理しなければなりません。
 
 
 
