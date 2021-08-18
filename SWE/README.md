@@ -20,7 +20,7 @@ PART II 文化
 
 [Ch06: Leading at Scale](docs/CHAPTER%2006.md)
 
-
+[ch07: Measuring Engineering Productivity](docs/CHAPTER%2007.md)
 
 
 
