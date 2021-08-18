@@ -238,11 +238,11 @@ Figure 6-2. 成功のスパイラル
 
 ------
 
-1 “Code yellow” is Google’s term for “emergency hackathon to fix a critical problem.” Affected teams are expected to suspend all work and focus 100% attention on the problem until the state of emergency is declared over.
-2 Brian W. Fitzpatrick and Ben Collins-Sussman, Debugging Teams: Better Productivity through Collaboration (Boston: O’Reilly, 2016).
-3 It’s easy for imposter syndrome to kick in at this point. One technique for fighting the feeling that you don’t know what you’re doing is to simply pretend that some expert out there knows exactly what to do, and that they’re simply on vacation and you’re temporarily subbing in for them. It’s a great way to remove the personal stakes and give yourself permission to fail and learn.
-4 You need to plan ahead and build around the assumption that your work simply won’t get done during vacation. Working hard (or smart) just before and after your vacation mitigates this issue.
-5 You can read more about BRAC at https://en.wikipedia.org/wiki/Basic_rest-activity_cycle.
+1 "Code yellow "とは、Googleの用語で「重大な問題を解決するための緊急ハッカソン」のこと。影響を受けたチームは、緊急事態の終了が宣言されるまで、すべての作業を中断し、問題に100％の注意を払うことが求められる。
+2 Brian W. Fitzpatrick and Ben Collins-Sussman, Debugging Teams: Better Productivity through Collaboration』（Boston: O'Reilly, 2016）。
+3 この時点でインポスター症候群が発生しやすくなります。自分が何をしているのかわからない」という気持ちに対抗するテクニックの1つとして、「何をすべきかを正確に知っている専門家がいる」「その人は単に休暇中で、自分は一時的にその人の代役を務めている」と思い込むことがあります。これは、個人的な利害関係を排除し、自分に失敗と学習の許可を与えるための素晴らしい方法です。
+4 事前に計画を立て、休暇中には仕事が終わらないことを前提にしておく必要があります。休暇の前後に一生懸命（または賢く）働くことで、この問題を軽減することができます。
+5 BRACについては、https://en.wikipedia.org/wiki/Basic_rest-activity_cycle をご覧ください。
 
 
 
