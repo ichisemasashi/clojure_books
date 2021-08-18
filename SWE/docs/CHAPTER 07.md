@@ -1,25 +1,25 @@
-# CHAPTER 7 Measuring Engineering Productivity
+# CHAPTER 7 エンジニアの生産性を測る
 
 Written by Ciera Jaspan
 Edited by Riona Macnamara
 
-Google is a data-driven company. We back up most of our products and design decisions with hard data. The culture of data-driven decision making, using appropriate metrics, has some drawbacks, but overall, relying on data tends to make most decisions objective rather than subjective, which is often a good thing. Collecting and analyzing data on the human side of things, however, has its own challenges. Specifically, within software engineering, Google has found that having a team of specialists focus on engineering productivity itself to be very valuable and important as the company scales and can leverage insights from such a team.
+Googleはデータ重視の企業です。製品やデザインの決定のほとんどを、確固たるデータで裏付けています。適切な測定基準を用いてデータ駆動型の意思決定を行う文化には欠点もありますが、全体的に見ると、データに頼ることでほとんどの意思決定が主観的ではなく客観的になる傾向があり、これは良いことであることが多いのです。しかし、人間の側からデータを収集・分析することには、それなりの課題があります。具体的には、ソフトウェアエンジニアリングの分野では、エンジニアリングの生産性に特化した専門家チームを持つこと自体が、会社の規模が大きくなり、そこから得られる知見を活用する上で、非常に価値のある重要なことだとGoogleは考えています。
 
-## Why Should We Measure Engineering Productivity?
+## なぜエンジニアの生産性を測定する必要があるのか？
 
-Let’s presume that you have a thriving business (e.g., you run an online search engine), and you want to increase your business’s scope (enter into the enterprise application market, or the cloud market, or the mobile market). Presumably, to increase the scope of your business, you’ll need to also increase the size of your engineering organization. However, as organizations grow in size linearly, communication costs grow quadratically.(*1) Adding more people will be necessary to increase the scope of your business, but the communication overhead costs will not scale linearly as you add additional personnel. As a result, you won’t be able to scale the scope of your business linearly to the size of your engineering organization.
+例えば、オンライン検索エンジンを運営しているような繁盛しているビジネスを持っているとします。(例えば、あなたはオンライン検索エンジンを運営しています。) ビジネスの範囲を拡大したいと考えているとします。(企業向けアプリケーション市場、クラウド市場、モバイル市場への参入。) おそらく、ビジネスの範囲を広げるためには、エンジニアリング組織の規模も大きくする必要があるでしょう。しかし、組織の規模が直線的に大きくなると、通信費は二次関数的に大きくなります(*1)。ビジネスの規模を大きくするためには人を増やす必要がありますが、通信費のオーバーヘッドは人を増やしても直線的には拡大しません。その結果、エンジニアリング組織の規模に応じてビジネスの範囲をリニアに拡大することができなくなります。
 
-There is another way to address our scaling problem, though: we could make each individual more productive. If we can increase the productivity of individual engineers in the organization, we can increase the scope of our business without the commensurate increase in communication overhead.
+スケーリングの問題を解決するには、一人ひとりの生産性を高めるという方法があります。組織内の個々のエンジニアの生産性を高めることができれば、コミュニケーションのオーバーヘッドを増やすことなく、ビジネスの範囲を拡大することができます。
 
-Google has had to grow quickly into new businesses, which has meant learning how to make our engineers more productive. To do this, we needed to understand what makes them productive, identify inefficiencies in our engineering processes, and fix the identified problems. Then, we would repeat the cycle as needed in a continuous improvement loop. By doing this, we would be able to scale our engineering organization with the increased demand on it.
+Googleは新規事業への急速な成長を余儀なくされていますが、それはエンジニアの生産性を高める方法を学ぶことを意味します。そのためには、エンジニアの生産性を高める要因を理解し、エンジニアリングプロセスの非効率性を特定し、特定された問題を解決する必要がありました。そして、このサイクルを必要に応じて繰り返し、継続的に改善していきます。このようにして、需要の増加に合わせてエンジニアリング組織を拡張することができるのです。
 
-However, this improvement cycle also takes human resources. It would not be worthwhile to improve the productivity of your engineering organization by the equivalent of 10 engineers per year if it took 50 engineers per year to understand and fix productivity blockers. Therefore, our goal is to not only improve software engineering productivity, but to do so efficiently.
+しかし、この改善サイクルには人的資源も必要です。生産性の阻害要因を理解して修正するのに年間50人のエンジニアが必要であれば、エンジニア組織の生産性を年間10人分向上させても意味がありません。そのため、ソフトウェアエンジニアリングの生産性を向上させるだけでなく、それを効率的に行うことを目標としています。
 
-At Google, we addressed these trade-offs by creating a team of researchers dedicated to understanding engineering productivity. Our research team includes people from the software engineering research field and generalist software engineers, but we also include social scientists from a variety of fields, including cognitive psychology and behavioral economics. The addition of people from the social sciences allows us to not only study the software artifacts that engineers produce, but to also understand the human side of software development, including personal motivations, incentive structures, and strategies for managing complex tasks. The goal of the team is to take a data-driven approach to measuring and improving engineering productivity.
+Googleでは、エンジニアリングの生産性を理解するための研究チームを設立し、このようなトレードオフの問題に取り組んでいます。研究チームには、ソフトウェアエンジニアリングの研究者や一般のソフトウェアエンジニアのほか、認知心理学や行動経済学などさまざまな分野の社会科学者も参加しています。社会科学者が加わったことで、エンジニアが生み出すソフトウェアの成果物を研究するだけでなく、個人のモチベーションやインセンティブ構造、複雑なタスクを管理するための戦略など、ソフトウェア開発の人間的側面を理解することができます。このチームの目標は、エンジニアの生産性を測定し、向上させるために、データに基づいたアプローチをとることです。
 
-In this chapter, we walk through how our research team achieves this goal. This begins with the triage process: there are many parts of software development that we can measure, but what should we measure? After a project is selected, we walk through how the research team identifies meaningful metrics that will identify the problematic parts of the process. Finally, we look at how Google uses these metrics to track improvements to productivity.
+本章では、私たちの研究チームがどのようにしてこの目標を達成したかを説明します。ソフトウェア開発には測定可能な部分がたくさんありますが，何を測定すればよいのでしょうか？プロジェクトが選択された後、リサーチチームがプロセスの問題点を特定するために、意味のある測定基準をどのように特定するかを説明します。最後に、Google社がこれらの測定基準を使って生産性の向上を追跡する方法を紹介します。
 
-For this chapter, we follow one concrete example posed by the C++ and Java language teams at Google: readability. For most of Google’s existence, these teams have managed the readability process at Google. (For more on readability, see Chapter 3.) The readability process was put in place in the early days of Google, before automatic formatters (Chapter 8) and linters that block submission were commonplace (Chapter 9). The process itself is expensive to run because it requires hundreds of engineers performing readability reviews for other engineers in order to grant readability to them. Some engineers viewed it as an archaic hazing process that no longer held utility, and it was a favorite topic to argue about around the lunch table. The concrete question from the language teams was this: is the time spent on the readability process worthwhile?
+本章では、GoogleのC++およびJava言語チームが提起した具体的な例として、「読みやすさ」を取り上げます。Googleの歴史のほとんどにおいて、これらのチームはGoogleの可読性プロセスを管理してきました。(読みやすさについては、第3章を参照してください）読みやすさのプロセスは、自動フォーマッタ（第8章）や送信をブロックするリンタ（第9章）が一般的になる前の、Googleの初期に導入されました。このプロセスは、何百人ものエンジニアが他のエンジニアに可読性を付与するために可読性レビューを行う必要があるため、運営自体にコストがかかります。エンジニアの中には、もはや実用性のない古臭いハズレのプロセスと捉えている人もいて、ランチテーブルを囲んで議論するのが好きな話題だった。言語チームからの具体的な質問は、「可読性評価に費やす時間は価値があるのか」というものだった。
 
 ## Triage: Is It Even Worth Measuring?
 
