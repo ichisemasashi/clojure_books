@@ -101,47 +101,47 @@ GSMフレームワークは、メトリクスを作成する際に、いくつ�
 
 これは明らかに極端な例ですが、チームは測定の際に核となるトレードオフを忘れてしまうことがよくあります。この問題を解決するために、私たちの研究チームは、生産性を5つのコアコンポーネントに分けました。この5つの構成要素は互いにトレードオフの関係にあり、チームはそれぞれの構成要素の目標を検討し、不用意に1つの構成要素を向上させて他の構成要素を低下させないようにしています。この5つの要素を覚えやすくするために、私たちは「QUANTS」というニーモニックを使っています。
 
-- Quality of the code
+- コードの品質
 
- What is the quality of the code produced? Are the test cases good enough to prevent regressions? How good is an architecture at mitigating risk and changes?
+ 作成されたコードの品質はどうか？テストケースはリグレッションを防ぐのに十分なものか？アーキテクチャは、リスクや変更を軽減するのに十分なものか？
 
-- Attention from engineers
+- エンジニアの注意力
 
- How frequently do engineers reach a state of flow? How much are they distracted by notifications? Does a tool encourage engineers to context switch?
+ エンジニアはどのくらいの頻度でフロー状態になっているか？通知によってどれくらい気を取られているか？ツールはエンジニアにコンテキストスイッチを促しているか？
 
-- Intellectual complexity
+- 知的複雑さ
 
- How much cognitive load is required to complete a task? What is the inherent complexity of the problem being solved? Do engineers need to deal with unnecessary complexity?
+ タスクを完了するために必要な認知的負荷はどのくらいか？解決しようとしている問題の本質的な複雑さとは？エンジニアは不必要な複雑さに対処する必要があるのか？
 
-- Tempo and velocity
+- テンポと速度
 
- How quickly can engineers accomplish their tasks? How fast can they push their releases out? How many tasks do they complete in a given timeframe?
+ エンジニアはどのくらいの速さでタスクをこなせるか？どのくらいの速さでリリースを出すことができますか？与えられた時間枠の中でどれだけのタスクを完了できるか？
 
-- Satisfaction
+- 満足度
 
- How happy are engineers with their tools? How well does a tool meet engineers’ needs? How satisfied are they with their work and their end product? Are engineers feeling burned out?
+ エンジニアは自分のツールにどれだけ満足しているのか？ツールはエンジニアのニーズをどれだけ満たしているか？エンジニアは自分の仕事や最終製品にどれだけ満足しているのか？エンジニアは燃え尽き症候群になっていないか？
 
-Going back to the readability example, our research team worked with the readability team to identify several productivity goals of the readability process:
+読みやすさの例に戻ると、私たちの研究チームは読みやすさチームと協力して、読みやすさプロセスの生産性目標をいくつか特定しました。
 
-- Quality of the code
+- コードの品質
 
- Engineers write higher-quality code as a result of the readability process; they write more consistent code as a result of the readability process; and they contribute to a culture of code health as a result of the readability process.
+ 読みやすさ向上プロセスの結果、エンジニアはより質の高いコードを書き、読みやすさ向上プロセスの結果、より一貫性のあるコードを書き、読みやすさ向上プロセスの結果、コードの健全性を保つ文化に貢献する。
 
-- Attention from engineers
+- エンジニアからの注目
 
- We did not have any attention goal for readability. This is OK! Not all questions about engineering productivity involve trade-offs in all five areas.
+ 読みやすさについての注意目標はありませんでした。これでOK! エンジニアの生産性に関するすべての質問が、5つの分野すべてにおいてトレードオフを伴うわけではない。
 
-- Intellectual complexity
+- 知的複雑さ
 
- Engineers learn about the Google codebase and best coding practices as a result of the readability process, and they receive mentoring during the readability process.
+ エンジニアは、読みやすさを追求した結果、Google のコードベースや最善のコーディング方法について学び、読みやすさを追求した過程でメンタリングを受けます。
 
-- Tempo and velocity
+- テンポと速度
 
- Engineers complete work tasks faster and more efficiently as a result of the readability process.
+ 読みやすさを追求した結果、エンジニアはより速く、より効率的に仕事をこなすことができるようになりました。
 
-- Satisfaction
+- 満足感
 
- Engineers see the benefit of the readability process and have positive feelings about participating in it.
+ エンジニアはリーダビリティ・プロセスの利点を理解し、プロセスへの参加に前向きな気持ちを持っています。
 
 ## Signals
 
