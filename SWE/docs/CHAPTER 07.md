@@ -143,29 +143,29 @@ GSMフレームワークは、メトリクスを作成する際に、いくつ�
 
  エンジニアはリーダビリティ・プロセスの利点を理解し、プロセスへの参加に前向きな気持ちを持っています。
 
-## Signals
+## シグナル
 
-A signal is the way in which we will know we’ve achieved our goal. Not all signals are measurable, but that’s acceptable at this stage. There is not a 1:1 relationship between signals and goals. Every goal should have at least one signal, but they might have more. Some goals might also share a signal. Table 7-1 shows some example signals for the goals of the readability process measurement.
+シグナルとは、目標を達成したことを知るための方法です。すべてのシグナルが測定可能なわけではありませんが、この段階ではそれは許容されます。シグナルとゴールの間には、1対1の関係はありません。すべてのゴールは少なくとも1つのシグナルを持つべきですが、それ以上のシグナルを持つ場合もあります。また、いくつかのゴールはシグナルを共有するかもしれません。表7-1は、読みやすさのプロセス測定の目標に対するシグナルの例を示している。
 
 Table 7-1. Signals and goals
 
 | Goals | Signals |
 |:----- |:------- |
-|Engineers write higher-quality code as a result of the readability process. | Engineers who have been granted readability judge their code to be of higher quality than engineers who have not been granted readability. The readability process has a positive impact on code quality. |
-|Engineers learn about the Google codebase and best coding practices as a result of the readability process.|Engineers report learning from the readability process.|
-|Engineers receive mentoring during the readability process. |Engineers report positive interactions with experienced Google engineers who serve as reviewers during the readability process.|
-|Engineers complete work tasks faster and more efficiently as a result of the readability process. |Engineers who have been granted readability judge themselves to be more productive than engineers who have not been granted readability. Changes written by engineers who have been granted readability are faster to review than changes written by engineers who have not been granted readability.|
-|Engineers see the benefit of the readability process and have positive feelings about participating in it. |Engineers view the readability process as being worthwhile.|
+|エンジニアは、読みやすさを追求した結果、より質の高いコードを書くようになります。| リーダビリティを付与されたエンジニアは、付与されていないエンジニアよりも自分のコードが高品質であると判断する。読みやすさ向上プロセスは、コードの品質に良い影響を与える。|
+|エンジニアは、可読性プロセスの結果として、Google のコードベースとベスト コーディング プラクティスについて学んでいる。|
+|エンジニアは、読みやすさ向上のためのメンタリングを受けています。|エンジニアは、可読性評価の過程でレビュアーを務める経験豊富なGoogleのエンジニアと積極的に交流したと報告している。|
+|エンジニアは、読みやすさ向上の結果、より速く、より効率的に仕事をこなすことができるようになった。|可読性を付与されたエンジニアは、可読性を付与されていないエンジニアよりも生産性が高いと判断している。読みやすさを付与されたエンジニアが書いた変更は、付与されていないエンジニアが書いた変更よりもレビューが早い。|
+|エンジニアは可読性プロセスの利点を理解しており、このプロセスに参加することに前向きな気持ちを持っている。|エンジニアは、読みやすさ向上のプロセスに価値があると考えている。|
 
-## Metrics
+## メトリクス
 
-Metrics are where we finally determine how we will measure the signal. Metrics are not the signal themselves; they are the measurable proxy of the signal. Because they are a proxy, they might not be a perfect measurement. For this reason, some signals might have multiple metrics as we try to triangulate on the underlying signal.
+メトリクスとは、シグナルをどのように測定するかを最終的に決定する場所です。メトリクスはシグナルそのものではなく、シグナルの測定可能な代理です。代理人であるがゆえに、完璧な測定ではないかもしれません。このような理由から、シグナルによっては複数の測定基準を設けて、根本的なシグナルの三角測量を行うことがあります。
 
-For example, to measure whether engineers’ code is reviewed faster after readability, we might use a combination of both survey data and logs data. Neither of these metrics really provide the underlying truth. (Human perceptions are fallible, and logs metrics might not be measuring the entire picture of the time an engineer spends reviewing a piece of code or can be confounded by factors unknown at the time, like the size or difficulty of a code change.) However, if these metrics show different results, it signals that possibly one of them is incorrect and we need to explore further. If they are the same, we have more confidence that we have reached some kind of truth.
+例えば、エンジニアのコードが読みやすいかどうかを測定するには、調査データとログデータの両方を組み合わせて使用することがあります。しかし、これらの指標はどちらも真実を示すものではありません。(人間の認識には誤りがあり、ログの測定基準は、エンジニアがコードの一部をレビューするのに費やす時間の全体像を測定していないかもしれませんし、コード変更の規模や難易度など、その時点ではわからない要因に惑わされる可能性もあります) しかし、これらの測定基準が異なる結果を示す場合、おそらくどちらかが間違っていることを示しており、さらに調査する必要があります。同じ結果であれば、ある種の真実に到達したという確信が得られます。
 
-Additionally, some signals might not have any associated metric because the signal might simply be unmeasurable at this time. Consider, for example, measuring code quality. Although academic literature has proposed many proxies for code quality, none of them have truly captured it. For readability, we had a decision of either using a poor proxy and possibly making a decision based on it, or simply acknowledging that this is a point that cannot currently be measured. Ultimately, we decided not to capture this as a quantitative measure, though we did ask engineers to self-rate their code quality.
+また、シグナルの中には、現時点では測定不可能なものもあるため、関連する指標がない場合もあります。例えば、コード品質の測定を考えてみましょう。学術論文ではコード品質の指標が数多く提案されていますが、コード品質を真に捉えたものはありません。可読性については、劣悪なプロキシを使用し、それに基づいて判断を下すか、あるいは、現在は測定できないポイントであることを認めるか、どちらかを選択しなければなりませんでした。最終的には、エンジニアにコードの品質を自己評価してもらいましたが、これを定量的な指標として捉えることはしませんでした。
 
-Following the GSM framework is a great way to clarify the goals for why you are measuring your software process and how it will actually be measured. However, it’s still possible that the metrics selected are not telling the complete story because they are not capturing the desired signal. At Google, we use qualitative data to validate our metrics and ensure that they are capturing the intended signal.
+GSMのフレームワークに従うことは、なぜソフトウェアプロセスを測定するのか、そして実際にどのように測定するのかという目標を明確にするための素晴らしい方法です。しかし、選択した測定基準が、望ましい信号を捉えていないために、完全なストーリーを語っていない可能性もあります。Googleでは、定性データを用いて測定基準を検証し、意図したシグナルを捉えているかどうかを確認しています。
 
 ## Using Data to Validate Metrics
 
