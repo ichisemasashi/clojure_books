@@ -167,30 +167,30 @@ Table 7-1. Signals and goals
 
 GSMのフレームワークに従うことは、なぜソフトウェアプロセスを測定するのか、そして実際にどのように測定するのかという目標を明確にするための素晴らしい方法です。しかし、選択した測定基準が、望ましい信号を捉えていないために、完全なストーリーを語っていない可能性もあります。Googleでは、定性データを用いて測定基準を検証し、意図したシグナルを捉えているかどうかを確認しています。
 
-## Using Data to Validate Metrics
+## データを使った測定基準の検証
 
-As an example, we once created a metric for measuring each engineer’s median build latency; the goal was to capture the “typical experience” of engineers’ build latencies. We then ran an experience sampling study. In this style of study, engineers are interrupted in context of doing a task of interest to answer a few questions. After an engineer started a build, we automatically sent them a small survey about their experiences and expectations of build latency. However, in a few cases, the engineers responded that they had not started a build! It turned out that automated tools were starting up builds, but the engineers were not blocked on these results and so it didn’t “count” toward their “typical experience.” We then adjusted the metric to exclude such builds.(*5)
+例えば、各エンジニアのビルドレイテンシーの中央値を測定する指標を作成したことがあります。その目的は、エンジニアのビルドレイテンシーの「典型的な経験」を把握することでした。そこで、エクスペリエンスサンプリング調査を実施しました。この調査では、エンジニアが興味のあるタスクを実行しているときに、いくつかの質問に答えるために中断します。エンジニアがビルドを開始した後、ビルドの待ち時間に関する経験と期待についての小さなアンケートを自動的に送りました。しかし、いくつかのケースでは、エンジニアはビルドを開始していないと回答しました。その結果、自動化されたツールがビルドを開始していたが、エンジニアはその結果をブロックされていなかったため、彼らの "典型的な経験 "にはカウントされていなかったのだ。そこで、そのようなビルドを除外するように指標を調整しました(*5)。
 
-Quantitative metrics are useful because they give you power and scale. You can measure the experience of engineers across the entire company over a large period of time and have confidence in the results. However, they don’t provide any context or narrative. Quantitative metrics don’t explain why an engineer chose to use an antiquated tool to accomplish their task, or why they took an unusual workflow, or why they circumvented a standard process. Only qualitative studies can provide this information, and only qualitative studies can then provide insight on the next steps to improve a process.
+定量的なメトリクスが有用なのは、パワーとスケールを与えてくれるからです。会社全体のエンジニアの経験を長期間にわたって測定し、その結果に自信を持つことができます。しかし、定量的な指標は、文脈や物語を提供しません。定量的な指標では、なぜエンジニアが自分のタスクを達成するために時代遅れのツールを使うことを選んだのか、なぜ普通ではないワークフローをとったのか、なぜ標準的なプロセスを回避したのかを説明できません。このような情報を提供できるのは定性調査だけであり、定性調査はプロセスを改善するための次のステップへのインサイトを提供することができます。
 
-Consider now the signals presented in Table 7-2. What metrics might you create to measure each of those? Some of these signals might be measurable by analyzing tool and code logs. Others are measurable only by directly asking engineers. Still others might not be perfectly measurable—how do we truly measure code quality, for example?
+ここで、表7-2のシグナルを考えてみましょう。それぞれのシグナルを測定するために、どのようなメトリクスを作成できますか？これらのシグナルの中には、ツールやコードのログを分析することで測定可能なものもあります。また、エンジニアに直接聞いてみないと測定できないものもあります。また、完全には測定できないものもあります。例えば、コードの品質を本当に測定できるのでしょうか？
 
-Ultimately, when evaluating the impact of readability on productivity, we ended up with a combination of metrics from three sources. First, we had a survey that was specifically about the readability process. This survey was given to people after they completed the process; this allowed us to get their immediate feedback about the process. This hopefully avoids recall bias,(*6) but it does introduce both recency bias(*7) and sampling bias.(*8) Second, we used a large-scale quarterly survey to track items that were not specifically about readability; instead, they were purely about metrics that we expected readability should affect. Finally, we used fine-grained logs metrics from our developer tools to determine how much time the logs claimed it took engineers to complete specific tasks.(*9) Table 7-2 presents the complete list of metrics with their corresponding signals and goals.
+最終的に、読みやすさが生産性に与える影響を評価するために、私たちは3つのソースから得られた指標を組み合わせました。まず、読みやすさのプロセスについてのアンケートを実施しました。このアンケートは、プロセスが完了した後に行われました。これにより、プロセスに関するフィードバックをすぐに得ることができました。これにより、想起バイアス(*6)を回避することができましたが、想起バイアス(*7)とサンプリングバイアス(*8)が発生しました。最後に、開発者ツールの詳細なログメトリクスを用いて、エンジニアが特定のタスクを完了するのにどれだけの時間がかかったかをログで確認しました(*9)。 表7-2は、メトリクスの全リストと、それに対応するシグナルおよびゴールを示しています。
 
 Table 7-2. Goals, signals, and metrics
 
 |QUANTS|Goal|Signal|Metric|
 |:-----|:---|:-----|:-----|
-|Quality of the code|Engineers write higherquality code as a result of the readability process.|Engineers who have been granted readability judge their code to be of higher quality than engineers who have not been granted readability.|Quarterly Survey: Proportion of engineers who report being satisfied with the quality of their own code|
-| | |The readability process has a positive impact on code quality.|Readability Survey: Proportion of engineers reporting that readability reviews have no impact or negative impact on code quality|
-| | | |Readability Survey: Proportion of engineers reporting that participating in the readability process has improved code quality for their team|
-| |Engineers write more consistent code as a result of the readability process. |Engineers are given consistent feedback and direction in code reviews by readability reviewers as a part of the readability process.|Readability Survey: Proportion of engineers reporting inconsistency in readability reviewers’ comments and readability criteria.|
-| |Engineers contribute to a culture of code health as a result of the readability process.|Engineers who have been granted readability regularly comment on style and/or readability issues in code reviews.|Readability Survey: Proportion of engineers reporting that they regularly comment on style and/or readability issues in code reviews|
-|Attention from engineers|n/a|n/a|n/a|
-|Intellectual|Engineers learn about the Google codebase and best coding practices as a result of the readability process.|Engineers report learning from the readability process.|Readability Survey: Proportion of engineers reporting that they learned about four relevant topics|
-| | | |Readability Survey: Proportion of engineers reporting that learning or gaining expertise was a strength of the readability process|
-| |Engineers receive mentoring during the readability process.|Engineers report positive interactions with experienced Google engineers who serve as reviewers during the readability process.|Readability Survey: Proportion of engineers reporting that working with readability reviewers was a strength of the readability process|
-|Tempo/velocity|Engineers are more productive as a result of the readability process.|Engineers who have been granted readability judge themselves to be more productive than engineers who have not been granted readability.|Quarterly Survey: Proportion of engineers reporting that they’re highly productive|
+|コードの品質|読みやすさを追求した結果、エンジニアはより質の高いコードを書くことができるようになりました。|可読性を付与されたエンジニアは、可読性を付与されていないエンジニアに比べて、自分のコードの品質が高いと判断する。|四半期ごとの調査。自分が書いたコードの品質に満足していると答えたエンジニアの割合|
+| | |読みやすさを追求したプロセスは、コードの品質に良い影響を与えます。|リーダビリティ調査。読みやすさに関するレビューがコード品質に影響しない、または悪影響を与えると回答したエンジニアの割合|
+| | | |Readability調査。Readabilityプロセスに参加したことで、チームのコード品質が向上したと回答したエンジニアの割合|
+| |読みやすさを追求した結果、エンジニアはより一貫性のあるコードを書くことができるようになりました。|エンジニアは、コードレビューにおいて、可読性プロセスの一環として、可読性レビュアーから一貫したフィードバックと指示を受けます。|読みやすさに関する調査。可読性審査員のコメントと可読性基準に矛盾があると回答したエンジニアの割合。|
+| |エンジニアは、読みやすさを追求した結果、コードの健全性を保つ文化に貢献しています。|可読性を認められたエンジニアは、コードレビューでスタイルや可読性の問題について定期的にコメントしています。|読みやすさに関する調査。コードレビューにおいて、スタイルや読みやすさの問題について定期的にコメントしていると回答したエンジニアの割合|
+|エンジニアからの注目|n/a|n/a|n/a|
+|知的|エンジニアは、読みやすさを追求した結果、Googleのコードベースやベストなコーディング手法について学ぶことができます。|エンジニアは読みやすさのプロセスから学んだことを報告します。|読みやすさ調査。関連する4つのトピックについて学んだと回答したエンジニアの割合|
+| | | |Readability調査。読みやすさを追求した結果、専門知識の習得や獲得ができたと回答したエンジニアの割合|
+| |読み上げの際には、エンジニアがメンタリングを受けます。|エンジニアからは、読みやすさを追求する過程でレビュアーを務める経験豊富なグーグルのエンジニアとの交流が良かったとの報告を受けています。|読みやすさに関する調査 可読性評価者との共同作業が可読性評価プロセスの長所であると回答したエンジニアの割合|
+|テンポ/速度|読みやすさを追求した結果、エンジニアの生産性が向上しました。|可読性を獲得したエンジニアは、可読性を獲得していないエンジニアよりも生産性が高いと判断している。|四半期ごとの調査。生産性が高いと回答したエンジニアの割合|
 | | |Engineers report that completing the readability process positively affects their engineering velocity.|Readability Survey: Proportion of engineers reporting that not having readability reduces team engineering velocity|
 | | |Changelists (CLs) written by engineers who have been granted readability are faster to review than CLs written by engineers who have not been granted readability.|Logs data: Median review time for CLs from authors with readability and without readability|
 | | |CLs written by engineers who have been granted readability are easier to shepherd through code review than CLs written by engineers who have not been granted readability.|Logs data: Median shepherding time for CLs from authors with readability and without readability|
