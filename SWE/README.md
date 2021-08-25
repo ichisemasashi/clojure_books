@@ -22,7 +22,9 @@ PART II 文化
 
 [ch07: Measuring Engineering Productivity](docs/CHAPTER%2007.md)
 
+PART III プロセス
 
+[ch08: Style Guides and Rules](docs/CHAPTER%2008.md)
 
 
 
