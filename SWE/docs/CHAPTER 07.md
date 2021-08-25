@@ -191,51 +191,51 @@ Table 7-2. Goals, signals, and metrics
 | | | |Readability調査。読みやすさを追求した結果、専門知識の習得や獲得ができたと回答したエンジニアの割合|
 | |読み上げの際には、エンジニアがメンタリングを受けます。|エンジニアからは、読みやすさを追求する過程でレビュアーを務める経験豊富なグーグルのエンジニアとの交流が良かったとの報告を受けています。|読みやすさに関する調査 可読性評価者との共同作業が可読性評価プロセスの長所であると回答したエンジニアの割合|
 |テンポ/速度|読みやすさを追求した結果、エンジニアの生産性が向上しました。|可読性を獲得したエンジニアは、可読性を獲得していないエンジニアよりも生産性が高いと判断している。|四半期ごとの調査。生産性が高いと回答したエンジニアの割合|
-| | |Engineers report that completing the readability process positively affects their engineering velocity.|Readability Survey: Proportion of engineers reporting that not having readability reduces team engineering velocity|
-| | |Changelists (CLs) written by engineers who have been granted readability are faster to review than CLs written by engineers who have not been granted readability.|Logs data: Median review time for CLs from authors with readability and without readability|
-| | |CLs written by engineers who have been granted readability are easier to shepherd through code review than CLs written by engineers who have not been granted readability.|Logs data: Median shepherding time for CLs from authors with readability and without readability|
-| | |CLs written by engineers who have been granted readability are faster to get through code review than CLs written by engineers who have not been granted readability.|Logs data: Median time to submit for CLs from authors with readability and without readability|
-| | |The readability process does not have a negative impact on engineering velocity.|Readability Survey: Proportion of engineers reporting that the readability process negatively impacts their velocity|
-| | | |Readability Survey: Proportion of engineers reporting that readability reviewers responded promptly|
-| | | |Readability Survey: Proportion of engineers reporting that timeliness of reviews was a strength of the readability process|
-|Satisfaction|Engineers see the benefit of the readability process and have positive feelings about participating in it.|Engineers view the readability process as being an overall positive experience.|Readability Survey: Proportion of engineers reporting that their experience with the readability process was positive overall|
-| | |Engineers view the readability process as being worthwhile|Readability Survey: Proportion of engineers reporting that the readability process is worthwhile|
-| | | |Readability Survey: Proportion of engineers reporting that the quality of readability reviews is a strength of the process|
-| | | |Readability Survey: Proportion of engineers reporting that thoroughness is a strength of the process|
-| | |Engineers do not view the readability process as frustrating.|Readability Survey: Proportion of engineers reporting that the readability process is uncertain, unclear, slow, or frustrating|
-| | | |Quarterly Survey: Proportion of engineers reporting that they’re satisfied with their own engineering velocity|
+| | |読みやすさを追求した結果、エンジニアの速度が向上したという報告があります。|リーダビリティ調査。可読性がないとチームのエンジニアリング速度が低下すると回答したエンジニアの割合|
+| | |可読性を付与されたエンジニアが書いたチェンジリスト（CL）は、可読性を付与されていないエンジニアが書いたCLよりもレビューが早い。|ログのデータ: 可読性のある著者のCLと可読性のない著者のCLのレビュー時間の中央値|
+| | |可読性を認められたエンジニアが書いたCLは、可読性を認められていないエンジニアが書いたCLに比べて、コードレビューを通すのが容易です。|ログのデータ: 可読性のある著者からのCLと可読性のない著者からのCLのシェパード時間の中央値|
+| | |可読性を付与されたエンジニアが書いたCLは、可読性を付与されていないエンジニアが書いたCLよりも、コードレビューを通過するのが早い。|ログデータ: 読みやすさを重視した著者とそうでない著者のCLの投稿までの時間の中央値|
+| | |読みやすさの追求は、エンジニアリングの速度に悪影響を与えません。|Readability調査。読みやすさ向上のためのプロセスが速度に悪影響を与えると回答したエンジニアの割合|
+| | | |読みやすさ調査。読みやすさに関する審査員の対応が早かったと回答したエンジニアの割合|
+| | | |Readability調査。レビューの適時性が読みやすさの強みであると回答したエンジニアの割合|
+|満足度|エンジニアは、読みやすさを追求したプロセスにメリットを感じ、参加することに前向きな気持ちを持っています。|エンジニアは、読みやすさを追求するプロセスを全体的にポジティブに捉えています。|可読性調査。読みやすさに関する経験が全体的に良かったと回答したエンジニアの割合|
+| | |エンジニアは読みやすさを追求することに意義を感じている|リーダビリティ調査 読みやすさを追求した結果、価値があったと回答したエンジニアの割合|
+| | | |可読性調査。読みやすさに関するレビューの質がプロセスの強みであると回答したエンジニアの割合|
+| | | |読みやすさ調査。徹底していることが強みであると回答したエンジニアの割合|
+| | |エンジニアは、読みやすさを追求することを苦手としています。|Readability調査 読みやすさに関するプロセスが不確実、不明確、遅い、またはフラストレーションを感じると回答したエンジニアの割合|
+| | | |四半期ごとの調査。自分のエンジニアリング・ベロシティに満足していると答えたエンジニアの割合|
 
 ## Taking Action and Tracking Results
 
-Recall our original goal in this chapter: we want to take action and improve productivity. After performing research on a topic, the team at Google always prepares a list of recommendations for how we can continue to improve. We might suggest new features to a tool, improving latency of a tool, improving documentation, removing obsolete processes, or even changing the incentive structures for the engineers. Ideally, these recommendations are “tool driven”: it does no good to tell engineers to change their process or way of thinking if the tools do not support them in doing so. We instead always assume that engineers will make the appropriate trade-offs if they have the proper data available and the suitable tools at their disposal.
+この章の最初の目標を思い出してください。それは、行動を起こして生産性を向上させたいということです。あるテーマについて調査を行った後、グーグルのチームは常に、どうすれば継続的に改善できるかという提言のリストを作成します。あるツールの新機能の提案、あるツールのレイテンシーの改善、ドキュメントの改善、廃止されたプロセスの削除、あるいはエンジニアのインセンティブ構造の変更などです。これらの提案は「ツールドリブン」であることが理想です。エンジニアにプロセスや考え方を変えろと言っても、ツールがそれをサポートしてくれなければ意味がありません。適切なデータがあり、適切なツールがあれば、エンジニアは適切なトレードオフを行うことを前提としています。
 
-For readability, our study showed that it was overall worthwhile: engineers who had achieved readability were satisfied with the process and felt they learned from it. Our logs showed that they also had their code reviewed faster and submitted it faster, even accounting for no longer needing as many reviewers. Our study also showed places for improvement with the process: engineers identified pain points that would have made the process faster or more pleasant. The language teams took these recommendations and improved the tooling and process to make it faster and to be more transparent so that engineers would have a more pleasant experience.
+可読性を実現したエンジニアは、このプロセスに満足し、そこから学んだと感じていました。また、ログによると、コードのレビュー時間が短縮され、提出時間も短縮されました。また、この調査では、プロセスの改善点も明らかになりました。エンジニアは、プロセスをより速く、あるいはより快適にするためのペインポイントを特定しました。言語チームはこれらの提言を受けて、ツールやプロセスを改善し、より速く、より透明性の高いものにして、エンジニアがより快適に過ごせるようにしました。
 
 ## Conclusion
 
-At Google, we’ve found that staffing a team of engineering productivity specialists has widespread benefits to software engineering; rather than relying on each team to chart its own course to increase productivity, a centralized team can focus on broadbased solutions to complex problems. Such “human-based” factors are notoriously difficult to measure, and it is important for experts to understand the data being analyzed given that many of the trade-offs involved in changing engineering processes are difficult to measure accurately and often have unintended consequences. Such a team must remain data driven and aim to eliminate subjective bias.
+グーグルでは、生産性向上のために各チームが独自の方針を打ち出すのではなく、集中したチームが複雑な問題に対する広範な解決策に焦点を当てることができるため、エンジニアリング生産性向上の専門家を配置することは、ソフトウェアエンジニアリングに広くメリットをもたらすことがわかっています。このような「ヒューマンベース」の要素は、測定が難しいことで知られています。エンジニアリングプロセスの変更に伴うトレードオフの多くは、正確に測定することが難しく、意図しない結果をもたらすことが多いため、専門家が分析されたデータを理解することが重要です。このようなチームは、データを重視し、主観的なバイアスを排除することを目指さなければなりません。
 
 ## TL;DRs
 
-- Before measuring productivity, ask whether the result is actionable, regardless of whether the result is positive or negative. If you can’t do anything with the result, it is likely not worth measuring.
-- Select meaningful metrics using the GSM framework. A good metric is a reasonable proxy to the signal you’re trying to measure, and it is traceable back to your original goals.
-- Select metrics that cover all parts of productivity (QUANTS). By doing this, you ensure that you aren’t improving one aspect of productivity (like developer velocity) at the cost of another (like code quality).
-- Qualitative metrics are metrics, too! Consider having a survey mechanism for tracking longitudinal metrics about engineers’ beliefs. Qualitative metrics should also align with the quantitative metrics; if they do not, it is likely the quantitative metrics that are incorrect.
-- Aim to create recommendations that are built into the developer workflow and incentive structures. Even though it is sometimes necessary to recommend additional training or documentation, change is more likely to occur if it is built into the developer’s daily habits.
+- 生産性を測定する前に、結果がポジティブであるかネガティブであるかにかかわらず、その結果が実行可能であるかどうかを問う。もしその結果に何もできないのであれば、それは測定する価値がないということになります。
+- GSMフレームワークを使って、意味のある測定基準を選択します。良い測定基準とは、測定しようとしている信号の妥当な代理であり、当初の目標にさかのぼることができるものです。
+- 生産性のすべての部分をカバーするメトリクス（QUANTS）を選択する。このようにすることで、生産性のある側面（開発者のベロシティなど）を改善して、別の側面（コード品質など）を犠牲にすることがないようにします。
+- 定性的な測定基準も測定基準になります。エンジニアの信念に関する縦断的な指標を追跡するための調査メカニズムを持つことを検討してください。定性的な測定基準も定量的な測定基準と一致していなければ、定量的な測定基準が間違っている可能性があります。
+- 開発者のワークフローとインセンティブ構造に組み込まれた推奨事項の作成を目指してください。トレーニングやドキュメントの追加を推奨する必要がある場合もありますが、開発者の日常的な習慣に組み込まれていれば、変化が起こる可能性は高くなります。
 
 
 -----
 
 1 Frederick P. Brooks, The Mythical Man-Month: Essays on Software Engineering (New York: Addison-Wesley,
 1995).
-2 It’s worth pointing out here that our industry currently disparages “anecdata,” and everyone has a goal of being “data driven.” Yet anecdotes continue to exist because they are powerful. An anecdote can provide context and narrative that raw numbers cannot; it can provide a deep explanation that resonates with others because it mirrors personal experience. Although our researchers do not make decisions on anecdotes, we do use and encourage techniques such as structured interviews and case studies to deeply understand phenomena and provide context to quantitative data.
-3 Java and C++ have the greatest amount of tooling support. Both have mature formatters and static analysis tools that catch common mistakes. Both are also heavily funded internally. Even though other language teams, like Python, were interested in the results, clearly there was not going to be a benefit for Python to remove readability if we couldn’t even show the same benefit for Java or C++.
-4 “From there it is only a small step to measuring ‘programmer productivity’ in terms of ‘number of lines of code produced per month.’ This is a very costly measuring unit because it encourages the writing of insipid code, but today I am less interested in how foolish a unit it is from even a pure business point of view. My point today is that, if we wish to count lines of code, we should not regard them as ‘lines produced’ but as ‘lines spent’: the current conventional wisdom is so foolish as to book that count on the wrong side of the ledger.” Edsger Dijkstra, on the cruelty of really teaching computing science, EWD Manuscript 1036.
-5 It has routinely been our experience at Google that when the quantitative and qualitative metrics disagree, it was because the quantitative metrics were not capturing the expected result.
-6 Recall bias is the bias from memory. People are more likely to recall events that are particularly interesting or frustrating.
-7 Recency bias is another form of bias from memory in which people are biased toward their most recent experience. In this case, as they just successfully completed the process, they might be feeling particularly good about it.
-8 Because we asked only those people who completed the process, we aren’t capturing the opinions of those who did not complete the process.
-9 There is a temptation to use such metrics to evaluate individual engineers, or perhaps even to identify high and low performers. Doing so would be counterproductive, though. If productivity metrics are used for performance reviews, engineers will be quick to game the metrics, and they will no longer be useful for measuring and improving productivity across the organization. The only way to make these measurements work is to let go of the idea of measuring individuals and embrace measuring the aggregate effect.
+2 ここで指摘しておきたいのは、我々の業界では現在、「逸話」を軽視しており、誰もが「データ・ドリブン」を目標としているということです。しかし、逸話が存在し続けるのは、それが強力だからです。逸話は、生の数字では得られない文脈や物語を提供することができます。また、個人的な経験を反映しているため、他の人の心に響く深い説明をすることができます。当社の研究者は、逸話に基づいて意思決定を行うことはありませんが、現象を深く理解し、定量的データに文脈を与えるために、構造化インタビューやケーススタディなどの手法を使用し、奨励しています。
+3 JavaとC++は、ツールのサポートが最も充実しています。どちらも成熟したフォーマッタや静的解析ツールを備えており、よくあるミスを発見することができます。また、どちらも社内で多額の資金援助を受けています。Pythonのような他の言語チームがこの結果に興味を持っていたとしても、JavaやC++で同じ利益を示すことすらできないのであれば、Pythonが可読性を除去することには明らかにメリットがないと考えられました。
+4 「そこから、『プログラマの生産性』を『1ヶ月に生産されたコード行数』で測ることへと、ほんの小さなステップがあります。これは、無味乾燥なコードを書くことを助長するため、非常にコストのかかる測定単位ですが、今日の私は、純粋なビジネスの観点からも、この単位がどれほど愚かなものであるかにはあまり興味がありません。私が今日言いたいのは、もしコードの行数を数えたいのであれば、それを「生産された行数」ではなく、「使用された行数」とみなすべきだということです。Edsger Dijkstra, on the cruelty of really teaching computing science, EWD Manuscript 1036.
+5 定量的な測定基準と定性的な測定基準が一致しない場合、それは定量的な測定基準が期待される結果を捉えていないためであるというのが、グーグルでの日常的な経験でした。
+6 リコール・バイアスとは、記憶によるバイアスのこと。人は、特に興味深かったり、悔しかったりする出来事を思い出しやすくなります。
+7 再現性バイアスとは、記憶によるバイアスのもう一つの形態で、人は最も最近の経験に偏るというものです。この場合、プロセスを成功させたばかりなので、特に良い印象を持っているのかもしれません。
+8 プロセスを完了した人だけに質問しているので、プロセスを完了しなかった人の意見は聞いていません。
+9 このような指標を使ってエンジニア個人を評価したり、あるいはハイパフォーマーとローパフォーマーを識別したりしたくなるかもしれませんが、それは逆効果です。しかし、それは逆効果です。生産性測定基準をパフォーマンスレビューに使用すると、エンジニアはすぐに測定基準を使いたがるようになり、組織全体の生産性を測定し改善するためには役に立たなくなります。このような測定を機能させるためには、個人を測定するという考えを捨てて、全体の効果を測定することが必要です。
 
 
 
