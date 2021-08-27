@@ -19,9 +19,9 @@ Google独自のスタイルガイドであっても様々な違いがあるた�
 
 組織が成長するにつれ、確立されたルールとガイドラインがコーディングの共通語彙を形成していきます。共通のボキャブラリーがあれば、エンジニアはコードがどのように表現されているかではなく、コードが何を言わなければならないかに集中することができます。この語彙を形成することで、エンジニアは無意識のうちに「良い」ことをデフォルトで行うようになります。このようにルールは、一般的な開発パターンを望ましい方向に導くための大きな力となります。
 
-## Creating the Rules
+## ルールの作成
 
-When defining a set of rules, the key question is not, “What rules should we have?” The question to ask is, “What goal are we trying to advance?” When we focus on the goal that the rules will be serving, identifying which rules support this goal makes it easier to distill the set of useful rules. At Google, where the style guide serves as law for coding practices, we do not ask, “What goes into the style guide?” but rather, “Why does something go into the style guide?” What does our organization gain by having a set of rules to regulate writing code?
+ルールを定義する際に重要なのは、"どのようなルールにすべきか？"ということではありません。問われるべきは、"どのような目標を達成しようとしているのか "ということです。ルールが果たすべきゴールに焦点を当て、そのゴールをサポートするルールを特定することで、有用なルールを抽出することが容易になります。スタイルガイドがコーディングプラクティスの法則として機能しているGoogleでは、"What goes into the style guide?" ではなく、"Why does something go into the style guide?" と問いかけます。コードを書くことを規制する一連のルールを持つことで、私たちの組織は何を得るのでしょうか？
 
 ### Guiding Principles
 
