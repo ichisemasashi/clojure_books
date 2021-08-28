@@ -23,55 +23,58 @@ Google独自のスタイルガイドであっても様々な違いがあるた�
 
 ルールを定義する際に重要なのは、"どのようなルールにすべきか？"ということではありません。問われるべきは、"どのような目標を達成しようとしているのか "ということです。ルールが果たすべきゴールに焦点を当て、そのゴールをサポートするルールを特定することで、有用なルールを抽出することが容易になります。スタイルガイドがコーディングプラクティスの法則として機能しているGoogleでは、"What goes into the style guide?" ではなく、"Why does something go into the style guide?" と問いかけます。コードを書くことを規制する一連のルールを持つことで、私たちの組織は何を得るのでしょうか？
 
-### Guiding Principles
+### 行動指針
 
-Let’s put things in context: Google’s engineering organization is composed of more than 30,000 engineers. That engineering population exhibits a wild variance in skill and background. About 60,000 submissions are made each day to a codebase of more than two billion lines of code that will likely exist for decades. We’re optimizing for a different set of values than most other organizations need, but to some degree, these concerns are ubiquitous --- we need to sustain an engineering environment that is resilient to both scale and time.
-In this context, the goal of our rules is to manage the complexity of our development environment, keeping the codebase manageable while still allowing engineers to work productively. We are making a trade-off here: the large body of rules that helps us toward this goal does mean we are restricting choice. We lose some flexibility and we might even offend some people, but the gains of consistency and reduced conflict furnished by an authoritative standard win out.
-Given this view, we recognize a number of overarching principles that guide the development of our rules, which must:
+物事を整理してみましょう。Googleのエンジニアリング組織は、3万人以上のエンジニアで構成されています。このエンジニア集団は、スキルや経歴に大きなばらつきがあります。また、20億行以上のコードベースに対して、毎日約6万件のコードを提出しています。このコードベースは今後数十年にわたって存在する可能性があります。私たちは、他の多くの組織が必要とするものとは異なる価値観に基づいて最適化を行っていますが、これらの懸念はある程度、普遍的なものであり、スケールと時間の両方に強いエンジニアリング環境を維持する必要があります。
 
-- Pull their weight
-- Optimize for the reader
-- Be consistent
-- Avoid error-prone and surprising constructs
-- Concede to practicalities when necessary
+この文脈では、私たちのルールの目的は、開発環境の複雑さを管理し、コードベースを管理可能な状態に保ちつつ、エンジニアが生産的に作業できるようにすることです。ここではトレードオフの関係にあります。この目標を達成するための大きなルール群は、選択肢を制限することになります。柔軟性は失われ、一部の人々を怒らせることもあるかもしれませんが、権威ある標準によってもたらされる一貫性と対立の減少という利益の方が大きいのです。
 
-#### Rules must pull their weight
+このような観点から、私たちは、ルールの開発を導くいくつかの包括的な原則を認識していますが、これらの原則は以下のとおりです。
 
-Not everything should go into a style guide. There is a nonzero cost in asking all of the engineers in an organization to learn and adapt to any new rule that is set. With too many rules,(*2) not only will it become harder for engineers to remember all relevant rules as they write their code, but it also becomes harder for new engineers to learn their way. More rules also make it more challenging and more expensive to maintain the rule set.
-To this end, we deliberately chose not to include rules expected to be self-evident. Google’s style guide is not intended to be interpreted in a lawyerly fashion; just because something isn’t explicitly outlawed does not imply that it is legal. For example, the C++ style guide has no rule against the use of goto. C++ programmers already tend to avoid it, so including an explicit rule forbidding it would introduce unnecessary overhead. If just one or two engineers are getting something wrong, adding to everyone’s mental load by creating new rules doesn’t scale.
+- 自重する
+- 読者にとって最適であること
+- 一貫性があること
+- エラーになりやすく、驚くような構造を避ける
+- 必要に応じて実用性を考慮する
 
-#### Optimize for the reader
+#### ルールは自重するもの
 
-Another principle of our rules is to optimize for the reader of the code rather than the author. Given the passage of time, our code will be read far more frequently than it is written. We’d rather the code be tedious to type than difficult to read. In our Python style guide, when discussing conditional expressions, we recognize that they are shorter than if statements and therefore more convenient for code authors. However, because they tend to be more difficult for readers to understand than the more verbose if statements, we restrict their usage. We value “simple to read” over “simple to write.” We’re making a trade-off here: it can cost more upfront when engineers must repeatedly type potentially longer, descriptive names for variables and types. We choose to pay this cost for the readability it provides for all future readers.
-As part of this prioritization, we also require that engineers leave explicit evidence of intended behavior in their code. We want readers to clearly understand what the code is doing as they read it. For example, our Java, JavaScript, and C++ style guides mandate use of the override annotation or keyword whenever a method overrides a superclass method. Without the explicit in-place evidence of design, readers can likely figure out this intent, though it would take a bit more digging on the part of each reader working through the code.
-Evidence of intended behavior becomes even more important when it might be surprising. In C++, it is sometimes difficult to track the ownership of a pointer just by reading a snippet of code. If a pointer is passed to a function, without being familiar with the behavior of the function, we can’t be sure what to expect. Does the caller still own the pointer? Did the function take ownership? Can I continue using the pointer after the function returns or might it have been deleted? To avoid this problem, our C++ style guide prefers the use of std::unique_ptr when ownership transfer is intended. unique_ptr is a construct that manages pointer ownership, ensuring that only one copy of the pointer ever exists. When a function takes a unique_ptr as an argument and intends to take ownership of the pointer, callers must explicitly invoke move semantics:
+すべてをスタイルガイドに記載すべきではありません。新しいルールが設定されるたびに、組織内のすべてのエンジニアに学習と適応を求めることには、ゼロではないコストがかかります。ルールが多すぎると(*2)、エンジニアがコードを書くときにすべての関連ルールを覚えておくことが難しくなるだけでなく、新しいエンジニアが自分のやり方を覚えるのも難しくなります。また、ルールが多すぎると、ルールセットを維持するのが難しくなり、コストもかかります。
+
+そのため、自明であると思われるルールはあえて掲載していません。Googleのスタイルガイドは、弁護士的に解釈されることを意図したものではありません。明示的に禁止されていないからといって、それが合法であるとは限りません。例えば、C++のスタイルガイドには、gotoの使用を禁止する規則はありません。C++プログラマーはすでにgotoを避ける傾向にあるため、明示的に禁止するルールを盛り込むと、不必要なオーバーヘッドが生じます。たった1人か2人のエンジニアが何かを間違えている場合、新しいルールを作ることで全員の精神的負担を増やすことは、スケールメリットがありません。
+
+#### 読み手のための最適化
+
+私たちのルールのもう一つの原則は、コードの作者ではなく、コードを読む人のために最適化することです。時間の経過とともに、コードは書かれた時よりもはるかに頻繁に読まれるようになります。読むのが難しいコードよりも、タイプするのが面倒なコードの方がいいのです。Pythonスタイルガイドでは、条件式について説明していますが、条件式はif文よりも短く、コード作成者にとって便利であると認識しています。しかし、条件式は、より冗長なif文よりも読者に理解されにくい傾向があるため、その使用を制限しています。書くのが簡単」よりも「読むのが簡単」を重視しているのです。ここではトレードオフの関係にあります。エンジニアが変数や型のために長くて説明的な名前を何度も入力しなければならない場合、前もってコストがかかります。しかし、将来の読者に読みやすさを提供するために、このコストを支払うことを選択しました。
+
+この優先順位付けの一環として、私たちはエンジニアが意図した動作の証拠をコードの中に明示的に残すことも要求しています。読者がコードを読むときに、そのコードが何をしているのかを明確に理解できるようにするためです。例えば、Java、JavaScript、C++のスタイルガイドでは、メソッドがスーパークラスのメソッドをオーバーライドする場合、overrideアノテーションまたはキーワードの使用を義務付けています。明示的な設計上の証拠がなければ、読者はこの意図を理解することができますが、コードを読む際には各読者の側でもう少し調べる必要があります。
+
+意図された動作の証拠は、それが意外なものである場合にさらに重要になります。C++では、コードの断片を読んだだけでは、ポインタの所有権を追跡することが難しい場合があります。ポインタが関数に渡された場合、その関数の動作に精通していなければ、何を期待していいのかわかりません。呼び出し側はまだポインタを所有しているのでしょうか？関数が所有権を持ったのか？関数が戻った後もポインタを使い続けられるのか，それとも削除されてしまったのか．この問題を回避するため、C++スタイルガイドでは、所有権の移転が意図される場合、std::unique_ptrの使用を推奨しています。unique_ptrは、ポインタの所有権を管理する構造体で、ポインタのコピーが1つしか存在しないことを保証します。関数が引数として unique_ptr を受け取り、そのポインタの所有権を取得しようとする場合、呼び出し側は明示的に移動セマンティクスを呼び出す必要があります。
 
 ```
-// Function that takes a Foo* and may or may not assume ownership of
-// the passed pointer.
+// Foo*を受け取り、渡されたポインタの所有権を持つことも持たないこともできる関数。
 void TakeFoo(Foo* arg);
 
-// Calls to the function don’t tell the reader anything about what to
-// expect with regard to ownership after the function returns.
+// 関数を呼び出しても、その関数が戻ってきた後の所有権に関して、読者には何も伝えられません。
 Foo* my_foo(NewFoo());
 TakeFoo(my_foo);
 ```
 
-Compare this to the following:
+次のように比較してみてください。
 
 ```
-// Function that takes a std::unique_ptr<Foo>.
+// std::unique_ptr<Foo>を受け取る関数です。
 void TakeFoo(std::unique_ptr<Foo> arg);
 
-// Any call to the function explicitly shows that ownership is
-// yielded and the unique_ptr cannot be used after the function
-// returns.
+// 関数を呼び出した場合は、所有権が放棄されたことを明示的に示し、
+// 関数が戻った後はunique_ptrを使用できません。
 std::unique_ptr<Foo> my_foo(FooFactory());
 TakeFoo(std::move(my_foo));
 ```
 
-Given the style guide rule, we guarantee that all call sites will include clear evidence of ownership transfer whenever it applies. With this signal in place, readers of the code don’t need to understand the behavior of every function call. We provide enough information in the API to reason about its interactions. This clear documentation of behavior at the call sites ensures that code snippets remain readable and understandable. We aim for local reasoning, where the goal is clear understanding of what’s happening at the call site without needing to find and reference other code, including the function’s implementation.
-Most style guide rules covering comments are also designed to support this goal of in-place evidence for readers. Documentation comments (the block comments prepended to a given file, class, or function) describe the design or intent of the code that follows. Implementation comments (the comments interspersed throughout the code itself) justify or highlight non-obvious choices, explain tricky bits, and underscore important parts of the code. We have style guide rules covering both types of comments, requiring engineers to provide the explanations another engineer might be looking for when reading through the code.
+このスタイルガイドのルールがあれば、すべての呼び出しサイトに、所有権移転の明確な証拠が適用されるたびに含まれることが保証されます。このシグナルがあれば、コードの読者はすべての関数呼び出しの動作を理解する必要はありません。私たちは、APIの相互作用を推論するのに十分な情報をAPIで提供しています。このように、呼び出し先での動作を明確に文書化することで、コードスニペットの可読性と理解性を確保しています。私たちはローカルな推論を目指しており、関数の実装を含む他のコードを探して参照しなくても、呼び出しサイトで何が起こっているかを明確に理解することを目標としています。
+
+コメントを対象としたほとんどのスタイルガイドのルールも、読者にとってのその場での証拠というこの目標をサポートするように設計されています。ドキュメントコメント（ファイル、クラス、または関数の前に付けられるブロックコメント）は、後に続くコードの設計や意図を説明します。実装コメント（コード自体に散りばめられたコメント）は、明らかでない選択を正当化したり強調したり、やっかいな部分を説明したり、コードの重要な部分を強調したりします。当社では、この2種類のコメントについてスタイルガイドのルールを設けており、他のエンジニアがコードを読む際に求めているであろう説明を提供することを求めています。
 
 #### Be consistent
 
