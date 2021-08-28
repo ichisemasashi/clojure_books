@@ -76,43 +76,49 @@ TakeFoo(std::move(my_foo));
 
 コメントを対象としたほとんどのスタイルガイドのルールも、読者にとってのその場での証拠というこの目標をサポートするように設計されています。ドキュメントコメント（ファイル、クラス、または関数の前に付けられるブロックコメント）は、後に続くコードの設計や意図を説明します。実装コメント（コード自体に散りばめられたコメント）は、明らかでない選択を正当化したり強調したり、やっかいな部分を説明したり、コードの重要な部分を強調したりします。当社では、この2種類のコメントについてスタイルガイドのルールを設けており、他のエンジニアがコードを読む際に求めているであろう説明を提供することを求めています。
 
-#### Be consistent
+#### 一貫性を保つ
 
-Our view on consistency within our codebase is similar to the philosophy we apply to our Google offices. With a large, distributed engineering population, teams are frequently split among offices, and Googlers often find themselves traveling to other sites. Although each office maintains its unique personality, embracing local flavor and style, for anything necessary to get work done, things are deliberately kept the same. A visiting Googler’s badge will work with all local badge readers; any Google devices will always get WiFi; the video conferencing setup in any conference room will have the same interface. A Googler doesn’t need to spend time learning how to get this all set up; they know that it will be the same no matter where they are. It’s easy to move between offices and still get work done.
-That’s what we strive for with our source code. Consistency is what enables any engineer to jump into an unfamiliar part of the codebase and get to work fairly quickly. A local project can have its unique personality, but its tools are the same, its techniques are the same, its libraries are the same, and it all Just Works.
+コードベース内の一貫性に関する私たちの考え方は、Googleのオフィスで適用されている哲学に似ています。大規模で分散したエンジニア集団の中では、チームは頻繁にオフィス間で分割され、グーグル社員もしばしば他のサイトに移動します。それぞれのオフィスは独自の個性を持ち、地域性やスタイルを尊重していますが、仕事を進める上で必要なものは、意図的に同じものを維持しています。訪問するグーグラーのバッジは現地のすべてのバッジリーダーで使用でき、グーグルのデバイスは常にWiFiを利用でき、会議室のビデオ会議のセットアップは同じインターフェースで行われます。Googlerは、これらすべての設定方法を学ぶために時間を費やす必要はなく、どこにいても同じことができることを知っています。オフィス間を移動しても、仕事を進めるのは簡単です。
 
-#### Advantages of consistency
+私たちはソースコードにもそれを求めています。一貫性があるからこそ、どんなエンジニアでもコードベースの知らない部分に飛び込んでも、すぐに仕事を始めることができるのです。ローカルプロジェクトには独特の個性がありますが、ツールは同じで、テクニックも同じで、ライブラリも同じで、すべてがうまくいくのです。
 
-Even though it might feel restrictive for an office to be disallowed from customizing a badge reader or video conferencing interface, the consistency benefits far outweigh the creative freedom we lose. It’s the same with code: being consistent may feel constraining at times, but it means more engineers get more work done with less effort:(*3)
+#### 一貫性のメリット
 
-- When a codebase is internally consistent in its style and norms, engineers writing code and others reading it can focus on what’s getting done rather than how it is presented. To a large degree, this consistency allows for expert chunking.(*4) When we solve our problems with the same interfaces and format the code in a consistent way, it’s easier for experts to glance at some code, zero in on what’s important, and understand what it’s doing. It also makes it easier to modularize code and spot duplication. For these reasons, we focus a lot of attention on consistent naming conventions, consistent use of common patterns, and consistent formatting and structure. There are also many rules that put forth a decision on a seemingly small issue solely to guarantee that things are done in only one way. For example, take the choice of the number of spaces to use for indentation or the limit set on line length.(*5) It’s the consistency of having one answer rather than the answer itself that is the valuable part here.
-- Consistency enables scaling. Tooling is key for an organization to scale, and consistent code makes it easier to build tools that can understand, edit, and generate code. The full benefits of the tools that depend on uniformity can’t be applied if everyone has little pockets of code that differ --- if a tool can keep source files updated by adding missing imports or removing unused includes, if different projects are choosing different sorting strategies for their import lists, the tool might not be able to work everywhere. When everyone is using the same components and when everyone’s code follows the same rules for structure and organization, we can invest in tooling that works everywhere, building in automation for many of our maintenance tasks. If each team needed to separately invest in a bespoke version of the same tool, tailored for their unique environment, we would lose that advantage.
-- Consistency helps when scaling the human part of an organization, too. As an organization grows, the number of engineers working on the codebase increases. Keeping the code that everyone is working on as consistent as possible enables better mobility across projects, minimizing the ramp-up time for an engineer switching teams and building in the ability for the organization to flex and adapt as headcount needs fluctuate. A growing organization also means that people in other roles interact with the code --- SREs, library engineers, and code janitors, for example. At Google, these roles often span multiple projects, which means engineers unfamiliar with a given team’s project might jump in to work on that project’s code. A consistent experience across the codebase makes this efficient.
-- Consistency also ensures resilience to time. As time passes, engineers leave projects, new people join, ownership shifts, and projects merge or split. Striving for a consistent codebase ensures that these transitions are low cost and allows us nearly unconstrained fluidity for both the code and the engineers working on it, simplifying the processes necessary for long-term maintenance.
+バッジリーダーやビデオ会議のインターフェースをカスタマイズできないのは、オフィスにとっては制約に感じるかもしれませんが、一貫性を保つことで得られるメリットは、失うクリエイティブな自由度をはるかに上回るものです。コードも同じで、一貫性を保つことで制約を感じることもあるかもしれませんが、その分、より多くのエンジニアがより少ない労力でより多くの仕事をこなすことができるのです(*3)
 
- --- -
+- コードベースのスタイルや規範が内部的に一貫していると、コードを書くエンジニアもそれを読む人も、表現方法よりも何をするのかに集中することができます。同じインターフェースで問題を解決し、一貫した方法でコードをフォーマットすることで、専門家がコードを一目見て、何が重要なのか、何をしているのかを理解することが容易になるのです。また、コードのモジュール化や重複の発見も容易になります。このような理由から、私たちは一貫した命名規則、共通パターンの一貫した使用、一貫したフォーマットと構造に多くの注意を払っています。また、一見すると小さな問題でも、物事が一つの方法でしか行われないことを保証するためだけに決定を下すルールも多くあります。たとえば、インデントに使うスペースの数や、行の長さの制限などです(*5)。ここで重要なのは、答えそのものではなく、答えがひとつであるという一貫性です。
+- 一貫性がスケーリングを可能にします。一貫性のあるコードは、コードを理解し、編集し、生成することができるツールの構築を容易にしてくれます。一貫性に依存するツールの利点は、全員のコードが少しずつ異なっている場合には適用できません。あるツールが、不足しているインポートを追加したり、使用されていないインクルードを削除したりすることで、ソースファイルを更新し続けることができたとしても、プロジェクトごとにインポートリストのソート戦略が異なっている場合には、そのツールはどこでも動作することはできないかもしれません。全員が同じコンポーネントを使用し、全員のコードが構造や構成に関する同じルールに従っていれば、どこでも動作するツールに投資することができ、メンテナンス作業の多くを自動化することができます。もし各チームが、それぞれの環境に合わせて同じツールの特注バージョンに投資する必要があるとしたら、その利点は失われてしまいます。
+- 一貫性は、組織の人間的な部分を拡大する際にも役立ちます。組織が大きくなると、コードベースに携わるエンジニアの数も増えます。全員が作業するコードを可能な限り一貫性のあるものにしておくことで、プロジェクト間の機動性を高め、エンジニアがチームを変更する際の立ち上げ時間を最小限に抑え、人員数のニーズが変動しても組織が柔軟に対応できるようにすることができます。組織が成長するということは、SRE、ライブラリエンジニア、コード管理者など、他の役割の人々がコードに関わるということでもあります。Googleでは、これらの役割が複数のプロジェクトにまたがっていることが多く、あるチームのプロジェクトに精通していないエンジニアが、そのプロジェクトのコードを担当することもあります。コードベース全体で一貫したエクスペリエンスを提供することで、これを効率的に行うことができます。
+- 一貫性は、時間への耐性も確保します。時間が経過すると、エンジニアがプロジェクトを離れ、新しい人が加わり、オーナーシップが変化し、プロジェクトが合併したり分裂したりします。一貫性のあるコードベースを目指すことで、このような移行を低コストで行うことができます。また、コードとそれに携わるエンジニアの両方に、ほぼ制約のない流動性をもたらし、長期的なメンテナンスに必要なプロセスを簡素化することができます。
 
-### At Scale
+----
 
-A few years ago, our C++ style guide promised to almost never change style guide rules that would make old code inconsistent: “In some cases, there might be good arguments for changing certain style rules, but we nonetheless keep things as they are in order to preserve consistency.”
-When the codebase was smaller and there were fewer old, dusty corners, that made sense.
-When the codebase grew bigger and older, that stopped being a thing to prioritize. This was (for the arbiters behind our C++ style guide, at least) a conscious change: when striking this bit, we were explicitly stating that the C++ codebase would never again be completely consistent, nor were we even aiming for that.
-It would simply be too much of a burden to not only update the rules to current best practices, but to also require that we apply those rules to everything that’s ever been written. Our Large Scale Change tooling and processes allow us to update almost all of our code to follow nearly every new pattern or syntax so that most old code exhibits the most recent approved style (see Chapter 22). Such mechanisms aren’t perfect, however; when the codebase gets as large as it is, we can’t be sure every bit of old code can conform to the new best practices. Requiring perfect consistency has reached the point where there’s too much cost for the value.
+### スケールメリット
 
- --- -
+数年前、私たちのC++スタイルガイドは、古いコードの一貫性を失わせるようなスタイルガイドのルールはほとんど変更しないと約束しました。"場合によっては、特定のスタイルルールを変更する正当な理由があるかもしれませんが、一貫性を保つために、現状のままにしています。"
 
-**Setting the standard.**
-When we advocate for consistency, we tend to focus on internal consistency. Sometimes, local conventions spring up before global ones are adopted, and it isn’t reasonable to adjust everything to match. In that case, we advocate a hierarchy of consistency: “Be consistent” starts locally, where the norms within a given file precede those of a given team, which precede those of the larger project, which precede those of the overall codebase. In fact, the style guides contain a number of rules that explicitly defer to local conventions,(*6) valuing this local consistency over a scientific technical choice.
-However, it is not always enough for an organization to create and stick to a set of internal conventions. Sometimes, the standards adopted by the external community should be taken into account.
+コードベースが小さく、古くて埃をかぶったコーナーが少なかった頃は、それが理にかなっていました。
 
- --- -
+コードベースが大きく、古くなってくると、それは優先すべきことではなくなりました。これは（少なくともC++スタイルガイドの策定者にとっては）意識的な変更でした。このビットを打ち込むことで、C++のコードベースが完全に一貫したものになることは二度とないし、それを目指しているわけでもないことを明確に表明したのです。
 
-### Counting Spaces
+現在のベストプラクティスに合わせてルールを更新するだけでなく、これまでに書かれたすべてのものにそのルールを適用しなければならないというのは、単純に負担が大きすぎます。大規模変更ツールとプロセスにより、ほぼすべてのコードを、ほぼすべての新しいパターンや構文に従うように更新し、古いコードのほとんどが最新の承認されたスタイルを示すようにしています（第22章参照）。しかし、このような仕組みは完璧ではありません。コードベースがこれほど大きくなると、古いコードのすべてが新しいベストプラクティスに適合するとは限りません。完全な一貫性を求めることは、価値に対してコストがかかりすぎるという点に達しています。
 
-The Python style guide at Google initially mandated two-space indents for all of our Python code. The standard Python style guide, used by the external Python community, uses four-space indents. Most of our early Python development was in direct support of our C++ projects, not for actual Python applications. We therefore chose to use two-space indentation to be consistent with our C++ code, which was already formatted in that manner. As time went by, we saw that this rationale didn’t really hold up. Engineers who write Python code read and write other Python code much more often than they read and write C++ code. We were costing our engineers extra effort every time they needed to look something up or reference external code snippets. We were also going through a lot of pain each time we tried to export pieces of our code into open source, spending time reconciling the differences between our internal code and the external world we wanted to join.
-When the time came for Starlark (a Python-based language designed at Google to serve as the build description language) to have its own style guide, we chose to change to using four-space indents to be consistent with the outside world.(*7)
+----
 
- --- -
+**基準を設けること**
+一貫性を主張するとき、私たちは内部的な一貫性に注目しがちです。時には、グローバルな規約が採用される前にローカルな規約が生まれることがあり、すべてを合わせることは合理的ではありません。そのような場合には、一貫性の階層化を提唱します。「一貫性を保つ」というのはローカルから始まります。あるファイルの中の規範が、あるチームの規範よりも先にあり、それが大きなプロジェクトの規範よりも先にあり、それがコードベース全体の規範よりも先にあります。実際、スタイルガイドには、ローカルな慣習に従うことを明示したルールが数多く含まれており(*6)、科学的な技術的選択よりも、このローカルな一貫性を重視しています。
+
+しかし、組織が内部規約を作り、それを守るだけでは必ずしも十分ではありません。時には、外部のコミュニティで採用されている基準を考慮に入れる必要があります。
+
+----
+
+### スペースの数え方
+
+GoogleのPythonスタイルガイドでは、当初、すべてのPythonコードに2スペースのインデントを義務付けていました。外部のPythonコミュニティで使用されている標準的なPythonスタイルガイドは4スペースのインデントを使用しています。私たちの初期のPython開発のほとんどは、実際のPythonアプリケーションではなく、C++プロジェクトを直接サポートするためでした。そのため、すでにそのようにフォーマットされていたC++のコードとの一貫性を保つために、2スペースのインデントを使うことにしました。時間が経つにつれ、この理由は実際には通用しないことがわかりました。Pythonのコードを書くエンジニアは、C++のコードを読んだり書いたりするよりも、他のPythonのコードを読んだり書いたりする方がはるかに多いのです。私たちは、エンジニアが何かを調べたり、外部のコードスニペットを参照する必要があるたびに、余分な労力を費やしていました。また、コードの一部をオープンソースにエクスポートしようとするたびに、社内のコードと外部の世界との違いを調整するのに時間がかかり、大変な苦労をしました。
+
+Starlark（Googleで開発されたPythonベースのビルド記述言語）に独自のスタイルガイドを作成することになったとき、外部との整合性をとるために4スペースのインデントを使用することにしました(*7)。
+
+----
 
 If conventions already exist, it is usually a good idea for an organization to be consistent with the outside world. For small, self-contained, and short-lived efforts, it likely won’t make a difference; internal consistency matters more than anything happening outside the project’s limited scope. Once the passage of time and potential scaling become factors, the likelihood of your code interacting with outside projects or even ending up in the outside world increase. Looking long-term, adhering to the widely accepted standard will likely pay off.
 
