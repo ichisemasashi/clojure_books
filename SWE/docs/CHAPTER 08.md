@@ -120,19 +120,20 @@ Starlark（Googleで開発されたPythonベースのビルド記述言語）に
 
 ----
 
-If conventions already exist, it is usually a good idea for an organization to be consistent with the outside world. For small, self-contained, and short-lived efforts, it likely won’t make a difference; internal consistency matters more than anything happening outside the project’s limited scope. Once the passage of time and potential scaling become factors, the likelihood of your code interacting with outside projects or even ending up in the outside world increase. Looking long-term, adhering to the widely accepted standard will likely pay off.
+慣例がすでに存在している場合は、通常、組織が外部との整合性をとることは良いアイデアです。小規模で自己完結的な短期間の取り組みの場合は、プロジェクトの限られた範囲の外で起こることよりも、内部の一貫性の方が重要なので、違いはないでしょう。しかし、時間の経過やスケールアップの可能性が出てくると、自分のコードが外部のプロジェクトに影響を与えたり、外の世界に出て行ってしまう可能性が高くなります。長期的に見れば、広く受け入れられている標準に従うことが利益につながるでしょう。
 
-#### Avoid error-prone and surprising constructs
+#### エラーになりやすい構文や意外な構文を避ける
 
-Our style guides restrict the use of some of the more surprising, unusual, or tricky constructs in the languages that we use. Complex features often have subtle pitfalls not obvious at first glance. Using these features without thoroughly understanding their complexities makes it easy to misuse them and introduce bugs. Even if a construct is well understood by a project’s engineers, future project members and maintainers are not guaranteed to have the same understanding.
-This reasoning is behind our Python style guide ruling to avoid using power features such as reflection. The reflective Python functions hasattr() and getattr() allow a user to access attributes of objects using strings:
+私たちのスタイルガイドでは、私たちが使用している言語の中で、意外性のある、変わった、またはトリッキーな構成要素の使用を制限しています。複雑な機能には、一見しただけではわからない微妙な落とし穴があることがよくあります。複雑な機能を十分に理解せずに使用すると、誤用やバグの発生が容易になります。また、あるプロジェクトのエンジニアがよく理解している機能であっても、将来のプロジェクトメンバーやメンテナが同じように理解できるとは限りません。
+
+このような理由から、Pythonのスタイルガイドでは、リフレクションのような強力な機能の使用を避けるように定めています。Pythonの反射関数hasattr()とgetattr()は、文字列を使ってオブジェクトの属性にアクセスすることができます。
 
 ```
 if hasattr(my_object, 'foo'):
 some_var = getattr(my_object, 'foo')
 ```
 
-Now, with that example, everything might seem fine. But consider this:
+さて、この例では、すべてが順調に見えるかもしれません。しかし、考えてみてください。
 
 ```
 some_file.py:
@@ -147,42 +148,46 @@ other_file.py:
     values.append(getattr(my_object, field))
 ```
 
-When searching through code, how do you know that the fields foo, bar, and baz are being accessed here? There’s no clear evidence left for the reader. You don’t easily see and therefore can’t easily validate which strings are used to access attributes of your object. What if, instead of reading those values from `A_CONSTANT`, we read them from a Remote Procedure Call (RPC) request message or from a data store? Such obfuscated code could cause a major security flaw, one that would be very difficult to notice, simply by validating the message incorrectly. It’s also difficult to test and verify such code.
-Python’s dynamic nature allows such behavior, and in very limited circumstances, using `hasattr()` and `getattr()` is valid. In most cases, however, they just cause obfuscation and introduce bugs.
-Although these advanced language features might perfectly solve a problem for an expert who knows how to leverage them, power features are often more difficult to understand and are not very widely used. We need all of our engineers able to operate in the codebase, not just the experts. It’s not just support for the novice software engineer, but it’s also a better environment for SREs --- if an SRE is debugging a production outage, they will jump into any bit of suspect code, even code written in a language in which they are not fluent. We place higher value on simplified, straightforward code that is easier to understand and maintain.
+コードを検索するとき、foo、bar、bazというフィールドがここでアクセスされていることをどうやって知ることができますか？読み手には明確な証拠が残りません。どの文字列がオブジェクトの属性にアクセスするために使われているのか、簡単に見ることができないので、簡単に検証することができません。これらの値を `A_CONSTANT` から読み取る代わりに、リモート・プロシージャ・コール (RPC) のリクエスト・メッセージやデータ・ストアから読み取ったとしたらどうでしょう？このような難読化されたコードは、メッセージの検証を誤るだけで、重大なセキュリティ上の欠陥を引き起こす可能性があり、非常に気付きにくいものです。また、そのようなコードをテスト・検証することも困難です。
 
-#### Concede to practicalities
+Pythonの動的な性質はそのような動作を可能にし、非常に限られた状況では、`hasattr()`や`getattr()`を使うことは有効です。しかし、ほとんどの場合、これらは難読化の原因となり、バグを引き起こすだけです。
 
-In the words of Ralph Waldo Emerson: “A foolish consistency is the hobgoblin of little minds.” In our quest for a consistent, simplified codebase, we do not want to blindly ignore all else. We know that some of the rules in our style guides will encounter cases that warrant exceptions, and that’s OK. When necessary, we permit concessions to optimizations and practicalities that might otherwise conflict with our rules.
-Performance matters. Sometimes, even if it means sacrificing consistency or readability, it just makes sense to accommodate performance optimizations. For example, although our C++ style guide prohibits use of exceptions, it includes a rule that allows the use of noexcept, an exception-related language specifier that can trigger compiler optimizations.
-Interoperability also matters. Code that is designed to work with specific non-Google pieces might do better if tailored for its target. For example, our C++ style guide includes an exception to the general CamelCase naming guideline that permits use of the standard library’s snake_case style for entities that mimic standard library features.(*8) The C++ style guide also allows exemptions for Windows programming, where compatibility with platform features requires multiple inheritance, something explicitly forbidden for all other C++ code. Both our Java and JavaScript style guides explicitly state that generated code, which frequently interfaces with or depends on components outside of a project’s ownership, is out of scope for the guide’s rules.(*9) Consistency is vital; adaptation is key.
+このような高度な言語機能は、その活用方法を知っている専門家にとっては完璧に問題を解決できるかもしれませんが、パワー系の機能は理解するのが難しく、あまり普及していないのが現状です。エキスパートだけでなく、すべてのエンジニアがコードベースで操作できるようにする必要があります。これは、初心者のソフトウェアエンジニアをサポートするだけでなく、SREにとってもより良い環境となります。SREが本番の障害をデバッグしている場合、彼らはどんな疑わしいコードにも飛びつくでしょうし、たとえ自分が精通していない言語で書かれたコードであっても同様です。私たちは、理解しやすくメンテナンスしやすい、シンプルでわかりやすいコードに価値を置いています。
 
-## The Style Guide
+#### 実用性に譲歩する
 
-So, what does go into a language style guide? There are roughly three categories into which all style guide rules fall:
+ラルフ・ウォルドー・エマーソンの言葉です。"愚かな一貫性は、小さな心の迷信である。" 一貫性のあるシンプルなコードベースを追求するためには、他のすべてを盲目的に無視することはできません。スタイルガイドに記載されているルールの中には、例外を認めざるを得ないケースがあることは承知していますが、それは構いません。必要であれば、ルールに抵触する可能性のある最適化や実用性のための譲歩を認めます。
 
-- Rules to avoid dangers
-- Rules to enforce best practices
-- Rules to ensure consistency
+パフォーマンスは重要です。時には、一貫性や読みやすさを犠牲にしてでも、パフォーマンスの最適化に対応することは理にかなっています。たとえば、C++スタイルガイドでは例外の使用を禁止していますが、コンパイラの最適化を引き起こす例外関連の言語指定子であるnoexceptの使用を許可するルールが含まれています。
 
-#### Avoiding danger
+相互運用性も重要です。グーグル以外の特定の部品で動作するように設計されたコードは、そのターゲットに合わせて調整することで、より良い結果が得られるかもしれません。例えば、C++スタイルガイドには、一般的なキャメルケース命名ガイドラインの例外として、標準ライブラリの機能を模倣したエンティティに標準ライブラリのsnake_caseスタイルを使用することが認められています(*8)。また、C++スタイルガイドでは、プラットフォーム機能との互換性のために多重継承を必要とするWindowsプログラミングの例外も認められていますが、これは他のすべてのC++コードでは明示的に禁止されています。また、JavaとJavaScriptのスタイルガイドでは、プロジェクトの所有者以外のコンポーネントと頻繁にインターフェースをとったり、コンポーネントに依存したりする生成コードは、スタイルガイドのルールの対象外であることが明示されています(*9) 一貫性が重要であり、適応が重要です。
 
-First and foremost, our style guides include rules about language features that either must or must not be done for technical reasons. We have rules about how to use static members and variables; rules about using lambda expressions; rules about handling exceptions; rules about building for threading, access control, and class inheritance. We cover which language features to use and which constructs to avoid. We call out standard vocabulary types that may be used and for what purposes. We specifically include rulings on the hard-to-use and the hard-to-use-correctly --- some language features have nuanced usage patterns that might not be intuitive or easy to apply properly, causing subtle bugs to creep in. For each ruling in the guide, we aim to include the pros and cons that were weighed with an explanation of the decision that was reached. Most of these decisions are based on the need for resilience to time, supporting and encouraging maintainable language usage.
+## スタイルガイド
 
-#### Enforcing best practices
+では、言語スタイルガイドには何が必要なのでしょうか？スタイルガイドのルールには、大きく分けて3つのカテゴリーがあります。
 
-Our style guides also include rules enforcing some best practices of writing source code. These rules help keep the codebase healthy and maintainable. For example, we specify where and how code authors must include comments.(*10) Our rules for comments cover general conventions for commenting and extend to include specific cases that must include in-code documentation --- cases in which intent is not always obvious, such as fall-through in switch statements, empty exception catch blocks, and template metaprogramming. We also have rules detailing the structuring of source files, outlining the organization of expected content. We have rules about naming: naming of packages, of classes, of functions, of variables. All of these rules are intended to guide engineers to practices that support healthier, more sustainable code.
-Some of the best practices enforced by our style guides are designed to make source code more readable. Many formatting rules fall under this category. Our style guides specify when and how to use vertical and horizontal whitespace in order to improve readability. They also cover line length limits and brace alignment. For some languages, we cover formatting requirements by deferring to autoformatting tools ---  gofmt for Go, dartfmt for Dart. Itemizing a detailed list of formatting requirements or naming a tool that must be applied, the goal is the same: we have a consistent set of formatting rules designed to improve readability that we apply to all of our code.
-Our style guides also include limitations on new and not-yet-well-understood language features. The goal is to preemptively install safety fences around a feature’s potential pitfalls while we all go through the learning process. At the same time, before everyone takes off running, limiting use gives us a chance to watch the usage patterns that develop and extract best practices from the examples we observe. For these new features, at the outset, we are sometimes not sure of the proper guidance to give. As adoption spreads, engineers wanting to use the new features in different ways discuss their examples with the style guide owners, asking for allowances to permit additional use cases beyond those covered by the initial restrictions. Watching the waiver requests that come in, we get a sense of how the feature is getting used and eventually collect enough examples to generalize good practice from bad. After we have that information, we can circle back to the restrictive ruling and amend it to allow wider use.
+- 危険を回避するためのルール
+- ベストプラクティスを実施するためのルール
+- 一貫性を保つためのルール
 
- --- -
+#### 危険を回避するために
+
+スタイルガイドには、何よりもまず、技術的な理由で行わなければならない、あるいは行ってはならない言語機能に関するルールが記載されています。静的メンバーや変数の使い方、ラムダ式の使い方、例外処理のルール、スレッド化、アクセス制御、クラス継承などの構築に関するルールなどです。また、どのような言語機能を使用し、どのような構造を避けるべきかを説明しています。また、どのような目的で使用されるのか、標準的な語彙の種類についても言及しています。言語機能の中には、直感的に理解できなかったり、適切に適用するのが容易ではなかったりする微妙な使用パターンがあり、それが微妙なバグの原因になることがあります。このガイドでは、それぞれの判断について、長所と短所を考慮した上で、どのような結論に至ったかを説明することを目指しています。これらの決定のほとんどは、時間への耐性の必要性、維持可能な言語使用のサポートと奨励に基づいています。
+
+#### ベストプラクティスの徹底
+
+スタイルガイドには、ソースコードを書く上でのベストプラクティスを守るためのルールも含まれています。これらのルールは、コードベースの健全性と保守性を維持するのに役立ちます。例えば、コード作成者はどこにどのようにコメントを記述しなければならないかを規定しています(*10)。コメントに関する規則は、コメントの一般的な慣習を網羅しており、コード内の文書を記述しなければならない特定のケース（switch文のフォールスルー、空の例外キャッチブロック、テンプレートのメタプログラミングなど、意図が必ずしも明らかではないケース）にまで拡大しています。また、ソースファイルの構造を詳細に規定し、期待されるコンテンツの構成を概説するルールもあります。また、パッケージ、クラス、関数、変数などのネーミングに関するルールもあります。これらのルールはすべて、エンジニアがより健全で持続可能なコードをサポートするための実践を導くことを目的としています。
+スタイルガイドで定められているベストプラクティスの中には、ソースコードをより読みやすくするためのものがあります。多くのフォーマットルールがこのカテゴリーに属します。スタイルガイドでは、読みやすさを向上させるために、垂直および水平方向の空白をいつ、どのように使用するかを規定しています。また、行の長さの制限や波括弧の配置についても規定しています。いくつかの言語では、自動フォーマットツール（Goの場合はgofmt、Dartの場合はdartfmt）に委ねることで、フォーマットの要件をカバーしています。フォーマット要件の詳細なリストを項目別に作成しても、適用しなければならないツールの名前を挙げても、目的は同じです。つまり、読みやすさを向上させるために設計された一貫したフォーマットルールを持ち、すべてのコードに適用するのです。
+私たちのスタイルガイドには、新しい言語機能や、まだよく理解されていない言語機能に対する制限も含まれています。その目的は、その機能が持つ潜在的な落とし穴に安全柵をあらかじめ設置しておき、皆が学習プロセスを経ることにあります。同時に、みんなが走り出す前に、使用を制限することで、発展していく使用パターンを観察し、観察した例からベストプラクティスを抽出するチャンスを得ることができます。このような新機能の場合、最初はどのように指導すればよいのかわからないことがあります。導入が進むにつれ、新機能を様々な方法で使用したいと考えているエンジニアは、その例をスタイルガイドのオーナーに相談し、当初の制限事項でカバーされていない追加のユースケースを許可してほしいと依頼します。寄せられた許可申請を見て、私たちはその機能がどのように使われているかを把握し、最終的には良い事例と悪い事例を一般化できるだけの例を集めます。このような情報が得られれば、制限付きの裁定に立ち返り、より広い範囲で使用できるように修正することができます。
+
+----
 
 ### Case Study: Introducing std::unique_ptr
 
 When C++11 introduced `std::unique_ptr`, a smart pointer type that expresses exclusive ownership of a dynamically allocated object and deletes the object when the `unique_ptr` goes out of scope, our style guide initially disallowed usage. The behavior of the `unique_ptr` was unfamiliar to most engineers, and the related move semantics that the language introduced were very new and, to most engineers, very confusing. Preventing the introduction of `std::unique_ptr` in the codebase seemed the safer choice. We updated our tooling to catch references to the disallowed type and kept our existing guidance recommending other types of existing smart pointers.
 Time passed. Engineers had a chance to adjust to the implications of move semantics and we became increasingly convinced that using `std::unique_ptr` was directly in line with the goals of our style guidance. The information regarding object ownership that a `std::unique_ptr` facilitates at a function call site makes it far easier for a reader to understand that code. The added complexity of introducing this new type, and the novel move semantics that come with it, was still a strong concern, but the significant improvement in the long-term overall state of the codebase made the adoption of `std::unique_ptr` a worthwhile trade-off.
 
- --- -
+----
 
 #### Building in consistency
 
@@ -198,7 +203,7 @@ Our style guides aren’t static. As with most things, given the passage of time
 The decisions behind rules captured in our style guides are backed by evidence. When adding a rule, we spend time discussing and analyzing the relevant pros and cons as well as the potential consequences, trying to verify that a given change is appropriate for the scale at which Google operates. Most entries in Google’s style guides include these considerations, laying out the pros and cons that were weighed during the process and giving the reasoning for the final ruling. Ideally, we prioritize this detailed reasoning and include it with every rule.
 Documenting the reasoning behind a given decision gives us the advantage of being able to recognize when things need to change. Given the passage of time and changing conditions, a good decision made previously might not be the best current one. With influencing factors clearly noted, we are able to identify when changes related to one or more of these factors warrant reevaluating the rule.
 
- --- -
+----
 
 ### Case Study: CamelCase Naming
 
@@ -207,7 +212,7 @@ Later, we reached a point at which we were building and supporting independent P
 As our Python projects grew, our code more frequently interacted with external Python projects. We were incorporating third-party Python libraries for some of our projects, leading to a mix within our codebase of our own CamelCase format with the externally preferred snake_case style. As we started to open source some of our Python projects, maintaining them in an external world where our conventions were nonconformist added both complexity on our part and wariness from a community that found our style surprising and somewhat weird.
 Presented with these arguments, after discussing both the costs (losing consistency with other Google code, reeducation for Googlers used to our Python style) and benefits (gaining consistency with most other Python code, allowing what was already leaking in with third-party libraries), the style arbiters for the Python style guide decided to change the rule. With the restriction that it be applied as a file-wide choice, an exemption for existing code, and the latitude for projects to decide what is best for them, the Google Python style guide was updated to permit snake_case naming.
 
- --- -
+----
 
 ### The Process
 
@@ -262,7 +267,7 @@ At Google, we generally use automated style checkers and formatters to enforce c
 In managing the largest codebase ever, we’ve had the opportunity to observe the results of formatting done by humans versus formatting done by automated tooling. The robots are better on average than the humans by a significant amount. There are some places where domain expertise matters --- formatting a matrix, for example, is something a human can usually do better than a general-purpose formatter. Failing that, formatting code with an automated style checker rarely goes wrong.
 We enforce use of these formatters with presubmit checks: before code can be submitted, a service checks whether running the formatter on the code produces any diffs. If it does, the submit is rejected with instructions on how to run the formatter to fix the code. Most code at Google is subject to such a presubmit check. For our code, we use clang-format for C++; an in-house wrapper around yapf for Python; gofmt for Go; dartfmt for Dart; and buildifier for our `BUILD` files.
 
- --- -
+----
 
 ### Case Study: gofmt
 
@@ -306,7 +311,7 @@ For any organization, but especially for an organization as large as Google’s 
 
 
 
- --- --
+-----
 
 1 Many of our style guides have external versions, which you can find at https://google.github.io/styleguide. We cite numerous examples from these guides within this chapter.
 2 Tooling matters here. The measure for “too many” is not the raw number of rules in play, but how many an engineer needs to remember. For example, in the bad-old-days pre-clang-format, we needed to remember a ton of formatting rules. Those rules haven’t gone away, but with our current tooling, the cost of adherence has fallen dramatically. We’ve reached a point at which somebody could add an arbitrary number of formatting rules and nobody would care, because the tool just does it for you.
