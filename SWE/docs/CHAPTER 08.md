@@ -278,55 +278,64 @@ Googleでは、各言語のスタイルガイドについて、最終的な決�
 
 その他のルールは、技術的なものというよりも社会的なものであり、社会的な問題を技術的な解決策で解決するのは賢明ではないことが多い。このカテゴリーに分類されるルールの多くは、詳細があまり定義されていない傾向があり、ツールの開発は複雑で高価なものになります。そのようなルールの施行は、人間に任せた方が良い場合が多いのです。例えば、コード変更のサイズ（影響を受けるファイル数や変更される行数）に関しては、エンジニアはより小さな変更を推奨しています。小さな変更はエンジニアにとってレビューしやすいため、レビューはより早く、より徹底したものになります。また、小さな変更であれば、潜在的な影響や効果を推し量ることができるため、バグが発生する可能性も低くなります。しかし、小さな変更の定義は曖昧です。何百ものファイルに同一の1行のアップデートを適用するような変更は、実際にはレビューしやすいかもしれません。一方、20行に及ぶ小規模な変更では、評価が困難な副作用を伴う複雑なロジックが導入される可能性があります。私たちは、サイズの測定方法には様々なものがあり、その中には主観的なものもあることを認識しています --- 特に変更の複雑さを考慮する場合には。これが、任意の行数制限を超えて提案された変更を自動で却下するツールを持たない理由です。レビューアは、変更が大きすぎると判断した場合、反発することができます（そして実際にそうしています）。このルールや同様のルールは、コードを作成したりレビューしたりするエンジニアの裁量に委ねられています。しかし、技術的なルールに関しては、実現可能な場合は、技術的に実施することを推奨します。
 
-### Error Checkers
+### エラーチェッカー
 
-Many rules covering language usage can be enforced with static analysis tools. In fact, an informal survey of the C++ style guide by some of our C++ librarians in mid-2018 estimated that roughly 90% of its rules could be automatically verified. Error- checking tools take a set of rules or patterns and verify that a given code sample fully complies. Automated verification removes the burden of remembering all applicable rules from the code author. If an engineer only needs to look for violation warnings ---  many of which come with suggested fixes --- surfaced during code review by an analyzer that has been tightly integrated into the development workflow, we minimize the effort that it takes to comply with the rules. When we began using tools to flag deprecated functions based on source tagging, surfacing both the warning and the suggested fix in-place, the problem of having new usages of deprecated APIs disappeared almost overnight. Keeping the cost of compliance down makes it more likely for engineers to happily follow through.
-We use tools like clang-tidy (for C++) and Error Prone (for Java) to automate the process of enforcing rules. See Chapter 20 for an in-depth discussion of our approach.
-The tools we use are designed and tailored to support the rules that we define. Most tools in support of rules are absolutes; everybody must comply with the rules, so everybody uses the tools that check them. Sometimes, when tools support best practices where there’s a bit more flexibility in conforming to the conventions, there are opt-out mechanisms to allow projects to adjust for their needs.
+言語の使用方法をカバーする多くのルールは、静的解析ツールで強制することができます。実際、2018年半ばにC++ライブラリアンの何人かがC++スタイルガイドを非公式に調査したところ、そのルールのおよそ90％が自動的に検証できると推定されました。エラーチェックツールは、ルールやパターンのセットを受け取り、与えられたコードサンプルが完全に準拠しているかどうかを検証します。自動検証により、適用可能なルールをすべて覚えておくという負担をコード作成者から取り除くことができます。エンジニアは、開発ワークフローに緊密に統合されたアナライザーによるコードレビューの際に表示される違反警告（その多くは修正案を含んでいる）を確認するだけでよいのであれば、ルールを遵守するために必要な労力は最小限に抑えられる。ソースのタグ付けに基づいて非推奨の関数にフラグを立てるツールを使い始めたところ、警告と修正案の両方がその場で表示されるようになり、非推奨のAPIが新たに使用されるという問題が一夜にして解消されました。コンプライアンスのコストを抑えることで、エンジニアが喜んでコンプライアンスに従う可能性が高まります。
 
-### Code Formatters
+私たちは、clang-tidy（C++用）やError Prone（Java用）のようなツールを使用して、ルールを実施するプロセスを自動化しています。このアプローチの詳細については、第20章を参照してください。
 
-At Google, we generally use automated style checkers and formatters to enforce consistent formatting within our code. The question of line lengths has stopped being interesting.(*13) Engineers just run the style checkers and keep moving forward. When formatting is done the same way every time, it becomes a non-issue during code review, eliminating the review cycles that are otherwise spent finding, flagging, and fixing minor style nits.
-In managing the largest codebase ever, we’ve had the opportunity to observe the results of formatting done by humans versus formatting done by automated tooling. The robots are better on average than the humans by a significant amount. There are some places where domain expertise matters --- formatting a matrix, for example, is something a human can usually do better than a general-purpose formatter. Failing that, formatting code with an automated style checker rarely goes wrong.
-We enforce use of these formatters with presubmit checks: before code can be submitted, a service checks whether running the formatter on the code produces any diffs. If it does, the submit is rejected with instructions on how to run the formatter to fix the code. Most code at Google is subject to such a presubmit check. For our code, we use clang-format for C++; an in-house wrapper around yapf for Python; gofmt for Go; dartfmt for Dart; and buildifier for our `BUILD` files.
+私たちが使うツールは、私たちが定義するルールをサポートするために設計され、調整されています。ルールをサポートするツールのほとんどは絶対的なもので、誰もがルールを遵守しなければならないため、誰もがルールをチェックするツールを使用します。しかし、ベストプラクティスをサポートするツールでは、規則に従うことにもう少し柔軟性がある場合、プロジェクトが必要に応じて調整できるように、オプトアウトメカニズムが用意されていることがあります。
+
+### コードフォーマッタ
+
+Googleでは、自動化されたスタイルチェッカーとフォーマッターを使用して、コード内の一貫したフォーマットを実現しています。エンジニアはスタイルチェッカーを実行するだけで、行の長さの問題には興味を示さなくなりました(*13)。毎回同じ方法でフォーマットが行われていれば、コードレビューの際に問題になることはありません。そうすれば、スタイル上の些細な問題を発見し、フラグを立て、修正するために費やしていたレビューサイクルが不要になります。
+
+過去最大のコードベースを管理する中で、人間が行ったフォーマットと、自動化されたツールが行ったフォーマットの結果を観察する機会がありました。平均すると、ロボットの方が人間よりもはるかに優れています。例えば、行列のフォーマットは、汎用のフォーマッタよりも人間の方が上手にできることが多いですね。そうでなくても、自動スタイルチェッカーを使ってコードをフォーマットしても、失敗することはほとんどありません。
+
+コードが送信される前に、サービスはフォーマッタを実行して差分が発生するかどうかをチェックします。コードを投稿する前に、サービスがフォーマッタを実行して差分が出るかどうかをチェックし、差分が出た場合は、コードを修正するためのフォーマッタの実行方法を指示して、投稿を拒否します。Googleのほとんどのコードは、このような投稿前のチェックを受けています。私たちのコードでは、C++にはclang-format、Pythonにはyapfのラッパー、Goにはgofmt、Dartにはdartfmt、そして`BUILD`ファイルにはbuildifierを使用しています。
 
 ----
 
-### Case Study: gofmt
+### ケーススタディ：gofmt
 
 Sameer Ajmani
 
-Google released the Go programming language as open source on November 10, 2009. Since then, Go has grown as a language for developing services, tools, cloud infrastructure, and open source software.(*14)
-We knew that we needed a standard format for Go code from day one. We also knew that it would be nearly impossible to retrofit a standard format after the open source release. So the initial Go release included gofmt, the standard formatting tool for Go.
+Googleは、2009年11月10日にプログラミング言語「Go」をオープンソースとして公開しました。それ以来、Goはサービスやツール、クラウド基盤、オープンソースソフトウェアを開発するための言語として成長してきました(*14)。
 
-#### Motivations
+Goのコードに標準的なフォーマットが必要なことは、初日からわかっていました。また、オープンソースのリリース後に標準フォーマットを後付けするのはほぼ不可能だと思っていました。そこで、Goの初期リリースには、Goの標準フォーマットツールであるgofmtを搭載しました。
 
-Code reviews are a software engineering best practice, yet too much time was spent in review arguing over formatting. Although a standard format wouldn’t be everyone’s favorite, it would be good enough to eliminate this wasted time.(*15)
-By standardizing the format, we laid the foundation for tools that could automatically update Go code without creating spurious diffs: machine-edited code would be indistinguishable from human-edited code.(*16)
-For example, in the months leading up to Go 1.0 in 2012, the Go team used a tool called gofix to automatically update pre-1.0 Go code to the stable version of the language and libraries. Thanks to gofmt, the diffs gofix produced included only the important bits: changes to uses of the language and APIs. This allowed programmers to more easily review the changes and learn from the changes the tool made.
+#### 動機
 
-#### Impact
+コードレビューはソフトウェアエンジニアリングのベストプラクティスですが、レビューではフォーマットについての議論に多くの時間が費やされていました。標準フォーマットは誰もが好むものではありませんが、この無駄な時間をなくすには十分なものです(*15)。
 
-Go programmers expect that all Go code is formatted with gofmt. gofmt has no configuration knobs, and its behavior rarely changes. All major editors and IDEs use gofmt or emulate its behavior, so nearly all Go code in existence is formatted identically. At first, Go users complained about the enforced standard; now, users often cite gofmt as one of the many reasons they like Go. Even when reading unfamiliar Go code, the format is familiar.
-Thousands of open source packages read and write Go code.(*17) Because all editors and IDEs agree on the Go format, Go tools are portable and easily integrated into new developer environments and workflows via the command line.
+フォーマットを標準化することで、機械で編集したコードと人間が編集したコードの区別がつかないような、偽の差分を発生させずにGoのコードを自動的に更新するツールの基礎を築くことができました(*16)。
 
-#### Retrofitting
+例えば、2012年にGo 1.0がリリースされるまでの数ヶ月間、Goチームはgofixというツールを使って、1.0以前のGoコードを言語とライブラリの安定版に自動的にアップデートしました。gofmtのおかげで、gofixが作成する差分には、言語やAPIの使い方の変更など、重要な部分だけが含まれていました。これにより、プログラマーはより簡単に変更点を確認し、ツールが行った変更点から学ぶことができるようになりました。
 
-In 2012, we decided to automatically format all `BUILD` files at Google using a new standard formatter: `buildifier`. `BUILD` files contain the rules for building Google’s software with Blaze, Google’s build system. A standard `BUILD` format would enable us to create tools that automatically edit `BUILD` files without disrupting their format, just as Go tools do with Go files.
-It took six weeks for one engineer to get the reformatting of Google’s 200,000 BUILD files accepted by the various code owners, during which more than a thousand new `BUILD` files were added each week. Google’s nascent infrastructure for making large- scale changes greatly accelerated this effort. (See Chapter 22.)
+#### インパクト
 
-## Conclusion
+Go プログラマーは、すべての Go コードが gofmt でフォーマットされていることを期待しています。 gofmt には設定ノブがなく、その動作が変更されることはほとんどありません。主要なエディタや IDE はすべて gofmt を使用しているか、その動作をエミュレートしているため、現存するほぼすべての Go コードは同じフォーマットになっています。当初、Goユーザーは強制された標準に不満を持っていましたが、今ではGoを好きになった多くの理由の一つとして、しばしばgofmtを挙げています。見慣れないGoコードを読む場合でも、フォーマットは親しみやすいものです。
 
-For any organization, but especially for an organization as large as Google’s engineering force, rules help us to manage complexity and build a maintainable codebase. A shared set of rules frames the engineering processes so that they can scale up and keep growing, keeping both the codebase and the organization sustainable for the long term.
+何千ものオープンソースパッケージがGoコードを読み書きしています(*17)。すべてのエディタやIDEがGoフォーマットに同意しているため、Goツールはポータブルで、コマンドラインを介して新しい開発環境やワークフローに簡単に統合できます。
+
+#### 改造
+
+2012年、Googleではすべての`BUILD`ファイルを新しい標準フォーマッタを使って自動的にフォーマットすることにしました。`buildifier`です。`BUILD`ファイルには、GoogleのビルドシステムであるBlazeでGoogleのソフトウェアをビルドするためのルールが書かれています。標準的な`BUILD`フォーマットがあれば、GoツールがGoファイルを編集するように、`BUILD`ファイルのフォーマットを崩すことなく自動的に編集するツールを作ることができます。
+
+Googleの200,000個のBUILDファイルの再フォーマットを様々なコードオーナーに受け入れてもらうのに、1人のエンジニアが6週間かかり、その間に毎週1,000個以上の新しい`BUILD`ファイルが追加された。大規模な変更を行うためのGoogleの初期のインフラは、この作業を大きく加速させた。(第22章参照)
+
+## 結論
+
+どのような組織であっても、特にGoogleのエンジニアリング部隊のような大規模な組織では、ルールによって複雑性を管理し、保守可能なコードベースを構築することができます。ルールを共有することで、エンジニアリングプロセスがスケールアップし、成長し続けることができ、コードベースと組織の両方を長期的に持続可能なものにすることができます。
 
 
 ## TL;DRs
 
-- Rules and guidance should aim to support resilience to time and scaling.
-- Know the data so that rules can be adjusted.
-- Not everything should be a rule.
-- Consistency is key.
-- Automate enforcement when possible.
+- ルールとガイダンスは、時間と規模に対する耐性をサポートすることを目的とすべきである。
+- ルールを調整できるように、データを把握する。
+- すべてをルール化するべきではない。
+- 一貫性が重要である。
+- 可能であれば施行を自動化する。
 
 
 
@@ -336,20 +345,20 @@ For any organization, but especially for an organization as large as Google’s 
 
 -----
 
-1 Many of our style guides have external versions, which you can find at https://google.github.io/styleguide. We cite numerous examples from these guides within this chapter.
-2 Tooling matters here. The measure for “too many” is not the raw number of rules in play, but how many an engineer needs to remember. For example, in the bad-old-days pre-clang-format, we needed to remember a ton of formatting rules. Those rules haven’t gone away, but with our current tooling, the cost of adherence has fallen dramatically. We’ve reached a point at which somebody could add an arbitrary number of formatting rules and nobody would care, because the tool just does it for you.
-3 Credit to H. Wright for the real-world comparison, made at the point of having visited around 15 different Google offices.
-4 “Chunking” is a cognitive process that groups pieces of information together into meaningful “chunks” rather than keeping note of them individually. Expert chess players, for example, think about configurations of pieces rather than the positions of the individuals.
-5 See 4.2 Block indentation: +2 spaces, Spaces vs. Tabs, 4.4 Column limit:100 and Line Length.
-6 Use of const, for example.
-7 Style formatting for BUILD files implemented with Starlark is applied by buildifier. See https://github.com/ bazelbuild/buildtools.
-8 See Exceptions to Naming Rules. As an example, our open sourced Abseil libraries use snake_case naming for types intended to be replacements for standard types. See the types defined in https://github.com/abseil/abseil- cpp/blob/master/absl/utility/utility.h. These are C++11 implementation of C++14 standard types and therefore use the standard’s favored snake_case style instead of Google’s preferred CamelCase form.
-9 See Generated code: mostly exempt.
-10 Seehttps://google.github.io/styleguide/cppguide.html#Comments,http://google.github.io/styleguide/pyguide#38- comments-and-docstrings, and https://google.github.io/styleguide/javaguide.html#s7-javadoc, where multiple languages define general comment rules.
-11 Such discussions are really just bikeshedding, an illustration of Parkinson’s law of triviality.
-12 https://abseil.io/tips has a selection of some of our most popular tips.
-15 Robert Griesemer’s 2015 talk, “The Cultural Evolution of gofmt,” provides details on the motivation, design, and impact of gofmt on Go and other languages.
-16 Russ Cox explained in 2009 that gofmt was about automated changes: “So we have all the hard parts of a program manipulation tool just sitting waiting to be used. Agreeing to accept ‘gofmt style’ is the piece that makes it doable in a finite amount of code.”
-17 The Go AST and format packages each have thousands of importers.
+1 多くのスタイルガイドには外部版があり、https://google.github.io/styleguide で見ることができます。本章では、これらのガイドから多くの例を引用しています。
+2 ここではツールが重要です。多すぎる」という指標は、実際に使用されているルールの数ではなく、エンジニアが覚える必要のある数です。例えば、clang-formatが登場する前の古い時代には、膨大な数のフォーマットルールを覚えておく必要がありました。これらのルールがなくなったわけではありませんが、現在のツールを使えば、ルールを守るためのコストは劇的に減少します。誰かが任意の数のフォーマットルールを追加しても、ツールが代わりにやってくれるので、誰も気にしないというところまで来ています。
+3 Googleのオフィスを15カ所ほど訪問した際に行った、現実世界での比較についてはH.Wright氏による。
+4 「チャンキング」とは、情報を個別に記録するのではなく、意味のある「チャンク」にまとめる認知プロセスのこと。例えば、チェスの熟練者は、個々の駒の位置ではなく、駒の構成について考える。
+5 参照 4.2 ブロックインデント。+4.2 ブロックのインデント：スペース2個、スペースとタブ、4.4 列数の制限：100、行の長さを参照してください。
+6 constの使用例。
+7 Starlarkで実装されたBUILDファイルのスタイルフォーマットはbuildifierで適用されます。https://github.com/ bazelbuild/buildtoolsを参照してください。
+8 「命名規則の例外」を参照してください。例として、オープンソースの Abseil ライブラリでは、標準の型を置き換えるための型に snake_case 命名を使用しています。https://github.com/abseil/abseil- cpp/blob/master/absl/utility/utility.h で定義されている型をご覧ください。これらは C++14 標準型の C++11 実装であるため、Google が好むキャメルケース形式ではなく、標準で好まれる snake_case 形式が使用されています。
+9 「生成されたコード：ほとんどが除外されています」を参照。
+10 https://google.github.io/styleguide/cppguide.html#Comments,http://google.github.io/styleguide/pyguide#38- comments-and-docstrings、および複数の言語が一般的なコメントルールを定義している https://google.github.io/styleguide/javaguide.html#s7-javadoc を参照。
+11 このような議論は、実際には単なるバイクシェディングであり、パーキンソンのつまらない法則の実例です。
+12 https://abseil.io/tips には、最も人気のあるヒントの一部が掲載されています。
+15 Robert Griesemer氏の2015年の講演「The Cultural Evolution of gofmt」では、goや他の言語におけるgofmtの動機、設計、影響について詳しく説明されています。
+16 ラス・コックスは2009年に、gofmtは変更の自動化について説明しています。「つまり、プログラム操作ツールのすべてのハードパーツが使われるのを待っているのです。gofmtスタイル」を受け入れることに同意することは、限られたコード量でそれを可能にする部分である。"
+17 GoのASTとフォーマットパッケージには、それぞれ何千ものインポーターがあります。
 
 
