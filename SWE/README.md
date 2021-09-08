@@ -26,6 +26,6 @@ PART III プロセス
 
 [ch08: Style Guides and Rules](docs/CHAPTER%2008.md)
 
-
+[ch09: Code Review](docs/CHAPTER%2009.md)
 
 www.DeepL.com/Translator（無料版）で翻訳しました。
