@@ -5,83 +5,96 @@ Written by Tom Manshreck and Caitlin Sadowski
 
 Edited by Lisa Carey
 
-Code review is a process in which code is reviewed by someone other than the author, often before the introduction of that code into a codebase. Although that is a simple definition, implementations of the process of code review vary widely throughout the software industry. Some organizations have a select group of “gatekeepers” across the codebase that review changes. Others delegate code review processes to smaller teams, allowing different teams to require different levels of code review. At Google, essentially every change is reviewed before being committed, and every engineer is responsible for initiating reviews and reviewing changes.
-Code reviews generally require a combination of a process and a tool supporting that process. At Google, we use a custom code review tool, Critique, to support our process.(*1) Critique is an important enough tool at Google to warrant its own chapter in this book. This chapter focuses on the process of code review as it is practiced at Google rather than the specific tool, both because these foundations are older than the tool and because most of these insights can be adapted to whatever tool you might use for code review.
+コードレビューとは、コードベースにコードを導入する前に、そのコードを作者以外の人間がレビューするプロセスである。これは簡単な定義ですが、コードレビューのプロセスの実装は、ソフトウェア業界全体で大きく異なります。ある組織では、コードベース全体の中から選ばれた「ゲートキーパー」たちが変更をレビューします。また、コードレビューのプロセスを小さなチームに委ね、チームごとに異なるレベルのコードレビューを要求することもあります。Googleでは、基本的にすべての変更がコミットされる前にレビューされ、すべてのエンジニアがレビューの開始と変更の確認に責任を持っています。
+
+コードレビューは一般的に、プロセスとそれをサポートするツールの組み合わせが必要です。Googleでは、Critiqueというカスタムコードレビューツールを使ってプロセスをサポートしています(*1)。この章では、特定のツールではなく、Googleで実践されているコードレビューのプロセスに焦点を当てています。これは、これらの基礎がツールよりも古いものであることと、これらの洞察のほとんどが、コードレビューに使用するどのようなツールにも適用できるものであるためです。
 
 
-  For more information on Critique, see Chapter 19.
+  Critiqueについては、第19章を参照してください。
 
-Some of the benefits of code review, such as detecting bugs in code before they enter a codebase, are well established(*2) and somewhat obvious (if imprecisely measured). Other benefits, however, are more subtle. Because the code review process at Google is so ubiquitous and extensive, we’ve noticed many of these more subtle effects, including psychological ones, which provide many benefits to an organization over time and scale.
+コードレビューの利点の中には、コードベースに入る前にコードのバグを検出できるなど、よく知られており(*2)、(測定が不正確ではあるが)ある程度明白なものがあります。しかし、それ以外のメリットは、より微妙なものです。Googleのコードレビュープロセスは非常にユビキタスで広範囲にわたっているため、心理的なものも含め、このような微妙な効果の多くに気付きました。
 
-## Code Review Flow
+## コードレビューの流れ
 
-Code reviews can happen at many stages of software development. At Google, code reviews take place before a change can be committed to the codebase; this stage is also known as a precommit review. The primary end goal of a code review is to get another engineer to consent to the change, which we denote by tagging the change as “looks good to me” (LGTM). We use this LGTM as a necessary permissions “bit” (combined with other bits noted below) to allow the change to be committed.
-A typical code review at Google goes through the following steps:
+コードレビューは、ソフトウェア開発のさまざまな段階で行われます。Googleでは、コードレビューは変更をコードベースにコミットする前に行われます。この段階はプリコミットレビューとも呼ばれます。コードレビューの主な目的は、他のエンジニアに変更を承諾してもらうことであり、私たちはその変更を「looks good to me」（LGTM）というタグで表します。私たちはこのLGTMを、変更をコミットするために必要なパーミッションの「ビット」として使用します（後述の他のビットと組み合わせて使用します）。
+Googleの典型的なコードレビューは、以下のような手順で行われます。
 
-1. A user writes a change to the codebase in their workspace. This author then creates a snapshot of the change: a patch and corresponding description that are uploaded to the code review tool. This change produces a diff against the codebase, which is used to evaluate what code has changed.
-2. The author can use this initial patch to apply automated review comments or do self-review. When the author is satisfied with the diff of the change, they mail the change to one or more reviewers. This process notifies those reviewers, asking them to view and comment on the snapshot.
-3. Reviewers open the change in the code review tool and post comments on the diff. Some comments request explicit resolution. Some are merely informational.
-4. The author modifies the change and uploads new snapshots based on the feedback and then replies back to the reviewers. Steps 3 and 4 may be repeated multiple times.
-5. After the reviewers are happy with the latest state of the change, they agree to the change and accept it by marking it as “looks good to me” (LGTM). Only one LGTM is required by default, although convention might request that all reviewers agree to the change.
-6. After a change is marked LGTM, the author is allowed to commit the change to the codebase, provided they resolve all comments and that the change is approved. We’ll cover approval in the next section.
+1. ユーザーが自分のワークスペースのコードベースに変更を書き込みます。この作者は、変更のスナップショット（パッチとそれに対応する説明文）を作成し、コードレビューツールにアップロードします。この変更により、コードベースに対する diff が作成され、どのコードが変更されたかを評価するために使用されます。
+2. 作者は、この最初のパッチを使って、自動レビューコメントを適用したり、セルフレビューを行ったりすることができます。作者は、変更点の diff に満足したら、その変更点を 1 人または複数のレビュアーに郵送します。このプロセスでは、それらのレビュアーに通知し、スナップショットの閲覧とコメントを求めます。
+3. レビューアは、コードレビューツールで変更箇所を開き、diffにコメントを投稿します。コメントの中には、明示的な解決を求めるものがあります。単に情報を提供するものもあります。
+4. 作者は、フィードバックに基づいて変更を修正し、新しいスナップショットをアップロードして、レビュアーに返信します。ステップ3と4は複数回繰り返すことができます。
+5. レビューアが変更の最新の状態に満足した後、変更に同意し、「looks good to me」(LGTM)とマークして承認します。デフォルトでは1つのLGTMのみが要求されますが、コンベンションではすべてのレビュアーが変更に同意することを要求する場合もあります。
+6. 変更が LGTM とマークされた後、すべてのコメントを解決し、変更が承認されていれば、作者はその変更をコードベースにコミットすることができます。承認については、次のセクションで説明します。
 
-We’ll go over this process in more detail later in this chapter.
-
------
-
-### Code Is a Liability
-
-It’s important to remember (and accept) that code itself is a liability. It might be a necessary liability, but by itself, code is simply a maintenance task to someone somewhere down the line. Much like the fuel that an airplane carries, it has weight, though it is, of course, necessary for that airplane to fly.
-New features are often necessary, of course, but care should be taken before developing code in the first place to ensure that any new feature is warranted. Duplicated code not only is a wasted effort, it can actually cost more in time than not having the code at all; changes that could be easily performed under one code pattern often require more effort when there is duplication in the codebase. Writing entirely new code is so frowned upon that some of us have a saying: “If you’re writing it from scratch, you’re doing it wrong!”
-This is especially true of library or utility code. Chances are, if you are writing a utility, someone else somewhere in a codebase the size of Google’s has probably done something similar. Tools such as those discussed in Chapter 17 are therefore critical for both finding such utility code and preventing the introduction of duplicate code. Ideally, this research is done beforehand, and a design for anything new has been communicated to the proper groups before any new code is written.
-Of course, new projects happen, new techniques are introduced, new components are needed, and so on. All that said, a code review is not an occasion to rehash or debate previous design decisions. Design decisions often take time, requiring the circulation of design proposals, debate on the design in API reviews or similar meetings, and perhaps the development of prototypes. As much as a code review of entirely new code should not come out of the blue, the code review process itself should also not be viewed as an opportunity to revisit previous decisions.
+このプロセスについては、本章の後半で詳しく説明します。
 
 -----
 
-## How Code Review Works at Google
+### コードには責任がある
 
-We’ve pointed out roughly how the typical code review process works, but the devil is in the details. This section outlines in detail how code review works at Google and how these practices allow it to scale properly over time.
-There are three aspects of review that require “approval” for any given change at Google:
+コード自体が負債であることを忘れない（受け入れる）ことが重要です。必要な責任かもしれませんが、コードはそれだけでは、どこかの誰かのメンテナンス作業に過ぎません。飛行機が運ぶ燃料のように、コードには重みがありますが、もちろん飛行機が飛ぶためには必要なものです。
 
-- A correctness and comprehension check from another engineer that the code is appropriate and does what the author claims it does. This is often a team member, though it does not need to be. This is reflected in the LGTM permissions “bit,” which will be set after a peer reviewer agrees that the code “looks good” to them.
-- Approval from one of the code owners that the code is appropriate for this particular part of the codebase (and can be checked into a particular directory). This approval might be implicit if the author is such an owner. Google’s codebase is a tree structure with hierarchical owners of particular directories. (See Chapter 16). Owners act as gatekeepers for their particular directories. A change might be proposed by any engineer and LGTM’ed by any other engineer, but an owner of the directory in question must also approve this addition to their part of the codebase. Such an owner might be a tech lead or other engineer deemed expert in that particular area of the codebase. It’s generally up to each team to decide how broadly or narrowly to assign ownership privileges.
-- Approval from someone with language “readability”(*3) that the code conforms to the language’s style and best practices, checking whether the code is written in the manner we expect. This approval, again, might be implicit if the author has such readability. These engineers are pulled from a company-wide pool of engineers who have been granted readability in that programming language.
+新しい機能が必要になることはよくありますが、そもそもコードを開発する前に、新しい機能が必要であるかどうかを確認するための注意が必要です。重複したコードは無駄な作業であるだけでなく、実際にはコードを持たない場合よりも時間的なコストがかかることがあります。一つのコードパターンで簡単にできる変更でも、コードベースに重複があるとより多くの労力を必要とします。全く新しいコードを書くことは嫌われるので、ある人はこう言います。"もしゼロから書いているなら、それは間違っている!"
 
-Although this level of control sounds onerous --- and, admittedly, it sometimes is ---  most reviews have one person assuming all three roles, which speeds up the process quite a bit. Importantly, the author can also assume the latter two roles, needing only an LGTM from another engineer to check code into their own codebase, provided they already have readability in that language (which owners often do).
-These requirements allow the code review process to be quite flexible. A tech lead who is an owner of a project and has that code’s language readability can submit a code change with only an LGTM from another engineer. An intern without such authority can submit the same change to the same codebase, provided they get approval from an owner with language readability. The three aforementioned permission “bits” can be combined in any combination. An author can even request more than one LGTM from separate people by explicitly tagging the change as wanting an LGTM from all reviewers.
-In practice, most code reviews that require more than one approval usually go through a two-step process: gaining an LGTM from a peer engineer, and then seeking approval from appropriate code owner/readability reviewer(s). This allows the two roles to focus on different aspects of the code review and saves review time. The primary reviewer can focus on code correctness and the general validity of the code change; the code owner can focus on whether this change is appropriate for their part of the codebase without having to focus on the details of each line of code. An approver is often looking for something different than a peer reviewer, in other words. After all, someone is trying to check in code to their project/directory. They are more concerned with questions such as: “Will this code be easy or difficult to maintain?” “Does it add to my technical debt?” “Do we have the expertise to maintain it within our team?”
-If all three of these types of reviews can be handled by one reviewer, why not just have those types of reviewers handle all code reviews? The short answer is scale. Separating the three roles adds flexibility to the code review process. If you are working with a peer on a new function within a utility library, you can get someone on your team to review the code for code correctness and comprehension. After several rounds (perhaps over several days), your code satisfies your peer reviewer and you get an LGTM. Now, you need only get an owner of the library (and owners often have appropriate readability) to approve the change.
+これは、ライブラリやユーティリティのコードに特に当てはまります。おそらく、あなたがユーティリティを書いていても、Googleと同じ規模のコードベースのどこかで、他の誰かが同じようなことをしているでしょう。そのため、第17章で説明したようなツールは、そのようなユーティリティコードを見つけたり、重複したコードの導入を防いだりするために非常に重要です。理想的には、このような調査が事前に行われ、新しいコードを書く前に、新しいもののデザインが適切なグループに伝えられていることです。
+
+もちろん、新しいプロジェクトが発生したり、新しい技術が導入されたり、新しいコンポーネントが必要になったりすることはあります。とはいえ、コードレビューは以前の設計上の決定を蒸し返したり、議論したりする場ではありません。設計の決定には時間がかかることが多く、設計案の配布、APIレビューなどでの設計に関する議論、そしておそらくプロトタイプの開発が必要になります。全く新しいコードのコードレビューが突然行われるべきではないのと同様に、コードレビューのプロセス自体も、過去の決定事項を再検討する機会と見なすべきではありません。
+
+-----
+
+## Googleにおけるコードレビューの仕組み
+
+典型的なコードレビュープロセスがどのように機能するかを大まかに指摘してきましたが、重要なのは細部にあります。このセクションでは、Googleでのコードレビューの仕組みと、これらのプラクティスがどのようにして時間をかけて適切にスケーリングすることを可能にしているかについて、詳細に説明します。
+Googleでは、どのような変更でも「承認」を必要とするレビューの3つの側面があります。
+
+- 他のエンジニアが、コードが適切であり、作者が主張していることを実行しているかどうか、正しさと理解度をチェックすること。これはチームメンバーであることが多いのですが、必ずしもそうである必要はありません。このことは、LGTMの許可ビットに反映されています。許可ビットは、ピア・レビュアーがコードを「良さそうだ」と同意した後にセットされます。
+- コードがコードベースの特定の部分に適している(特定のディレクトリにチェックインできる)という、コード所有者の1人からの承認。作者がそのような所有者である場合、この承認は暗黙の了解となることがあります。Googleのコードベースは、特定のディレクトリの所有者が階層化されたツリー構造になっています。(第16章参照)。所有者は、特定のディレクトリのゲートキーパーの役割を果たします。エンジニアが提案した変更は、他のエンジニアによってLGTMされるかもしれませんが、問題のディレクトリのオーナーは、コードベースの自分の部分への追加を承認しなければなりません。そのようなオーナーは、コードベースの特定の領域に精通していると思われる技術リーダーや他のエンジニアかもしれません。オーナーシップの権限をどれだけ広く、あるいは狭く設定するかは、各チームに任されています。
+- 言語の「読みやすさ」(*3)を持つ人が、その言語のスタイルやベストプラクティスに準拠していることを承認し、私たちが期待する方法でコードが書かれているかどうかをチェックします。この承認も、著者にそのような読みやすさがあれば、暗黙の了解となるかもしれません。これらのエンジニアは、そのプログラミング言語のリーダビリティを付与された全社のエンジニアの中から引き抜かれます。
+
+しかし、ほとんどのレビューでは、一人の人間がこの3つの役割を担っているため、プロセスが非常に速くなっています。重要なのは、著者が後者の2つの役割を担うこともできるということです。自分のコードベースにコードをチェックするためには、他のエンジニアがLGTMを必要とするだけですが、その言語での読みやすさをすでに持っていることが条件となります（オーナーがそうであることが多い）。
+
+これらの要件により、コードレビュープロセスは非常に柔軟になります。あるプロジェクトのオーナーであり、そのコードの言語の可読性を持っているテックリードは、他のエンジニアからのLGTMだけでコード変更を提出することができます。そのような権限を持たないインターンは、言語可読性を持つオーナーから承認を得れば、同じコードベースに同じ変更を提出することができます。前述の3つの許可「ビット」は、どのような組み合わせも可能です。作者は、すべてのレビュアーにLGTMを求めるように変更を明示的にタグ付けすることで、別々の人に複数のLGTMを要求することもできます。
+
+実際には、複数の承認を必要とするコードレビューのほとんどは、ピアエンジニアからLGTMを得て、次に適切なコードオーナー/可読性レビュアー（複数）に承認を求めるという2段階のプロセスを経るのが普通です。これにより、2つの役割がコードレビューの異なる側面に焦点を当てることができ、レビュー時間を短縮することができます。プライマリーレビュアーは、コードの正しさとコード変更の一般的な妥当性に注目することができ、コードオーナーは、コードの各行の詳細に注目しなくても、この変更がコードベースの自分の部分に適切であるかどうかに注目することができます。承認者が求めているものは、言い換えればピアレビューとは異なるものであることが多いのです。結局のところ、誰かが自分のプロジェクトやディレクトリにコードをチェックインしようとしているのです。彼らは次のような質問に関心があります。"このコードは維持するのが簡単か難しいか？" "このコードは私の技術的負債を増やすことになるのか？" "チーム内でメンテナンスするための専門知識はあるのか？"
+
+これら3つのタイプのレビューを1人のレビュアーが担当できるのであれば、そのタイプのレビュアーがすべてのコードレビューを担当すればよいのではないでしょうか。その答えは「規模」です。3つの役割を分けることで、コードレビューのプロセスに柔軟性を持たせることができます。ユーティリティーライブラリ内の新しい関数を仲間と一緒に作っている場合、チーム内の誰かにコードの正しさと理解度をレビューしてもらいます。数回のラウンド（おそらく数日間）の後、あなたのコードがピア・レビュアーを満足させ、LGTMを得ることができます。あとは、そのライブラリのオーナー（オーナーは適切な読みやすさを持っていることが多い）に変更を承認してもらうだけです。
 
 ----
 
-### Ownership
+### 所有権
 
 Hyrum Wright
 
-When working on a small team in a dedicated repository, it’s common to grant the entire team access to everything in the repository. After all, you know the other engineers, the domain is narrow enough that each of you can be experts, and small numbers constrain the effect of potential errors.
-As the team grows larger, this approach can fail to scale. The result is either a messy repository split or a different approach to recording who has what knowledge and responsibilities in different parts of the repository. At Google, we call this set of knowledge and responsibilities ownership and the people to exercise them owners. This concept is different than possession of a collection of source code, but rather implies a sense of stewardship to act in the company’s best interest with a section of the codebase. (Indeed, “stewards” would almost certainly be a better term if we had it to do over again.)
-Specially named OWNERS files list usernames of people who have ownership responsibilities for a directory and its children. These files may also contain references to other OWNERS files or external access control lists, but eventually they resolve to a list of individuals. Each subdirectory may also contain a separate OWNERS file, and the relationship is hierarchically additive: a given file is generally owned by the union of the members of all the OWNERS files above it in the directory tree. OWNERS files may have as many entries as teams like, but we encourage a relatively small and focused list to ensure responsibility is clear.
-Ownership of Google’s code conveys approval rights for code within one’s purview, but these rights also come with a set of responsibilities, such as understanding the code that is owned or knowing how to find somebody who does. Different teams have different criteria for granting ownership to new members, but we generally encourage them not to use ownership as a rite of initiation and encourage departing members to yield ownership as soon as is practical.
-This distributed ownership structure enables many of the other practices we’ve outlined in this book. For example, the set of people in the root OWNERS file can act as global approvers for large-scale changes (see Chapter 22) without having to bother local teams. Likewise, OWNERS files act as a kind of documentation, making it easy for people and tools to find those responsible for a given piece of code just by walking up the directory tree. When new projects are created, there’s no central authority that has to register new ownership privileges: a new OWNERS file is sufficient.
-This ownership mechanism is simple, yet powerful, and has scaled well over the past two decades. It is one of the ways that Google ensures that tens of thousands of engineers can operate efficiently on billions of lines of code in a single repository.
+専用のリポジトリで少人数のチームで作業する場合、チーム全体にリポジトリ内のすべてのものへのアクセスを許可するのが一般的です。結局のところ、他のエンジニアを知っているし、ドメインが狭いので各人が専門家になれるし、人数が少ないので潜在的なエラーの影響を抑えることができるからです。
+
+チームの規模が大きくなると、このアプローチは拡張性に欠けるようになります。その結果、リポジトリが乱雑に分割されるか、誰がどのような知識と責任を持っているかをリポジトリの異なる部分に記録するための異なるアプローチが必要になります。Googleでは、この一連の知識と責任をオーナーシップと呼び、それを行使する人をオーナーと呼んでいます。この概念は、ソースコードの集合体を所有することとは異なり、コードベースのある部分について会社の利益のために行動するスチュワードシップの感覚を意味しています。(確かに、もう一度やり直すとしたら、「スチュワード」という言葉の方がいいかもしれません)。
+
+特別な名前のOWNERSファイルには、ディレクトリとその子の所有権を持つ人のユーザー名がリストアップされています。これらのファイルは、他のOWNERSファイルや外部のアクセスコントロールリストへの参照を含むこともありますが、最終的には個人のリストに解決されます。各サブディレクトリには、それぞれ別のOWNERSファイルが含まれており、その関係は階層的に加算されていきます。OWNERSファイルは、チームが必要とする数のエントリーを持つことができますが、責任の所在を明確にするために、比較的小さくて集中的なリストを持つことを推奨します。
+
+Google のコードを所有すると、自分の権限内のコードを承認する権利が与えられますが、この権利には、所有しているコードを理解したり、理解している人を見つける方法を知っておくなどの責任が伴います。新しいメンバーにオーナーシップを与える基準はチームによって異なりますが、一般的には、オーナーシップを入社式の儀式として使わないようにし、退社するメンバーにはできるだけ早くオーナーシップを放棄するように勧めています。
+
+この分散したオーナーシップ構造により、本書で説明した他の多くの実践が可能になります。例えば、ルートOWNERSファイルに登録されている人たちは、大規模な変更を行う際に、ローカルチームに迷惑をかけることなく、グローバルな承認者として機能することができます（第22章参照）。同様に、OWNERSファイルは一種のドキュメントのような役割を果たし、人々やツールがディレクトリツリーを歩くだけで、特定のコードの責任者を簡単に見つけることができます。また、新しいプロジェクトが作成されても、新しいオーナーシップ権限を登録する中央機関はありません：新しいOWNERSファイルで十分です。
+
+このオーナーシップの仕組みはシンプルでありながら強力で、過去20年間に渡ってうまく拡張されてきました。これは、Googleが、何万人ものエンジニアが1つのリポジトリで何十億行ものコードを効率的に処理できるようにするための方法の1つです。
 
 ----
 
-## Code Review Benefits
+## コードレビューのメリット
 
-Across the industry, code review itself is not controversial, although it is far from a universal practice. Many (maybe even most) other companies and open source projects have some form of code review, and most view the process as important as a sanity check on the introduction of new code into a codebase. Software engineers understand some of the more obvious benefits of code review, even if they might not personally think it applies in all cases. But at Google, this process is generally more thorough and wide spread than at most other companies.
-Google’s culture, like that of a lot of software companies, is based on giving engineers wide latitude in how they do their jobs. There is a recognition that strict processes tend not to work well for a dynamic company needing to respond quickly to new technologies, and that bureaucratic rules tend not to work well with creative professionals. Code review, however, is a mandate, one of the few blanket processes in which all software engineers at Google must participate. Google requires code review for almost(*4) every code change to the codebase, no matter how small. This mandate does have a cost and effect on engineering velocity given that it does slow down the introduction of new code into a codebase and can impact time-to-production for any given code change. (Both of these are common complaints by software engineers of strict code review processes.) Why, then, do we require this process? Why do we believe that this is a long-term benefit?
+業界全体では、コードレビューは普遍的な慣行とは程遠いものの、それ自体は議論の対象にはなっていません。多くの企業やオープンソースプロジェクトでは、何らかの形でコードレビューが行われており、ほとんどの企業では、コードベースに新しいコードを導入する際の健全性チェックとして、このプロセスを重要視しています。ソフトウェアエンジニアは、個人的にはコードレビューがすべてのケースに適用されるとは思っていなくても、コードレビューのより明白なメリットを理解しています。しかし、グーグルでは、このプロセスが他の多くの企業よりも徹底しており、広く普及している。
 
-A well-designed code review process and a culture of taking code review seriously provides the following benefits:
+多くのソフトウェア企業がそうであるように、Googleの文化は、エンジニアに仕事の進め方の自由度を与えることを基本としています。新しい技術に迅速に対応しなければならないダイナミックな企業にとって、厳格なプロセスはうまく機能しない傾向があり、官僚的なルールはクリエイティブなプロフェッショナルとうまく機能しない傾向があるという認識があります。しかし、コードレビューは、グーグルのすべてのソフトウェアエンジニアが参加しなければならない数少ない包括的なプロセスの1つであり、義務付けられている。グーグルでは、どんなに小さなコードベースへの変更でも、ほぼすべてのコードレビューを要求している(*4)。この義務化は、コードベースへの新しいコードの導入を遅らせ、コード変更の生産開始までの時間に影響を与えることから、エンジニアリングの速度にコストと影響を与えます。(これらはいずれも、厳格なコードレビュープロセスに対するソフトウェアエンジニアの一般的な不満です。) では、なぜこのようなプロセスを必要とするのでしょうか。また、このプロセスが長期的に有益であると考える理由は何でしょうか。
 
-- Checks code correctness
-- Ensures the code change is comprehensible to other engineers
-- Enforces consistency across the codebase
-- Psychologically promotes team ownership
-- Enables knowledge sharing
-- Provides a historical record of the code review itself
+適切に設計されたコードレビュープロセスと、コードレビューに真剣に取り組む文化は、以下のようなメリットをもたらします。
+
+- コードの正しさをチェック
+- コードの変更が他のエンジニアに理解できるかどうかの確認
+- コードベース全体の一貫性を確保する
+- チームのオーナーシップを心理的に促進する
+- 知識の共有が可能になる
+- コードレビュー自体の履歴が残る
   
-Many of these benefits are critical to a software organization over time, and many of them are beneficial to not only the author but also the reviewers. The following sections go into more specifics for each of these items.
+これらの利点の多くは、ソフトウェア組織にとって長期的に重要であり、作者だけでなくレビュアーにとっても有益なものが多い。以下のセクションでは、それぞれの項目についてより具体的に説明します。
 
 ### Code Correctness
 
