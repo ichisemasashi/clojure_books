@@ -208,19 +208,20 @@ Googleのコードレビューは、ほとんどの場合、1人のレビュア�
 ここ数年の自動化に関する最も重要な技術的改善の一つは、コード変更時の自動静的解析です（第20章参照）。現在の Google コードレビューツールは、作者がテストやリンター、フォーマッターを実行するのではなく、プリサブミットと呼ばれる方法でほとんどのユーティリティを自動的に提供しています。プレサブミットプロセスは、変更が最初にレビューアに送信されるときに実行されます。変更が送信される前に、プリサブミットプロセスは既存の変更に関するさまざまな問題を検出し、現在の変更を拒否して（レビューアに気まずいメールを送るのを防いで）、元の作者にまず変更の修正を依頼します。このような自動化は、コードレビュープロセス自体を支援するだけでなく、レビュアーがフォーマットよりも重要な関心事に集中できるようにします。
 
 
-## Types of Code Reviews
+## コードレビューの種類
 
-All code reviews are not alike! Different types of code review require different levels of focus on the various aspects of the review process. Code changes at Google generally fall into one of the following buckets (though there is sometimes overlap):
+すべてのコードレビューは同じではありません コードレビューの種類によって、レビュープロセスのさまざまな側面に焦点を当てるレベルが異なります。Google のコード変更は、一般的に次のいずれかに分類されます（重複する場合もあります）。
 
-- Greenfield reviews and new feature development
-- Behavioral changes, improvements, and optimizations
-- Bug fixes and rollbacks
-- Refactorings and large-scale changes
+- グリーンフィールドレビューと新機能開発
+- 動作の変更、改善、最適化
+- バグ修正とロールバック
+- リファクタリングと大規模な変更
 
-### Greenfield Code Reviews
+### グリーンフィールドコードレビュー
 
-The least common type of code review is that of entirely new code, a so-called greenfield review. A greenfield review is the most important time to evaluate whether the code will stand the test of time: that it will be easier to maintain as time and scale change the underlying assumptions of the code. Of course, the introduction of entirely new code should not come as a surprise. As mentioned earlier in this chapter, code is a liability, so the introduction of entirely new code should generally solve a real problem rather than simply provide yet another alternative. At Google, we generally require new code and/or projects to undergo an extensive design review, apart from a code review. A code review is not the time to debate design decisions already made in the past (and by the same token, a code review is not the time to introduce the design of a proposed API).
-To ensure that code is sustainable, a greenfield review should ensure that an API matches an agreed design (which may require reviewing a design document) and is tested fully, with all API endpoints having some form of unit test, and that those tests fail when the code’s assumptions change. (See Chapter 11). The code should also have proper owners (one of the first reviews in a new project is often of a single OWNERS file for the new directory), be sufficiently commented, and provide supplemental documentation, if needed. A greenfield review might also necessitate the introduction of a project into the continuous integration system. (See Chapter 23).
+コードレビューの中で最も一般的ではないのが、全く新しいコードのレビュー、いわゆるグリーンフィールドレビューです。グリーンフィールドレビューは、コードが時間の試練に耐えられるかどうか、つまり、時間と規模がコードの基本的な前提条件を変化させてもメンテナンスが容易になるかどうかを評価する最も重要な時間です。もちろん、まったく新しいコードが導入されても、驚くようなことではありません。この章の前半で述べたように、コードは負債であるため、全く新しいコードを導入する場合は、単に別の選択肢を提供するのではなく、実際の問題を解決する必要があります。Googleでは、新しいコードやプロジェクトは、コードレビューとは別に、大規模なデザインレビューを受ける必要があります。コードレビューは、過去に行われた設計上の決定を議論する場ではない（同じ意味で、コードレビューは提案されたAPIの設計を紹介する場でもない）。
+
+コードが持続可能であることを保証するために、グリーンフィールド・レビューでは、APIが合意された設計(設計文書のレビューが必要な場合もある)に合致し、すべてのAPIエンドポイントが何らかの形でユニット・テストを行い、コードの前提条件が変わったときにそれらのテストが失敗することを確認する必要がある。(第11章参照）。) また、コードには適切なオーナーが存在し（新規プロジェクトの最初のレビューでは、新しいディレクトリのOWNERSファイルを1つ確認することがよくあります）、十分なコメントが付けられ、必要に応じて補足のドキュメントが提供されている必要があります。グリーンフィールド・レビューでは、プロジェクトを継続的インテグレーション・システムに導入する必要があるかもしれません。(第23章参照)。
 
 ### Behavioral Changes, Improvements, and Optimizations
 
