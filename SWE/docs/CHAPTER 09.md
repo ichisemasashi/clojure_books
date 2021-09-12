@@ -223,37 +223,44 @@ Googleのコードレビューは、ほとんどの場合、1人のレビュア�
 
 コードが持続可能であることを保証するために、グリーンフィールド・レビューでは、APIが合意された設計(設計文書のレビューが必要な場合もある)に合致し、すべてのAPIエンドポイントが何らかの形でユニット・テストを行い、コードの前提条件が変わったときにそれらのテストが失敗することを確認する必要がある。(第11章参照）。) また、コードには適切なオーナーが存在し（新規プロジェクトの最初のレビューでは、新しいディレクトリのOWNERSファイルを1つ確認することがよくあります）、十分なコメントが付けられ、必要に応じて補足のドキュメントが提供されている必要があります。グリーンフィールド・レビューでは、プロジェクトを継続的インテグレーション・システムに導入する必要があるかもしれません。(第23章参照)。
 
-### Behavioral Changes, Improvements, and Optimizations
+### 動作の変更、改善、最適化
 
-Most changes at Google generally fall into the broad category of modifications to existing code within the codebase. These additions may include modifications to API endpoints, improvements to existing implementations, or optimizations for other factors such as performance. Such changes are the bread and butter of most software engineers.
-In each of these cases, the guidelines that apply to a greenfield review also apply: is this change necessary, and does this change improve the codebase? Some of the best modifications to a codebase are actually deletions! Getting rid of dead or obsolete code is one of the best ways to improve the overall code health of a codebase.
-Any behavioral modifications should necessarily include revisions to appropriate tests for any new API behavior. Augmentations to the implementation should be tested in a Continuous Integration (CI) system to ensure that those modifications don’t break any underlying assumptions of the existing tests. As well, optimizations should of course ensure that they don’t affect those tests and might need to include performance benchmarks for the reviewers to consult. Some optimizations might also require benchmark tests.
+Googleにおける変更のほとんどは、コードベース内の既存コードの修正という大まかなカテゴリーに分類されます。このような変更には、APIエンドポイントの変更、既存の実装の改善、パフォーマンスなどの他の要因のための最適化などが含まれます。このような変更は、ほとんどのソフトウェアエンジニアの糧となります。
 
-### Bug Fixes and Rollbacks
+これらのケースでは、グリーンフィールドレビューに適用されるガイドラインが適用されます。つまり、この変更は必要なのか、この変更はコードベースを改善するものなのか、ということです。コードベースの最適な変更の中には、実は削除もあるのです。死んだコードや時代遅れのコードを取り除くことは、コードベースの全体的なコードの健全性を向上させる最良の方法の一つです。
 
-Inevitably, you will need to submit a change for a bug fix to your codebase. When doing so, avoid the temptation to address other issues. Not only does this risk increasing the size of the code review, it also makes it more difficult to perform regression testing or for others to roll back your change. A bug fix should focus solely on fixing the indicated bug and (usually) updating associated tests to catch the error that occurred in the first place.
-Addressing the bug with a revised test is often necessary. The bug surfaced because existing tests were either inadequate, or the code had certain assumptions that were not met. As a reviewer of a bug fix, it is important to ask for updates to unit tests if applicable.
-Sometimes, a code change in a codebase as large as Google’s causes some dependency to fail that was either not detected properly by tests or that unearths an untested part of the codebase. In those cases, Google allows such changes to be “rolled back,” usually by the affected downstream customers. A rollback consists of a change that essentially undoes the previous change. Such rollbacks can be created in seconds because they just revert the previous change to a known state, but they still require a code review.
-It also becomes critically important that any change that could cause a potential rollback (and that includes all changes!) be as small and atomic as possible so that a rollback, if needed, does not cause further breakages on other dependencies that can be difficult to untangle. At Google, we’ve seen developers start to depend on new code very quickly after it is submitted, and rollbacks sometimes break these developers as a result. Small changes help to mitigate these concerns, both because of their atomicity, and because reviews of small changes tend to be done quickly.
+挙動の修正には、新しいAPIの挙動に対する適切なテストの修正が含まれるべきです。実装の追加は、継続的インテグレーション（CI）システムでテストし、既存のテストの基本的な前提条件を壊さないようにする必要があります。また、最適化を行う際には、もちろんテストに影響を与えないようにする必要があり、レビュー担当者が参照できるようにパフォーマンスベンチマークを含める必要があるかもしれません。最適化のためには、ベンチマークテストが必要な場合もあります。
 
-### Refactorings and Large-Scale Changes
+### バグフィックスとロールバック
 
-Many changes at Google are automatically generated: the author of the change isn’t a person, but a machine. We discuss more about the large-scale change (LSC) process in Chapter 22, but even machine-generated changes require review. In cases where the change is considered low risk, it is reviewed by designated reviewers who have approval privileges for our entire codebase. But for cases in which the change might be risky or otherwise requires local domain expertise, individual engineers might be asked to review automatically generated changes as part of their normal workflow.
-At first look, a review for an automatically generated change should be handled the same as any other code review: the reviewer should check for correctness and applicability of the change. However, we encourage reviewers to limit comments in the associated change and only flag concerns that are specific to their code, not the underlying tool or LSC generating the changes. While the specific change might be machine generated, the overall process generating these changes has already been reviewed, and individual teams cannot hold a veto over the process, or it would not be possible to scale such changes across the organization. If there is a concern about the underlying tool or process, reviewers can escalate out of band to an LSC oversight group for more information.
-We also encourage reviewers of automatic changes to avoid expanding their scope. When reviewing a new feature or a change written by a teammate, it is often reasonable to ask the author to address related concerns within the same change, so long as the request still follows the earlier advice to keep the change small. This does not apply to automatically generated changes because the human running the tool might have hundreds of changes in flight, and even a small percentage of changes with review comments or unrelated questions limits the scale at which the human can effectively operate the tool.
+必然的に、コードベースのバグフィックスのための変更を提出する必要があります。その際、他の問題に対処したいという誘惑に負けないようにしましょう。コードレビューの規模が大きくなるだけでなく、回帰テストの実施や他の人による変更のロールバックが困難になります。バグ修正は、指摘されたバグを修正することと、（通常は）最初に発生したエラーを捕捉するために関連するテストを更新することだけに集中すべきです。
 
-## Conclusion
+テストを修正してバグに対処することは、しばしば必要です。このバグは、既存のテストが不十分であったり、コードの前提条件が満たされていなかったりしたために表面化したものです。バグ修正のレビュアーとしては、ユニットテストの更新を求めることが重要です（該当する場合）。
 
-Code review is one of the most important and critical processes at Google. Code review acts as the glue connecting engineers with one another, and the code review process is the primary developer workflow upon which almost all other processes must hang, from testing to static analysis to CI. A code review process must scale appropriately, and for that reason, best practices, including small changes and rapid feedback and iteration, are important to maintain developer satisfaction and appropriate production velocity.
+Google のような大規模なコードベースでコードを変更すると、テストで適切に検出されなかった依存関係が失敗したり、コードベースのテストされていない部分が明らかになったりすることがあります。このような場合、Google はそのような変更を「ロールバック」することを認めており、通常は影響を受ける下流の顧客がこれを行います。ロールバックとは、前回の変更を基本的に元に戻す変更のことです。このようなロールバックは、前回の変更を既知の状態に戻すだけなので、数秒で作成できますが、それでもコードレビューが必要です。
+
+また、ロールバックの原因となる可能性のある変更（すべての変更を含む）は、できるだけ小さく、かつアトミックに行うことが非常に重要です。Googleでは、開発者が新しいコードを提出した後、すぐにそれに依存するようになり、その結果、ロールバックによって開発者が壊れてしまうことがあります。小さな変更は、その原子性と、小さな変更のレビューが迅速に行われる傾向にあることから、このような懸念を軽減するのに役立ちます。
+
+### リファクタリングと大規模な変更
+
+Google の多くの変更は自動的に生成されます。変更の作者は人間ではなく機械です。大規模変更（LSC）プロセスについては第22章で詳しく説明しますが、機械で生成された変更であってもレビューが必要です。リスクが低いと考えられる変更の場合は、コードベース全体の承認権限を持つ指定されたレビュアーによってレビューされます。しかし、変更がリスクを伴う可能性がある場合や、ローカルなドメインの専門知識が必要な場合には、個々のエンジニアが通常のワークフローの一環として、自動生成された変更のレビューを依頼されることがあります。
+
+自動生成された変更に対するレビューは、一見すると他のコードレビューと同じように扱われるべきです。レビューアは、変更の正しさと適用性をチェックする必要があります。しかし、レビュアーには、関連する変更点へのコメントを制限し、変更点を生成する基本的なツールやLSCではなく、コードに固有の懸念事項のみを指摘することをお勧めします。特定の変更は機械で生成されたものかもしれませんが、これらの変更を生成する全体的なプロセスはすでにレビューされており、個々のチームがプロセスに対して拒否権を持つことはできませんし、そのような変更を組織全体に拡大することもできません。基本的なツールやプロセスに懸念がある場合、レビュアーはバンド外のLSCオーバーサイトグループにエスカレーションして詳細情報を得ることができます。
+
+また、自動変更のレビュアーには、その範囲を広げないようにすることをお勧めします。新機能やチームメイトが書いた変更をレビューする際、変更を小さくするという先ほどのアドバイスに従っている限り、同じ変更の中で関連する問題を解決するように作者に依頼することは、しばしば妥当なことです。これは、自動生成された変更には適用されません。なぜなら、ツールを実行している人間は、何百もの変更を飛行中に持っている可能性があり、レビューコメントや関連性のない質問のある変更がわずかな割合であっても、人間がツールを効果的に操作できる規模を制限してしまうからです。
+
+## 結論
+
+コードレビューは、Googleで最も重要かつクリティカルなプロセスの1つです。コードレビューは、エンジニア同士を結びつける役割を果たしており、コードレビュープロセスは、テスト、静的解析、CIなど、他のほとんどのプロセスを支える主要な開発者のワークフローとなっています。コードレビュープロセスは、適切にスケールアップする必要があります。そのため、開発者の満足度と適切な生産速度を維持するためには、小さな変更、迅速なフィードバックと反復などのベストプラクティスが重要です。
 
 ## TL;DRs
 
-- Code review has many benefits, including ensuring code correctness, comprehension, and consistency across a codebase.
-- Always check your assumptions through someone else; optimize for the reader.
-- Provide the opportunity for critical feedback while remaining professional.
-- Code review is important for knowledge sharing throughout an organization.
-- Automation is critical for scaling the process.
-- The code review itself provides a historical record.
+- コードレビューには、コードの正しさ、理解度、コードベース全体の一貫性の確保など、多くの利点があります。
+- 常に誰かを通して自分の仮定をチェックし、読む人のために最適化する。
+- プロフェッショナルでありながら、批判的なフィードバックの機会を提供する。
+- コードレビューは、組織全体で知識を共有するために重要です。
+- 自動化は、プロセスを拡張するために重要です。
+- コードレビュー自体が歴史的な記録となります。
 
 
 
@@ -264,14 +271,14 @@ Code review is one of the most important and critical processes at Google. Code 
 
 -----
 
-1 We also use Gerrit to review Git code, primarily for our open source projects. However, Critique is the primary tool of a typical software engineer at Google.
+1 私たちは、主にオープンソースプロジェクトにおいて、GitコードのレビューにGerritも使用しています。しかし、GoogleではCritiqueが一般的なソフトウェアエンジニアの主要なツールとなっています。
 2 Steve McConnell, Code Complete (Redmond: Microsoft Press, 2004).
-3 At Google, “readability” does not refer simply to comprehension, but to the set of styles and best practices that allow code to be maintainable to other engineers. See Chapter 3.
-4 Some changes to documentation and configurations might not require a code review, but it is often still preferable to obtain such a review.
-5 “Advances in Software Inspection,” IEEE Transactions on Software Engineering, SE-12(7): 744–751, July 1986. Granted, this study took place before robust tooling and automated testing had become so important in the software development process, but the results still seem relevant in the modern software age.
-6 Rigby, Peter C. and Christian Bird. 2013. “Convergent software peer review practices.” ESEC/FSE 2013: Proceedings of the 2013 9th Joint Meeting on Foundations of Software Engineering, August 2013: 202-212. https:// dl.acm.org/doi/10.1145/2491411.2491444.
-7 Caitlin Sadowski, Emma Söderberg, Luke Church, Michal Sipko, and Alberto Bacchelli, “Modern code review: a case study at Google.”
-8 Ibid.
-9 Ibid.
+3 Googleでは、「読みやすさ」とは単に理解力のことではなく、他のエンジニアがコードを維持できるようにするための一連のスタイルやベストプラクティスのことを指す。第3章参照。
+4 ドキュメントや設定の変更によっては、コードレビューを必要としない場合もあるが、そのようなレビューを受けた方が望ましい場合も多い。
+5 "Advances in Software Inspection," IEEE Transactions on Software Engineering, SE-12(7): 744-751, July 1986. この研究は、ソフトウェア開発プロセスにおいてロバストツールや自動テストが重要になる前に行われたものであるが、その結果は現代のソフトウェア時代にも当てはまると思われる。
+6 Rigby, Peter C. and Christian Bird. 2013. "Convergent software peer review practices." ESEC/FSE 2013: Proceedings of the 2013 9th Joint Meeting on Foundations of Software Engineering, August 2013: 202-212. https:// dl.acm.org/doi/10.1145/2491411.2491444.
+7 Caitlin Sadowski, Emma Söderberg, Luke Church, Michal Sipko, and Alberto Bacchelli, "Modern code review: a case study at Google".
+8 同上。
+9 同上。
 
 
