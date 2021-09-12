@@ -28,4 +28,11 @@ PART III プロセス
 
 [ch09: Code Review](docs/CHAPTER%2009.md)
 
+[ch10: Documentation](docs/CHAPTER%2010.md)
+
+
+
+
+
+
 www.DeepL.com/Translator（無料版）で翻訳しました。
