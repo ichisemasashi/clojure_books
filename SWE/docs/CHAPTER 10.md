@@ -1,60 +1,67 @@
-# CHAPTER 10  Documentation
+# CHAPTER 10  ドキュメント
 
 Written by Tom Manshreck
 
 Edited by Riona MacNamara
 
-Of the complaints most engineers have about writing, using, and maintaining code, a singular common frustration is the lack of quality documentation. “What are the side effects of this method?” “I got an error after step 3.” “What does this acronym mean?” “Is this document up to date?” Every software engineer has voiced complaints about the quality, quantity, or sheer lack of documentation throughout their career, and the software engineers at Google are no different.
-Technical writers and project managers may help, but software engineers will always need to write most documentation themselves. Engineers, therefore, need the proper tools and incentives to do so effectively. The key to making it easier for them to write quality documentation is to introduce processes and tools that scale with the organization and that tie into their existing workflow.
-Overall, the state of engineering documentation in the late 2010s is similar to the state of software testing in the late 1980s. Everyone recognizes that more effort needs to be made to improve it, but there is not yet organizational recognition of its critical benefits. That is changing, if slowly. At Google, our most successful efforts have been when documentation is treated like code and incorporated into the traditional engineering workflow, making it easier for engineers to write and maintain simple documents.
+多くのエンジニアがコードの作成、使用、保守に関して抱いている不満の中で、共通しているのは、質の高いドキュメントがないことです。"この方法の副作用は何ですか？" "ステップ3の後にエラーが出ました。" "この頭字語は何を意味しますか？" "このドキュメントは最新のものですか？" すべてのソフトウェアエンジニアは、そのキャリアを通じて、ドキュメントの質、量、あるいはまったくの欠如について不満を口にするものであり、Googleのソフトウェアエンジニアも同様である。
 
-## What Qualifies as Documentation?
+テクニカルライターやプロジェクトマネージャーの助けはあっても、ソフトウェアエンジニアは常にほとんどのドキュメントを自分で書く必要がある。そのため、エンジニアが効果的にドキュメントを書くためには、適切なツールとインセンティブが必要です。エンジニアが質の高いドキュメントを簡単に書けるようにするには、組織の規模に合わせたプロセスやツールを導入し、既存のワークフローと連携させることが重要です。
 
-When we refer to “documentation,” we’re talking about every supplemental text that an engineer needs to write to do their job: not only standalone documents, but code comments as well. (In fact, most of the documentation an engineer at Google writes comes in the form of code comments.) We’ll discuss the various types of engineering documents further in this chapter.
+全体的に見ると、2010年代後半のエンジニアリング・ドキュメンテーションの状況は、1980年代後半のソフトウェア・テストの状況に似ています。ドキュメンテーションを改善するためにもっと努力する必要があることは誰もが認識していますが、その重要なメリットが組織的に認識されているわけではありません。しかし、少しずつではありますが、その状況は変わりつつあります。Googleでは、ドキュメントをコードのように扱い、従来のエンジニアリングのワークフローに組み込むことで、エンジニアが簡単なドキュメントを書いて維持することができるようになったときに、最も成功した取り組みがあります。
 
-## Why Is Documentation Needed?
+## ドキュメンテーションとは？
 
-Quality documentation has tremendous benefits for an engineering organization. Code and APIs become more comprehensible, reducing mistakes. Project teams are more focused when their design goals and team objectives are clearly stated. Manual processes are easier to follow when the steps are clearly outlined. Onboarding new members to a team or code base takes much less effort if the process is clearly documented.
-But because documentation’s benefits are all necessarily downstream, they generally don’t reap immediate benefits to the author. Unlike testing, which (as we’ll see) quickly provides benefits to a programmer, documentation generally requires more effort up front and doesn’t provide clear benefits to an author until later. But, like investments in testing, the investment made in documentation will pay for itself over time. After all, you might write a document only once,(*1) but it will be read hundreds, perhaps thousands of times afterward; its initial cost is amortized across all the future readers. Not only does documentation scale over time, but it is critical for the rest of the organization to scale as well. It helps answer questions like these:
+「ドキュメント」とは、エンジニアが仕事をする上で必要なあらゆる補足テキストのことを指します。(実際、Googleのエンジニアが書くドキュメントのほとんどは、コードコメントの形で提供されています）。この章では、さまざまな種類のエンジニアリングドキュメントについて説明します。
 
-- Why were these design decisions made?
-- Why did we implement this code in this manner?
-- Why did I implement this code in this manner, if you’re looking at your own code two years later?
+## ドキュメンテーションはなぜ必要なのか？
 
-If documentation conveys all these benefits, why is it generally considered “poor” by engineers? One reason, as we’ve mentioned, is that the benefits aren’t immediate, especially to the writer. But there are several other reasons:
+質の高いドキュメントは、エンジニアの組織にとって非常に大きなメリットがあります。コードやAPIがより理解しやすくなり、ミスが減ります。プロジェクトチームは、設計目標やチームの目的が明確に示されていると、より集中できます。マニュアルプロセスでは、手順が明確に示されていると従うのが容易になります。新しいメンバーをチームやコードベースに迎え入れる際にも、プロセスが明確に文書化されていれば、労力が大幅に軽減されます。
 
-- Engineers often view writing as a separate skill than that of programming. (We’ll try to illustrate that this isn’t quite the case, and even where it is, it isn’t necessarily a separate skill from that of software engineering.)
-- Some engineers don’t feel like they are capable writers. But you don’t need a robust command of English(*2) to produce workable documentation. You just need to step outside yourself a bit and see things from the audience’s perspective.
-- Writing documentation is often more difficult because of limited tools support or integration into the developer workflow.
-- Documentation is viewed as an extra burden --- something else to maintain ---  rather than something that will make maintenance of their existing code easier.
+しかし、文書化のメリットは必ずしも下流にあるため、一般的に文書化した人がすぐに利益を得ることはできません。これから説明するように、プログラマーにすぐに利益をもたらすテストとは異なり、ドキュメント作成は一般的に前もって多くの努力を必要とし、作成者に明確な利益をもたらすのは後になってからです。しかし、テストへの投資と同様に、ドキュメンテーションへの投資も時間が経てば元が取れます。つまり、ドキュメントを書くのは一度だけかもしれないが(*1)、その後、何百回、何千回と読まれることになり、その初期費用は将来の読者すべてに償却されることになるのだ。ドキュメントは時間とともにスケールするだけでなく、組織の他の部分も同様にスケールするために重要です。それは、次のような質問に答えるのに役立ちます。
 
-Not every engineering team needs a technical writer (and even if that were the case, there aren’t enough of them). This means that engineers will, by and large, write most of the documentation themselves. So, instead of forcing engineers to become technical writers, we should instead think about how to make writing documentation easier for engineers. Deciding how much effort to devote to documentation is a decision your organization will need to make at some point.
-Documentation benefits several different groups. Even to the writer, documentation provides the following benefits:
+- なぜこのような設計判断をしたのか？
+- なぜこのコードをこのように実装したのか？
+- 2年後に自分のコードを見たときに、なぜこのコードをこのように実装したのか？
 
-- It helps formulate an API. Writing documentation is one of the surest ways to figure out if your API makes sense. Often, the writing of the documentation itself leads engineers to reevaluate design decisions that otherwise wouldn’t be questioned. If you can’t explain it and can’t define it, you probably haven’t designed it well enough.
-- It provides a road map for maintenance and a historical record. Tricks in code should be avoided, in any case, but good comments help out a great deal when you’re staring at code you wrote two years ago, trying to figure out what’s wrong.
-- It makes your code look more professional and drive traffic. Developers will naturally assume that a well-documented API is a better-designed API. That’s not always the case, but they are often highly correlated. Although this benefit sounds cosmetic, it’s not quite so: whether a product has good documentation is usually a pretty good indicator of how well a product will be maintained.
-- It will prompt fewer questions from other users. This is probably the biggest benefit over time to someone writing the documentation. If you have to explain something to someone more than once, it usually makes sense to document that process.
+ドキュメントがこのようなメリットを伝えるものであるならば、なぜ一般的にエンジニアから「貧弱」と言われるのでしょうか？その理由の一つは、これまで述べてきたように、特に書き手にとってのメリットがすぐには得られないことです。しかし、それ以外にもいくつかの理由があります。
 
-As great as these benefits are to the writer of documentation, the lion’s share of documentation’s benefits will naturally accrue to the reader. Google’s C++ Style Guide notes the maxim “optimize for the reader.” This maxim applies not just to code, but to the comments around code, or the documentation set attached to an API. Much like testing, the effort you put into writing good documents will reap benefits many times over its lifetime. Documentation is critical over time, and reaps tremendous benefits for especially critical code as an organization scales.
+- エンジニアは、ライティングをプログラミングとは別のスキルと考えていることが多いです。(ここでは、そうではないことを説明します。また、そうであっても、必ずしもソフトウェアエンジニアリングとは別のスキルではありません。)
+- エンジニアの中には、自分には文章を書く能力がないと思っている人もいます。しかし、実用的なドキュメントを作成するのに、英語力(*2)が必要なわけではありません。自分から少し離れて、相手の立場に立って物事を考えればいいのです。
+- ドキュメントの作成は、ツールのサポートや開発者のワークフローへの統合が限られているために、より困難になることが多い。
+- ドキュメンテーションは、既存のコードのメンテナンスを容易にするものではなく、余分な負担（メンテナンスするための他の何か）と見なされます。
 
-## Documentation Is Like Code
+すべてのエンジニアリングチームがテクニカルライターを必要としているわけではありません（仮にそうだとしても、その数は十分ではありません）。つまり、ほとんどのドキュメントはエンジニアが自分で書くことになります。ですから、エンジニアにテクニカルライターになることを強要するのではなく、エンジニアがドキュメントを書きやすくするにはどうしたらいいかを考えるべきなのです。ドキュメンテーションにどれだけの労力を割くかは、あなたの組織でもいつかは決めなければならないことです。
+ドキュメンテーションは、いくつかの異なるグループに利益をもたらします。書き手にとっても、ドキュメンテーションは以下のようなメリットがあります。
 
-Software engineers who write in a single, primary programming language still often reach for different languages to solve specific problems. An engineer might write shell scripts or Python to run command-line tasks, or they might write most of their backend code in C++ but write some middleware code in Java, and so on. Each language is a tool in the toolbox.
-Documentation should be no different: it’s a tool, written in a different language (usually English) to accomplish a particular task. Writing documentation is not much different than writing code. Like a programming language, it has rules, a particular syntax, and style decisions, often to accomplish a similar purpose as that within code: enforce consistency, improve clarity, and avoid (comprehension) errors. Within technical documentation, grammar is important not because one needs rules, but to standardize the voice and avoid confusing or distracting the reader. Google requires a certain comment style for many of its languages for this reason.
-Like code, documents should also have owners. Documents without owners become stale and difficult to maintain. Clear ownership also makes it easier to handle documentation through existing developer workflows: bug tracking systems, code review tooling, and so forth. Of course, documents with different owners can still conflict with one another. In those cases, it is important to designate canonical documentation: determine the primary source and consolidate other associated documents into that primary source (or deprecate the duplicates).
-The prevalent usage of “go/ links” at Google (see Chapter 3) makes this process easier. Documents with straightforward go/ links often become the canonical source of truth. One other way to promote canonical documents is to associate them directly with the code they document by placing them directly under source control and alongside the source code itself.
-Documentation is often so tightly coupled to code that it should, as much as possible, be treated as code. That is, your documentation should:
+- APIの策定に役立ちます。ドキュメントを書くことは、そのAPIが意味のあるものかどうかを見極める最も確実な方法の一つです。多くの場合、ドキュメントを書くこと自体が、エンジニアに、他の方法では疑われないような設計上の決定を再評価させるきっかけとなる。説明できない、定義できないということは、おそらく十分に設計されていないということです。
+- メンテナンスのためのロードマップと歴史的な記録を提供します。コードのトリックは避けるべきですが、優れたコメントは、2年前に書いたコードを見つめながら何が問題なのかを考えているときに、大いに役立ちます。
+- あなたのコードをよりプロフェッショナルに見せ、トラフィックを促進します。開発者は当然のことながら、ドキュメントが充実したAPIは設計の良いAPIだと考えるでしょう。必ずしもそうとは限りませんが、両者はしばしば高い相関関係にあります。製品のドキュメントが充実しているかどうかは、その製品がどの程度メンテナンスされているかを示すかなり良い指標となります。
+- 他のユーザーからの質問が減ります。これはおそらく、ドキュメントを書いている人にとって、時間をかけて得られる最大のメリットです。何かを誰かに何度も説明しなければならない場合、そのプロセスを文書化することは通常意味のあることです。
 
-- Have internal policies or rules to be followed
-- Be placed under source control
-- Have clear ownership responsible for maintaining the docs
-- Undergo reviews for changes (and change with the code it documents)
-- Have issues tracked, as bugs are tracked in code
-- Be periodically evaluated (tested, in some respect)
-- If possible, be measured for aspects such as accuracy, freshness, etc. (tools have still not caught up here)
+ドキュメントを書く人にとってのこれらの利点と同様に、ドキュメントの利点の大部分は、当然ながら読者にもたらされます。GoogleのC++スタイルガイドでは、「読み手のために最適化する」という格言が記されています。この格言は、コードだけでなく、コード周りのコメントや、APIに付属するドキュメントセットにも当てはまります。テストと同じように、良いドキュメントを書くために費やした努力は、その寿命の間に何倍もの利益をもたらします。ドキュメントは時間とともに重要になり、組織の規模が大きくなるにつれて、特に重要なコードに多大な利益をもたらします。
 
-The more engineers treat documentation as “one of” the necessary tasks of software development, the less they will resent the upfront costs of writing, and the more they will reap the long-term benefits. In addition, making the task of documentation easier reduces those upfront costs.
+## ドキュメントはコードと同じ
+
+1つの主要なプログラミング言語を使用しているソフトウェアエンジニアでも、特定の問題を解決するために異なる言語を使用することはよくあります。シェルスクリプトやPythonを使ってコマンドラインタスクを実行したり、バックエンドのコードのほとんどをC++で書き、ミドルウェアのコードの一部をJavaで書いたり......。それぞれの言語はツールボックスの中の一つの道具です。
+
+ドキュメントも同じで、特定のタスクを達成するために、異なる言語（通常は英語）で書かれたツールです。ドキュメンテーションを書くことは、コードを書くこととあまり変わりません。プログラミング言語のように、規則、特定の構文、スタイルの決定があり、多くの場合、コードと同じような目的を達成するために、一貫性を保ち、明確性を高め、（理解の）誤りを避けるために書かれます。技術文書において文法が重要なのは、ルールが必要だからではなく、音声を標準化し、読者を混乱させたり、気を散らさせたりしないためです。Googleが多くの言語で特定のコメントスタイルを要求しているのはこのためです。
+
+コードと同様、ドキュメントにもオーナーが必要です。所有者のいないドキュメントは陳腐化し、メンテナンスも困難になります。また、オーナーシップを明確にすることで、バグトラッキングシステムやコードレビューツールなど、既存の開発者のワークフローでドキュメントを扱うことが容易になります。もちろん、所有者が異なるドキュメント同士が衝突することもあります。そのような場合には、正規のドキュメントを指定することが重要です。つまり、プライマリ・ソースを決定し、関連する他のドキュメントをそのプライマリ・ソースに統合します（または、重複するドキュメントを廃止します）。
+
+Googleで普及している「go/links」（第3章参照）は、このプロセスを容易にしています。分かりやすいgo/linksを持つドキュメントは、しばしば正典となります。正準化されたドキュメントを促進するもう一つの方法は、ドキュメントをソースコントロールの下に直接置き、ソースコードそのものと並べることで、ドキュメントをコードと直接関連付けることです。
+
+ドキュメントはコードと密接に結びついていることが多いので、可能な限りコードとして扱われるべきです。つまり、ドキュメントは以下のようにすべきです。
+
+- 従うべき内部ポリシーやルールがある
+- ソース管理されている
+- ドキュメントの維持に責任を持つ明確なオーナーシップがある
+- 変更時にはレビューを受ける（ドキュメントのコードと一緒に変更される)
+- コードのバグを追跡するように、問題が追跡されること
+- 定期的に評価される（何らかの形でテストされる）。
+- 可能であれば、正確さや新鮮さなどの面で測定されること。(ツールはまだここに追いついていない）。
+
+エンジニアがドキュメント作成をソフトウェア開発に必要な作業の1つと考えれば考えるほど、ドキュメント作成にかかる初期費用への抵抗が減り、長期的な利益を得ることができるようになります。また、ドキュメント作成の作業を容易にすることで、先行コストを削減することができます。
 
 ----
 
