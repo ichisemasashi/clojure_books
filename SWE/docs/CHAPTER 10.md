@@ -168,10 +168,11 @@ Googleでは、ほぼすべてのコードファイルにファイルコメン�
 // hexadecimal values (through the Hex type) into strings.
 ```
 
-#### Function comments
+#### 関数コメント
 
-All free functions, or public methods of a class, at Google must also contain a function comment describing what the function does. Function comments should stress the active nature of their use, beginning with an indicative verb describing what the function does and what is returned.
-Function comments should generally begin with a comment of the following form:
+Google のすべてのフリー関数、またはクラスのパブリックメソッドには、その関数が何をするのかを説明する関数コメントが必要です。関数コメントは、関数が何をするのか、何を返すのかを説明する指示動詞で始まり、能動的に使用することを強調しなければなりません。
+
+関数コメントは通常、次のような形式のコメントで始まるべきです。
 
 ```C
 // StrCat()
@@ -181,8 +182,9 @@ Function comments should generally begin with a comment of the following form:
 ...
 ```
 
-Note that starting a function comment with a declarative verb introduces consistency across a header file. A seeker can quickly scan an API and read just the verb to get an idea of whether the function is appropriate: “Merges, Deletes, Creates,” and so on.
-Some documentation styles (and some documentation generators) require various forms of boilerplate on function comments, like “Returns:”, “Throws:”, and so forth, but at Google we haven’t found them to be necessary. It is often clearer to present such information in a single prose comment that’s not broken up into artificial section boundaries:
+関数のコメントを宣言的な動詞で始めることで、ヘッダーファイル全体の一貫性が確保されることに注意してください。探索者はAPIを素早くスキャンし、動詞だけを読んで、その関数が適切かどうかを判断することができます。"Merges, Deletes, Creates "といった具合に。
+
+一部のドキュメントスタイル（および一部のドキュメントジェネレータ）では、関数のコメントに "Returns: "や "Throws: "などの様々な形式の定型文を必要としますが、Googleではそれらが必要であるとは考えていません。このような情報は、人工的なセクションの境界線で分割されていない1つの散文コメントで提示する方が、しばしば明確になります。
 
 ```C
 // Creates a new record for a customer with the given name and address,
@@ -191,88 +193,107 @@ Some documentation styles (and some documentation generators) require various fo
 int AddCustomer(string name, string address);
 ```
 
-Notice how the postcondition, parameters, return value, and exceptional cases are naturally documented together (in this case, in a single sentence), because they are not independent of one another. Adding explicit boilerplate sections would make the comment more verbose and repetitive, but no clearer (and arguably less clear).
+ポストコンディション、パラメータ、戻り値、例外的なケースが、互いに独立していないため、自然に一緒に（この場合は1つの文に）文書化されていることに注目してください。明示的なボイラープレートのセクションを追加すると、コメントはより冗長で反復的になりますが、明確にはなりません（そして、間違いなく明確ではありません）。
 
-### Design Docs
+### デザインドキュメント
 
-Most teams at Google require an approved design document before starting work on any major project. A software engineer typically writes the proposed design document using a specific design doc template approved by the team. Such documents are designed to be collaborative, so they are often shared in Google Docs, which has good collaboration tools. Some teams require such design documents to be discussed and debated at specific team meetings, where the finer points of the design can be discussed or critiqued by experts. In some respects, these design discussions act as a form of code review before any code is written.
-Because the development of a design document is one of the first processes an engineer undertakes before deploying a new system, it is also a convenient place to ensure that various concerns are covered. The canonical design document templates at Google require engineers to consider aspects of their design such as security implications, internationalization, storage requirements and privacy concerns, and so on. In most cases, such parts of those design documents are reviewed by experts in those domains.
-A good design document should cover the goals of the design, its implementation strategy, and propose key design decisions with an emphasis on their individual trade-offs. The best design documents suggest design goals and cover alternative designs, denoting their strong and weak points.
-A good design document, once approved, also acts not only as a historical record, but as a measure of whether the project successfully achieved its goals. Most teams archive their design documents in an appropriate location within their team documents so that they can review them at a later time. It’s often useful to review a design document before a product is launched to ensure that the stated goals when the design document was written remain the stated goals at launch (and if they do not, either the document or the product can be adjusted accordingly).
+Googleのほとんどのチームでは、大きなプロジェクトに着手する前に、承認された設計書が必要となります。ソフトウェアエンジニアは通常、チームで承認された特定の設計書テンプレートを使用して設計書案を作成します。このような文書は共同作業を前提としているため、優れたコラボレーションツールを備えたGoogle Docsで共有されることが多い。チームによっては、このような設計書を特定のチームミーティングで議論し、設計の細かい点を専門家が議論したり批評したりすることを要求する場合もあります。このような設計上の議論は、コードが書かれる前のコードレビューのような役割を果たしている面もあります。
 
-### Tutorials
+設計書の作成は、エンジニアが新しいシステムを導入する前に行う最初のプロセスの一つであるため、様々な懸念事項を確実にカバーするのに便利な場所でもあります。Googleの典型的な設計書のテンプレートでは、セキュリティへの影響、国際化、ストレージ要件やプライバシーへの配慮など、設計の側面を考慮するようエンジニアに求めています。ほとんどの場合、そのような設計文書の部分は、その領域の専門家によってレビューされます。
 
-Every software engineer, when they join a new team, will want to get up to speed as quickly as possible. Having a tutorial that walks someone through the setup of a new project is invaluable; “Hello World” has established itself is one of the best ways to ensure that all team members start off on the right foot. This goes for documents as well as code. Most projects deserve a “Hello World” document that assumes nothing and gets the engineer to make something “real” happen.
-Often, the best time to write a tutorial, if one does not yet exist, is when you first join a team. (It’s also the best time to find bugs in any existing tutorial you are following.) Get a notepad or other way to take notes, and write down everything you need to do along the way, assuming no domain knowledge or special setup constraints; after you’re done, you’ll likely know what mistakes you made during the process --- and why  --- and can then edit down your steps to get a more streamlined tutorial. Importantly, write everything you need to do along the way; try not to assume any particular setup, permissions, or domain knowledge. If you do need to assume some other setup, state that clearly in the beginning of the tutorial as a set of prerequisites.
-Most tutorials require you to perform a number of steps, in order. In those cases, number those steps explicitly. If the focus of the tutorial is on the user (say, for external developer documentation), then number each action that a user needs to undertake. Don’t number actions that the system may take in response to such user actions. It is critical and important to number explicitly every step when doing this. Nothing is more annoying than an error on step 4 because you forget to tell someone to properly authorize their username, for example.
+優れた設計文書は、設計の目標とその実装戦略をカバーし、重要な設計上の決定事項を、それぞれのトレードオフに重点を置いて提案するものです。最良の設計文書は、設計目標を提案し、代替設計をカバーし、それらの長所と短所を示します。
 
-#### Example: A bad tutorial
+一度承認された優れた設計文書は、歴史的な記録としてだけでなく、プロジェクトがその目標を無事に達成したかどうかを測る指標としても機能します。ほとんどのチームでは、デザインドキュメントをチームドキュメント内の適切な場所に保管し、後から見直せるようにしています。製品が発売される前に設計文書を見直すことは、設計文書が書かれたときの目標が発売時の目標のままであることを確認するために、しばしば有用です（もしそうでなければ、文書または製品のいずれかを適宜調整することができます）。
 
-1. Download the package from our server at http://example.com
-2. Copy the shell script to your home directory
-3. Execute the shell script
-4. The foobar system will communicate with the authentication system
-5. Once authenticated, foobar will bootstrap a new database named “baz”
-6. Test “baz” by executing a SQL command on the command line
-7. Type: CREATE DATABASE my_foobar_db;
+### チュートリアル
+
+ソフトウェアエンジニアは、新しいチームに参加すると、できるだけ早く仕事に慣れたいと思うものです。新しいプロジェクトのセットアップを説明するチュートリアルは非常に重要です。「Hello World」は、チームメンバー全員が正しいスタートを切るための最良の方法のひとつです。これはコードだけでなく、ドキュメントにも言えることです。ほとんどのプロジェクトには、何も仮定せず、エンジニアに「実際に」何かを起こさせるための「Hello World」ドキュメントがふさわしい。
+
+多くの場合、チュートリアルを書くのに最適なタイミングは、まだチュートリアルが存在しない場合は、チームに初めて参加したときです。(また、既存のチュートリアルのバグを見つけるのにも最適なタイミングです)。メモ帳などを用意して、ドメインの知識や特別な設定の制約がないと仮定して、その過程で必要なことをすべて書き出してみましょう。終わった後には、その過程でどのような間違いをしたのか、またその理由がわかるでしょうから、手順を編集してより合理的なチュートリアルを作ることができます。重要なのは、その過程で必要なことをすべて書くことです。特定の設定、権限、ドメインの知識などを前提としないようにしてください。もし、他の設定を前提とする必要がある場合は、前提条件としてチュートリアルの最初に明示してください。
+
+ほとんどのチュートリアルでは、いくつかのステップを順番に実行する必要があります。そのような場合には、それらのステップに明確な番号を付けます。チュートリアルの焦点がユーザーに置かれている場合（例えば、外部の開発者向けドキュメントの場合）、ユーザーが行う必要のある各アクションに番号を付けます。ユーザーの行動に応じてシステムが取る行動には番号を振らないでください。このような場合、すべてのステップに明確に番号を付けることは非常に重要です。例えば、ユーザー名を適切に認証するように伝えるのを忘れたために、ステップ4でエラーになることほど腹立たしいことはありません。
+
+#### 例 悪いチュートリアル
+
+1. 私たちのサーバー（http://example.com）からパッケージをダウンロードします。
+2. シェルスクリプトをホームディレクトリにコピーする
+3. シェルスクリプトを実行する
+4. foobarシステムが認証システムと通信します。
+5. 認証されると、foobarは "baz "という名前の新しいデータベースを起動します。
+6. コマンド・ラインでSQLコマンドを実行して、"baz "をテストする。
+7. タイプします。CREATE DATABASE my_foobar_db;
 
 
-In the preceding procedure, steps 4 and 5 happen on the server end. It’s unclear whether the user needs to do anything, but they don’t, so those side effects can be mentioned as part of step 3. As well, it’s unclear whether step 6 and step 7 are different. (They aren’t.) Combine all atomic user operations into single steps so that the user knows they need to do something at each step in the process. Also, if your tutorial has user-visible input or output, denote that on separate lines (often using the convention of a monospaced bold font).
+前述の手順では、ステップ4と5はサーバー側で行われます。ユーザーが何かをする必要があるかどうかは不明ですが、ユーザーは何もしませんので、これらの副作用はステップ3の一部として言及することができます。同様に、ステップ6とステップ7が異なるものであるかどうかも不明です。(アトミックなユーザーの操作をすべて1つのステップにまとめ、ユーザーが各ステップで何かをする必要があるとわかるようにします。また、チュートリアルでユーザーに見える入力や出力がある場合は、それを別の行に表記してください（しばしば、等幅の太字フォントの規則を使用します）。
 
 
-#### Example: A bad tutorial made better
+#### 例 悪いチュートリアルを良くしたもの
 
-1. Download the package from our server at http://example.com: $ curl -I http://example.com
-2. Copy the shell script to your home directory:
+1. http://example.com のサーバーからパッケージをダウンロードします。
+```
+        $ curl -I http://example.com
+```
+2. シェルスクリプトをホームディレクトリにコピーします。
 ```
         $ cp foobar.sh ~
 ```
-3. Execute the shell script in your home directory:
+3. ホームディレクトリーでシェルスクリプトを実行します。
 ```
         $ cd ~; foobar.sh
 ```
- The foobar system will first communicate with the authentication system. Once authenticated, foobar will bootstrap a new database named “baz” and open an input shell.
-4. Test “baz” by executing a SQL command on the command line:
+ foobarシステムは、まず認証システムと通信する。認証されると、foobarは "baz "という名前の新しいデータベースを起動し、入力シェルを開きます。
+4. コマンド・ラインでSQLコマンドを実行して、"baz "をテストする。
 ```
         baz:$ CREATE DATABASE my_foobar_db;
 ```
 
-Note how each step requires specific user intervention. If, instead, the tutorial had a focus on some other aspect (e.g., a document about the “life of a server”), number those steps from the perspective of that focus (what the server does).
+それぞれのステップで、どのようにユーザーが介入する必要があるかを説明します。もし、そのチュートリアルが他の側面に焦点を当てていたとしたら（例えば、「サーバーの生活」についてのドキュメント）、その焦点の観点（サーバーが何をするか）から、これらのステップに番号を付けてください。
 
-### Conceptual Documentation
+### 概念的なドキュメント
 
-Some code requires deeper explanations or insights than can be obtained simply by reading the reference documentation. In those cases, we need conceptual documentation to provide overviews of the APIs or systems. Some examples of conceptual documentation might be a library overview for a popular API, a document describing the life cycle of data within a server, and so on. In almost all cases, a conceptual document is meant to augment, not replace, a reference documentation set. Often this leads to duplication of some information, but with a purpose: to promote clarity. In those cases, it is not necessary for a conceptual document to cover all edge cases (though a reference should cover those cases religiously). In this case, sacrificing some accuracy is acceptable for clarity. The main point of a conceptual document is to impart understanding.
-“Concept” documents are the most difficult forms of documentation to write. As a result, they are often the most neglected type of document within a software engineer’s toolbox. One problem engineers face when writing conceptual documentation is that it often cannot be embedded directly within the source code because there isn’t a canonical location to place it. Some APIs have a relatively broad API surface area, in which case, a file comment might be an appropriate place for a “conceptual” explanation of the API. But often, an API works in conjunction with other APIs and/or modules. The only logical place to document such complex behavior is through a separate conceptual document. If comments are the unit tests of documentation, conceptual documents are the integration tests.
-Even when an API is appropriately scoped, it often makes sense to provide a separate conceptual document. For example, Abseil’s StrFormat library covers a variety of concepts that accomplished users of the API should understand. In those cases, both internally and externally, we provide a format concepts document.
-A concept document needs to be useful to a broad audience: both experts and novices alike. Moreover, it needs to emphasize clarity, so it often needs to sacrifice completeness (something best reserved for a reference) and (sometimes) strict accuracy. That’s not to say a conceptual document should intentionally be inaccurate; it just means that it should focus on common usage and leave rare usages or side effects for reference documentation.
+コードの中には、リファレンス・ドキュメントを読むだけでは得られない、より深い説明や洞察を必要とするものがあります。そのような場合には、APIやシステムの概要を説明する概念的なドキュメントが必要になります。概念的なドキュメントの例としては、人気のあるAPIのライブラリの概要や、サーバー内のデータのライフサイクルを説明したドキュメントなどがあります。ほとんどの場合、概念的なドキュメントは、リファレンス・ドキュメント・セットを置き換えるものではなく、補強するものです。そのため、いくつかの情報が重複してしまうこともありますが、目的は明確にすることです。このような場合、概念的な文書ですべてのエッジケースをカバーする必要はありません（ただし、リファレンスはそれらのケースを忠実にカバーする必要があります）。この場合、明確さのために多少の正確さを犠牲にしても構いません。概念的な文書の主なポイントは、理解を与えることです。
 
-### Landing Pages
+「コンセプト・ドキュメントは、ドキュメントの中でも最も書くのが難しい形態です。そのため、ソフトウェアエンジニアのツールボックスの中で、最も軽視されているドキュメントのタイプです。コンセプト・ドキュメントを書く際にエンジニアが直面する問題の1つは、ソースコードに直接埋め込むことができない場合が多いことだ。APIの中には、APIの表面積が比較的広いものもあり、そのような場合には、APIの「概念的」な説明のために、ファイルのコメントが適切な場所となるかもしれない。しかし、多くの場合、APIは他のAPIやモジュールと連携して動作します。そのような複雑な動作を文書化するための唯一の論理的な場所は、別の概念的な文書である。コメントがドキュメントのユニットテストだとすれば、概念的なドキュメントは統合テストにあたります。
 
-Most engineers are members of a team, and most teams have a “team page” somewhere on their company’s intranet. Often, these sites are a bit of a mess: a typical landing page might contain some interesting links, sometimes several documents titled “read this first!”, and some information both for the team and for its customers. Such documents start out useful but rapidly turn into disasters; because they become so cumbersome to maintain, they will eventually get so obsolete that they will be fixed by only the brave or the desperate.
-Luckily, such documents look intimidating, but are actually straightforward to fix: ensure that a landing page clearly identifies its purpose, and then include only links to other pages for more information. If something on a landing page is doing more than being a traffic cop, it is not doing its job. If you have a separate setup document, link to that from the landing page as a separate document. If you have too many links on the landing page (your page should not scroll multiple screens), consider breaking up the pages by taxonomy, under different sections.
-Most poorly configured landing pages serve two different purposes: they are the “goto” page for someone who is a user of your product or API, or they are the home page for a team. Don’t have the page serve both masters --- it will become confusing. Create a separate “team page” as an internal page apart from the main landing page. What the team needs to know is often quite different than what a customer of your API needs to know.
+APIが適切にスコープされている場合でも、別の概念的なドキュメントを提供することが意味を持つことがよくあります。例えば、AbseilのStrFormatライブラリは、APIの熟練ユーザが理解すべき様々な概念をカバーしています。そのような場合には、社内外を問わず、フォーマットのコンセプト文書を提供しています。
 
-## Documentation Reviews
+コンセプト・ドキュメントは、専門家と初心者の両方を含む幅広い層に役立つものである必要があります。さらに、わかりやすさを重視する必要があるため、完全性（参考資料として最適なもの）や（場合によっては）厳密な正確性を犠牲にする必要があることもあります。これは、概念的な文書が意図的に不正確であるべきだということではなく、一般的な使用法に焦点を当て、稀な使用法や副作用については参考文献に任せるべきだということです。
 
-At Google, all code needs to be reviewed, and our code review process is well understood and accepted. In general, documentation also needs review (though this is less universally accepted). If you want to “test” whether your documentation works, you should generally have someone else review it.
-A technical document benefits from three different types of reviews, each emphasizing different aspects:
+### ランディングページ
 
-- A technical review, for accuracy. This review is usually done by a subject matter expert, often another member of your team. Often, this is part of a code review itself.
-- An audience review, for clarity. This is usually someone unfamiliar with the domain. This might be someone new to your team or a customer of your API.
-- A writing review, for consistency. This is often a technical writer or volunteer.
+ほとんどのエンジニアはチームに所属しており、ほとんどのチームは社内のイントラネットのどこかに「チームページ」を持っています。典型的なランディングページには、いくつかの興味深いリンク、時には「まずこれを読んでください！」と題されたいくつかのドキュメント、そしてチームとその顧客のための情報が含まれていることがありますが、これらのサイトは少し混乱しています。このようなドキュメントは、最初は便利ですが、すぐに災害になります。メンテナンスが非常に面倒になるため、最終的には時代遅れになり、勇気のある人や必死になっている人だけが修正することになるでしょう。
 
-Of course, some of these lines are sometimes blurred, but if your document is high profile or might end up being externally published, you probably want to ensure that it receives more types of reviews. (We’ve used a similar review process for this book.) Any document tends to benefit from the aforementioned reviews, even if some of those reviews are ad hoc. That said, even getting one reviewer to review your text is preferable to having no one review it.
-Importantly, if documentation is tied into the engineering workflow, it will often improve over time. Most documents at Google now implicitly go through an audience review because at some point, their audience will be using them, and hopefully letting you know when they aren’t working (via bugs or other forms of feedback).
+ランディングページの目的を明確にした上で、より詳細な情報を提供するために他のページへのリンクを貼ることです。ランディングページのどこかが交通整理以上の役割を果たしているとしたら、それはその役割を果たしていないということです。もし、別のセットアップドキュメントがある場合は、ランディングページから別のドキュメントとしてリンクしてください。ランディングページにリンクが多すぎる場合（ページは複数の画面をスクロールさせるべきではありません）、タクソノミー別にページを分割することを検討してください。
+
+設定が不十分なランディングページの多くは、2つの異なる目的を持っています。つまり、製品やAPIのユーザーである人にとっての「入口」ページであったり、チームのホームページであったりします。1つのページで2つの役割を持たせてはいけません。混乱してしまいます。メインのランディングページとは別に、内部のページとして「チームページ」を作りましょう。チームが知りたいことと、APIを利用する顧客が知りたいことは全く異なることが多いからです。
+
+## ドキュメントレビュー
+
+Google では、すべてのコードはレビューされる必要があり、Google のコードレビュープロセスはよく理解され、受け入れられています。一般的に、ドキュメントにもレビューが必要です（ただし、これはあまり一般的には受け入れられていません）。ドキュメントが機能するかどうかを「テスト」したい場合は、通常、他の人にレビューしてもらうべきです。
+
+技術文書には3つの異なるタイプのレビューがあり、それぞれが異なる側面を強調しています。
+
+- 正確さを期すためのテクニカルレビュー。このレビューは、通常、対象分野の専門家（多くの場合、チームの他のメンバー）が行います。多くの場合、これはコードレビューの一環として行われます。
+- オーディエンスレビュー：分かりやすさのために行います。これは通常、その分野に精通していない人が行います。あなたのチームの新入社員や、あなたのAPIの顧客などが該当します。
+- 一貫性を保つためのライティング・レビュー。これは、テクニカルライターやボランティアが行うことが多い。
+
+もちろん、これらの境界線は曖昧なこともありますが、もしあなたのドキュメントが注目を集めていたり、外部に出版される可能性がある場合は、より多くの種類のレビューを受けるようにしたいと思うでしょう。(たとえその場限りのレビューであっても、前述のようなレビューがあれば、どんなドキュメントにもメリットがあるはずです。とはいえ、1人のレビュアーにレビューしてもらうだけでも、誰にもレビューしてもらえないよりは好ましいものです。
+
+重要なのは、ドキュメントがエンジニアリングのワークフローに結びついていれば、時間の経過とともに改善されることが多いということです。Googleでは、ほとんどのドキュメントが暗黙のうちにオーディエンスレビューを経ています。なぜなら、オーディエンスはある時点でそれらのドキュメントを使用し、うまく機能していないときには（バグやその他の形式のフィードバックによって）あなたに知らせてくれるからです。
 
 ----
 
-### Case Study: The Developer Guide Library
+### ケーススタディ デベロッパーガイドライブラリ
 
-As mentioned earlier, there were problems associated with having most (almost all) engineering documentation contained within a shared wiki: little ownership of important documentation, competing documentation, obsolete information, and difficulty in filing bugs or issues with documentation. But this problem was not seen in some documents: the Google C++ style guide was owned by a select group of senior engineers (style arbiters) who managed it. The document was kept in good shape because certain people cared about it. They implicitly owned that document. The document was also canonical: there was only one C++ style guide.
-As previously mentioned, documentation that sits directly within source code is one way to promote the establishment of canonical documents; if the documentation sits alongside the source code, it should usually be the most applicable (hopefully). At Google, each API usually has a separate g3doc directory where such documents live (written as Markdown files and readable within our Code Search browser). Having the documentation exist alongside the source code not only establishes de facto ownership, it makes the documentation seem more wholly “part” of the code.
-Some documentation sets, however, cannot exist very logically within source code. A “C++ developer guide” for Googlers, for example, has no obvious place to sit within the source code. There is no master “C++” directory where people will look for such information. In this case (and others that crossed API boundaries), it became useful to create standalone documentation sets in their own depot. Many of these culled together associated existing documents into a common set, with common navigation and look-and-feel. Such documents were noted as “Developer Guides” and, like the code in the codebase, were under source control in a specific documentation depot, with this depot organized by topic rather than API. Often, technical writers managed these developer guides, because they were better at explaining topics across API boundaries.
-Over time, these developer guides became canonical. Users who wrote competing or supplementary documents became amenable to adding their documents to the canonical document set after it was established, and then deprecating their competing documents. Eventually, the C++ style guide became part of a larger “C++ Developer Guide.” As the documentation set became more comprehensive and more authoritative, its quality also improved. Engineers began logging bugs because they knew someone was maintaining these documents. Because the documents were locked down under source control, with proper owners, engineers also began sending changelists directly to the technical writers.
-The introduction of go/ links (see Chapter 3) allowed most documents to, in effect, more easily establish themselves as canonical on any given topic. Our C++ Developer Guide became established at “go/cpp,” for example. With better internal search, go/ links, and the integration of multiple documents into a common documentation set, such canonical documentation sets became more authoritative and robust over time.
+前述したように、ほとんどの（ほぼすべての）エンジニアリング文書が共有Wikiに収められていることには、重要な文書の所有者が少ないこと、競合する文書があること、古い情報があること、文書のバグや問題を提出するのが難しいことなどの問題がありました。しかし、この問題は一部のドキュメントでは見られませんでした。Google C++のスタイルガイドは、それを管理する選ばれたシニアエンジニアのグループ（スタイルアービター）によって所有されていました。特定の人が気にかけていたからこそ、そのドキュメントは良好な状態に保たれていたのです。彼らは暗黙のうちにその文書を所有していたのです。C++スタイルガイドは1つしかありません。
+
+前述したように、ソースコード内に直接置かれたドキュメントは、正規のドキュメントの確立を促進する一つの方法です。ドキュメントがソースコードと一緒に置かれていれば、通常は最も適用可能であるはずです（願わくば）。Googleでは、各APIには通常g3docディレクトリがあり、そこにドキュメントが置かれています（Markdownファイルとして書かれており、Code Searchブラウザで読むことができます）。ドキュメントがソースコードと一緒に存在することは、事実上の所有権を確立するだけでなく、ドキュメントをより完全にコードの「一部」のように見せることができます。
+
+しかし、ドキュメントセットの中には、ソースコードの中に論理的に存在できないものもあります。例えば、Googlerのための「C++開発者ガイド」は、ソースコードの中に明らかに存在する場所がありません。人々がそのような情報を探すためのマスター「C++」ディレクトリはありません。このケース（およびAPIの境界を越えた他のケース）では、独立したドキュメントセットを独自のデポに作成することが有用になりました。これらのドキュメントの多くは、関連する既存のドキュメントをまとめて、共通のナビゲーションとルックアンドフィールを持つ共通のセットにしました。このようなドキュメントは「開発者ガイド」と呼ばれ、コードベースのコードと同様に、特定のドキュメントデポでソース管理されていました。このデポは、APIではなくトピックごとに構成されていました。テクニカルライターは、APIの境界を越えてトピックを説明するのが得意なので、しばしばこれらの開発者ガイドを管理していました。
+
+時が経つにつれ、これらの開発者ガイドは正式なものとなりました。競合する文書や補足的な文書を書いたユーザーは、正規の文書セットが確立された後、その文書を追加し、競合する文書を廃止することに従順になりました。最終的に、C++スタイルガイドは、より大きな「C++開発者ガイド」の一部となりました。ドキュメントセットがより包括的でより権威あるものになるにつれ、その品質も向上しました。エンジニアは、誰かがこれらのドキュメントを管理していることを知っているので、バグを記録するようになりました。ドキュメントはソースコントロールの下、適切なオーナーの下で管理されていたため、エンジニアは変更リストをテクニカルライターに直接送るようになりました。
+
+go/links（第3章参照）の導入により、ほとんどのドキュメントは、どのトピックにおいても、より簡単に正典としての地位を確立することができるようになりました。例えば、C++開発者ガイドは「go/cpp」で確立されました。内部検索、go/links、そして複数のドキュメントを共通のドキュメントセットに統合することで、このような正規のドキュメントセットは、時間の経過とともに、より権威のある強固なものになっていきました。
 
 ----
 
