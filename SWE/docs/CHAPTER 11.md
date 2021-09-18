@@ -4,50 +4,64 @@ Written by Adam Bender
 
 Edited by Tom Manshreck
 
-Testing has always been a part of programming. In fact, the first time you wrote a computer program you almost certainly threw some sample data at it to see whether it performed as you expected. For a long time, the state of the art in software testing resembled a very similar process, largely manual and error prone. However, since the early 2000s, the software industry’s approach to testing has evolved dramatically to cope with the size and complexity of modern software systems. Central to that evolution has been the practice of developer-driven, automated testing.
-Automated testing can prevent bugs from escaping into the wild and affecting your users. The later in the development cycle a bug is caught, the more expensive it is; exponentially so in many cases.(*1) However, “catching bugs” is only part of the motivation. An equally important reason why you want to test your software is to support the ability to change. Whether you’re adding new features, doing a refactoring focused on code health, or undertaking a larger redesign, automated testing can quickly catch mistakes, and this makes it possible to change software with confidence.
-Companies that can iterate faster can adapt more rapidly to changing technologies, market conditions, and customer tastes. If you have a robust testing practice, you needn’t fear change --- you can embrace it as an essential quality of developing software. The more and faster you want to change your systems, the more you need a fast way to test them.
-The act of writing tests also improves the design of your systems. As the first clients of your code, a test can tell you much about your design choices. Is your system too tightly coupled to a database? Does the API support the required use cases? Does your system handle all of the edge cases? Writing automated tests forces you to confront these issues early on in the development cycle. Doing so generally leads to more modular software that enables greater flexibility later on.
-Much ink has been spilled about the subject of testing software, and for good reason: for such an important practice, doing it well still seems to be a mysterious craft to many. At Google, while we have come a long way, we still face difficult problems getting our processes to scale reliably across the company. In this chapter, we’ll share what we have learned to help further the conversation.
+テストは、常にプログラミングの一部です。実際、あなたが初めてコンピュータ・プログラムを書いたとき、ほとんどの場合、サンプル・データを投げて、期待通りに動作するかどうかを確認したはずです。長い間、ソフトウェアテストの現状は、主に手作業でエラーを起こしやすい、よく似たプロセスになっていた。しかし、2000年代初頭以降、ソフトウェア業界のテストに対するアプローチは、現代のソフトウェアシステムの規模と複雑さに対応するために劇的に進化した。その進化の中心となったのが、開発者主導の自動テストの実践です。
+
+自動化されたテストを行うことで、バグが外に出てユーザーに影響を与えることを防ぐことができます。開発サイクルの後半にバグを発見すればするほど、そのコストは指数関数的に増加します(*1)。 しかし、「バグを発見すること」は動機の一部に過ぎません。ソフトウェアをテストする理由としては、変化に対応する能力をサポートすることも同様に重要です。新しい機能を追加する場合でも、コードの健全性を重視したリファクタリングを行う場合でも、あるいは大規模な再設計を行う場合でも、自動化されたテストはミスを素早く発見することができるので、安心してソフトウェアを変更することができます。
+
+より速く反復できる企業は、技術や市場の状況、顧客の好みの変化に、より迅速に対応することができます。しっかりとしたテストを実施していれば、変化を恐れる必要はありません。ソフトウェア開発に不可欠な品質として、変化を受け入れることができます。システムをより多く、より速く変更したいと思えば思うほど、迅速なテスト方法が必要になります。
+
+テストを書くという行為は、システムの設計を改善することにもなります。コードの最初のクライアントであるテストは、あなたの設計の選択について多くのことを教えてくれます。あなたのシステムは、データベースと緊密に結合しすぎていませんか？APIは必要なユースケースをサポートしているか？システムはすべてのエッジケースに対応しているか？自動化されたテストを書くことで、開発サイクルの早い段階でこれらの問題に直面することになります。そうすることで、よりモジュール化されたソフトウェアとなり、後々の柔軟性を高めることができるのです。
+
+ソフトウェアのテストについては、これまでも多くの議論がなされてきましたが、それには十分な理由があります。Googleでは、長い道のりを歩んできましたが、会社全体でプロセスを確実にスケールアップさせるという難しい問題に直面しています。本章では、この問題を解決するために、私たちが学んだことを紹介します。
 
 
-## Why Do We Write Tests?
+## なぜテストを書くのか？
 
-To better understand how to get the most out of testing, let’s start from the beginning. When we talk about automated testing, what are we really talking about?
-The simplest test is defined by:
+テストを最大限に活用する方法をよりよく理解するために、最初から始めましょう。自動化されたテストといっても、実際には何のことを言っているのでしょうか？
+最もシンプルなテストは次のように定義されます。
 
-- A single behavior you are testing, usually a method or API that you are calling
-- A specific input, some value that you pass to the API
-- An observable output or behavior
-- A controlled environment such as a single isolated process
+- テストしたい単一の動作、通常は呼び出しているメソッドやAPI
+- 特定の入力、つまりAPIに渡す何らかの値
+- 観測可能な出力または動作
+- 隔離された単一のプロセスのような制御された環境
 
-When you execute a test like this, passing the input to the system and verifying the output, you will learn whether the system behaves as you expect. Taken in aggregate, hundreds or thousands of simple tests (usually called a test suite) can tell you how well your entire product conforms to its intended design and, more important, when it doesn’t.
-Creating and maintaining a healthy test suite takes real effort. As a codebase grows, so too will the test suite. It will begin to face challenges like instability and slowness. A failure to address these problems will cripple a test suite. Keep in mind that tests derive their value from the trust engineers place in them. If testing becomes a productivity sink, constantly inducing toil and uncertainty, engineers will lose trust and begin to find workarounds. A bad test suite can be worse than no test suite at all.
-In addition to empowering companies to build great products quickly, testing is becoming critical to ensuring the safety of important products and services in our lives. Software is more involved in our lives than ever before, and defects can cause more than a little annoyance: they can cost massive amounts of money, loss of property, or, worst of all, loss of life.(*2)
-At Google, we have determined that testing cannot be an afterthought. Focusing on quality and testing is part of how we do our jobs. We have learned, sometimes painfully, that failing to build quality into our products and services inevitably leads to bad outcomes. As a result, we have built testing into the heart of our engineering culture.
+このようなテストを実行して、システムに入力を渡し、出力を検証すると、システムが期待通りに動作するかどうかを知ることができます。数百から数千の単純なテスト（通常、テストスイートと呼ばれます）を総合すると、製品全体が意図した設計にどれだけ適合しているか、さらに重要なことに、どのような場合に適合しないかを知ることができます。
 
-### The Story of Google Web Server
+健全なテストスイートを作成し、維持するには大変な努力が必要です。コードベースが成長すると、テストスイートも成長します。不安定さや遅さなどの問題に直面するようになります。これらの問題に対処できなければ、テストスイートは機能しなくなります。テストの価値は、エンジニアの信頼から生まれることを覚えておいてください。もしテストが生産性の低下を招き、常に苦労と不確実性を伴うものになってしまったら、エンジニアは信頼を失い、回避策を見つけ始めます。悪いテスト・スイートは、テスト・スイートが全くないよりも悪いかもしれません。
 
-In Google’s early days, engineer-driven testing was often assumed to be of little importance. Teams regularly relied on smart people to get the software right. A few systems ran large integration tests, but mostly it was the Wild West. One product in particular seemed to suffer the worst: it was called the Google Web Server, also known as GWS.
-GWS is the web server responsible for serving Google Search queries and is as important to Google Search as air traffic control is to an airport. Back in 2005, as the project swelled in size and complexity, productivity had slowed dramatically. Releases were becoming buggier, and it was taking longer and longer to push them out. Team members had little confidence when making changes to the service, and often found out something was wrong only when features stopped working in production. (At one point, more than 80% of production pushes contained user-affecting bugs that had to be rolled back.)
-To address these problems, the tech lead (TL) of GWS decided to institute a policy of engineer-driven, automated testing. As part of this policy, all new code changes were required to include tests, and those tests would be run continuously. Within a year of instituting this policy, the number of emergency pushes dropped by half. This drop occurred despite the fact that the project was seeing a record number of new changes every quarter. Even in the face of unprecedented growth and change, testing brought renewed productivity and confidence to one of the most critical projects at Google. Today, GWS has tens of thousands of tests, and releases almost every day with relatively few customer-visible failures.
-The changes in GWS marked a watershed for testing culture at Google as teams in other parts of the company saw the benefits of testing and moved to adopt similar tactics.
-One of the key insights the GWS experience taught us was that you can’t rely on programmer ability alone to avoid product defects. Even if each engineer writes only the occasional bug, after you have enough people working on the same project, you will be swamped by the ever-growing list of defects. Imagine a hypothetical 100-person team whose engineers are so good that they each write only a single bug a month. Collectively, this group of amazing engineers still produces five new bugs every workday. Worse yet, in a complex system, fixing one bug can often cause another, as engineers adapt to known bugs and code around them.
-The best teams find ways to turn the collective wisdom of its members into a benefit for the entire team. That is exactly what automated testing does. After an engineer on the team writes a test, it is added to the pool of common resources available to others. Everyone else on the team can now run the test and will benefit when it detects an issue. Contrast this with an approach based on debugging, wherein each time a bug occurs, an engineer must pay the cost of digging into it with a debugger. The cost in engineering resources is night and day and was the fundamental reason GWS was able to turn its fortunes around.
+テストは、企業が優れた製品を迅速に構築するために役立つだけでなく、私たちの生活の中で重要な製品やサービスの安全性を確保するためにも重要な役割を果たしています。ソフトウェアはこれまで以上に私たちの生活に密着しており、不具合が発生すると、単なるトラブルにとどまらず、莫大な費用や財産の損失、最悪の場合は人命の損失につながることもあります(*2)。
 
-### Testing at the Speed of Modern Development
+Googleでは、テストを後回しにしてはいけないと考えています。品質とテストに重点を置くことは、私たちの仕事のやり方の一部です。私たちは、製品やサービスに品質を組み込むことができなければ、必然的に悪い結果を招くことを、時には痛感してきました。その結果、私たちはエンジニアリング文化の中心にテストを組み込んだのです。
 
-Software systems are growing larger and ever more complex. A typical application or service at Google is made up of thousands or millions of lines of code. It uses hundreds of libraries or frameworks and must be delivered via unreliable networks to an increasing number of platforms running with an uncountable number of configurations. To make matters worse, new versions are pushed to users frequently, sometimes multiple times each day. This is a far cry from the world of shrink-wrapped software that saw updates only once or twice a year.
-The ability for humans to manually validate every behavior in a system has been unable to keep pace with the explosion of features and platforms in most software. Imagine what it would take to manually test all of the functionality of Google Search, like finding flights, movie times, relevant images, and of course web search results (see Figure 11-1). Even if you can determine how to solve that problem, you then need to multiply that workload by every language, country, and device Google Search must support, and don’t forget to check for things like accessibility and security. Attempting to assess product quality by asking humans to manually interact with every feature just doesn’t scale. When it comes to testing, there is one clear answer: automation.
+### Google ウェブサーバーの物語
+
+Googleの初期には、エンジニア主導のテストはあまり重要ではないと思われていました。チームは、ソフトウェアを正しく動作させるために、常に頭の良い人たちに頼っていました。いくつかのシステムでは大規模な統合テストが行われていましたが、ほとんどはワイルドウェストのような状態でした。その中でも特に問題となっていたのが、「Google Web Server」（通称GWS）という製品でした。
+
+GWSは、Google検索のクエリを提供するWebサーバーで、Google検索にとっては、空港の航空管制のように重要な役割を果たしています。2005年当時、プロジェクトの規模と複雑さが増すにつれ、生産性は劇的に低下していました。リリースにはバグが多く、リリースまでに時間がかかるようになっていました。チームメンバーは、サービスに変更を加えることに自信が持てず、本番で機能が動作しなくなって初めて何か問題があることに気づくことが多かったのです。(ある時は、本番リリースの80％以上にユーザーに影響を与えるバグが含まれており、ロールバックしなければならなかったこともありました。)
+
+これらの問題に対処するため、GWSの技術リーダー（TL）は、エンジニア主導の自動テストという方針を打ち出すことにしました。このポリシーの一環として、すべての新しいコード変更にはテストを含めることが要求され、それらのテストは継続的に実行されることになったのです。この方針を打ち出してから1年で、緊急プッシュの数は半分になった。プロジェクトでは、四半期ごとに記録的な数の新規変更が行われていたにもかかわらず、この減少は起こりました。前例のない成長と変化に直面しても、テストはGoogleで最も重要なプロジェクトの一つに新たな生産性と自信をもたらしました。現在、GWSには何万ものテストがあり、ほぼ毎日リリースが行われているが、顧客の目に見える失敗は比較的少ない。
+
+GWSの変化は、Googleのテスト文化の分岐点となりました。社内の他の部署のチームがテストの利点を知り、同様の戦術を採用するようになったのです。
+
+GWSの経験から得られた重要な洞察の一つは、製品の欠陥を避けるためには、プログラマーの能力だけに頼ることはできないということです。それぞれのエンジニアがたまにしかバグを書かなかったとしても、同じプロジェクトで働く人が多くなれば、増え続ける不具合のリストに振り回されることになります。仮に100人のチームがあったとして、そのチームのエンジニアが非常に優秀で、それぞれが月に1回しかバグを書かないとします。このような優秀なエンジニアが集まっても、毎日5つの新しいバグを生み出しているのです。さらに悪いことに、複雑なシステムでは、エンジニアが既知のバグに適応してその周りをコーディングするため、1つのバグを修正すると別のバグが発生することがよくあります。
+
+最高のチームは、メンバーの知恵を結集してチーム全体の利益につなげる方法を見つけ出します。それが、自動テストの役割です。チームのエンジニアがテストを作成すると、そのテストは他のメンバーが利用できる共通リソースのプールに追加されます。チームの誰もがテストを実行できるようになり、問題が検出されれば利益を得ることができます。一方、デバッグを基本とするアプローチでは、バグが発生するたびにエンジニアがデバッガを使って調査するコストがかかります。エンジニアのリソースにかかるコストは天と地ほどの差があり、これがGWSが運命を好転させることができた根本的な理由です。
+
+### 最新の開発スピードに合わせたテスト
+
+ソフトウェアシステムはますます大規模化し、複雑化しています。Googleの典型的なアプリケーションやサービスは、数千から数百万行のコードで構成されています。何百ものライブラリやフレームワークを使用し、信頼性の低いネットワークを介して、数え切れないほど多くの設定で動作するプラットフォームに配信しなければなりません。さらに悪いことに、新しいバージョンが頻繁に、時には1日に何度もユーザーにプッシュされます。これは、年に1〜2回しかアップデートされなかったシュリンクラップドソフトウェアの世界とはかけ離れています。
+
+人間がシステムのすべての動作を手動で検証する能力は、ほとんどのソフトウェアの機能やプラットフォームの爆発的な増加に追いついていません。航空券の検索、映画の上映時間、関連画像、そしてもちろんウェブ検索結果など、Google検索のすべての機能を手動でテストするには何が必要か想像してみてほしい（図11-1参照）。その問題を解決する方法がわかったとしても、その作業量に、Google Searchがサポートしなければならないすべての言語、国、デバイスを掛け合わせなければならないし、アクセシビリティやセキュリティなどのチェックも忘れてはならない。すべての機能を人間が手動で操作することで製品の品質を評価しようとしても、スケールアップすることはできません。テストに関しては、自動化という明確な答えがあります。
 
 ![fig11-1](../img/Fig11-1.png)
 
-Figure 11-1. Screenshots of two complex Google search results
+Figure 11-1. 複雑な2つのGoogle検索結果のスクリーンショット
 
 ### Write, Run, React
 
-In its purest form, automating testing consists of three activities: writing tests, running tests, and reacting to test failures. An automated test is a small bit of code, usually a single function or method, that calls into an isolated part of a larger system that you want to test. The test code sets up an expected environment, calls into the system, usually with a known input, and verifies the result. Some of the tests are very small, exercising a single code path; others are much larger and can involve entire systems, like a mobile operating system or web browser.
-Example 11-1 presents a deliberately simple test in Java using no frameworks or testing libraries. This is not how you would write an entire test suite, but at its core every automated test looks similar to this very simple example.
+テストの自動化は、純粋な形では、テストの作成、テストの実行、テストの失敗への対応という3つの活動から成り立っています。自動化されたテストとは、テストしたい大規模なシステムの孤立した部分を呼び出す小さなコードであり、通常は1つの関数やメソッドである。テストコードは、期待される環境を設定し、通常は既知の入力を用いてシステムを呼び出し、その結果を検証します。テストの中には、単一のコードパスを使った非常に小規模なものもあれば、モバイルのオペレーティングシステムやウェブブラウザのように、システム全体を対象とした大規模なものもあります。
+
+例11-1では、フレームワークやテストライブラリを使わずに、Javaで意図的にシンプルなテストを行っています。これはテストスイート全体を記述する方法ではありませんが、 自動化されたテストの核心部分はこの非常にシンプルな例に似ています。
 
 Example 11-1. An example test
 ```C++
@@ -60,12 +74,17 @@ public void main(String[] args) {
 }
 ```
 
-Unlike the QA processes of yore, in which rooms of dedicated software testers pored over new versions of a system, exercising every possible behavior, the engineers who build systems today play an active and integral role in writing and running automated tests for their own code. Even in companies where QA is a prominent organization, developer-written tests are commonplace. At the speed and scale that today’s systems are being developed, the only way to keep up is by sharing the development of tests around the entire engineering staff.
-Of course, writing tests is different from writing good tests. It can be quite difficult to train tens of thousands of engineers to write good tests. We will discuss what we have learned about writing good tests in the chapters that follow.
-Writing tests is only the first step in the process of automated testing. After you have written tests, you need to run them. Frequently. At its core, automated testing consists of repeating the same action over and over, only requiring human attention when something breaks. We will discuss this Continuous Integration (CI) and testing in Chapter 23. By expressing tests as code instead of a manual series of steps, we can run them every time the code changes --- easily thousands of times per day. Unlike human testers, machines never grow tired or bored.
-Another benefit of having tests expressed as code is that it is easy to modularize them for execution in various environments. Testing the behavior of Gmail in Firefox requires no more effort than doing so in Chrome, provided you have configurations for both of these systems.(*3) Running tests for a user interface (UI) in Japanese or German can be done using the same test code as for English.
-Products and services under active development will inevitably experience test failures. What really makes a testing process effective is how it addresses test failures. Allowing failing tests to pile up quickly defeats any value they were providing, so it is imperative not to let that happen. Teams that prioritize fixing a broken test within minutes of a failure are able to keep confidence high and failure isolation fast, and therefore derive more value out of their tests.
-In summary, a healthy automated testing culture encourages everyone to share the work of writing tests. Such a culture also ensures that tests are run regularly. Last, and perhaps most important, it places an emphasis on fixing broken tests quickly so as to maintain high confidence in the process.
+かつてのQAプロセスでは、専任のソフトウェアテスターが部屋にこもってシステムの新バージョンを調査し、可能な限りの動作を確認していましたが、今日では、システムを構築するエンジニアは、自らのコードに対して自動テストを書いて実行するという積極的かつ不可欠な役割を担っています。QAが重要な役割を果たしている企業でも、開発者が書いたテストは一般的です。今日のシステム開発のスピードと規模では、テストの開発をエンジニアリングスタッフ全体で共有するしかありません。
+
+もちろん、テストを書くことと、良いテストを書くことは違います。何万人ものエンジニアが良いテストを書けるようにトレーニングするのは、かなり難しいことです。良いテストを書くために学んだことは、この後の章で説明します。
+
+テストを書くことは、自動テストを行う上での最初のステップに過ぎません。テストを書いた後は、それを実行する必要があります。よくあることです。自動テストの基本は、同じ動作を何度も繰り返すことであり、何か問題が発生したときにのみ人間が注意を払う必要があります。この継続的インテグレーション(CI)とテストについては、第23章で説明します。テストを手動の一連の手順ではなくコードとして表現することで、コードが変更されるたびにテストを実行することができます（1日に何千回も簡単に実行できます）。人間のテスターと違って、機械は疲れたり飽きたりすることがありません。
+
+また、テストをコードで表現することで、さまざまな環境で実行できるようにモジュール化しやすいというメリットもあります。例えば、Gmailの動作をFirefoxでテストする場合、Chromeでテストする場合と同じように、両方の環境設定があれば、手間がかかりません(*3)。また、日本語やドイツ語のユーザーインターフェース(UI)のテストも、英語と同じテストコードで実行できます。
+
+開発中の製品やサービスは、どうしてもテストに失敗することがあります。しかし、テストプロセスの有効性を決めるのは、失敗したテストにどう対処するかです。失敗したテストが積み重なると、それまでの価値が失われてしまうので、絶対に避けなければなりません。失敗したテストを数分以内に修正することを優先するチームは、信頼性を高く保ち、失敗を迅速に切り離すことができ、その結果テストからより多くの価値を引き出すことができます。
+
+要約すると、健全な自動テスト文化は、全員がテストを書く作業を共有することを奨励します。このような文化は、テストが定期的に実行されることを保証します。最後に、そしておそらく最も重要なことは、テストの信頼性を高く保つために、壊れたテストを素早く修正することに重点を置くことです。
 
 ### Benefits of Testing Code
 
