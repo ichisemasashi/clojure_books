@@ -86,119 +86,142 @@ public void main(String[] args) {
 
 要約すると、健全な自動テスト文化は、全員がテストを書く作業を共有することを奨励します。このような文化は、テストが定期的に実行されることを保証します。最後に、そしておそらく最も重要なことは、テストの信頼性を高く保つために、壊れたテストを素早く修正することに重点を置くことです。
 
-### Benefits of Testing Code
+### コードテストの利点
 
-To developers coming from organizations that don’t have a strong testing culture, the idea of writing tests as a means of improving productivity and velocity might seem antithetical. After all, the act of writing tests can take just as long (if not longer!) than implementing a feature would take in the first place. On the contrary, at Google, we’ve found that investing in software tests provides several key benefits to developer productivity:
+強力なテスト文化を持たない組織から来た開発者にとって、生産性や速度を向上させる手段としてテストを書くという考えは、相反するものに見えるかもしれません。結局のところ、テストを書くという行為は、そもそも機能を実装するのと同じくらいの時間がかかることがあります。それどころか、Googleでは、ソフトウェアテストに投資することで、開発者の生産性を向上させるいくつかの重要なメリットがあることを発見しました。
 
-- Less debugging
-  - As you would expect, tested code has fewer defects when it is submitted. Critically, it also has fewer defects throughout its existence; most of them will be caught before the code is submitted. A piece of code at Google is expected to be modified dozens of times in its lifetime. It will be changed by other teams and even automated code maintenance systems. A test written once continues to pay dividends and prevent costly defects and annoying debugging sessions through the lifetime of the project. Changes to a project, or the dependencies of a project, that break a test can be quickly detected by test infrastructure and rolled back before the problem is ever released to production.
-- Increased confidence in changes
-  - All software changes. Teams with good tests can review and accept changes to their project with confidence because all important behaviors of their project are continuously verified. Such projects encourage refactoring. Changes that refactor code while preserving existing behavior should (ideally) require no changes to existing tests.
-- Improved documentation
-  - Software documentation is notoriously unreliable. From outdated requirements to missing edge cases, it is common for documentation to have a tenuous relationship to the code. Clear, focused tests that exercise one behavior at a time function as executable documentation. If you want to know what the code does in a particular case, look at the test for that case. Even better, when requirements change and new code breaks an existing test, we get a clear signal that the “documentation” is now out of date. Note that tests work best as documentation only if care is taken to keep them clear and concise.
-- Simpler reviews
-  - All code at Google is reviewed by at least one other engineer before it can be submitted (see Chapter 9 for more details). A code reviewer spends less effort verifying code works as expected if the code review includes thorough tests that demonstrate code correctness, edge cases, and error conditions. Instead of the tedious effort needed to mentally walk each case through the code, the reviewer can verify that each case has a passing test.
-- Thoughtful design
-  - Writing tests for new code is a practical means of exercising the API design of the code itself. If new code is difficult to test, it is often because the code being tested has too many responsibilities or difficult-to-manage dependencies. Well- designed code should be modular, avoiding tight coupling and focusing on specific responsibilities. Fixing design issues early often means less rework later.
-- Fast, high-quality releases
-  - With a healthy automated test suite, teams can release new versions of their application with confidence. Many projects at Google release a new version to production every day --- even large projects with hundreds of engineers and thousands of code changes submitted every day. This would not be possible without automated testing.
+- デバッグ作業の軽減
+  - 予想されるように、テストされたコードは、提出された時点での欠陥が少なくなります。重要なのは、コードが存在する間中、欠陥が少ないということです。Googleでは、1つのコードが一生の間に何十回も変更されることが予想されます。他のチームや、自動化されたコードメンテナンスシステムによっても変更されるでしょう。一度書かれたテストは、プロジェクトの存続期間中、コストのかかる欠陥や煩わしいデバッグ作業を防ぎ、継続して利益をもたらします。プロジェクトやプロジェクトの依存関係の変更によってテストが壊れることは、テストインフラストラクチャによって素早く検出され、問題が本番にリリースされる前にロールバックされます。
+- 変更に対する信頼性の向上
+  - すべてのソフトウェアは変更されます。優れたテストを実施しているチームは、プロジェクトの重要な動作がすべて継続的に検証されているため、自信を持ってプロジェクトの変更を検討し、受け入れることができます。このようなプロジェクトは、リファクタリングを促進します。既存の動作を維持しながらコードをリファクタリングする変更は、（理想的には）既存のテストに変更を加える必要はありません。
+- ドキュメントの改善
+  - ソフトウェアのドキュメントは信頼性が低いことで知られています。時代遅れの要件やエッジケースの欠落など、ドキュメントとコードとの関係が希薄であることはよくあることです。一度に一つの動作を実行する、明確で焦点を絞ったテストは、実行可能なドキュメントとして機能します。特定のケースでコードが何をするのかを知りたければ、そのケースのテストを見ればいいのです。さらに良いことに、要件が変更され、新しいコードが既存のテストを壊してしまった場合、「ドキュメント」が古くなったという明確な信号を得ることができます。なお、テストが文書として最も効果的に機能するのは、テストを明確かつ簡潔に保つように配慮した場合に限られる。
+- よりシンプルなレビュー
+  - Googleでは、すべてのコードは、投稿する前に少なくとも1人の他のエンジニアによってレビューされます（詳細は第9章を参照）。コードレビューでは、コードの正しさ、エッジケース、エラー条件を示す徹底したテストが含まれていれば、コードが期待通りに動作するかどうかを確認するために費やす労力は少なくて済みます。コードレビューでは、ケースごとにコードを確認する必要がありますが、レビュー担当者は、ケースごとにテストに合格しているかどうかを確認することができます。
+- 考え抜かれた設計
+  - 新しいコードのテストを書くことは、コード自体のAPI設計を実施するための実用的な手段です。新しいコードのテストが難しい場合、テスト対象のコードの責任が大きすぎたり、依存関係の管理が難しいことが原因であることが多い。適切に設計されたコードは、モジュール化され、緊密な結合を避け、特定の責任に集中するべきです。設計上の問題を早期に解決することは、後の手直しを少なくすることにつながります。
+- 迅速かつ高品質なリリース
+  - 健全な自動テストスイートがあれば、チームは自信を持ってアプリケーションの新バージョンをリリースすることができます。Googleの多くのプロジェクトでは、毎日新バージョンを本番環境にリリースしています。それは、何百人ものエンジニアがいて、何千ものコード変更が毎日提出されるような大規模なプロジェクトでも同じです。自動化されたテストがなければ、このようなことはできません。
 
-## Designing a Test Suite
+## テストスイートの設計
 
-Today, Google operates at a massive scale, but we haven’t always been so large, and the foundations of our approach were laid long ago. Over the years, as our codebase has grown, we have learned a lot about how to approach the design and execution of a test suite, often by making mistakes and cleaning up afterward.
-One of the lessons we learned fairly early on is that engineers favored writing larger, system-scale tests, but that these tests were slower, less reliable, and more difficult to debug than smaller tests. Engineers, fed up with debugging the system-scale tests, asked themselves, “Why can’t we just test one server at a time?” or, “Why do we need to test a whole server at once? We could test smaller modules individually.” Eventually, the desire to reduce pain led teams to develop smaller and smaller tests, which turned out to be faster, more stable, and generally less painful.
-This led to a lot of discussion around the company about the exact meaning of “small.” Does small mean unit test? What about integration tests, what size are those? We have come to the conclusion that there are two distinct dimensions for every test case: size and scope. Size refers to the resources that are required to run a test case: things like memory, processes, and time. Scope refers to the specific code paths we are verifying. Note that executing a line of code is different from verifying that it worked as expected. Size and scope are interrelated but distinct concepts.
+今日、Google は大規模な事業を展開していますが、昔からそれほど大規模だったわけではなく、私たちのアプローチの基礎はずっと前に築かれました。長年にわたり、コードベースが成長するにつれ、テストスイートの設計と実行のアプローチについて多くのことを学んできました。
 
-### Test Size
+かなり早い段階で学んだことの1つは、エンジニアはシステム規模の大きなテストを書くことを好むが、これらのテストは小規模なテストに比べて時間がかかり、信頼性が低く、デバッグが困難であるということでした。システム規模のテストのデバッグにうんざりしたエンジニアたちは、「なぜ一度に1つのサーバーをテストできないのか」「なぜ一度にサーバー全体をテストする必要があるのか」と自問しました。もっと小さなモジュールを個別にテストすればいいのではないか」。最終的には、苦痛を減らしたいという思いから、チームはどんどん小さなテストを開発するようになり、結果的に、より速く、より安定した、そして一般的に苦痛の少ないテストになりました。
 
-At Google, we classify every one of our tests into a size and encourage engineers to always write the smallest possible test for a given piece of functionality. A test’s size is determined not by its number of lines of code, but by how it runs, what it is allowed to do, and how many resources it consumes. In fact, in some cases, our definitions of small, medium, and large are actually encoded as constraints the testing infrastructure can enforce on a test. We go into the details in a moment, but in brief, small tests run in a single process, medium tests run on a single machine, and large tests run wherever they want, as demonstrated in Figure 11-2.(*4)
+これをきっかけに、"small"の正確な意味について、社内では様々な議論がなされました。小さいとはユニットテストのことか？統合テストはどのくらいの規模なのか？私たちは、すべてのテストケースには「サイズ」と「スコープ」という2つの異なる次元があるという結論に達しました。サイズとは、テストケースを実行するのに必要なリソースのことで、メモリ、プロセス、時間などのことです。スコープとは、検証する特定のコードパスのことです。コードを実行することと、そのコードが期待通りに動作することを検証することは異なります。サイズとスコープは相互に関連していますが、異なる概念です。
+
+### テストのサイズ
+
+Google では、すべてのテストをサイズ別に分類し、与えられた機能に対して可能な限り小さなテストを書くようエンジニアに奨励しています。テストのサイズは、コードの行数ではなく、どのように実行されるか、何ができるか、どれだけのリソースを消費するかによって決まります。実際、私たちが定義する小、中、大は、テストインフラがテストに課すことのできる制約として、実際にコード化されているケースがあります。詳細については後ほど説明しますが、簡単に言うと、図11-2に示すように、小テストは単一のプロセスで実行され、中テストは単一のマシンで実行され、大テストは好きな場所で実行されます(*4)。
 
 ![fig11-2](../img/Fig11-2.png)
 
-Figure 11-2. Test sizes
+Figure 11-2. テストサイズ
 
-We make this distinction, as opposed to the more traditional “unit” or “integration,” because the most important qualities we want from our test suite are speed and determinism, regardless of the scope of the test. Small tests, regardless of the scope, are almost always faster and more deterministic than tests that involve more infrastructure or consume more resources. Placing restrictions on small tests makes speed and determinism much easier to achieve. As test sizes grow, many of the restrictions are relaxed. Medium tests have more flexibility but also more risk of nondeterminism. Larger tests are saved for only the most complex and difficult testing scenarios. Let’s take a closer look at the exact constraints imposed on each type of test.
+従来の「ユニット」や「インテグレーション」とは異なり、このような区別をしているのは、テストの範囲に関わらず、テストスイートに求められる最も重要な品質が速度と決定性であるためです。小さなテストは、その範囲に関わらず、より多くのインフラを使用したり、より多くのリソースを消費したりするテストよりも、ほとんどの場合、より速く、より決定性の高いものです。小規模なテストに制限を設けることで、速度と決定性をより簡単に実現することができます。テストの規模が大きくなると、多くの制限が緩和されます。中規模のテストでは、より柔軟性がありますが、非決定性のリスクも高くなります。大規模なテストは、最も複雑で困難なテストシナリオのためだけに保存されます。それでは、それぞれのテストタイプに課せられた制約を詳しく見ていきましょう。
 
-#### Small tests
+#### 小型テスト
 
-Small tests are the most constrained of the three test sizes. The primary constraint is that small tests must run in a single process. In many languages, we restrict this even further to say that they must run on a single thread. This means that the code performing the test must run in the same process as the code being tested. You can’t run a server and have a separate test process connect to it. It also means that you can’t run a third-party program such as a database as part of your test.
-The other important constraints on small tests are that they aren’t allowed to sleep, perform I/O operations,(*5) or make any other blocking calls. This means that small tests aren’t allowed to access the network or disk. Testing code that relies on these sorts of operations requires the use of test doubles (see Chapter 13) to replace the heavyweight dependency with a lightweight, in-process dependency.
-The purpose of these restrictions is to ensure that small tests don’t have access to the main sources of test slowness or nondeterminism. A test that runs on a single process and never makes blocking calls can effectively run as fast as the CPU can handle. It’s difficult (but certainly not impossible) to accidentally make such a test slow or nondeterministic. The constraints on small tests provide a sandbox that prevents engineers from shooting themselves in the foot.
-These restrictions might seem excessive at first, but consider a modest suite of a couple hundred small test cases running throughout the day. If even a few of them fail nondeterministically (often called flaky tests), tracking down the cause becomes a serious drain on productivity. At Google’s scale, such a problem could grind our testing infrastructure to a halt.
-At Google, we encourage engineers to try to write small tests whenever possible, regardless of the scope of the test, because it keeps the entire test suite running fast and reliably. For more discussion on small versus unit tests, see Chapter 12.
+小規模テストは、3つのテストサイズの中で最も制約の多いテストです。主な制約は、小規模なテストは単一のプロセスで実行されなければならないということです。多くの言語では、これをさらに制限して、単一のスレッド上で実行しなければならないとしています。つまり、テストを実行するコードは、テストされるコードと同じプロセスで実行されなければならないのです。サーバーを起動して、別のテストプロセスがそれに接続することはできません。また、データベースのようなサードパーティのプログラムをテストの一部として実行することもできません。
 
-#### Medium tests
+その他の重要な制約として、小型テストでは、スリープやI/O操作(*5)、その他のブロッキングコールを行うことができません。つまり、スモールテストは、ネットワークやディスクにアクセスすることができないのです。このような操作に依存しているコードをテストするには、テストダブルス（第13章参照）を使用して、ヘビーウェイトな依存関係を軽量なプロセス内の依存関係に置き換える必要があります。
 
-The constraints placed on small tests can be too restrictive for many interesting kinds of tests. The next rung up the ladder of test sizes is the medium test. Medium tests can span multiple processes, use threads, and can make blocking calls, including network calls, to localhost. The only remaining restriction is that medium tests aren’t allowed to make network calls to any system other than localhost. In other words, the test must be contained within a single machine.
-The ability to run multiple processes opens up a lot of possibilities. For example, you could run a database instance to validate that the code you’re testing integrates correctly in a more realistic setting. Or you could test a combination of web UI and server code. Tests of web applications often involve tools like WebDriver that start a real browser and control it remotely via the test process.
-Unfortunately, with increased flexibility comes increased potential for tests to become slow and nondeterministic. Tests that span processes or are allowed to make blocking calls are dependent on the operating system and third-party processes to be fast and deterministic, which isn’t something we can guarantee in general. Medium tests still provide a bit of protection by preventing access to remote machines via the network, which is far and away the biggest source of slowness and nondeterminism in most systems. Still, when writing medium tests, the “safety” is off, and engineers need to be much more careful.
+これらの制限の目的は、小規模なテストが、テストの速度低下や不確定性の主な原因にアクセスできないようにすることです。単一のプロセス上で実行され、ブロック化された呼び出しを行わないテストは、事実上、CPUが処理できる限り高速に実行することができます。このようなテストを誤って遅くしたり、非決定性にしたりすることは困難です（不可能ではありませんが）。小さなテストに対する制約は、エンジニアが自分で自分を撃つことを防ぐためのサンドボックスになります。
 
-#### Large tests
+これらの制約は、最初は過剰に思えるかもしれませんが、数百個の小さなテストケースからなるささやかなスイートを1日中実行することを考えてみてください。そのうちの数個でも非決定論的に失敗すると（しばしばフレーキーテストと呼ばれる）、その原因を追究することは生産性を著しく低下させます。Googleの規模では、このような問題が発生すると、テストインフラが停止してしまいます。
 
-Finally, we have large tests. Large tests remove the localhost restriction imposed on medium tests, allowing the test and the system being tested to span across multiple machines. For example, the test might run against a system in a remote cluster.
-As before, increased flexibility comes with increased risk. Having to deal with a system that spans multiple machines and the network connecting them increases the chance of slowness and nondeterminism significantly compared to running on a single machine. We mostly reserve large tests for full-system end-to-end tests that are more about validating configuration than pieces of code, and for tests of legacy components for which it is impossible to use test doubles. We’ll talk more about use cases for large tests in Chapter 14. Teams at Google will frequently isolate their large tests from their small or medium tests, running them only during the build and release process so as not to impact developer workflow.
+Googleでは、テストの範囲にかかわらず、可能な限り小さなテストを書くようエンジニアに奨励しています。これは、テストスイート全体を高速かつ確実に実行するためです。スモールテストとユニットテストの比較については、第12章を参照してください。
 
-----
+#### 中規模テスト
 
-### Case Study: Flaky Tests Are Expensive
+小規模なテストに課せられた制約は、多くの興味深い種類のテストにとってあまりにも制限的です。テストのサイズの次の段階は、中規模テストです。中規模テストでは、複数のプロセスにまたがったり、スレッドを使用したり、localhost に対してネットワークコールを含むブロックコールを行うことができます。唯一の制限は、中規模テストでは localhost 以外のシステムにネットワークコールを行うことができないということです。言い換えれば、テストは1台のマシンの中で行わなければなりません。
 
-If you have a few thousand tests, each with a very tiny bit of nondeterminism, running all day, occasionally one will probably fail (flake). As the number of tests grows, statistically so will the number of flakes. If each test has even a 0.1% of failing when it should not, and you run 10,000 tests per day, you will be investigating 10 flakes per day. Each investigation takes time away from something more productive that your team could be doing.
-In some cases, you can limit the impact of flaky tests by automatically rerunning them when they fail. This is effectively trading CPU cycles for engineering time. At low levels of flakiness, this trade-off makes sense. Just keep in mind that rerunning a test is only delaying the need to address the root cause of flakiness.
-If test flakiness continues to grow, you will experience something much worse than lost productivity: a loss of confidence in the tests. It doesn’t take needing to investigate many flakes before a team loses trust in the test suite. After that happens, engineers will stop reacting to test failures, eliminating any value the test suite provided. Our experience suggests that as you approach 1% flakiness, the tests begin to lose value. At Google, our flaky rate hovers around 0.15%, which implies thousands of flakes every day. We fight hard to keep flakes in check, including actively investing engineering hours to fix them.
-In most cases, flakes appear because of nondeterministic behavior in the tests themselves. Software provides many sources of nondeterminism: clock time, thread scheduling, network latency, and more. Learning how to isolate and stabilize the effects of randomness is not easy. Sometimes, effects are tied to low-level concerns like hardware interrupts or browser rendering engines. A good automated test infrastructure should help engineers identify and mitigate any nondeterministic behavior.
+複数のプロセスを実行できるようになったことで、さまざまな可能性が広がりました。例えば、データベースインスタンスを実行して、テストしているコードが正しく統合されているかどうかを、より現実的な環境で検証することができます。また、Web UIとサーバーコードの組み合わせをテストすることもできます。Webアプリケーションのテストでは、WebDriverのようなツールを使って実際のブラウザを起動し、テストプロセスを介してリモートで制御することがよくあります。
+
+残念ながら、柔軟性が高まると、テストが遅くなったり、非決定論的になったりする可能性が高まります。プロセスをまたいだり、ブロックコールを許可されているテストは、OSやサードパーティのプロセスに高速性や決定性を依存しており、一般的に保証できるものではありません。中程度のテストであれば、ネットワーク経由でのリモートマシンへのアクセスを防ぐことで、多少の保護はできます。ネットワークは、ほとんどのシステムで遅さや非決定性の最大の原因となっています。しかし、中程度のテストを書くときには、「安全性」は失われており、エンジニアはより慎重になる必要があります。
+
+#### 大型テスト
+
+最後に、大規模テストについて説明します。大規模テストでは、中規模テストで課されていたローカルホストの制限がなくなり、テストとテスト対象のシステムが複数のマシンにまたがることができます。例えば、リモート クラスタ内のシステムに対してテストを実行することができます。
+
+前述の通り、柔軟性の向上はリスクの増加を伴います。複数のマシンとそれらをつなぐネットワークにまたがるシステムを扱わなければならないため、単一のマシン上で実行する場合に比べて、速度低下や不確定性が発生する可能性が大きくなります。大規模なテストは、コードよりも構成を検証することに重点を置いたフルシステムのエンドツーエンドのテストや、テストダブルが使用できないレガシーコンポーネントのテストなどに使用します。大規模テストの使用例については、第14章で詳しく説明します。Google のチームでは、大規模なテストを小規模なテストや中規模なテストから分離し、 開発者のワークフローに影響を与えないようにするために、 ビルドやリリースのプロセスでのみ実行することがよくあります。
 
 ----
 
-#### Properties common to all test sizes
+### ケーススタディ フレークテストはコストがかかる
 
-All tests should strive to be hermetic: a test should contain all of the information necessary to set up, execute, and tear down its environment. Tests should assume as little as possible about the outside environment, such as the order in which the tests are run. For example, they should not rely on a shared database. This constraint becomes more challenging with larger tests, but effort should still be made to ensure isolation.
-A test should contain only the information required to exercise the behavior in question. Keeping tests clear and simple aids reviewers in verifying that the code does what it says it does. Clear code also aids in diagnosing failure when they fail. We like to say that “a test should be obvious upon inspection.” Because there are no tests for the tests themselves, they require manual review as an important check on correctness. As a corollary to this, we also strongly discourage the use of control flow statements like conditionals and loops in a test. More complex test flows risk containing bugs themselves and make it more difficult to determine the cause of a test failure.
-Remember that tests are often revisited only when something breaks. When you are called to fix a broken test that you have never seen before, you will be thankful someone took the time to make it easy to understand. Code is read far more than it is written, so make sure you write the test you’d like to read!
+もし数千ものテストがあって、それぞれがほんの少しの非決定性を持っていて、 それを一日中走らせていたら、たまには失敗することもあるでしょう (フレーク)。テストの数が増えれば、統計的にフレークの数も増えます。もし各テストが0.1%でも失敗する可能性があり、1日に10,000個のテストを実行した場合、1日に10個のフレークを調査することになります。それぞれの調査は、あなたのチームができるもっと生産的なことから時間を奪います。
 
-**Test sizes in practice.**
-Having precise definitions of test sizes has allowed us to create tools to enforce them. Enforcement enables us to scale our test suites and still make certain guarantees about speed, resource utilization, and stability. The extent to which these definitions are enforced at Google varies by language. For example, we run all Java tests using a custom security manager that will cause all tests tagged as small to fail if they attempt to do something prohibited, such as establish a network connection.
+場合によっては、テストが失敗したときに自動的に再実行することで、不具合のあるテストの影響を抑えることができます。これは事実上、CPU サイクルとエンジニアリングの時間を交換することになります。不具合のレベルが低い場合、このトレードオフは理にかなっています。ただし、テストの再実行は、不具合の根本的な原因に対処する必要性を先延ばしにしているだけであることに留意してください。
 
-### Test Scope
+テストのフレークが増え続けると、生産性の低下よりもはるかに悪いことが起こります。それは、テストに対する信頼の喪失です。チームがテスト・スイートに対する信頼を失うまでには、多くのフレークを調査する必要はありません。そうなると、エンジニアはテストの失敗に反応しなくなり、テスト・スイートが提供していた価値がなくなってしまいます。私たちの経験では、フレーク率が1％に近づくと、テストの価値が失われ始める。Googleでは、フレーク率は0.15%前後で推移しており、これは毎日何千ものフレークが発生していることを意味しています。Googleでは、フレークの発生を抑えるために、エンジニアが積極的にフレークの修正に時間を割くなどの努力をしています。
 
-Though we at Google put a lot of emphasis on test size, another important property to consider is test scope. Test scope refers to how much code is being validated by a given test. Narrow-scoped tests (commonly called “unit tests”) are designed to validate the logic in a small, focused part of the codebase, like an individual class or method. Medium-scoped tests (commonly called integration tests) are designed to verify interactions between a small number of components; for example, between a server and its database. Large-scoped tests (commonly referred to by names like functional tests, end-to-end tests, or system tests) are designed to validate the interaction of several distinct parts of the system, or emergent behaviors that aren’t expressed in a single class or method.
-It’s important to note that when we talk about unit tests as being narrowly scoped, we’re referring to the code that is being validated, not the code that is being executed. It’s quite common for a class to have many dependencies or other classes it refers to, and these dependencies will naturally be invoked while testing the target class. Though some other testing strategies make heavy use of test doubles (fakes or mocks) to avoid executing code outside of the system under test, at Google, we prefer to keep the real dependencies in place when it is feasible to do so. Chapter 13 discusses this issue in more detail.
-Narrow-scoped tests tend to be small, and broad-scoped tests tend to be medium or large, but this isn’t always the case. For example, it’s possible to write a broad-scoped test of a server endpoint that covers all of its normal parsing, request validation, and business logic, which is nevertheless small because it uses doubles to stand in for all out-of-process dependencies like a database or filesystem. Similarly, it’s possible to write a narrow-scoped test of a single method that must be medium sized. For example, modern web frameworks often bundle HTML and JavaScript together, and testing a UI component like a date picker often requires running an entire browser, even to validate a single code path.
-Just as we encourage tests of smaller size, at Google, we also encourage engineers to write tests of narrower scope. As a very rough guideline, we tend to aim to have a mix of around 80% of our tests being narrow-scoped unit tests that validate the majority of our business logic; 15% medium-scoped integration tests that validate the interactions between two or more components; and 5% end-to-end tests that validate the entire system. Figure 11-3 depicts how we can visualize this as a pyramid.
+ほとんどの場合、フレークはテスト自体の非決定論的な動作が原因で発生します。ソフトウェアには、クロックタイム、スレッドスケジューリング、ネットワークレイテンシーなど、多くの非決定性の原因があります。ランダム性の影響を分離し、安定化させる方法を学ぶことは容易ではありません。時には、ハードウェアの割り込みやブラウザのレンダリングエンジンなど、低レベルの問題に結びつくこともあります。優れた自動テストインフラは、エンジニアが非決定論的な動作を特定し、それを軽減するのに役立つはずです。
+
+----
+
+#### すべてのテストサイズに共通する特性
+
+すべてのテストは密閉型であるように努めなければなりません。テストには、その環境をセットアップし、実行し、破壊するために必要なすべての情報が含まれていなければなりません。テストは、テストを実行する順番など、 外部環境についてできる限り想定しないようにしなければなりません。例えば、テストは共有データベースに依存すべきではありません。この制約は、大規模なテストになるほど難しくなりますが、それでも隔離性を確保するための努力は必要です。
+
+テストには、問題となっている動作を実行するのに必要な情報だけを含めるべきです。テストを明確かつシンプルにすることで、コードがその通りに動作するかどうかを確認することができます。また、明確なコードは、失敗したときの診断にも役立ちます。私たちは、"テストは一目瞭然でなければならない "と言っています。テスト自体にはテストがないので、正しさを確認するためには手動でのレビューが必要になります。これに付随して、私たちはテストに条件分岐やループなどの制御フロー文を使用することも強く推奨しません。テストの流れが複雑になると、それ自体にバグが含まれる危険性がありますし、 テストの失敗の原因を突き止めるのが難しくなります。
+
+テストが見直されるのは、何かが壊れたときだけであることを忘れないでください。今まで見たこともないような壊れたテストを修正するように言われたとき、誰かが時間をかけて理解しやすくしてくれたことに感謝するでしょう。コードは書かれるよりも読まれることの方がはるかに多いのですから、自分が読まれたいと思うテストを書くようにしましょう。
+
+**テストサイズの実際**
+テストサイズを正確に定義することで、それを実施するためのツールを作成することができました。これにより、テストスイートを拡張しても、速度、リソース使用率、安定性について一定の保証を行うことができるようになりました。Googleでは、これらの定義をどの程度実施しているかは、言語によって異なります。例えば、Google ではすべての Java テストを独自のセキュリティ マネージャを使用して実行しています。このセキュリティ マネージャは、ネットワーク接続の確立などの禁止事項を実行しようとした場合、小さいとタグ付けされたすべてのテストを失敗させます。
+
+### テストスコープ
+
+Googleではテストサイズを重視していますが、もう一つの重要な特性としてテストスコープを考慮する必要があります。テストスコープとは、あるテストでどれだけのコードが検証されているかということです。狭い範囲のテスト (一般に「ユニットテスト」と呼ばれます) は、個々のクラスやメソッドのような、コードベースの小さな集中した部分のロジックを検証するように設計されています。中規模テスト (一般に統合テストと呼ばれる) は、少数のコンポーネント間の相互作用を検証するために設計されています。大規模なテスト (機能テスト、エンドツーエンドテスト、システムテストなどの名称で呼ばれる) は、システムのいくつかの異なる部分の相互作用や、単一のクラスやメソッドでは表現されない出現する動作を検証するように設計されています。
+
+注意すべき点は、ユニットテストのスコープが狭いということは、実行されるコードではなく、検証されるコードに言及しているということです。あるクラスが多くの依存関係を持っていたり、他のクラスを参照していたりすることはよくあることで、これらの依存関係は対象となるクラスのテスト中に自然に呼び出されます。他のテスト戦略では、テスト対象のシステムの外にあるコードの実行を避けるために、テストの替え玉（フェイクやモック）を多用するものもありますが、Google では、実行可能な場合は実際の依存関係を維持することを推奨しています。第13章では、この問題についてさらに詳しく説明します。
+
+狭い範囲のテストは小さく、広い範囲のテストは中規模または大規模になる傾向がありますが、これは必ずしもそうではありません。たとえば、サーバーのエンドポイントに対して 広範な範囲のテストを書くことは可能です。 このテストでは、通常の構文解析やリクエストの検証、 ビジネスロジックをすべてカバーしていますが、 データベースやファイルシステムなどのプロセス外の依存関係を すべてダブルスで代用しているため、規模は小さくなります。同様に、中規模でなければならない単一のメソッドに対して、狭い範囲のテストを書くことも可能です。たとえば、最近のウェブフレームワークでは HTML と JavaScript が一緒になっていることが多く、日付選択ツールのような UI コンポーネントのテストでは、単一のコードパスを検証するためにもブラウザ全体を実行しなければならないことがよくあります。
+
+Googleでは、小さいサイズのテストを推奨しているように、エンジニアにも狭い範囲のテストを書くことを推奨しています。大まかな目安としては、ビジネスロジックの大部分を検証する範囲の狭いユニットテストが80％、2つ以上のコンポーネント間のやり取りを検証する範囲の広い統合テストが15％、そしてシステム全体を検証するエンドツーエンドのテストが5％という構成にしています。図11-3は、これをピラミッド型にしたものです。
 
 ![fig11-3](../img/Fig11-3.png)
 
-Figure 11-3. Google’s version of Mike Cohn’s test pyramid;(*6) percentages are by test case count, and every team’s mix will be a little different
+Figure 11-3. Mike Cohn氏のテストピラミッドのGoogle版。(*6) パーセンテージはテストケース数で、チームごとに構成は少しずつ異なる。
 
 
-Unit tests form an excellent base because they are fast, stable, and dramatically narrow the scope and reduce the cognitive load required to identify all the possible behaviors a class or function has. Additionally, they make failure diagnosis quick and painless. Two antipatterns to be aware of are the “ice cream cone” and the “hourglass,” as illustrated in Figure 11-4.
-With the ice cream cone, engineers write many end-to-end tests but few integration or unit tests. Such suites tend to be slow, unreliable, and difficult to work with. This pattern often appears in projects that start as prototypes and are quickly rushed to production, never stopping to address testing debt.
-The hourglass involves many end-to-end tests and many unit tests but few integration tests. It isn’t quite as bad as the ice cream cone, but it still results in many end-to- end test failures that could have been caught quicker and more easily with a suite of medium-scope tests. The hourglass pattern occurs when tight coupling makes it difficult to instantiate individual dependencies in isolation.
+ユニットテストは、高速で安定しており、クラスや関数が持つ可能性のあるすべての動作を特定するために必要な範囲を劇的に狭め、認知的な負荷を減らすことができるため、優れた基盤となります。さらに、ユニットテストは失敗の診断を迅速かつ無痛で行うことができます。注意すべき2つのアンチパターンは、図11-4に示すように、「アイスクリーム・コーン」と「砂時計」です。
+
+アイスクリームコーンの場合、エンジニアはエンドツーエンドのテストをたくさん書きますが、統合テストやユニットテストはほとんど書きません。このようなスイートは、時間がかかり、信頼性が低く、作業がしにくい傾向があります。このパターンは、プロトタイプとしてスタートし、すぐに製品化を急ぐプロジェクトでよく見られ、テストの負債に対処するために停止することはありません。
+
+砂時計は、多くのエンドツーエンドのテストと多くのユニットテストを含みますが、統合テストはほとんどありません。アイスクリームコーンほどひどくはありませんが、それでもエンド・ツー・エンドのテストで多くの失敗が発生し、中規模のテストであればもっと早く簡単に発見できたはずです。砂時計パターンは、緊密な結合により、個々の依存関係を分離してインスタンス化することが困難な場合に発生します。
 
 ![fig11-4](../img/Fig11-4.png)
 
-Figure 11-4. Test suite antipatterns
+Figure 11-4. テストスイートのアンチパターン
 
-Our recommended mix of tests is determined by our two primary goals: engineering productivity and product confidence. Favoring unit tests gives us high confidence quickly, and early in the development process. Larger tests act as sanity checks as the product develops; they should not be viewed as a primary method for catching bugs.
-When considering your own mix, you might want a different balance. If you emphasize integration testing, you might discover that your test suites take longer to run but catch more issues between components. When you emphasize unit tests, your test suites can complete very quickly, and you will catch many common logic bugs. But, unit tests cannot verify the interactions between components, like a contract between two systems developed by different teams. A good test suite contains a blend of different test sizes and scopes that are appropriate to the local architectural and organizational realities.
+私たちが推奨するテストの組み合わせは、エンジニアリングの生産性と製品の信頼性という2つの主要な目標によって決まります。ユニットテストを優先することで、開発プロセスの早い段階で高い信頼性を得ることができます。大規模なテストは、製品が開発される際の健全性をチェックするためのものであり、バグを発見するための主要な手段と見なすべきではありません。
 
-### The Beyoncé Rule
+あなた自身の組み合わせを考えると、異なるバランスが必要になるかもしれません。統合テストを重視した場合、テストスイートの実行には時間がかかるが、コンポーネント間の問題をより多く捕捉できることがわかるかもしれない。ユニットテストを重視した場合、テストスイートは非常に早く完了し、一般的なロジックのバグを多く検出することができます。しかし、ユニットテストでは、異なるチームが開発した2つのシステム間の契約のような、コンポーネント間の相互作用を検証することはできません。優れたテストスイートには、アーキテクチャや組織の現実に適した、さまざまなテストのサイズとスコープが混在しています。
 
-We are often asked, when coaching new hires, which behaviors or properties actually need to be tested? The straightforward answer is: test everything that you don’t want to break. In other words, if you want to be confident that a system exhibits a particular behavior, the only way to be sure it will is to write an automated test for it. This includes all of the usual suspects like testing performance, behavioral correctness, accessibility, and security. It also includes less obvious properties like testing how a system handles failure.
-We have a name for this general philosophy: we call it the Beyoncé Rule. Succinctly, it can be stated as follows: “If you liked it, then you shoulda put a test on it.” The Beyoncé Rule is often invoked by infrastructure teams that are responsible for making changes across the entire codebase. If unrelated infrastructure changes pass all of your tests but still break your team’s product, you are on the hook for fixing it and adding the additional tests.
+### ビヨンセの法則
 
-----
+新入社員を指導する際に、どのような行動や特性を実際にテストする必要があるのか、という質問をよく受けます。率直な答えは、「壊したくないものはすべてテストする」です。言い換えれば、あるシステムが特定の動作をすることを確信したい場合、それを確認する唯一の方法は、そのための自動テストを書くことです。これには、パフォーマンス、動作の正しさ、アクセシビリティ、セキュリティのテストなど、一般的なものがすべて含まれます。また、システムが障害をどのように処理するかをテストするような、目立たない特性も含まれます。
 
-### Testing for Failure
-
-One of the most important situations a system must account for is failure. Failure is inevitable, but waiting for an actual catastrophe to find out how well a system responds to a catastrophe is a recipe for pain. Instead of waiting for a failure, write automated tests that simulate common kinds of failures. This includes simulating exceptions or errors in unit tests and injecting Remote Procedure Call (RPC) errors or latency in integration and end-to-end tests. It can also include much larger disruptions that affect the real production network using techniques like Chaos Engineering. A predictable and controlled response to adverse conditions is a hallmark of a reliable system.
+私たちは、この一般的な考え方を「ビヨンセ・ルール」と呼んでいます。簡潔に言うと、次のようになります。"If you like it, then you shoulda put a test on it." ビヨンセ・ルールは、コードベース全体の変更に責任を持つインフラストラクチャ・チームでよく唱えられます。関連性のないインフラストラクチャの変更がすべてのテストに合格しても、チームの製品が壊れてしまった場合、あなたはそれを修正し、追加のテストを追加する責任があります。
 
 ----
 
-### A Note on Code Coverage
+### 故障を想定したテスト
 
-Code coverage is a measure of which lines of feature code are exercised by which tests. If you have 100 lines of code and your tests execute 90 of them, you have 90% code coverage.(*7) Code coverage is often held up as the gold standard metric for understanding test quality, and that is somewhat unfortunate. It is possible to exercise a lot of lines of code with a few tests, never checking that each line is doing anything useful. That’s because code coverage only measures that a line was invoked, not what happened as a result. (We recommend only measuring coverage from small tests to avoid coverage inflation that occurs when executing larger tests.)
-An even more insidious problem with code coverage is that, like other metrics, it quickly becomes a goal unto itself. It is common for teams to establish a bar for expected code coverage --- for instance, 80%. At first, that sounds eminently reasonable; surely you want to have at least that much coverage. In practice, what happens is that instead of treating 80% like a floor, engineers treat it like a ceiling. Soon, changes begin landing with no more than 80% coverage. After all, why do more work than the metric requires?
-A better way to approach the quality of your test suite is to think about the behaviors that are tested. Do you have confidence that everything your customers expect to work will work? Do you feel confident you can catch breaking changes in your dependencies? Are your tests stable and reliable? Questions like these are a more holistic way to think about a test suite. Every product and team is going to be different; some will have difficult-to-test interactions with hardware, some involve massive datasets. Trying to answer the question “do we have enough tests?” with a single number ignores a lot of context and is unlikely to be useful. Code coverage can provide some insight into untested code, but it is not a substitute for thinking critically about how well your system is tested.
+システムが考慮しなければならない最も重要な状況の一つは、失敗です。失敗は避けられませんが、システムが大惨事にどれだけ対応できるかを調べるために、実際の大惨事を待つのは苦痛のもとになります。失敗を待つのではなく、一般的な種類の失敗をシミュレートする自動テストを書きましょう。これには、ユニットテストにおける例外やエラーのシミュレーション、統合テストやエンドツーエンドテストにおけるRPC（Remote Procedure Call）のエラーや遅延の注入などが含まれます。また、カオスエンジニアリングのような技術を用いて、実際の本番ネットワークに影響を与えるような大規模な障害を含めることもできます。悪条件に対する予測可能で制御された応答は、信頼性の高いシステムの特徴です。
+
+----
+
+### コードカバレッジについて
+
+コードカバレッジとは、機能コードのどの行がどのテストによって実行されたかを示す指標です。100 行のコードがあり、そのうちの 90 行をテストが実行した場合、コードカバレッジは 90% となります(*7)。 コードカバレッジはテストの品質を理解するための金字塔のように語られることがありますが、これは少々残念なことです。多くのコードラインをいくつかのテストで実行することは可能ですが、それぞれのラインが何か有用なことをしているかどうかはチェックできません。これは、コードカバレッジが、ある行が呼び出されたことを測定しているだけで、その結果何が起こったかを測定していないからです。(大規模なテストを実行したときに発生するカバレッジの膨張を避けるために、小さなテストでのみカバレッジを測定することをお勧めします)。
+
+コードカバレッジのさらに厄介な問題は、他の測定基準と同様に、すぐにそれ自体が目標となってしまうことです。例えば、80% というように、期待されるコードカバレッジの基準を設定することがよくあります。最初は、それは非常に合理的に聞こえます。確かに、少なくともその程度のカバレッジは欲しいものです。実際には、80％を床のように扱うのではなく、エンジニアが天井のように扱うことになります。やがて、80％以上のカバー率でないと変更ができなくなってしまいます。結局のところ、指標が要求する以上の仕事をする必要はないのです。
+
+テストスイートの品質にアプローチするためのより良い方法は、テストされる動作について考えることです。顧客が期待する動作がすべて動作するという自信がありますか？依存関係にある変更をキャッチできる自信がありますか？あなたのテストは安定していて信頼できますか？このような質問は、テストスイートをより全体的に考えるためのものです。ハードウェアとのインタラクションをテストするのが難しい製品や、膨大なデータセットを扱う製品など、製品やチームはそれぞれ異なります。テストの数が足りているか」という問いに一つの数字で答えようとすると、多くの文脈を無視してしまい、役に立つことはまずありません。コードカバレッジは、テストされていないコードをある程度把握することができますが、自分のシステムがどれだけテストされているかを批判的に考えることの代用にはなりません。
 
 ## Testing at Google Scale
 
