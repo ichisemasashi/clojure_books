@@ -223,92 +223,126 @@ Figure 11-4. テストスイートのアンチパターン
 
 テストスイートの品質にアプローチするためのより良い方法は、テストされる動作について考えることです。顧客が期待する動作がすべて動作するという自信がありますか？依存関係にある変更をキャッチできる自信がありますか？あなたのテストは安定していて信頼できますか？このような質問は、テストスイートをより全体的に考えるためのものです。ハードウェアとのインタラクションをテストするのが難しい製品や、膨大なデータセットを扱う製品など、製品やチームはそれぞれ異なります。テストの数が足りているか」という問いに一つの数字で答えようとすると、多くの文脈を無視してしまい、役に立つことはまずありません。コードカバレッジは、テストされていないコードをある程度把握することができますが、自分のシステムがどれだけテストされているかを批判的に考えることの代用にはなりません。
 
-## Testing at Google Scale
+## Googleスケールでのテスト
 
-Much of the guidance to this point can be applied to codebases of almost any size. However, we should spend some time on what we have learned testing at our very large scale. To understand how testing works at Google, you need an understanding of our development environment, the most important fact about which is that most of Google’s code is kept in a single, monolithic repository (monorepo). Almost every line of code for every product and service we operate is all stored in one place. We have more than two billion lines of code in the repository today.
-Google’s codebase experiences close to 25 million lines of change every week. Roughly half of them are made by the tens of thousands of engineers working in our monorepo, and the other half by our automated systems, in the form of configuration updates or large-scale changes (Chapter 22). Many of those changes are initiated from outside the immediate project. We don’t place many limitations on the ability of engineers to reuse code.
-The openness of our codebase encourages a level of co-ownership that lets everyone take responsibility for the codebase. One benefit of such openness is the ability to directly fix bugs in a product or service you use (subject to approval, of course) instead of complaining about it. This also implies that many people will make changes in a part of the codebase owned by someone else.
-Another thing that makes Google a little different is that almost no teams use repository branching. All changes are committed to the repository head and are immediately visible for everyone to see. Furthermore, all software builds are performed using the last committed change that our testing infrastructure has validated. When a product or service is built, almost every dependency required to run it is also built from source, also from the head of the repository. Google manages testing at this scale by use of a CI system. One of the key components of our CI system is our Test Automated Platform (TAP).
+ここまでの説明の多くは、ほぼすべての規模のコードベースに適用できます。しかし、ここでは非常に大きな規模でのテストから学んだことについて、少し時間を割いてみたいと思います。Google でのテストの仕組みを理解するには、Google の開発環境を理解する必要があります。最も重要な事実は、Google のコードのほとんどが単一のモノリシックリポジトリ (monorepo) に保管されていることです。Googleが運営するすべての製品やサービスのコードのほとんどすべての行が、すべて1つの場所に保管されています。現在、リポジトリには20億行以上のコードが保管されています。
 
-  For more information on TAP and our CI philosophy, see Chapter 23.
+Googleのコードベースでは、毎週2,500万行近くの変更が行われています。そのうちのおよそ半分は、モノレポで働く何万人ものエンジニアが行っており、残りの半分は、構成の更新や大規模な変更（第22章）という形で、自動化されたシステムが行っています。それらの変更の多くは、当面のプロジェクトの外から開始されます。私たちは、エンジニアがコードを再利用することに対して、あまり制限を設けていません。
 
-Whether you are considering our size, our monorepo, or the number of products we offer, Google’s engineering environment is complex. Every week it experiences millions of changing lines, billions of test cases being run, tens of thousands of binaries being built, and hundreds of products being updated --- talk about complicated!
+私たちのコードベースがオープンであることは、誰もがコードベースに責任を持つことができる共同所有のレベルを促進します。このようなオープン性の利点のひとつは、自分が使っている製品やサービスのバグを、文句を言う代わりに直接修正できることです（もちろん、承認を得てからですが）。これはまた、誰かが所有しているコードベースの一部に、多くの人が変更を加えることを意味します。
 
-### The Pitfalls of a Large Test Suite
+Googleが少し変わっているもう一つの点は、リポジトリのブランチを使うチームがほとんどないことです。すべての変更はリポジトリヘッドにコミットされ、誰もがすぐに見ることができます。さらに、すべてのソフトウェアのビルドは、テストインフラが検証した最後のコミットされた変更を使用して実行されます。製品やサービスが構築されると、それを実行するために必要なほぼすべての依存関係もソースから構築され、それもリポジトリのヘッドから構築されます。Googleは、この規模のテストをCIシステムで管理しています。GoogleのCIシステムの重要なコンポーネントの1つは、TAP（Test Automated Platform）です。
 
-As a codebase grows, you will inevitably need to make changes to existing code. When poorly written, automated tests can make it more difficult to make those changes. Brittle tests --- those that over-specify expected outcomes or rely on extensive and complicated boilerplate --- can actually resist change. These poorly written tests can fail even when unrelated changes are made.
-If you have ever made a five-line change to a feature only to find dozens of unrelated, broken tests, you have felt the friction of brittle tests. Over time, this friction can make a team reticent to perform necessary refactoring to keep a codebase healthy. The subsequent chapters will cover strategies that you can use to improve the robustness and quality of your tests.
-Some of the worst offenders of brittle tests come from the misuse of mock objects. Google’s codebase has suffered so badly from an abuse of mocking frameworks that it has led some engineers to declare “no more mocks!” Although that is a strong statement, understanding the limitations of mock objects can help you avoid misusing them.
+  TAPとGoogleのCIの考え方については、第23章を参照してください。
 
-  For more information on working effectively with mock objects, see Chapter 13.
+Googleのエンジニアリング環境は、Googleの規模、モノレポ、提供している製品の数など、どれをとっても複雑です。毎週、何百万行もの変更が行われ、何十億ものテストケースが実行され、何万ものバイナリがビルドされ、何百もの製品がアップデートされています......複雑とはこのことです。
 
-In addition to the friction caused by brittle tests, a larger suite of tests will be slower to run. The slower a test suite, the less frequently it will be run, and the less benefit it provides. We use a number of techniques to speed up our test suite, including parallelizing execution and using faster hardware. However, these kinds of tricks are eventually swamped by a large number of individually slow test cases.
-Tests can become slow for many reasons, like booting significant portions of a system, firing up an emulator before execution, processing large datasets, or waiting for disparate systems to synchronize. Tests often start fast enough but slow down as the system grows. For example, maybe you have an integration test exercising a single dependency that takes five seconds to respond, but over the years you grow to depend on a dozen services, and now the same tests take five minutes.
-Tests can also become slow due to unnecessary speed limits introduced by functions like `sleep()` and `setTimeout()`. Calls to these functions are often used as naive heuristics before checking the result of nondeterministic behavior. Sleeping for half a second here or there doesn’t seem too dangerous at first; however, if a “wait-and-check” is embedded in a widely used utility, pretty soon you have added minutes of idle time to every run of your test suite. A better solution is to actively poll for a state transition with a frequency closer to microseconds. You can combine this with a timeout value in case a test fails to reach a stable state.
-Failing to keep a test suite deterministic and fast ensures it will become roadblock to productivity. At Google, engineers who encounter these tests have found ways to work around slowdowns, with some going as far as to skip the tests entirely when submitting changes. Obviously, this is a risky practice and should be discouraged, but if a test suite is causing more harm than good, eventually engineers will find a way to get their job done, tests or no tests.
-The secret to living with a large test suite is to treat it with respect. Incentivize engineers to care about their tests; reward them as much for having rock-solid tests as you would for having a great feature launch. Set appropriate performance goals and refactor slow or marginal tests. Basically, treat your tests like production code. When simple changes begin taking nontrivial time, spend effort making your tests less brittle.
-In addition to developing the proper culture, invest in your testing infrastructure by developing linters, documentation, or other assistance that makes it more difficult to write bad tests. Reduce the number of frameworks and tools you need to support to increase the efficiency of the time you invest to improve things.(*8) If you don’t invest in making it easy to manage your tests, eventually engineers will decide it isn’t worth having them at all.
+### 大規模なテストスイートの落とし穴
 
-## History of Testing at Google
+コードベースが成長すると、必然的に既存のコードに変更を加える必要が出てきます。自動化されたテストの書き方が悪いと、そのような変更を行うことが難しくなります。脆弱なテストとは、期待される結果を過剰に指定したり、膨大で複雑な定型文に頼ったりするもので、実際には変更を妨げるものです。このようなテストは、関係のない変更が加えられた場合でも失敗することがあります。
 
-Now that we’ve discussed how Google approaches testing, it might be enlightening to learn how we got here. As mentioned previously, Google’s engineers didn’t always embrace the value of automated testing. In fact, until 2005, testing was closer to a curiosity than a disciplined practice. Most of the testing was done manually, if it was done at all. However, from 2005 to 2006, a testing revolution occurred and changed the way we approach software engineering. Its effects continue to reverberate within the company to this day.
-The experience of the GWS project, which we discussed at the opening of this chapter, acted as a catalyst. It made it clear how powerful automated testing could be. Following the improvements to GWS in 2005, the practices began spreading across the entire company. The tooling was primitive. However, the volunteers, who came to be known as the Testing Grouplet, didn’t let that slow them down.
-Three key initiatives helped usher automated testing into the company’s consciousness: Orientation Classes, the Test Certified program, and Testing on the Toilet. Each one had influence in a completely different way, and together they reshaped Google’s engineering culture.
+もしあなたが、ある機能に5行の変更を加えた後に、何十もの無関係な壊れたテストを見つけたことがあるなら、あなたは脆いテストの摩擦を感じたことがあるでしょう。時間が経つにつれ、この摩擦によってチームはコードベースを健全に保つために必要なリファクタリングを行うことを躊躇するようになります。以降の章では、テストの堅牢性と品質を向上させるための戦略について説明します。
 
-### Orientation Classes
+テストが脆弱になる原因としては、モックオブジェクトの誤用が挙げられます。Googleのコードベースは、モックフレームワークの乱用によって非常に大きな被害を受けており、一部のエンジニアは「もうモックはいらない！」と宣言しています。これは強い主張ですが、モックオブジェクトの限界を理解することは、モックオブジェクトの誤用を避けるために役立ちます。
 
-Even though much of the early engineering staff at Google eschewed testing, the pioneers of automated testing at Google knew that at the rate the company was growing, new engineers would quickly outnumber existing team members. If they could reach all the new hires in the company, it could be an extremely effective avenue for introducing cultural change. Fortunately, there was, and still is, a single choke point that all new engineering hires pass through: orientation.
-Most of Google’s early orientation program concerned things like medical benefits and how Google Search worked, but starting in 2005 it also began including an hour- long discussion of the value of automated testing.(*9) The class covered the various benefits of testing, such as increased productivity, better documentation, and support for refactoring. It also covered how to write a good test. For many Nooglers (new Googlers) at the time, such a class was their first exposure to this material. Most important, all of these ideas were presented as though they were standard practice at the company. The new hires had no idea that they were being used as trojan horses to sneak this idea into their unsuspecting teams.
-As Nooglers joined their teams following orientation, they began writing tests and questioning those on the team who didn’t. Within only a year or two, the population of engineers who had been taught testing outnumbered the pretesting culture engineers. As a result, many new projects started off on the right foot.
-Testing has now become more widely practiced in the industry, so most new hires arrive with the expectations of automated testing firmly in place. Nonetheless, orientation classes continue to set expectations about testing and connect what Nooglers know about testing outside of Google to the challenges of doing so in our very large and very complex codebase.
+  モックオブジェクトを効果的に使用する方法については、第13章を参照してください。
 
-### Test Certified
+脆弱なテストによって生じる摩擦に加えて、より多くのテスト・スイートは実行速度が遅くなります。テストスイートが遅くなると、実行される頻度が減り、得られる利益も少なくなります。私たちはテストスイートを高速化するために、実行の並列化や高速なハードウェアの使用など、さまざまなテクニックを駆使しています。しかし、このようなテクニックを使っても、個々に遅いテストケースがたくさんあると、結局はその影響を受けてしまいます。
 
-Initially, the larger and more complex parts of our codebase appeared resistant to good testing practices. Some projects had such poor code quality that they were almost impossible to test. To give projects a clear path forward, the Testing Grouplet devised a certification program that they called Test Certified. Test Certified aimed to give teams a way to understand the maturity of their testing processes and, more critically, cookbook instructions on how to improve it.
-The program was organized into five levels, and each level required some concrete actions to improve the test hygiene on the team. The levels were designed in such a way that each step up could be accomplished within a quarter, which made it a convenient fit for Google’s internal planning cadence.
-Test Certified Level 1 covered the basics: set up a continuous build; start tracking code coverage; classify all your tests as small, medium, or large; identify (but don’t necessarily fix) flaky tests; and create a set of fast (not necessarily comprehensive) tests that can be run quickly. Each subsequent level added more challenges like “no releases with broken tests” or “remove all nondeterministic tests.” By Level 5, all tests were automated, fast tests were running before every commit, all nondeterminism had been removed, and every behavior was covered. An internal dashboard applied social pressure by showing the level of every team. It wasn’t long before teams were competing with one another to climb the ladder.
-By the time the Test Certified program was replaced by an automated approach in 2015 (more on pH later), it had helped more than 1,500 projects improve their testing culture.
+テストが遅くなる原因はさまざまです。例えば、システムの大部分を起動したり、実行前にエミュレータを起動したり、大規模なデータセットを処理したり、異なるシステムが同期するのを待ったりすることがあります。テストの開始時は十分に速くても、システムの成長とともに遅くなることがよくあります。例えば、1つの依存関係を対象とした統合テストでは5秒で応答していたのが、数年後には12のサービスに依存するようになり、同じテストに5分かかるようになったとします。
 
-### Testing on the Toilet
+また、`sleep()`や`setTimeout()`などの関数で不必要な速度制限をかけることで、テストが遅くなることもあります。これらの関数の呼び出しは、非決定論的な動作の結果をチェックする前に、素朴なヒューリスティクスとして使われることがよくあります。しかし、広く使われているユーティリティーに「待機とチェック」が組み込まれていると、テストスイートを実行するたびに数分のアイドルタイムが追加されることになります。より良い解決策は、マイクロ秒に近い頻度で状態遷移のために積極的にポーリングすることです。これに、テストが安定した状態に到達できなかった場合のタイムアウト値を組み合わせることができます。
 
-Of all the methods the Testing Grouplet used to try to improve testing at Google, perhaps none was more off-beat than Testing on the Toilet (TotT). The goal of TotT was fairly simple: actively raise awareness about testing across the entire company. The question is, what’s the best way to do that in a company with employees scattered around the world?
-The Testing Grouplet considered the idea of a regular email newsletter, but given the heavy volume of email everyone deals with at Google, it was likely to become lost in the noise. After a little bit of brainstorming, someone proposed the idea of posting flyers in the restroom stalls as a joke. We quickly recognized the genius in it: the bathroom is one place that everyone must visit at least once each day, no matter what. Joke or not, the idea was cheap enough to implement that it had to be tried.
-In April 2006, a short writeup covering how to improve testing in Python appeared in restroom stalls across Google. This first episode was posted by a small band of volunteers. To say the reaction was polarized is an understatement; some saw it as an invasion of personal space, and they objected strongly. Mailing lists lit up with complaints, but the TotT creators were content: the people complaining were still talking about testing.
-Ultimately, the uproar subsided and TotT quickly became a staple of Google culture. To date, engineers from across the company have produced several hundred episodes, covering almost every aspect of testing imaginable (in addition to a variety of other technical topics). New episodes are eagerly anticipated and some engineers even volunteer to post the episodes around their own buildings. We intentionally limit each episode to exactly one page, challenging authors to focus on the most important and actionable advice. A good episode contains something an engineer can take back to the desk immediately and try.
-Ironically for a publication that appears in one of the more private locations, TotT has had an outsized public impact. Most external visitors see an episode at some point in their visit, and such encounters often lead to funny conversations about how Googlers always seem to be thinking about code. Additionally, TotT episodes make great blog posts, something the original TotT authors recognized early on. They began publishing lightly edited versions publicly, helping to share our experience with the industry at large.
-Despite starting as a joke, TotT has had the longest run and the most profound impact of any of the testing initiatives started by the Testing Grouplet.
+テストスイートを決定論的かつ高速に保つことができなければ、生産性の障害となってしまいます。Googleでは、このようなテストに遭遇したエンジニアは、速度低下を回避する方法を見つけており、中には変更を送信する際にテストを完全にスキップする人もいます。もちろん、これは危険な行為であり、控えるべきですが、テストスイートが利益よりも害をもたらしているのであれば、テストがあってもなくても、最終的にはエンジニアは仕事を終わらせる方法を見つけるでしょう。
 
-### Testing Culture Today
+大規模なテストスイートと共存するための秘訣は、敬意を持ってそれを扱うことです。エンジニアが自分のテストに関心を持つようにインセンティブを与えましょう。しっかりとしたテストができたときには、優れた機能を立ち上げたときと同じくらいの報酬を与えましょう。適切なパフォーマンス目標を設定し、遅いテストや限界のあるテストをリファクタリングします。基本的には、テストをプロダクションコードのように扱います。簡単な変更でも自ずと時間がかかるようになったら、テストのもろさを改善することに力を注ぎます。
 
-Testing culture at Google today has come a long way from 2005. Nooglers still attend orientation classes on testing, and TotT continues to be distributed almost weekly. However, the expectations of testing have more deeply embedded themselves in the daily developer workflow.
-Every code change at Google is required to go through code review. And every change is expected to include both the feature code and tests. Reviewers are expected to review the quality and correctness of both. In fact, it is perfectly reasonable to block a change if it is missing tests.
-As a replacement for Test Certified, one of our engineering productivity teams recently launched a tool called Project Health (pH). The pH tool continuously gathers dozens of metrics on the health of a project, including test coverage and test latency, and makes them available internally. pH is measured on a scale of one (worst) to five (best). A pH-1 project is seen as a problem for the team to address. Almost every team that runs a continuous build automatically gets a pH score.
-Over time, testing has become an integral part of Google’s engineering culture. We have myriad ways to reinforce its value to engineers across the company. Through a combination of training, gentle nudges, mentorship, and, yes, even a little friendly competition, we have created the clear expectation that testing is everyone’s job.
-Why didn’t we start by mandating the writing of tests?
-The Testing Grouplet had considered asking for a testing mandate from senior leadership but quickly decided against it. Any mandate on how to develop code would be seriously counter to Google culture and likely slow the progress, independent of the idea being mandated. The belief was that successful ideas would spread, so the focus became demonstrating success.
-If engineers were deciding to write tests on their own, it meant that they had fully accepted the idea and were likely to keep doing the right thing --- even if no one was compelling them to.
+適切な文化を育てることに加えて、テストのインフラに投資し、リンターやドキュメント、あるいは悪いテストを書きにくくするためのその他の支援を行います。サポートするフレームワークやツールの数を減らして、改善にかける時間を効率化する(*8) テストの管理を容易にすることに投資しなければ、最終的にエンジニアはテストを持つ価値がないと判断するだろう。
 
-## The Limits of Automated Testing
+## Googleにおけるテストの歴史
 
-Automated testing is not suitable for all testing tasks. For example, testing the quality of search results often involves human judgment. We conduct targeted, internal studies using Search Quality Raters who execute real queries and record their impressions. Similarly, it is difficult to capture the nuances of audio and video quality in an automated test, so we often use human judgment to evaluate the performance of telephony or video-calling systems.
-In addition to qualitative judgements, there are certain creative assessments at which humans excel. For example, searching for complex security vulnerabilities is something that humans do better than automated systems. After a human has discovered and understood a flaw, it can be added to an automated security testing system like Google’s Cloud Security Scanner where it can be run continuously and at scale.
-A more generalized term for this technique is Exploratory Testing. Exploratory Testing is a fundamentally creative endeavor in which someone treats the application under test as a puzzle to be broken, maybe by executing an unexpected set of steps or by inserting unexpected data. When conducting an exploratory test, the specific problems to be found are unknown at the start. They are gradually uncovered by probing commonly overlooked code paths or unusual responses from the application. As with the detection of security vulnerabilities, as soon as an exploratory test discovers an issue, an automated test should be added to prevent future regressions.
-Using automated testing to cover well-understood behaviors enables the expensive and qualitative efforts of human testers to focus on the parts of your products for which they can provide the most value --- and avoid boring them to tears in the process.
+Googleがどのようにテストに取り組んでいるかを説明してきましたが、どのようにしてここまで来たのかを知ることは有益なことかもしれません。前述したように、Googleのエンジニアは自動テストの価値を必ずしも認めていませんでした。実際、2005年までは、テストは規律ある実践というよりも、好奇心に近いものでした。ほとんどのテストは、手作業で行われていました。しかし、2005年から2006年にかけて、テスト革命が起こり、ソフトウェアエンジニアリングへの取り組み方が変わりました。その影響は今でも社内に響き渡っています。
 
-## Conclusion
+そのきっかけとなったのが、本章の冒頭で触れたGWSプロジェクトの経験です。自動化されたテストがいかに強力であるかを明らかにしたのです。2005年にGWSが改良された後、その手法は全社的に普及し始めました。ツールは原始的なものだった。しかし、"Testing Grouplet "と呼ばれるようになった有志たちは、それにもめげませんでした。
 
-The adoption of developer-driven automated testing has been one of the most transformational software engineering practices at Google. It has enabled us to build larger systems with larger teams, faster than we ever thought possible. It has helped us keep up with the increasing pace of technological change. Over the past 15 years, we have successfully transformed our engineering culture to elevate testing into a cultural norm. Despite the company growing by a factor of almost 100 times since the journey began, our commitment to quality and testing is stronger today than it has ever been.
-This chapter has been written to help orient you to how Google thinks about testing. In the next few chapters, we are going to dive even deeper into some key topics that have helped shape our understanding of what it means to write good, stable, and reliable tests. We will discuss the what, why, and how of unit tests, the most common kind of test at Google. We will wade into the debate on how to effectively use test doubles in tests through techniques such as faking, stubbing, and interaction testing. Finally, we will discuss the challenges with testing larger and more complex systems, like many of those we have at Google.
-At the conclusion of these three chapters, you should have a much deeper and clearer picture of the testing strategies we use and, more important, why we use them.
+自動テストを社内に浸透させるためには、3つの重要な取り組みがあった。オリエンテーションクラス」、「Test Certifiedプログラム」、「トイレでテスト」である。それぞれが全く違った形で影響を与え、Googleのエンジニア文化を変えていったのです。
+
+### オリエンテーションクラス
+
+Googleの初期のエンジニアリングスタッフの多くがテストを敬遠していたにもかかわらず、Googleの自動テストの先駆者たちは、会社の成長速度に合わせて、新しいエンジニアが既存のチームメンバーをすぐに上回ってしまうことを知っていました。もし社内の新入社員全員にテストを実施することができれば、文化的な変化をもたらす非常に効果的な手段となるでしょう。幸いなことに、昔も今も、エンジニアの新入社員が必ず通る「オリエンテーション」という関門がある。
+
+初期のグーグルのオリエンテーションでは、医療手当やGoogle検索の仕組みなどが説明されていたが、2005年からは、自動テストの価値について1時間にわたって説明されるようになった(*9)。 このクラスでは、生産性の向上、ドキュメントの改善、リファクタリングのサポートなど、テストのさまざまなメリットが説明された。また、良いテストの書き方についても説明された。当時、多くのNoogler（新米Googler）にとって、このような授業はこのような内容に触れる最初の機会だった。最も重要なのは、これらのアイデアがすべて、会社の標準的な慣習であるかのように提示されていたことだ。新入社員たちは、自分たちがトロイの木馬になって、何も知らないチームにこのアイデアを忍ばせているとは知らなかった。
+
+オリエンテーション後にチームに参加したNooglerたちは、テストを書き始め、テストをしないチームの人たちに質問をするようになりました。わずか1〜2年の間に、テストを教えてもらったエンジニアの人口が、テストをする前の文化的なエンジニアの人口を上回るようになりました。その結果、多くの新しいプロジェクトが正しいスタートを切れるようになりました。
+
+今ではテストは業界で広く行われるようになり、ほとんどの新入社員は自動テストへの期待をしっかりと持って入社してきます。それでも、オリエンテーションクラスでは、テストについての期待を設定し、Google以外でのテストについてNooglerが知っていることと、非常に大きくて非常に複雑なコードベースでテストを行うことの難しさを結びつけています。
+
+### 認証されたテスト
+
+当初、私たちのコードベースの大規模で複雑な部分は、優れたテスト手法に対して抵抗を感じていました。プロジェクトの中には、コードの品質が低く、テストすることがほとんど不可能なものもありました。プロジェクトに明確な道筋を示すために、テストグループレットは「Test Certified」と呼ばれる認証プログラムを考案しました。「Test Certified」は、テストプロセスの成熟度を把握する方法をチームに提供し、さらに重要なこととして、テストプロセスを改善するための手順書を提供することを目的としています。
+
+このプログラムは5つのレベルで構成されており、各レベルではチームのテスト衛生状態を改善するための具体的な行動が求められる。各レベルは、それぞれのステップアップが四半期以内に達成できるように設計されており、Googleの社内計画のケイデンスに都合よく適合していた。
+
+テスト認証レベル1では、継続的なビルドの設定、コードカバレッジのトラッキングの開始、すべてのテストの小・中・大の分類、不具合のあるテストの特定（必ずしも修正する必要はない）、迅速に実行できる（必ずしも包括的ではない）テストのセットの作成といった基本的な内容が含まれています。レベルが上がるごとに、"壊れたテストを含むリリースはしない"、"すべての非決定論的テストを削除する "などの課題が追加されました。レベル5では、すべてのテストが自動化され、高速テストがすべてのコミットの前に実行され、すべての非決定性が除去され、すべての動作がカバーされていた。社内のダッシュボードには、各チームのレベルが表示され、社会的なプレッシャーとなった。チーム同士が競争してレベルアップするまでには時間がかかりませんでした。
+
+2015年にTest Certifiedプログラムが自動化されたアプローチに取って代わられるまでに（pHについては後述します）、1,500以上のプロジェクトがテスト文化の改善に貢献しました。
+
+### トイレでテスト
+
+テスティンググループレットがGoogleのテストを改善するために用いた方法の中で、「Testing on the Toilet」（TotT）ほど奇抜なものはなかっただろう。TotTの目的はいたってシンプルで、テストに対する意識を全社的に高めることだった。問題は、世界中に社員が散らばっている会社で、それを実現するための最良の方法は何かということだ。
+
+テスト部会では、定期的にメールマガジンを配信することも検討したが、Googleでは大量のメールを処理するため、ノイズに紛れてしまう可能性があった。そこで誰かが提案したのが、トイレの個室にチラシを貼るという冗談のようなアイデア。トイレは誰もが一日に一度は必ず訪れる場所です。
+
+2006年4月、Pythonのテストを改善する方法を網羅した短い文章が、Google中のトイレの個室に現れました。この最初のエピソードは、ボランティアの小さなバンドによって投稿されました。反応は賛否両論でした。パーソナルスペースの侵害と見なし、強く反発する人もいました。メーリングリストにはたくさんの苦情が寄せられたが、TOTTの制作者たちは満足していた。苦情を言っている人たちが、まだテストの話をしているのだから。
+
+結局、騒動は収まり、TOTTはグーグルの文化として定着していったのである。現在までに、全社のエンジニアが数百のエピソードを制作しており、テストに関するあらゆる側面を網羅しています。新しいエピソードが出るのを心待ちにしているエンジニアもおり、中にはボランティアで自分のビルの周りにエピソードを掲示する人もいます。各エピソードは意図的に1ページにまとめられており、著者は最も重要で実行可能なアドバイスに焦点を当てています。良いエピソードは、エンジニアがすぐにデスクに持ち帰って試せるものです。
+
+皮肉なことに、プライベートな場所で発行されているにもかかわらず、『TOTT』は世間に大きな影響を与えている。外部からの訪問者のほとんどが、訪問中にエピソードを目にしています。そのような出会いから、「グーグルはいつもコードのことを考えているようだね」という面白い会話が生まれることもあります。さらに、TOTTのエピソードはブログのネタにもなります。これは、TOTTの原作者が早くから気づいていたことです。これは、TOTTの作者が早くから気づいていたことで、軽く編集したものを公開することで、私たちの経験を業界全体で共有することができるようになったのです。
+
+冗談で始めたにもかかわらず、TotTはTesting Groupletが始めたテストの取り組みの中で、最も長く続いており、最も大きな影響を与えている。
+
+### 現在のテスト文化
+
+現在のGoogleのテスト文化は、2005年からずいぶんと進歩している。Nooglerたちは今でもテストに関するオリエンテーションクラスに参加しているし、TotTはほぼ毎週配布されている。しかし、テストに対する期待は、日々の開発者のワークフローの中により深く浸透している。
+
+Googleでは、コードを変更するたびにコードレビューを受けることが義務付けられている。そして、すべての変更には、機能コードとテストの両方が含まれることが求められる。レビュー担当者は、その両方の品質と正しさをレビューすることが求められます。実際のところ、テストが含まれていない変更をブロックすることは完全に合理的です。
+
+Test Certifiedに代わるものとして、あるエンジニアリング生産性向上チームが最近、Project Health（pH）というツールを発表しました。pHツールは、テストカバレッジやテストレイテンシーなど、プロジェクトの健全性に関する数多くの指標を継続的に収集し、社内で公開しています。 pHは、1（最悪）から5（最良）のスケールで測定されます。pH-1のプロジェクトは、チームが対処すべき問題と見なされます。継続的なビルドを行っているほとんどのチームは、自動的にpHスコアを取得している。
+
+テストは、時を経て、Googleのエンジニア文化に欠かせないものとなっています。Googleでは、社内のエンジニアにテストの価値を伝えるために様々な方法を用いています。トレーニング、穏やかな働きかけ、メンターシップ、そしてもちろん少しの切磋琢磨を組み合わせて、テストは全員の仕事であるという明確な期待を持たせています。
+
+なぜ、テストの作成を義務付けることから始めなかったのでしょうか？
+
+テストグループレットは、シニアリーダーにテストの義務化を求めることを検討しましたが、すぐに断念しました。コードを開発する方法を強制することは、Googleの文化に著しく反しており、強制されるアイデアとは無関係に、進歩を遅らせる可能性がありました。成功したアイデアは広まるという信念があったので、成功を実証することに重点を置いた。
+
+エンジニアが自分でテストを書くことを決めているということは、そのアイデアを完全に受け入れているということであり、たとえ誰にも強制されていなくても、正しいことをやり続ける可能性があるということだ。
+
+## 自動テストの限界
+
+自動テストは、すべてのテスト作業に適しているわけではありません。例えば、検索結果の品質をテストするには、人間の判断が必要な場合があります。私たちは、サーチクオリティーレイターが実際のクエリを実行し、その印象を記録することで、ターゲットを絞った社内調査を行っています。同様に、音声や映像の品質の微妙な違いを自動テストで把握することは難しいため、電話やビデオ通話システムの性能評価には人間の判断を用いることが多いです。
+
+また、定性的な判断だけでなく、人間が得意とするクリエイティブな評価もあります。例えば、複雑なセキュリティの脆弱性を発見することは、自動化されたシステムよりも人間の方が得意とするところです。人間が欠陥を発見して理解した後は、GoogleのCloud Security Scannerのような自動セキュリティテストシステムに追加して、継続的かつ大規模に実行することができます。
+
+この手法をより一般化した言葉として、「探索的テスト」があります。探索的テストとは、基本的に創造的な試みであり、テスト対象のアプリケーションを、予想外の手順を実行したり、予想外のデータを挿入したりして、壊すべきパズルとして扱います。探索的テストでは、発見すべき具体的な問題点は最初は不明です。一般的に見過ごされているコードパスや、アプリケーションからの通常とは異なる反応を探ることで、徐々に問題点が明らかになっていきます。セキュリティの脆弱性の検出と同様に、探索的テストで問題が発見されたら、将来のリグレッションを防ぐために自動テストを追加する必要があります。
+
+よく理解されている動作をカバーするために自動テストを使用することで、人間のテスターの高価で質的な努力を、製品の最も価値のある部分に集中させることができ、その過程で彼らを退屈させないようにすることができます。
+
+## 結論
+
+開発者主導の自動テストの導入は、Googleにおいて最も変革をもたらしたソフトウェアエンジニアリング手法の一つです。これにより、大規模なシステムを大規模なチームで、これまで考えられなかったような速さで構築できるようになりました。また、技術的な変化のペースが速くなっても、それに対応できるようになりました。この15年間で、Googleはエンジニアリング文化を変革し、テストを文化的な規範とすることに成功しました。この旅が始まってから会社の規模が100倍になったにもかかわらず、品質とテストに対する当社のコミットメントは、これまで以上に強固なものとなっています。
+
+この章では、Googleがテストについてどのように考えているかを説明しています。次の数章では、優れた、安定した、信頼性の高いテストを書くとはどういうことなのかということについて、私たちの理解を深めてくれるいくつかの重要なトピックについてさらに深く掘り下げていきます。Googleで最も一般的なテストであるユニットテストについて、何を、なぜ、どのように行うのかを説明します。フェイキング、スタッビング、インタラクション・テストなどのテクニックを使って、テストでテスト・ダブルを効果的に使用する方法についても議論します。最後に、Googleのような大規模で複雑なシステムをテストする際の課題について説明します。
+
+この3つの章を終える頃には、私たちが使用しているテスト戦略について、さらに重要なこととして、なぜその戦略を使用しているのかについて、より深く明確なイメージを持つことができるでしょう。
 
 
 ## TL;DRs
 
-- Automated testing is foundational to enabling software to change.
-- For tests to scale, they must be automated.
-- A balanced test suite is necessary for maintaining healthy test coverage.
-- “If you liked it, you should have put a test on it.”
-- Changing the testing culture in organizations takes time.
+- 自動化されたテストは、ソフトウェアの変更を可能にするための基盤となります。
+- テストを拡張するには、自動化が必要です。
+- 健全なテストカバレッジを維持するには、バランスのとれたテストスイートが必要です。
+- "気に入ったのなら、その上にテストを置くべきだった。"
+- 組織のテスト文化を変えるには時間がかかる。
 
 
 
@@ -318,13 +352,13 @@ At the conclusion of these three chapters, you should have a much deeper and cle
 
 ----
 
-1 See “Defect Prevention: Reducing Costs and Enhancing Quality.”
-2 See “Failure at Dhahran.”
-3 Getting the behavior right across different browsers and languages is a different story! But, ideally, the end- user experience should be the same for everyone.
-4 Technically, we have four sizes of test at Google: small, medium, large, and enormous. The internal difference between large and enormous is actually subtle and historical; so, in this book, most descriptions of large actually apply to our notion of enormous.
-5 There is a little wiggle room in this policy. Tests are allowed to access a filesystem if they use a hermetic, in- memory implementation.
+1 「Defect Prevention: Reducing Costs and Enhancing Quality」を参照。
+2 "Failure at Dhahran "参照。
+3 異なるブラウザや言語で正しい動作をさせることは、また別の話です。しかし、最終的なユーザー体験は誰もが同じであることが理想です。
+4 技術的には、Googleのテストには、small、medium、large、 enormousの4つのサイズがあります。しかし、大と小の違いは歴史的に見ても微妙なもので、本書では大についての記述は大の概念に当てはめています。
+5 このポリシーには少しだけ余裕があります。密閉型のインメモリー実装を採用しているテストであれば、ファイルシステムにアクセスすることができます。
 6 Mike Cohn, Succeeding with Agile: Software Development Using Scrum (New York: Addison-Wesley Professional, 2009).
-7 Keep in mind that there are different kinds of coverage (line, path, branch, etc.), and each says something different about which code has been tested. In this simple example, line coverage is being used.
-8 Each supported language at Google has one standard test framework and one standard mocking/stubbing library. One set of infrastructure runs most tests in all languages across the entire codebase. 
-9 This class was so successful that an updated version is still taught today. In fact, it is one of the longest- running orientation classes in the company’s history.
+7 カバレッジにはさまざまな種類（ライン、パス、ブランチなど）があり、それぞれがどのコードがテストされたかについて異なることを示していることに留意してください。この例では、ラインカバレッジを使用しています。
+8 Google がサポートしている各言語には、標準的なテストフレームワークと標準的なモッキング/スタブライブラリがあります。1つのインフラが、コードベース全体のすべての言語でほとんどのテストを実行する。
+9 このクラスは非常に成功したため、現在も更新版が教えられている。9 このクラスは非常に成功したため、現在も最新版が教えられている。実際、このクラスは、グーグルの歴史の中で最も長く続いているオリエンテーションクラスの一つである。
 
