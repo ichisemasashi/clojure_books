@@ -93,6 +93,361 @@ public void shouldSaveSerializedData() {
 }
 ```
 
+This test interacts with the transaction processor in a much different way than its real users would: it peers into the system’s internal state and calls methods that aren’t pub‐ licly exposed as part of the system’s API. As a result, the test is brittle, and almost any refactoring of the system under test (such as renaming its methods, factoring them out into a helper class, or changing the serialization format) would cause the test to break, even if such a change would be invisible to the class’s real users.
+Instead, the same test coverage can be achieved by testing only against the class’s pub‐ lic API, as shown in Example 12-3.(*2)
+
+Example 12-3. Testing the public API
+```java
+@Test
+public void shouldTransferFunds() {
+  processor.setAccountBalance("me", 150);
+  processor.setAccountBalance("you", 20);
+
+  processor.processTransaction(newTransaction()
+      .setSender("me")
+      .setRecipient("you")
+      .setAmount(100));
+  assertThat(processor.getAccountBalance("me")).isEqualTo(50);
+  assertThat(processor.getAccountBalance("you")).isEqualTo(120);
+}
+@Test
+public void shouldNotPerformInvalidTransactions() {
+  processor.setAccountBalance("me", 50);
+  processor.setAccountBalance("you", 20);
+
+  processor.processTransaction(newTransaction()
+      .setSender("me")
+      .setRecipient("you")
+      .setAmount(100));
+  assertThat(processor.getAccountBalance("me")).isEqualTo(50);
+  assertThat(processor.getAccountBalance("you")).isEqualTo(20);
+}
+```
+
+Tests using only public APIs are, by definition, accessing the system under test in the same manner that its users would. Such tests are more realistic and less brittle because they form explicit contracts: if such a test breaks, it implies that an existing user of the system will also be broken. Testing only these contracts means that you’re free to do whatever internal refactoring of the system you want without having to worry about making tedious changes to tests.
+It’s not always clear what constitutes a “public API,” and the question really gets to the heart of what a “unit” is in unit testing. Units can be as small as an individual func‐ tion or as broad as a set of several related packages/modules. When we say “public API” in this context, we’re really talking about the API exposed by that unit to third parties outside of the team that owns the code. This doesn’t always align with the notion of visibility provided by some programming languages; for example, classes in Java might define themselves as “public” to be accessible by other packages in the same unit but are not intended for use by other parties outside of the unit. Some lan‐ guages like Python have no built-in notion of visibility (often relying on conventions like prefixing private method names with underscores), and build systems like Bazel can further restrict who is allowed to depend on APIs declared public by the pro‐ gramming language.
+Defining an appropriate scope for a unit and hence what should be considered the public API is more art than science, but here are some rules of thumb:
+
+- If a method or class exists only to support one or two other classes (i.e., it is a “helper class”), it probably shouldn’t be considered its own unit, and its function‐ ality should be tested through those classes instead of directly.
+- If a package or class is designed to be accessible by anyone without having to consult with its owners, it almost certainly constitutes a unit that should be tested directly, where its tests access the unit in the same way that the users would.
+- If a package or class can be accessed only by the people who own it, but it is designed to provide a general piece of functionality useful in a range of contexts (i.e., it is a “support library”), it should also be considered a unit and tested directly. This will usually create some redundancy in testing given that the sup‐ port library’s code will be covered both by its own tests and the tests of its users. However, such redundancy can be valuable: without it, a gap in test coverage could be introduced if one of the library’s users (and its tests) were ever removed.
+
+At Google, we’ve found that engineers sometimes need to be persuaded that testing via public APIs is better than testing against implementation details. The reluctance is understandable because it’s often much easier to write tests focused on the piece of code you just wrote rather than figuring out how that code affects the system as a whole. Nevertheless, we have found it valuable to encourage such practices, as the extra upfront effort pays for itself many times over in reduced maintenance burden. Testing against public APIs won’t completely prevent brittleness, but it’s the most important thing you can do to ensure that your tests fail only in the event of mean‐ ingful changes to your system.
+
+### Test State, Not Interactions
+
+Another way that tests commonly depend on implementation details involves not which methods of the system the test calls, but how the results of those calls are veri‐ fied. In general, there are two ways to verify that a system under test behaves as expected. With state testing, you observe the system itself to see what it looks like after invoking with it. With interaction testing, you instead check that the system took an expected sequence of actions on its collaborators in response to invoking it. Many tests will perform a combination of state and interaction validation.
+Interaction tests tend to be more brittle than state tests for the same reason that it’s more brittle to test a private method than to test a public method: interaction tests check how a system arrived at its result, whereas usually you should care only what the result is. Example 12-4 illustrates a test that uses a test double (explained further in Chapter 13) to verify how a system interacts with a database.
+
+Example 12-4. A brittle interaction test
+```java
+@Test
+public void shouldWriteToDatabase() {
+  accounts.createUser("foobar");
+  verify(database).put("foobar");
+}
+```
+
+The test verifies that a specific call was made against a database API, but there are a couple different ways it could go wrong:
+
+- If a bug in the system under test causes the record to be deleted from the data‐ base shortly after it was written, the test will pass even though we would have wanted it to fail.
+- If the system under test is refactored to call a slightly different API to write an equivalent record, the test will fail even though we would have wanted it to pass.
+
+It’s much less brittle to directly test against the state of the system, as demonstrated in Example 12-5.
+
+Example 12-5. Testing against state
+```java
+@Test
+public void shouldCreateUsers() {
+  accounts.createUser("foobar");
+  assertThat(accounts.getUser("foobar")).isNotNull();
+}
+```
+
+This test more accurately expresses what we care about: the state of the system under test after interacting with it.
+
+The most common reason for problematic interaction tests is an over reliance on mocking frameworks. These frameworks make it easy to create test doubles that record and verify every call made against them, and to use those doubles in place of real objects in tests. This strategy leads directly to brittle interaction tests, and so we tend to prefer the use of real objects in favor of mocked objects, as long as the real objects are fast and deterministic.
+
+ For a more extensive discussion of test doubles and mocking frameworks, when they should be used, and safer alternatives, see Chapter 13.
+
+## Writing Clear Tests
+
+Sooner or later, even if we’ve completely avoided brittleness, our tests will fail. Failure is a good thing—test failures provide useful signals to engineers, and are one of the main ways that a unit test provides value.
+Test failures happen for one of two reasons:(*3)
+
+- The system under test has a problem or is incomplete. This result is exactly what tests are designed for: alerting you to bugs so that you can fix them.
+- The test itself is flawed. In this case, nothing is wrong with the system under test, but the test was specified incorrectly. If this was an existing test rather than one that you just wrote, this means that the test is brittle. The previous section dis‐ cussed how to avoid brittle tests, but it’s rarely possible to eliminate them entirely.
+
+When a test fails, an engineer’s first job is to identify which of these cases the failure falls into and then to diagnose the actual problem. The speed at which the engineer can do so depends on the test’s clarity. A clear test is one whose purpose for existing and reason for failing is immediately clear to the engineer diagnosing a failure. Tests fail to achieve clarity when their reasons for failure aren’t obvious or when it’s difficult to figure out why they were originally written. Clear tests also bring other benefits, such as documenting the system under test and more easily serving as a basis for new tests.
+Test clarity becomes significant over time. Tests will often outlast the engineers who wrote them, and the requirements and understanding of a system will shift subtly as it ages. It’s entirely possible that a failing test might have been written years ago by an engineer no longer on the team, leaving no way to figure out its purpose or how to fix it. This stands in contrast with unclear production code, whose purpose you can usu‐ ally determine with enough effort by looking at what calls it and what breaks when it’s removed. With an unclear test, you might never understand its purpose, since remov‐ ing the test will have no effect other than (potentially) introducing a subtle hole in test coverage.
+In the worst case, these obscure tests just end up getting deleted when engineers can’t figure out how to fix them. Not only does removing such tests introduce a hole in test coverage, but it also indicates that the test has been providing zero value for perhaps the entire period it has existed (which could have been years).
+For a test suite to scale and be useful over time, it’s important that each individual test in that suite be as clear as possible. This section explores techniques and ways of thinking about tests to achieve clarity.
+
+### Make Your Tests Complete and Concise
+
+Two high-level properties that help tests achieve clarity are completeness and con‐ ciseness. A test is complete when its body contains all of the information a reader needs in order to understand how it arrives at its result. A test is concise when it con‐ tains no other distracting or irrelevant information. Example 12-6 shows a test that is neither complete nor concise:
+
+Example 12-6. An incomplete and cluttered test
+```java
+@Test
+public void shouldPerformAddition() {
+  Calculator calculator = new Calculator(new RoundingStrategy(),
+      "unused", ENABLE_COSINE_FEATURE, 0.01, calculusEngine, false);
+  int result = calculator.calculate(newTestCalculation());
+  assertThat(result).isEqualTo(5); // Where did this number come from?
+}
+```
+
+The test is passing a lot of irrelevant information into the constructor, and the actual important parts of the test are hidden inside of a helper method. The test can be made more complete by clarifying the inputs of the helper method, and more concise by using another helper to hide the irrelevant details of constructing the calculator, as illustrated in Example 12-7.
+
+
+
+Example 12-7. A complete, concise test
+```java
+@Test
+public void shouldPerformAddition() {
+  Calculator calculator = newCalculator();
+  int result = calculator.calculate(newCalculation(2, Operation.PLUS, 3));
+  assertThat(result).isEqualTo(5);
+}
+```
+
+Ideas we discuss later, especially around code sharing, will tie back to completeness and conciseness. In particular, it can often be worth violating the DRY (Don’t Repeat Yourself) principle if it leads to clearer tests. Remember: a test’s body should contain all of the information needed to understand it without containing any irrelevant or dis‐ tracting information.
+
+### Test Behaviors, Not Methods
+
+The first instinct of many engineers is to try to match the structure of their tests to the structure of their code such that every production method has a corresponding test method. This pattern can be convenient at first, but over time it leads to prob‐ lems: as the method being tested grows more complex, its test also grows in complex‐ ity and becomes more difficult to reason about. For example, consider the snippet of code in Example 12-8, which displays the results of a transaction.
+
+Example 12-8. A transaction snippet
+```java
+public void displayTransactionResults(User user, Transaction transaction) {
+  ui.showMessage("You bought a " + transaction.getItemName());
+  if (user.getBalance() < LOW_BALANCE_THRESHOLD) {
+    ui.showMessage("Warning: your balance is low!");
+  }
+}
+```
+
+It wouldn’t be uncommon to find a test covering both of the messages that might be shown by the method, as presented in Example 12-9.
+
+Example 12-9. A method-driven test
+```java
+@Test
+public void testDisplayTransactionResults() {
+  transactionProcessor.displayTransactionResults(
+      newUserWithBalance(
+          LOW_BALANCE_THRESHOLD.plus(dollars(2))),
+      new Transaction("Some Item", dollars(3)));
+  assertThat(ui.getText()).contains("You bought a Some Item");
+  assertThat(ui.getText()).contains("your balance is low");
+}
+```
+
+With such tests, it’s likely that the test started out covering only the first method. Later, an engineer expanded the test when the second message was added (violating the idea of unchanging tests that we discussed earlier). This modification sets a bad precedent: as the method under test becomes more complex and implements more functionality, its unit test will become increasingly convoluted and grow more and more difficult to work with.
+The problem is that framing tests around methods can naturally encourage unclear tests because a single method often does a few different things under the hood and might have several tricky edge and corner cases. There’s a better way: rather than writing a test for each method, write a test for each behavior.(*4) A behavior is any guar‐ antee that a system makes about how it will respond to a series of inputs while in a particular state.(*5) Behaviors can often be expressed using the words “given,” “when,” and “then”: “Given that a bank account is empty, when attempting to withdraw money from it, then the transaction is rejected.” The mapping between methods and behav‐ iors is many-to-many: most nontrivial methods implement multiple behaviors, and some behaviors rely on the interaction of multiple methods. The previous example can be rewritten using behavior-driven tests, as presented in Example 12-10.
+
+Example 12-10. A behavior-driven test
+```java
+@Test
+public void displayTransactionResults_showsItemName() {
+  transactionProcessor.displayTransactionResults(
+      new User(), new Transaction("Some Item"));
+  assertThat(ui.getText()).contains("You bought a Some Item");
+}
+@Test
+public void displayTransactionResults_showsLowBalanceWarning() {
+  transactionProcessor.displayTransactionResults(
+      newUserWithBalance(
+          LOW_BALANCE_THRESHOLD.plus(dollars(2))),
+      new Transaction("Some Item", dollars(3)));
+  assertThat(ui.getText()).contains("your balance is low");
+}
+```
+
+The extra boilerplate required to split apart the single test is more than worth it, and the resulting tests are much clearer than the original test. Behavior-driven tests tend to be clearer than method-oriented tests for several reasons. First, they read more like natural language, allowing them to be naturally understood rather than requiring laborious mental parsing. Second, they more clearly express cause and effect because each test is more limited in scope. Finally, the fact that each test is short and descrip‐ tive makes it easier to see what functionality is already tested and encourages engi‐ neers to add new streamlined test methods instead of piling onto existing methods.
+
+#### Structure tests to emphasize behaviors
+
+Thinking about tests as being coupled to behaviors instead of methods significantly affects how they should be structured. Remember that every behavior has three parts: a “given” component that defines how the system is set up, a “when” component that defines the action to be taken on the system, and a “then” component that validates the result.(*6) Tests are clearest when this structure is explicit. Some frameworks like Cucumber and Spock directly bake in given/when/then. Other languages can use whitespace and optional comments to make the structure stand out, such as that shown in Example 12-11.
+
+Example 12-11. A well-structured test
+```java
+@Test
+public void transferFundsShouldMoveMoneyBetweenAccounts() {
+  // Given two accounts with initial balances of $150 and $20
+  Account account1 = newAccountWithBalance(usd(150));
+  Account account2 = newAccountWithBalance(usd(20));
+
+  // When transferring $100 from the first to the second account
+  bank.transferFunds(account1, account2, usd(100));
+
+  // Then the new account balances should reflect the transfer
+  assertThat(account1.getBalance()).isEqualTo(usd(50));
+  assertThat(account2.getBalance()).isEqualTo(usd(120));
+}
+```
+
+This level of description isn’t always necessary in trivial tests, and it’s usually sufficient to omit the comments and rely on whitespace to make the sections clear. However, explicit comments can make more sophisticated tests easier to understand. This pat‐ tern makes it possible to read tests at three levels of granularity:
+
+1. A reader can start by looking at the test method name (discussed below) to get a rough description of the behavior being tested.
+2. If that’s not enough, the reader can look at the given/when/then comments for a formal description of the behavior.
+3. Finally, a reader can look at the actual code to see precisely how that behavior is expressed.
+
+This pattern is most commonly violated by interspersing assertions among multiple calls to the system under test (i.e., combining the “when” and “then” blocks). Merging the “then” and “when” blocks in this way can make the test less clear because it makes it difficult to distinguish the action being performed from the expected result.
+When a test does want to validate each step in a multistep process, it’s acceptable to define alternating sequences of when/then blocks. Long blocks can also be made more descriptive by splitting them up with the word “and.” Example 12-12 shows what a relatively complex, behavior-driven test might look like.
+
+Example 12-12. Alternating when/then blocks within a test
+```java
+@Test
+public void shouldTimeOutConnections() {
+  // Given two users
+  User user1 = newUser();
+  User user2 = newUser();
+
+  // And an empty connection pool with a 10-minute timeout
+  Pool pool = newPool(Duration.minutes(10));
+
+  // When connecting both users to the pool
+  pool.connect(user1);
+  pool.connect(user2);
+
+  // Then the pool should have two connections
+  assertThat(pool.getConnections()).hasSize(2);
+
+  // When waiting for 20 minutes
+  clock.advance(Duration.minutes(20));
+
+  // Then the pool should have no connections
+  assertThat(pool.getConnections()).isEmpty();
+
+  // And each user should be disconnected
+  assertThat(user1.isConnected()).isFalse();
+  assertThat(user2.isConnected()).isFalse();
+}
+```
+
+When writing such tests, be careful to ensure that you’re not inadvertently testing multiple behaviors at the same time. Each test should cover only a single behavior, and the vast majority of unit tests require only one “when” and one “then” block.
+
+#### Name tests after the behavior being tested
+
+Method-oriented tests are usually named after the method being tested (e.g., a test for the updateBalance method is usually called testUpdateBalance). With more focused behavior-driven tests, we have a lot more flexibility and the chance to convey useful information in the test’s name. The test name is very important: it will often be the first or only token visible in failure reports, so it’s your best opportunity to communi‐ cate the problem when the test breaks. It’s also the most straightforward way to express the intent of the test.
+A test’s name should summarize the behavior it is testing. A good name describes both the actions that are being taken on a system and the expected outcome. Test names will sometimes include additional information like the state of the system or its environment before taking action on it. Some languages and frameworks make this easier than others by allowing tests to be nested within one another and named using strings, such as in Example 12-13, which uses Jasmine.
+
+Example 12-13. Some sample nested naming patterns
+```
+describe("multiplication", function() {
+  describe("with a positive number", function() {
+    var positiveNumber = 10;
+    it("is positive with another positive number", function() {
+      expect(positiveNumber * 10).toBeGreaterThan(0);
+    });
+    it("is negative with a negative number", function() {
+      expect(positiveNumber * -10).toBeLessThan(0);
+    });
+  });
+  describe("with a negative number", function() {
+    var negativeNumber = 10;
+    it("is negative with a positive number", function() {
+      expect(negativeNumber * 10).toBeLessThan(0);
+    });
+    it("is positive with another negative number", function() {
+      expect(negativeNumber * -10).toBeGreaterThan(0);
+    });
+  });
+});
+```
+
+Other languages require us to encode all of this information in a method name, lead‐ ing to method naming patterns like that shown in Example 12-14.
+
+Example 12-14. Some sample method naming patterns
+```
+multiplyingTwoPositiveNumbersShouldReturnAPositiveNumber
+multiply_postiveAndNegative_returnsNegative
+divide_byZero_throwsException
+```
+
+Names like this are much more verbose than we’d normally want to write for methods in production code, but the use case is different: we never need to write code that calls these, and their names frequently need to be read by humans in reports. Hence, the extra verbosity is warranted.
+Many different naming strategies are acceptable so long as they’re used consistently within a single test class. A good trick if you’re stuck is to try starting the test name with the word “should.” When taken with the name of the class being tested, this naming scheme allows the test name to be read as a sentence. For example, a test of a BankAccount class named shouldNotAllowWithdrawalsWhenBalanceIsEmpty can be read as “BankAccount should not allow withdrawals when balance is empty.” By read‐ ing the names of all the test methods in a suite, you should get a good sense of the behaviors implemented by the system under test. Such names also help ensure that the test stays focused on a single behavior: if you need to use the word “and” in a test name, there’s a good chance that you’re actually testing multiple behaviors and should be writing multiple tests!
+
+## Don’t Put Logic in Tests
+
+Clear tests are trivially correct upon inspection; that is, it is obvious that a test is doing the correct thing just from glancing at it. This is possible in test code because each test needs to handle only a particular set of inputs, whereas production code must be generalized to handle any input. For production code, we’re able to write tests that ensure complex logic is correct. But test code doesn’t have that luxury—if you feel like you need to write a test to verify your test, something has gone wrong!
+Complexity is most often introduced in the form of logic. Logic is defined via the imperative parts of programming languages such as operators, loops, and condition‐ als. When a piece of code contains logic, you need to do a bit of mental computation to determine its result instead of just reading it off of the screen. It doesn’t take much logic to make a test more difficult to reason about. For example, does the test in Example 12-15 look correct to you?
+
+Example 12-15. Logic concealing a bug
+```java
+@Test
+public void shouldNavigateToAlbumsPage() {
+  String baseUrl = "http://photos.google.com/";
+  Navigator nav = new Navigator(baseUrl);
+  nav.goToAlbumPage();
+  assertThat(nav.getCurrentUrl()).isEqualTo(baseUrl + "/albums");
+}
+```
+
+There’s not much logic here: really just one string concatenation. But if we simplify the test by removing that one bit of logic, a bug immediately becomes clear, as demonstrated in Example 12-16.
+
+Example 12-16. A test without logic reveals the bug
+```java
+@Test
+public void shouldNavigateToPhotosPage() {
+  Navigator nav = new Navigator("http://photos.google.com/");
+  nav.goToPhotosPage();
+  assertThat(nav.getCurrentUrl()))
+      .isEqualTo("http://photos.google.com//albums"); // Oops!
+}
+```
+
+When the whole string is written out, we can see right away that we’re expecting two slashes in the URL instead of just one. If the production code made a similar mistake, this test would fail to detect a bug. Duplicating the base URL was a small price to pay for making the test more descriptive and meaningful (see the discussion of DAMP versus DRY tests later in this chapter).
+If humans are bad at spotting bugs from string concatenation, we’re even worse at spotting bugs that come from more sophisticated programming constructs like loops and conditionals. The lesson is clear: in test code, stick to straight-line code over clever logic, and consider tolerating some duplication when it makes the test more descriptive and meaningful. We’ll discuss ideas around duplication and code sharing later in this chapter.
+
+### Write Clear Failure Messages
+
+One last aspect of clarity has to do not with how a test is written, but with what an engineer sees when it fails. In an ideal world, an engineer could diagnose a problem just from reading its failure message in a log or report without ever having to look at the test itself. A good failure message contains much the same information as the test’s name: it should clearly express the desired outcome, the actual outcome, and any relevant parameters.
+Here’s an example of a bad failure message:
+
+```
+Test failed: account is closed
+```
+
+Did the test fail because the account was closed, or was the account expected to be closed and the test failed because it wasn’t? A better failure message clearly distin‐ guishes the expected from the actual state and gives more context about the result:
+
+```
+   Expected an account in state CLOSED, but got account:
+        <{name: "my-account", state: "OPEN"}
+```
+
+Good libraries can help make it easier to write useful failure messages. Consider the assertions in Example 12-17 in a Java test, the first of which uses classical JUnit asserts, and the second of which uses Truth, an assertion library developed by Google:
+
+Example 12-17. An assertion using the Truth library
+```java
+Set<String> colors = ImmutableSet.of("red", "green", "blue");
+assertTrue(colors.contains("orange")); // JUnit
+assertThat(colors).contains("orange"); // Truth
+```
+
+Because the first assertion only receives a Boolean value, it is only able to give a generic error message like “expected <true> but was <false>,” which isn’t very infor‐ mative in a failing test output. Because the second assertion explicitly receives the subject of the assertion, it is able to give a much more useful error message: AssertionError: <[red, green, blue]> should have contained <orange>.”
+Not all languages have such helpers available, but it should always be possible to man‐ ually specify the important information in the failure message. For example, test assertions in Go conventionally look like Example 12-18.
+
+Example 12-18. A test assertion in Go
+```go
+result := Add(2, 3)
+if result !=5 {
+  t.Errorf("Add(2, 3) = %v, want %v", result, 5)
+}
+```
+
+## Tests and Code Sharing: DAMP, Not DRY
+
+One final aspect of writing clear tests and avoiding brittleness has to do with code sharing. Most software attempts to achieve a principle called DRY—“Don’t Repeat Yourself.” DRY states that software is easier to maintain if every concept is canonically represented in one place and code duplication is kept to a minimum. This approach is especially valuable in making changes easier because an engineer needs to update only one piece of code rather than tracking down multiple references. The downside to such consolidation is that it can make code unclear, requiring readers to follow chains of references to understand what the code is doing.
+In normal production code, that downside is usually a small price to pay for making code easier to change and work with. But this cost/benefit analysis plays out a little differently in the context of test code. Good tests are designed to be stable, and in fact you usually want them to break when the system being tested changes. So DRY doesn’t have quite as much benefit when it comes to test code. At the same time, the costs of complexity are greater for tests: production code has the benefit of a test suite to ensure that it keeps working as it becomes complex, whereas tests must stand by themselves, risking bugs if they aren’t self-evidently correct. As mentioned earlier, something has gone wrong if tests start becoming complex enough that it feels like they need their own tests to ensure that they’re working properly.
+Instead of being completely DRY, test code should often strive to be DAMP—that is, to promote “Descriptive And Meaningful Phrases.” A little bit of duplication is OK in tests so long as that duplication makes the test simpler and clearer. To illustrate, Example 12-19 presents some tests that are far too DRY.
+
+
+
+
+
+
 
 
 
@@ -114,6 +469,11 @@ public void shouldSaveSerializedData() {
 -----
 
 1 Note that this is slightly different from a flaky test, which fails nondeterministically without any change to production code.
+2 This is sometimes called the "Use the front door first principle.”
+3 These are also the same two reasons that a test can be “flaky.” Either the system under test has a nondetermin‐ istic fault, or the test is flawed such that it sometimes fails when it should pass.
+4 Seehttps://testing.googleblog.com/2014/04/testing-on-toilet-test-behaviors-not.htmlandhttps://dannorth.net/ introducing-bdd.
+5 Furthermore, a feature (in the product sense of the word) can be expressed as a collection of behaviors.
+6 These components are sometimes referred to as “arrange,” “act,” and “assert.”
 
 
 
