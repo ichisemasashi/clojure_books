@@ -5,24 +5,28 @@ Written by Erik Kuefler
 
 Edited by Tom Manshreck
 
-The previous chapter introduced two of the main axes along which Google classifies tests: size and scope. To recap, size refers to the resources consumed by a test and what it is allowed to do, and scope refers to how much code a test is intended to validate. Though Google has clear definitions for test size, scope tends to be a little fuzzier. We use the term unit test to refer to tests of relatively narrow scope, such as of a single class or method. Unit tests are usually small in size, but this isn’t always the case.
-After preventing bugs, the most important purpose of a test is to improve engineers’ productivity. Compared to broader-scoped tests, unit tests have many properties that make them an excellent way to optimize productivity:
+前章では、Google がテストを分類する際の主な軸として、サイズとスコープの 2 つを紹介しました。要約すると、サイズとはテストが消費するリソースやテストに許可されていることを指し、 スコープとはテストがどの程度のコードを検証するかを指します。Googleはテストのサイズについて明確な定義をしていますが、スコープについては少し曖昧な傾向があります。私たちは、単一のクラスやメソッドなど、比較的狭い範囲のテストをユニットテストと呼んでいます。ユニットテストは通常、サイズが小さいのですが、必ずしもそうではありません。
 
-- They tend to be small according to Google’s definitions of test size. Small tests are fast and deterministic, allowing developers to run them frequently as part of their workflow and get immediate feedback.
-- They tend to be easy to write at the same time as the code they’re testing, allowing engineers to focus their tests on the code they’re working on without having to set up and understand a larger system.
-- They promote high levels of test coverage because they are quick and easy to write. High test coverage allows engineers to make changes with confidence that they aren’t breaking anything.
-- They tend to make it easy to understand what’s wrong when they fail because each test is conceptually simple and focused on a particular part of the system.
-- They can serve as documentation and examples, showing engineers how to use the part of the system being tested and how that system is intended to work.
+テストの最大の目的は、バグを防ぐことに加えて、エンジニアの生産性を向上させることにあります。範囲の広いテストに比べて、ユニットテストには生産性を向上させるのに適した多くの特性があります。
 
-Due to their many advantages, most tests written at Google are unit tests, and as a rule of thumb, we encourage engineers to aim for a mix of about 80% unit tests and 20% broader-scoped tests. This advice, coupled with the ease of writing unit tests and the speed with which they run, means that engineers run a lot of unit tests --- it’s not at all unusual for an engineer to execute thousands of unit tests (directly or indirectly) during the average workday.
-Because they make up such a big part of engineers’ lives, Google puts a lot of focus on test maintainability. Maintainable tests are ones that “just work”: after writing them, engineers don’t need to think about them again until they fail, and those failures indicate real bugs with clear causes. The bulk of this chapter focuses on exploring the idea of maintainability and techniques for achieving it.
+- Googleのテストサイズの定義によれば、テストサイズは小さい傾向にあります。小規模なテストは高速で決定性があるため、開発者はワークフローの一部として頻繁にテストを実行し、すぐにフィードバックを得ることができます。
+- また、テスト対象のコードと同時に記述することが容易であるため、エンジニアは大規模なシステムを設定したり理解したりすることなく、作業中のコードにテストを集中させることができる。
+- また、素早く簡単に書けるため、高いレベルのテストカバレッジを実現しています。テストカバレッジが高いと、エンジニアは何も壊していないという確信を持って変更を加えることができます。
+- それぞれのテストは概念的にシンプルで、システムの特定の部分に焦点を当てているため、失敗しても何が問題なのか簡単に理解できる傾向がある。
+- また、テスト対象となるシステムの一部をどのように使用するか、そのシステムがどのように動作するように意図されているかをエンジニアに示す、ドキュメントや例としての役割も果たします。
+
+Googleでは、経験則として、ユニットテストが80％、より広い範囲のテストが20％程度になるようにエンジニアに勧めています。このアドバイスと、ユニットテストの書きやすさ、実行速度の速さが相まって、エンジニアは大量のユニットテストを実行することになります。平均的な勤務時間中に、数千ものユニットテストを（直接または間接的に）実行することは決して珍しいことではありません。
+
+エンジニアの生活の大部分を占めるユニットテストだからこそ、Googleはテストのメンテナンス性に力を入れています。保守性の高いテストとは、「ただ動く」テストのことです。テストを書いた後、エンジニアはテストが失敗するまでテストのことを考える必要はなく、失敗した場合には明確な原因のある本当のバグを示します。この章の大部分は、保守性という考え方と、それを実現するためのテクニックについて説明します。
 
 
-## The Importance of Maintainability
+## メンテナンス性の重要性
 
-Imagine this scenario: Mary wants to add a simple new feature to the product and is able to implement it quickly, perhaps requiring only a couple dozen lines of code. But when she goes to check in her change, she gets a screen full of errors back from the automated testing system. She spends the rest of the day going through those failures one by one. In each case, the change introduced no actual bug, but broke some of the assumptions that the test made about the internal structure of the code, requiring those tests to be updated. Often, she has difficulty figuring out what the tests were trying to do in the first place, and the hacks she adds to fix them make those tests even more difficult to understand in the future. Ultimately, what should have been a quick job ends up taking hours or even days of busywork, killing Mary’s productivity and sapping her morale.
-Here, testing had the opposite of its intended effect by draining productivity rather than improving it while not meaningfully increasing the quality of the code under test. This scenario is far too common, and Google engineers struggle with it every day. There’s no magic bullet, but many engineers at Google have been working to develop sets of patterns and practices to alleviate these problems, which we encourage the rest of the company to follow.
-The problems Mary ran into weren’t her fault, and there was nothing she could have done to avoid them: bad tests must be fixed before they are checked in, lest they impose a drag on future engineers. Broadly speaking, the issues she encountered fall into two categories. First, the tests she was working with were brittle: they broke in response to a harmless and unrelated change that introduced no real bugs. Second, the tests were unclear: after they were failing, it was difficult to determine what was wrong, how to fix it, and what those tests were supposed to be doing in the first place.
+こんなシナリオを想像してみてください。メアリーは製品に簡単な新機能を追加したいと考えており、おそらく数十行のコードですぐに実装することができます。しかし、その変更をチェックしようとすると、自動テストシステムからエラーが画面いっぱいに表示されます。彼女はその日のうちに、これらのエラーをひとつひとつ確認していきます。それぞれのケースでは、変更によって実際のバグは発生していませんでしたが、コードの内部構造に関するテストの前提条件が崩れていたため、それらのテストを更新する必要がありました。そもそもテストが何をしようとしていたのかがわからず、修正のために追加したハックによって、そのテストが今後さらにわかりにくくなってしまうこともよくあります。結局、短時間で終わるはずの作業が、何時間も何日もかかってしまい、メアリーの生産性と士気は低下してしまうのだ。
+
+ここでは、テストが意図された効果とは逆に、生産性を向上させるどころか、生産性を低下させ、テスト対象のコードの品質を有意に向上させることができませんでした。このようなシナリオはあまりにも一般的であり、Googleのエンジニアは毎日のようにこの問題に取り組んでいます。魔法の弾はありませんが、Googleの多くのエンジニアは、これらの問題を軽減するためのパターンやプラクティスの開発に取り組んでおり、会社の他のメンバーもそれに従うことを推奨しています。
+
+メアリーが遭遇した問題は、彼女の責任ではなく、彼女が回避できたものでもありません。悪いテストは、将来のエンジニアの足を引っ張らないように、チェックインする前に修正しなければなりません。彼女が直面した問題は、大きく分けて2つあります。1つ目は、彼女が担当していたテストが脆かったこと。実際にはバグをもたらさない無害で無関係な変更に反応して壊れてしまったのです。2つ目は、テストが不明確なことです。テストが失敗した後、何が悪いのか、どうやって修正すればいいのか、そもそもテストは何をするべきなのかを判断するのが難しいのです。
 
 ## Preventing Brittle Tests
 
