@@ -28,34 +28,36 @@ Googleでは、経験則として、ユニットテストが80％、より広い
 
 メアリーが遭遇した問題は、彼女の責任ではなく、彼女が回避できたものでもありません。悪いテストは、将来のエンジニアの足を引っ張らないように、チェックインする前に修正しなければなりません。彼女が直面した問題は、大きく分けて2つあります。1つ目は、彼女が担当していたテストが脆かったこと。実際にはバグをもたらさない無害で無関係な変更に反応して壊れてしまったのです。2つ目は、テストが不明確なことです。テストが失敗した後、何が悪いのか、どうやって修正すればいいのか、そもそもテストは何をするべきなのかを判断するのが難しいのです。
 
-## Preventing Brittle Tests
+## 脆いテストの防止
 
-As just defined, a brittle test is one that fails in the face of an unrelated change to production code that does not introduce any real bugs.(*1) Such tests must be diagnosed and fixed by engineers as part of their work. In small codebases with only a few engineers, having to tweak a few tests for every change might not be a big problem. But if a team regularly writes brittle tests, test maintenance will inevitably consume a larger and larger proportion of the team’s time as they are forced to comb through an increasing number of failures in an ever-growing test suite. If a set of tests needs to be manually tweaked by engineers for each change, calling it an “automated test suite” is a bit of a stretch!
-Brittle tests cause pain in codebases of any size, but they become particularly acute at Google’s scale. An individual engineer might easily run thousands of tests in a single day during the course of their work, and a single large-scale change (see Chapter 22) can trigger hundreds of thousands of tests. At this scale, spurious breakages that affect even a small percentage of tests can waste huge amounts of engineering time. Teams at Google vary quite a bit in terms of how brittle their test suites are, but we’ve identified a few practices and patterns that tend to make tests more robust to change.
+先ほど定義したように、脆いテストとは、実際にはバグが発生していない本番コードへの無関係な変更にもかかわらず、失敗してしまうテストのことである(*1)。 このようなテストは、エンジニアが仕事として診断し、修正しなければならない。数人のエンジニアしかいない小規模なコードベースでは、変更のたびに数個のテストを調整することは大きな問題ではないかもしれません。しかし、チームが定期的に脆弱なテストを書いている場合、テストのメンテナンスにかかる時間は必然的に大きくなります。これは、増え続けるテスト・スイートの中で、増え続ける不具合を調べなければならないからです。変更のたびにエンジニアが手作業で調整しなければならないようなテストセットを「自動化されたテストスイート」と呼ぶのは、少し大げさです。
 
-### Strive for Unchanging Tests
+脆弱なテストは、どのような規模のコードベースでも問題となりますが、Googleの規模では特に顕著になります。一人のエンジニアが1日の仕事の中で数千のテストを実行することもあれば、1回の大規模な変更（第22章参照）が数十万のテストを引き起こすこともあります。このような規模では、わずかな割合のテストに影響を与える偽装故障が発生すると、膨大なエンジニアリング時間が無駄になってしまいます。Google のチームによって、テストスイートの脆弱性の程度は大きく異なりますが、変更に対するテストの堅牢性を高めるためのいくつかの手法やパターンがあります。
 
-Before talking about patterns for avoiding brittle tests, we need to answer a question: just how often should we expect to need to change a test after writing it? Any time spent updating old tests is time that can’t be spent on more valuable work. Therefore, the ideal test is unchanging: after it’s written, it never needs to change unless the requirements of the system under test change.
-What does this look like in practice? We need to think about the kinds of changes that engineers make to production code and how we should expect tests to respond to those changes. Fundamentally, there are four kinds of changes:
+### 変わらないテストを目指して
 
-- Pure refactorings
-  - When an engineer refactors the internals of a system without modifying its interface, whether for performance, clarity, or any other reason, the system’s tests shouldn’t need to change. The role of tests in this case is to ensure that the refactoring didn’t change the system’s behavior. Tests that need to be changed during a refactoring indicate that either the change is affecting the system’s behavior and isn’t a pure refactoring, or that the tests were not written at an appropriate level of abstraction. Google’s reliance on large-scale changes (described in Chapter 22) to do such refactorings makes this case particularly important for us.
-- New features
-  - When an engineer adds new features or behaviors to an existing system, the system’s existing behaviors should remain unaffected. The engineer must write new tests to cover the new behaviors, but they shouldn’t need to change any existing tests. As with refactorings, a change to existing tests when adding new features suggest unintended consequences of that feature or inappropriate tests.
-- Bug fixes
-  - Fixing a bug is much like adding a new feature: the presence of the bug suggests that a case was missing from the initial test suite, and the bug fix should include that missing test case. Again, bug fixes typically shouldn’t require updates to existing tests.
-- Behavior changes
-  - Changing a system’s existing behavior is the one case when we expect to have to make updates to the system’s existing tests. Note that such changes tend to be significantly more expensive than the other three types. A system’s users are likely to rely on its current behavior, and changes to that behavior require coordination with those users to avoid confusion or breakages. Changing a test in this case indicates that we’re breaking an explicit contract of the system, whereas changes in the previous cases indicate that we’re breaking an unintended contract. Low- level libraries will often invest significant effort in avoiding the need to ever make a behavior change so as not to break their users.
+脆弱なテストを避けるためのパターンについて説明する前に、 ある質問に答える必要があります。古いテストの更新に費やす時間は、 より価値のある仕事に費やすことのできない時間です。したがって、理想的なテストとは不変のものです。つまり、テストを書いた後は、 テスト対象のシステムの要件が変わらない限り変更する必要がないということです。
+
+では、実際にはどうなのでしょうか？エンジニアがプロダクションコードに加える変更の種類と、その変更にテストがどのように対応すべきかについて考える必要があります。基本的に、変更には4つの種類があります。
+
+- 純粋なリファクタリング
+  - エンジニアがシステムのインターフェイスを変更せずにシステムの内部をリファクタリングした場合、 パフォーマンスやわかりやすさなどの理由から、システムのテストを変更する必要はありません。この場合のテストの役割は、リファクタリングによってシステムの動作が変更されていないことを確認することです。リファクタリング中にテストを変更しなければならないということは、その変更がシステムの動作に影響を与えており、純粋なリファクタリングではないか、あるいはテストが適切な抽象度で書かれていないかのいずれかである。Google はこのようなリファクタリングを行う際に大規模な変更 (第 22 章で説明) に依存しているため、このケースは私たちにとって特に重要です。
+- 新機能
+  - エンジニアが既存のシステムに新しい機能や動作を追加する場合、 システムの既存の動作は影響を受けないようにする必要があります。エンジニアは新しい動作をカバーするために新しいテストを書く必要がありますが、 既存のテストを変更する必要はありません。リファクタリングと同様に、新しい機能を追加する際に既存のテストを変更すると、その機能の意図しない結果や不適切なテストを示唆することになります。
+- バグの修正
+  - バグ修正は新機能の追加とよく似ています。バグが存在するということは、 最初のテストスイートにケースが欠けていることを示唆しており、 バグ修正ではその欠けているテストケースを含めるべきです。繰り返しになりますが、バグの修正には既存のテストの更新は必要ありません。
+- 動作の変更
+  - システムの既存の挙動を変更する場合は、 既存のテストを更新しなければならないことが予想されます。このような変更は、他の3つのタイプに比べてかなりコストがかかる傾向があることに注意してください。システムのユーザは、そのシステムの現在の動作に依存している可能性が高く、その動作を変更する場合には、混乱や破損を避けるためにユーザとの調整が必要になります。このケースでのテストの変更は、システムの明示的な契約を破っていることを示していますが、前のケースでの変更は、意図しない契約を破っていることを示しています。低レベルのライブラリでは、ユーザーを混乱させないように、動作を変更する必要性を避けるために多大な努力を払うことがよくあります。
 
 
-The takeaway is that after you write a test, you shouldn’t need to touch that test again as you refactor the system, fix bugs, or add new features. This understanding is what makes it possible to work with a system at scale: expanding it requires writing only a small number of new tests related to the change you’re making rather than potentially having to touch every test that has ever been written against the system. Only breaking changes in a system’s behavior should require going back to change its tests, and in such situations, the cost of updating those tests tends to be small relative to the cost of updating all of the system’s users.
+重要なのは、テストを書いた後、システムのリファクタリングやバグの修正、新機能の追加などの際に、そのテストを再び触る必要はないということです。この理解が、システムを大規模に扱うことを可能にしています。システムを拡張する際には、 これまでにシステムに対して書かれたすべてのテストに手をつけるのではなく、 変更内容に関連する少数の新しいテストを書くだけで済みます。システムの動作に大きな変更があった場合にのみ、テストを変更する必要があります。そのような場合、システムのすべてのユーザーを更新するコストに比べて、テストを更新するコストは小さくなる傾向にあります。
 
-### Test via Public APIs
+### パブリックAPIを使ったテスト
 
-Now that we understand our goal, let’s look at some practices for making sure that tests don’t need to change unless the requirements of the system being tested change. By far the most important way to ensure this is to write tests that invoke the system being tested in the same way its users would; that is, make calls against its public API rather than its implementation details. If tests work the same way as the system’s users, by definition, change that breaks a test might also break a user. As an additional bonus, such tests can serve as useful examples and documentation for users.
-Consider Example 12-1, which validates a transaction and saves it to a database.
+目的を理解したところで、テスト対象のシステムの要件が変わらない限りテストを変更する必要がないようにするための方法を考えてみましょう。これを確実にするための最も重要な方法は、 テスト対象のシステムをそのユーザーと同じ方法で呼び出すようにテストを書くことです。テストがシステムのユーザーと同じように動作するのであれば、 定義上、テストを壊すような変更はユーザーも壊すことになります。さらに、このようなテストはユーザーにとっても有用な例や資料となります。
+例 12-1 では、トランザクションを検証してデータベースに保存します。
 
-Example 12-1. A transaction API
+Example 12-1. トランザクションAPI
 ```java
 public void processTransaction(Transaction transaction) {
  if (isValid(transaction)) {
@@ -77,9 +79,9 @@ public void getAccountBalance(String accountName) {
 }
 ```
 
-A tempting way to test this code would be to remove the “private” visibility modifiers and test the implementation logic directly, as demonstrated in Example 12-2.
+このコードをテストするには、例12-2のように、"private "可視性修飾子を削除して、実装ロジックを直接テストするのがよいでしょう。
 
-Example 12-2. A naive test of a transaction API’s implementation
+Example 12-2. トランザクションAPIの実装に関する素朴なテスト
 ```java
 @Test
 public void emptyAccountShouldNotBeValid() {
@@ -97,10 +99,11 @@ public void shouldSaveSerializedData() {
 }
 ```
 
-This test interacts with the transaction processor in a much different way than its real users would: it peers into the system’s internal state and calls methods that aren’t publicly exposed as part of the system’s API. As a result, the test is brittle, and almost any refactoring of the system under test (such as renaming its methods, factoring them out into a helper class, or changing the serialization format) would cause the test to break, even if such a change would be invisible to the class’s real users.
-Instead, the same test coverage can be achieved by testing only against the class’s public API, as shown in Example 12-3.(*2)
+このテストは、実際のユーザーとは大きく異なる方法でトランザクションプロセッサと対話します。システムの内部状態を覗き見し、システムのAPIの一部として公開されていないメソッドを呼び出します。その結果、このテストは脆く、テスト対象のシステムのほとんどすべてのリファクタリング（メソッド名の変更、ヘルパークラスへのファクタリング、シリアル化フォーマットの変更など）は、たとえそのクラスの実際のユーザーには見えない変更であっても、テストが壊れる原因となります。
 
-Example 12-3. Testing the public API
+その代わり、例12-3のようにクラスのパブリックAPIに対してのみテストを行うことで、同じテストカバレッジを実現することができます(*2)。
+
+Example 12-3. 公開APIのテスト
 ```java
 @Test
 public void shouldTransferFunds() {
@@ -128,15 +131,17 @@ public void shouldNotPerformInvalidTransactions() {
 }
 ```
 
-Tests using only public APIs are, by definition, accessing the system under test in the same manner that its users would. Such tests are more realistic and less brittle because they form explicit contracts: if such a test breaks, it implies that an existing user of the system will also be broken. Testing only these contracts means that you’re free to do whatever internal refactoring of the system you want without having to worry about making tedious changes to tests.
-It’s not always clear what constitutes a “public API,” and the question really gets to the heart of what a “unit” is in unit testing. Units can be as small as an individual function or as broad as a set of several related packages/modules. When we say “public API” in this context, we’re really talking about the API exposed by that unit to third parties outside of the team that owns the code. This doesn’t always align with the notion of visibility provided by some programming languages; for example, classes in Java might define themselves as “public” to be accessible by other packages in the same unit but are not intended for use by other parties outside of the unit. Some languages like Python have no built-in notion of visibility (often relying on conventions like prefixing private method names with underscores), and build systems like Bazel can further restrict who is allowed to depend on APIs declared public by the programming language.
-Defining an appropriate scope for a unit and hence what should be considered the public API is more art than science, but here are some rules of thumb:
+パブリック API のみを使用したテストは、定義上、ユーザーと同じ方法でテスト対象のシステムにアクセスすることになります。このようなテストは、明示的な契約を結んでいるため、より現実的で脆くありません。このようなテストが壊れた場合、そのシステムの既存のユーザーも壊れることになります。このようなコントラクトのみをテストするということは、テストの面倒な変更を気にすることなく、システムの内部リファクタリングを自由に行うことができるということです。
 
-- If a method or class exists only to support one or two other classes (i.e., it is a “helper class”), it probably shouldn’t be considered its own unit, and its functionality should be tested through those classes instead of directly.
-- If a package or class is designed to be accessible by anyone without having to consult with its owners, it almost certainly constitutes a unit that should be tested directly, where its tests access the unit in the same way that the users would.
-- If a package or class can be accessed only by the people who own it, but it is designed to provide a general piece of functionality useful in a range of contexts (i.e., it is a “support library”), it should also be considered a unit and tested directly. This will usually create some redundancy in testing given that the support library’s code will be covered both by its own tests and the tests of its users. However, such redundancy can be valuable: without it, a gap in test coverage could be introduced if one of the library’s users (and its tests) were ever removed.
+何をもって「公開API」とするかは必ずしも明確ではありません。また、この問題はユニットテストにおける「ユニット」とは何かということにも関わってきます。ユニットとは、個々の関数のように小さなものから、複数の関連するパッケージやモジュールのセットのように大きなものまであります。この文脈で「パブリックAPI」と言った場合、実際にはそのユニットがコードを所有するチーム以外の第三者に公開するAPIのことを指しています。これは、いくつかのプログラミング言語で提供されている可視性の概念とは必ずしも一致しません。例えば、Javaのクラスは、同じユニット内の他のパッケージからアクセスできるように「パブリック」と定義されているかもしれませんが、ユニット外の他のパーティーが使用することは意図されていません。また、Pythonのように可視性の概念が組み込まれていない言語もあります（プライベートメソッド名の前にアンダースコアを付けるなどの慣例に頼っている場合が多い）。Bazelのようなビルドシステムでは、プログラミング言語で公開が宣言されているAPIに依存することができる人をさらに制限することができます。
 
-At Google, we’ve found that engineers sometimes need to be persuaded that testing via public APIs is better than testing against implementation details. The reluctance is understandable because it’s often much easier to write tests focused on the piece of code you just wrote rather than figuring out how that code affects the system as a whole. Nevertheless, we have found it valuable to encourage such practices, as the extra upfront effort pays for itself many times over in reduced maintenance burden. Testing against public APIs won’t completely prevent brittleness, but it’s the most important thing you can do to ensure that your tests fail only in the event of meaningful changes to your system.
+ユニットの適切なスコープを定義し、したがって何を公開APIとみなすかは、科学というよりも芸術ですが、以下のような経験則があります。
+
+- あるメソッドやクラスが、他の 1 つまたは 2 つのクラスをサポートするためだけに存在している場合 (つまり「ヘルパークラス」)、それはおそらく独立したユニットと考えるべきではなく、その機能は直接ではなくそれらのクラスを通してテストされるべきです。
+- パッケージやクラスが、その所有者と相談せずに誰でもアクセスできるように設計されている場合、それはほぼ確実に、直接テストすべきユニットを構成します。
+- パッケージやクラスを所有している人だけがアクセスできるが、さまざまな状況で役立つ一般的な機能を提供するように設計されている場合（つまり「サポートライブラリ」）、それもユニットとみなして直接テストすべきです。サポートライブラリのコードは、サポートライブラリ自身のテストとユーザのテストの両方でカバーされるため、通常、テストには冗長性が生じます。しかし、このような冗長性は貴重なものです。冗長性がないと、ライブラリのユーザー（およびそのテスト）が削除された場合に、テストのカバレッジにギャップが生じてしまいます。
+
+Googleでは、エンジニアが、実装の詳細に対してテストするよりも、公開されているAPIを使ってテストする方が良いと説得しなければならないことがあります。なぜなら、自分が書いたばかりのコードに注目してテストを書く方が、そのコードがシステム全体にどのような影響を与えるかを理解するよりもずっと簡単だからです。しかし、私たちはこのような方法を奨励することに価値があると考えています。なぜなら、前もって余分な努力をすることで、メンテナンスの負担を何倍にも減らすことができるからです。公開されているAPIに対してテストを行うことで、脆さを完全に防ぐことはできませんが、システムに意味のある変更があった場合にのみテストが失敗するようにすることは、最も重要なことです。
 
 ### Test State, Not Interactions
 
