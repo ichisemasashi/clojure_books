@@ -143,12 +143,13 @@ public void shouldNotPerformInvalidTransactions() {
 
 Googleでは、エンジニアが、実装の詳細に対してテストするよりも、公開されているAPIを使ってテストする方が良いと説得しなければならないことがあります。なぜなら、自分が書いたばかりのコードに注目してテストを書く方が、そのコードがシステム全体にどのような影響を与えるかを理解するよりもずっと簡単だからです。しかし、私たちはこのような方法を奨励することに価値があると考えています。なぜなら、前もって余分な努力をすることで、メンテナンスの負担を何倍にも減らすことができるからです。公開されているAPIに対してテストを行うことで、脆さを完全に防ぐことはできませんが、システムに意味のある変更があった場合にのみテストが失敗するようにすることは、最も重要なことです。
 
-### Test State, Not Interactions
+### インタラクションではなくステートをテストする
 
-Another way that tests commonly depend on implementation details involves not which methods of the system the test calls, but how the results of those calls are verified. In general, there are two ways to verify that a system under test behaves as expected. With state testing, you observe the system itself to see what it looks like after invoking with it. With interaction testing, you instead check that the system took an expected sequence of actions on its collaborators in response to invoking it. Many tests will perform a combination of state and interaction validation.
-Interaction tests tend to be more brittle than state tests for the same reason that it’s more brittle to test a private method than to test a public method: interaction tests check how a system arrived at its result, whereas usually you should care only what the result is. Example 12-4 illustrates a test that uses a test double (explained further in Chapter 13) to verify how a system interacts with a database.
+テストが実装の詳細に依存するもう一つの方法は、 テストがシステムのどのメソッドを呼び出すかではなく、 その呼び出しの結果をどのように検証するかということです。一般的に、テスト対象のシステムが期待通りの動作をするかどうかを検証するには、2つの方法があります。ステートテストでは、システムを起動した後に、システム自体を観察して確認します。一方、インタラクションテストでは、システムを起動した際に、システムが協力者に対して期待通りのアクションを起こすかどうかを確認します。多くのテストでは、状態の検証とインタラクションの検証を組み合わせて行います。
 
-Example 12-4. A brittle interaction test
+インタラクションテストはステートテストよりも脆い傾向があります。 これは、パブリックなメソッドをテストするよりもプライベートなメソッドをテストするほうが 脆いのと同じ理由です。例 12-4 は、テストダブル (第 13 章で詳しく説明します) を使用してシステムがデータベースとどのようにやり取りするのかを検証するテストです。
+
+Example 12-4. 脆性相互作用のテスト
 ```java
 @Test
 public void shouldWriteToDatabase() {
@@ -157,12 +158,12 @@ public void shouldWriteToDatabase() {
 }
 ```
 
-The test verifies that a specific call was made against a database API, but there are a couple different ways it could go wrong:
+このテストでは、データベースのAPIに対して特定の呼び出しが行われたことを検証しますが、いくつかの異なる方法で失敗する可能性があります。
 
-- If a bug in the system under test causes the record to be deleted from the database shortly after it was written, the test will pass even though we would have wanted it to fail.
-- If the system under test is refactored to call a slightly different API to write an equivalent record, the test will fail even though we would have wanted it to pass.
+- テスト対象のシステムのバグにより、レコードが書き込まれた直後にデータベースから削除されてしまった場合、テストは失敗したいと思っていても合格してしまいます。
+- テスト対象のシステムがリファクタリングされて、同等のレコードを書くためにわずかに異なるAPIを呼び出すようになった場合、テストは合格したいと思っていても失敗してしまいます。
 
-It’s much less brittle to directly test against the state of the system, as demonstrated in Example 12-5.
+例 12-5 で示したように、システムの状態を直接テストする方がはるかにもろいです。
 
 Example 12-5. Testing against state
 ```java
@@ -173,30 +174,34 @@ public void shouldCreateUsers() {
 }
 ```
 
-This test more accurately expresses what we care about: the state of the system under test after interacting with it.
+このテストでは、私たちが気にかけていること、つまりテスト対象のシステムとインタラクトした後の状態をより正確に表現しています。
 
-The most common reason for problematic interaction tests is an over reliance on mocking frameworks. These frameworks make it easy to create test doubles that record and verify every call made against them, and to use those doubles in place of real objects in tests. This strategy leads directly to brittle interaction tests, and so we tend to prefer the use of real objects in favor of mocked objects, as long as the real objects are fast and deterministic.
+インタラクションテストに問題がある最も一般的な理由は、モッキングフレームワークに頼りすぎていることです。これらのフレームワークを使うと、テスト用の替え玉を簡単に作ることができます。この替え玉は、実際のオブジェクトの代わりにテストで使用することができます。この方法ではインタラクションテストがもろくなってしまうので、高速で決定論的な実オブジェクトであれば、モックされたオブジェクトよりも実オブジェクトの使用を好む傾向があります。
 
- For a more extensive discussion of test doubles and mocking frameworks, when they should be used, and safer alternatives, see Chapter 13.
+ テストの替え玉やモッキング・フレームワーク、それらを使うべき場合、より安全な代替手段などについては、第13章を参照してください。
 
-## Writing Clear Tests
+## 明確なテストを書く
 
-Sooner or later, even if we’ve completely avoided brittleness, our tests will fail. Failure is a good thing --- test failures provide useful signals to engineers, and are one of the main ways that a unit test provides value.
-Test failures happen for one of two reasons:(*3)
+遅かれ早かれ、たとえ脆さを完全に回避したとしても、テストは失敗します。テストの失敗は良いことです。テストの失敗はエンジニアにとって有益なシグナルであり、ユニットテストの価値を高める主な方法のひとつです。
 
-- The system under test has a problem or is incomplete. This result is exactly what tests are designed for: alerting you to bugs so that you can fix them.
-- The test itself is flawed. In this case, nothing is wrong with the system under test, but the test was specified incorrectly. If this was an existing test rather than one that you just wrote, this means that the test is brittle. The previous section discussed how to avoid brittle tests, but it’s rarely possible to eliminate them entirely.
+テストの失敗は、次の2つの理由で起こります(*3)。
 
-When a test fails, an engineer’s first job is to identify which of these cases the failure falls into and then to diagnose the actual problem. The speed at which the engineer can do so depends on the test’s clarity. A clear test is one whose purpose for existing and reason for failing is immediately clear to the engineer diagnosing a failure. Tests fail to achieve clarity when their reasons for failure aren’t obvious or when it’s difficult to figure out why they were originally written. Clear tests also bring other benefits, such as documenting the system under test and more easily serving as a basis for new tests.
-Test clarity becomes significant over time. Tests will often outlast the engineers who wrote them, and the requirements and understanding of a system will shift subtly as it ages. It’s entirely possible that a failing test might have been written years ago by an engineer no longer on the team, leaving no way to figure out its purpose or how to fix it. This stands in contrast with unclear production code, whose purpose you can usually determine with enough effort by looking at what calls it and what breaks when it’s removed. With an unclear test, you might never understand its purpose, since removing the test will have no effect other than (potentially) introducing a subtle hole in test coverage.
-In the worst case, these obscure tests just end up getting deleted when engineers can’t figure out how to fix them. Not only does removing such tests introduce a hole in test coverage, but it also indicates that the test has been providing zero value for perhaps the entire period it has existed (which could have been years).
-For a test suite to scale and be useful over time, it’s important that each individual test in that suite be as clear as possible. This section explores techniques and ways of thinking about tests to achieve clarity.
+- テスト対象のシステムに問題があったり、不完全だったりする。この結果は、まさにテストの目的である「バグを警告し、それを修正できるようにする」ためのものです。
+- テスト自体に問題がある。この場合、テスト対象のシステムには何の問題もありませんが、テストの仕様が間違っていたということになります。もしこのテストが自分で書いたものではなく、既存のテストだった場合、そのテストは脆いということになります。前のセクションでは、脆いテストを回避する方法を説明しましたが、完全に排除できることはほとんどありません。
 
-### Make Your Tests Complete and Concise
+テストが失敗した場合、エンジニアの最初の仕事は、その失敗がこれらのケースのどれに該当するかを特定し、実際の問題を診断することです。そのスピードは、テストのわかりやすさにかかっているといっても過言ではありません。明確なテストとは、障害を診断するエンジニアにとって、テストが存在する目的や障害が発生する理由がすぐにわかるものです。テストが明確でないのは、失敗の理由が明らかでない場合や、最初に書かれた理由を理解するのが難しい場合である。明確なテストは、テスト対象のシステムを文書化し、新しいテストの基礎となりやすいなどの利点もあります。
 
-Two high-level properties that help tests achieve clarity are completeness and conciseness. A test is complete when its body contains all of the information a reader needs in order to understand how it arrives at its result. A test is concise when it contains no other distracting or irrelevant information. Example 12-6 shows a test that is neither complete nor concise:
+テストが明確であることは、時間の経過とともに重要になります。テストは多くの場合、それを書いたエンジニアよりも長持ちします。また、システムの要件や理解は、古くなるにつれて微妙に変化します。不合格になったテストが、何年も前にもうチームにいないエンジニアによって書かれたものである可能性は十分にあり、その目的や修正方法を把握する方法はありません。これは、不明瞭なプロダクションコードとは対照的です。プロダクションコードの目的は、そのコードを呼び出しているものや、そのコードを削除したときに何が壊れるかを見れば、十分な努力をすれば大抵は分かります。不明瞭なテストでは、テストを削除しても、テストカバレッジに微妙な穴が生じる（可能性がある）以外には何の効果もないので、その目的を理解することはできないかもしれません。
 
-Example 12-6. An incomplete and cluttered test
+最悪の場合、これらの不明瞭なテストは、エンジニアが修正方法を見つけられずに削除されてしまうこともあります。このようなテストを削除すると、テストカバレッジに穴が開いてしまうだけでなく、そのテストが存在していた期間（何年にもなるかもしれません）、そのテストがゼロの価値しか提供していなかったことになります。
+
+テストスイートの規模を拡大し、長期間にわたって有用であるためには、 そのスイート内の個々のテストが可能な限り明確であることが重要です。このセクションでは、明快なテストを実現するためのテクニックや考え方を紹介します。
+
+### テストの完全性と簡潔性
+
+テストをわかりやすくするための高レベルの特性として、 完全性と簡潔性があります。テストの本文に、どのようにしてその結果にたどり着くのかを理解するために必要な情報がすべて含まれている場合、そのテストは完全です。テストが簡潔であるとは、 邪魔な情報や無関係な情報が含まれていないことです。例 12-6 は、完全でも簡潔でもないテストを示しています。
+
+例12-6. 不完全で雑然としたテスト
 ```java
 @Test
 public void shouldPerformAddition() {
@@ -207,11 +212,11 @@ public void shouldPerformAddition() {
 }
 ```
 
-The test is passing a lot of irrelevant information into the constructor, and the actual important parts of the test are hidden inside of a helper method. The test can be made more complete by clarifying the inputs of the helper method, and more concise by using another helper to hide the irrelevant details of constructing the calculator, as illustrated in Example 12-7.
+このテストでは、コンストラクタに多くの無関係な情報を渡しており、 テストの実際の重要な部分はヘルパーメソッドの中に隠されています。例 12-7 に示すように、ヘルパーメソッドの入力を明確にすることでテストをより完全なものにし、 別のヘルパーを使って電卓を作る際の無関係な詳細を隠すことでより簡潔なものにすることができます。
 
 
 
-Example 12-7. A complete, concise test
+例 12-7. 完全で簡潔なテスト
 ```java
 @Test
 public void shouldPerformAddition() {
@@ -221,13 +226,13 @@ public void shouldPerformAddition() {
 }
 ```
 
-Ideas we discuss later, especially around code sharing, will tie back to completeness and conciseness. In particular, it can often be worth violating the DRY (Don’t Repeat Yourself) principle if it leads to clearer tests. Remember: a test’s body should contain all of the information needed to understand it without containing any irrelevant or distracting information.
+後述するアイデア、特にコード共有に関するアイデアは、完全性と簡潔性に結びつきます。特に、DRY (Don't Repeat Yourself) の原則に反しても、 テストがより明確になるのであれば価値があるでしょう。覚えておいてほしいのは、 テストの本文にはそれを理解するのに必要なすべての情報が含まれていなければならず、 無関係な情報や気を散らすような情報は含まれていてはいけないということです。
 
-### Test Behaviors, Not Methods
+### メソッドではなく、ビヘイビアをテストする
 
-The first instinct of many engineers is to try to match the structure of their tests to the structure of their code such that every production method has a corresponding test method. This pattern can be convenient at first, but over time it leads to problems: as the method being tested grows more complex, its test also grows in complexity and becomes more difficult to reason about. For example, consider the snippet of code in Example 12-8, which displays the results of a transaction.
+多くのエンジニアの最初の直感は、テストの構造をコードの構造に合わせようとすることです。つまり、すべてのプロダクションメソッドに対応するテストメソッドがあるということです。このパターンは最初は便利ですが、時間が経つにつれて問題が出てきます。テストするメソッドが複雑になると、そのテストも複雑になり、推論が難しくなります。例えば、例 12-8 のコードでは、トランザクションの結果を表示しています。
 
-Example 12-8. A transaction snippet
+例 12-8. トランザクションスニペット
 ```java
 public void displayTransactionResults(User user, Transaction transaction) {
   ui.showMessage("You bought a " + transaction.getItemName());
@@ -237,9 +242,9 @@ public void displayTransactionResults(User user, Transaction transaction) {
 }
 ```
 
-It wouldn’t be uncommon to find a test covering both of the messages that might be shown by the method, as presented in Example 12-9.
+例12-9のように、そのメソッドで表示される可能性のあるメッセージの両方をカバーするテストを見つけることは珍しいことではありません。
 
-Example 12-9. A method-driven test
+例 12-9. メソッド駆動型のテスト
 ```java
 @Test
 public void testDisplayTransactionResults() {
@@ -252,10 +257,11 @@ public void testDisplayTransactionResults() {
 }
 ```
 
-With such tests, it’s likely that the test started out covering only the first method. Later, an engineer expanded the test when the second message was added (violating the idea of unchanging tests that we discussed earlier). This modification sets a bad precedent: as the method under test becomes more complex and implements more functionality, its unit test will become increasingly convoluted and grow more and more difficult to work with.
-The problem is that framing tests around methods can naturally encourage unclear tests because a single method often does a few different things under the hood and might have several tricky edge and corner cases. There’s a better way: rather than writing a test for each method, write a test for each behavior.(*4) A behavior is any guarantee that a system makes about how it will respond to a series of inputs while in a particular state.(*5) Behaviors can often be expressed using the words “given,” “when,” and “then”: “Given that a bank account is empty, when attempting to withdraw money from it, then the transaction is rejected.” The mapping between methods and behaviors is many-to-many: most nontrivial methods implement multiple behaviors, and some behaviors rely on the interaction of multiple methods. The previous example can be rewritten using behavior-driven tests, as presented in Example 12-10.
+このようなテストでは、最初は1つ目の方法だけでテストを行っていたと考えられます。このようなテストの場合、最初は1つ目のメソッドだけを対象としたテストだったのが、2つ目のメッセージが追加されたときにエンジニアがテストを拡張してしまったのでしょう。この修正は、テスト対象のメソッドがより複雑になり、より多くの機能を実装するようになると、そのユニットテストはますます複雑になり、作業が困難になるという悪い前例を作ってしまいます。
 
-Example 12-10. A behavior-driven test
+問題は、メソッドを中心にテストを構成すると、当然ながら不明確なテストになってしまうことです。なぜなら、ひとつのメソッドは、しばしばボンネットの中でいくつかの異なることを行い、いくつかの厄介なエッジケースやコーナーケースがあるからです。メソッドごとにテストを書くのではなく、ビヘイビアごとにテストを書くのです。(*4) ビヘイビアとは、システムが特定の状態にあるときに、一連の入力に対してどのように反応するかを保証するものです。(*5) ビヘイビアは、しばしば「given」「when」「then」という言葉を使って表現されます。"銀行口座が空であるときに、そこからお金を引き出そうとすると、その取引は拒否される。" メソッドとビヘイビアの間のマッピングは多対多です。自明ではないほとんどのメソッドは複数のビヘイビアを実装し、一部のビヘイビアは複数のメソッドの相互作用に依存します。先ほどの例は、例12-10のように振る舞い駆動型のテストを用いて書き換えることができます。
+
+例 12-10. 動作駆動型のテスト
 ```java
 @Test
 public void displayTransactionResults_showsItemName() {
@@ -273,13 +279,13 @@ public void displayTransactionResults_showsLowBalanceWarning() {
 }
 ```
 
-The extra boilerplate required to split apart the single test is more than worth it, and the resulting tests are much clearer than the original test. Behavior-driven tests tend to be clearer than method-oriented tests for several reasons. First, they read more like natural language, allowing them to be naturally understood rather than requiring laborious mental parsing. Second, they more clearly express cause and effect because each test is more limited in scope. Finally, the fact that each test is short and descriptive makes it easier to see what functionality is already tested and encourages engineers to add new streamlined test methods instead of piling onto existing methods.
+一つのテストを分割するために必要な余分な定型文は、その価値以上のものであり、結果として得られるテストは元のテストよりもはるかに明確です。振る舞い駆動型のテストは、メソッド指向型のテストよりも明確になる傾向がありますが、それにはいくつかの理由があります。第一に、テストは自然言語のように読めるので、手間のかかる精神的な解析を必要とせず、自然に理解することができます。次に、各テストの範囲が限定されているため、原因と結果がより明確に表現されます。最後に、それぞれのテストが短くて説明的であるため、どの機能がすでにテストされているかがわかりやすく、エンジニアが既存のテスト手法を重ねるのではなく、新しい合理的なテスト手法を追加することを促す。
 
-#### Structure tests to emphasize behaviors
+#### ビヘイビアを重視したテストの構成
 
-Thinking about tests as being coupled to behaviors instead of methods significantly affects how they should be structured. Remember that every behavior has three parts: a “given” component that defines how the system is set up, a “when” component that defines the action to be taken on the system, and a “then” component that validates the result.(*6) Tests are clearest when this structure is explicit. Some frameworks like Cucumber and Spock directly bake in given/when/then. Other languages can use whitespace and optional comments to make the structure stand out, such as that shown in Example 12-11.
+テストがメソッドではなくビヘイビアと結びついていると考えると、 テストの構造が大きく変わります。すべてのビヘイビアには3つの部分があることを覚えておいてください。すなわち、システムがどのように設定されているかを定義する「given」コンポーネント、システムに対して行うべきアクションを定義する「when」コンポーネント、そして結果を検証する「then」コンポーネントです(*6)。CucumberやSpockのようなフレームワークでは、given/when/thenを直接組み込むことができます。その他の言語では、例12-11のように、空白やオプションのコメントを使って構造を目立たせることができます。
 
-Example 12-11. A well-structured test
+例 12-11. 構造化されたテスト
 ```java
 @Test
 public void transferFundsShouldMoveMoneyBetweenAccounts() {
@@ -296,16 +302,17 @@ public void transferFundsShouldMoveMoneyBetweenAccounts() {
 }
 ```
 
-This level of description isn’t always necessary in trivial tests, and it’s usually sufficient to omit the comments and rely on whitespace to make the sections clear. However, explicit comments can make more sophisticated tests easier to understand. This pattern makes it possible to read tests at three levels of granularity:
+些細なテストではこのレベルの記述は必ずしも必要ではなく、 通常はコメントを省略して空白に頼ってセクションを明確にすることで十分です。しかし、コメントを明示することで、より高度なテストを理解しやすくすることができます。このパターンでは、3 つのレベルの粒度でテストを読むことができます。
 
-1. A reader can start by looking at the test method name (discussed below) to get a rough description of the behavior being tested.
-2. If that’s not enough, the reader can look at the given/when/then comments for a formal description of the behavior.
-3. Finally, a reader can look at the actual code to see precisely how that behavior is expressed.
+1. テストメソッド名 (後述) を見て、テストされている動作の大まかな内容を知ることから始めます。
+2. それだけでは不十分な場合は、 given/when/then コメントを見て動作の正式な説明を確認します。
+3. 最後に、実際のコードを見て、その動作がどのように表現されているかを正確に確認することができます。
 
-This pattern is most commonly violated by interspersing assertions among multiple calls to the system under test (i.e., combining the “when” and “then” blocks). Merging the “then” and “when” blocks in this way can make the test less clear because it makes it difficult to distinguish the action being performed from the expected result.
-When a test does want to validate each step in a multistep process, it’s acceptable to define alternating sequences of when/then blocks. Long blocks can also be made more descriptive by splitting them up with the word “and.” Example 12-12 shows what a relatively complex, behavior-driven test might look like.
+このパターンは、テスト対象のシステムへの複数の呼び出しの間にアサーションを挟む（つまり、「when」と「then」のブロックを組み合わせる）ことで最もよく破られます。このように「then」と「when」のブロックを組み合わせると、実行されるアクションと期待される結果を区別することが難しくなるため、テストが明確でなくなります。
 
-Example 12-12. Alternating when/then blocks within a test
+テストが多段階プロセスの各ステップを検証したい場合は、when/then ブロックを交互に並べて定義することができます。長いブロックは、"and "という単語で分割することで、より説明的にすることができます。例 12-12 は、比較的複雑な動作駆動型のテストがどのようなものかを示しています。
+
+例 12-12. テスト内でのwhen/thenブロックの交互配置
 ```java
 @Test
 public void shouldTimeOutConnections() {
@@ -335,7 +342,7 @@ public void shouldTimeOutConnections() {
 }
 ```
 
-When writing such tests, be careful to ensure that you’re not inadvertently testing multiple behaviors at the same time. Each test should cover only a single behavior, and the vast majority of unit tests require only one “when” and one “then” block.
+このようなテストを書く際には、不用意に複数の動作を同時にテストしてしまわないように注意しましょう。各テストは単一の動作のみを対象とすべきであり、ユニットテストの大部分は1つの「when」と1つの「then」ブロックのみを必要とします。
 
 #### Name tests after the behavior being tested
 
