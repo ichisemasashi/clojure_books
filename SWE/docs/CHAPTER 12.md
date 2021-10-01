@@ -344,12 +344,13 @@ public void shouldTimeOutConnections() {
 
 このようなテストを書く際には、不用意に複数の動作を同時にテストしてしまわないように注意しましょう。各テストは単一の動作のみを対象とすべきであり、ユニットテストの大部分は1つの「when」と1つの「then」ブロックのみを必要とします。
 
-#### Name tests after the behavior being tested
+#### テストの名前は、テストされる動作の後に付けます。
 
-Method-oriented tests are usually named after the method being tested (e.g., a test for the updateBalance method is usually called testUpdateBalance). With more focused behavior-driven tests, we have a lot more flexibility and the chance to convey useful information in the test’s name. The test name is very important: it will often be the first or only token visible in failure reports, so it’s your best opportunity to communicate the problem when the test breaks. It’s also the most straightforward way to express the intent of the test.
-A test’s name should summarize the behavior it is testing. A good name describes both the actions that are being taken on a system and the expected outcome. Test names will sometimes include additional information like the state of the system or its environment before taking action on it. Some languages and frameworks make this easier than others by allowing tests to be nested within one another and named using strings, such as in Example 12-13, which uses Jasmine.
+メソッド指向のテストは通常、テスト対象のメソッドにちなんだ名前をつけます (たとえば updateBalance メソッドのテストは通常 testUpdateBalance と呼ばれます)。より焦点を絞った振る舞い駆動型のテストでは、より多くの柔軟性を持ち、 テストの名前で有用な情報を伝えることができます。テスト名は非常に重要です。障害報告の中で最初あるいは唯一のトークンとなることが多いので、 テストが壊れたときに問題点を伝える絶好の機会となります。また、テストの意図を表現する最もわかりやすい方法でもあります。
 
-Example 12-13. Some sample nested naming patterns
+テストの名前は、テストしている動作を要約したものでなければなりません。良い名前は、システム上で行われている動作と期待される結果の両方を表しています。テストの名前には、システムにアクションを起こす前に、システムの状態や環境などの追加情報を含めることもあります。言語やフレームワークによっては、Jasmineを使った例12-13のように、テストを互いに入れ子にして文字列で名前をつけることができるので、他よりも簡単にテストを行うことができます。
+
+例12-13. ネストしたネーミングパターンの例
 ```
 describe("multiplication", function() {
   describe("with a positive number", function() {
@@ -373,17 +374,18 @@ describe("multiplication", function() {
 });
 ```
 
-Other languages require us to encode all of this information in a method name, leading to method naming patterns like that shown in Example 12-14.
+他の言語では、これらの情報をすべてメソッド名にエンコードする必要があるため、例12-14のようなメソッドの命名パターンになります。
 
-Example 12-14. Some sample method naming patterns
+例12-14. メソッドの命名パターンの例
 ```
 multiplyingTwoPositiveNumbersShouldReturnAPositiveNumber
 multiply_postiveAndNegative_returnsNegative
 divide_byZero_throwsException
 ```
 
-Names like this are much more verbose than we’d normally want to write for methods in production code, but the use case is different: we never need to write code that calls these, and their names frequently need to be read by humans in reports. Hence, the extra verbosity is warranted.
-Many different naming strategies are acceptable so long as they’re used consistently within a single test class. A good trick if you’re stuck is to try starting the test name with the word “should.” When taken with the name of the class being tested, this naming scheme allows the test name to be read as a sentence. For example, a test of a BankAccount class named shouldNotAllowWithdrawalsWhenBalanceIsEmpty can be read as “BankAccount should not allow withdrawals when balance is empty.” By reading the names of all the test methods in a suite, you should get a good sense of the behaviors implemented by the system under test. Such names also help ensure that the test stays focused on a single behavior: if you need to use the word “and” in a test name, there’s a good chance that you’re actually testing multiple behaviors and should be writing multiple tests!
+このような名前は、プロダクションコードのメソッドに通常書くべきものよりもはるかに冗長ですが、ユースケースは異なります。これらを呼び出すコードを書く必要はなく、その名前はレポートで人間が読む必要があることが多いのです。そのため、余分な冗長性が必要になります。
+
+ひとつのテストクラスの中で一貫して使用されている限り、 さまざまな名前の付け方が許容されます。困ったときには、テストの名前を "should" という単語で始めてみるのがいいでしょう。この命名法は、テストするクラスの名前と一緒に使うと、テスト名を文章として読むことができます。たとえば BankAccount クラスのテストである shouldNotAllowWithdrawalsWhenBalanceIsEmpty は、"BankAccount should not allow withdrawalals when balance is empty" と読むことができます。スイート内のすべてのテストメソッドの名前を読むことで、テスト対象のシステムで実装されている動作を把握することができます。テストの名前に "and" という単語を使う必要がある場合は、 実際には複数の動作をテストしている可能性が高いので、 複数のテストを書くべきでしょう。
 
 ## Don’t Put Logic in Tests
 
