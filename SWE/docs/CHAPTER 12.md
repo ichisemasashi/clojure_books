@@ -387,12 +387,13 @@ divide_byZero_throwsException
 
 ひとつのテストクラスの中で一貫して使用されている限り、 さまざまな名前の付け方が許容されます。困ったときには、テストの名前を "should" という単語で始めてみるのがいいでしょう。この命名法は、テストするクラスの名前と一緒に使うと、テスト名を文章として読むことができます。たとえば BankAccount クラスのテストである shouldNotAllowWithdrawalsWhenBalanceIsEmpty は、"BankAccount should not allow withdrawalals when balance is empty" と読むことができます。スイート内のすべてのテストメソッドの名前を読むことで、テスト対象のシステムで実装されている動作を把握することができます。テストの名前に "and" という単語を使う必要がある場合は、 実際には複数の動作をテストしている可能性が高いので、 複数のテストを書くべきでしょう。
 
-## Don’t Put Logic in Tests
+## テストに論理を入れるな
 
-Clear tests are trivially correct upon inspection; that is, it is obvious that a test is doing the correct thing just from glancing at it. This is possible in test code because each test needs to handle only a particular set of inputs, whereas production code must be generalized to handle any input. For production code, we’re able to write tests that ensure complex logic is correct. But test code doesn’t have that luxury --- if you feel like you need to write a test to verify your test, something has gone wrong!
-Complexity is most often introduced in the form of logic. Logic is defined via the imperative parts of programming languages such as operators, loops, and conditionals. When a piece of code contains logic, you need to do a bit of mental computation to determine its result instead of just reading it off of the screen. It doesn’t take much logic to make a test more difficult to reason about. For example, does the test in Example 12-15 look correct to you?
+明確なテストとは、一見しただけで正しいことがわかるものです。 つまり、テストを見ただけで正しいことをしていることがわかるのです。これが可能なのは、テストコードでは各テストが特定の入力セットのみを処理する必要があるのに対し、プロダクションコードではあらゆる入力を処理するように一般化する必要があるからです。プロダクションコードでは、複雑なロジックが正しいかどうかを確認するテストを書くことができます。しかし、テストコードにはそのような余裕はありません。もし、テストを検証するためにテストを書く必要があると感じたら、何かが間違っているのです。
 
-Example 12-15. Logic concealing a bug
+複雑さは論理の形で導入されることがほとんどです。論理は、演算子やループ、条件分岐など、プログラミング言語の命令的な部分で定義されます。コードにロジックが含まれていると、その結果をただ画面から読み取るのではなく、少し頭を使って計算しなければなりません。テストの推論を難しくするためには、それほど多くのロジックは必要ありません。例えば、例 12-15 のテストは正しく見えるでしょうか？
+
+Example 12-15. バグを隠すロジック
 ```java
 @Test
 public void shouldNavigateToAlbumsPage() {
@@ -403,9 +404,9 @@ public void shouldNavigateToAlbumsPage() {
 }
 ```
 
-There’s not much logic here: really just one string concatenation. But if we simplify the test by removing that one bit of logic, a bug immediately becomes clear, as demonstrated in Example 12-16.
+ここには大したロジックはありません。実際には1つの文字列を連結しただけです。しかし、このテストを単純化してロジックを1つ取り除くと、例12-16のようにバグがすぐに明らかになります。
 
-Example 12-16. A test without logic reveals the bug
+例 12-16. ロジックのないテストでバグを発見
 ```java
 @Test
 public void shouldNavigateToPhotosPage() {
@@ -416,38 +417,40 @@ public void shouldNavigateToPhotosPage() {
 }
 ```
 
-When the whole string is written out, we can see right away that we’re expecting two slashes in the URL instead of just one. If the production code made a similar mistake, this test would fail to detect a bug. Duplicating the base URL was a small price to pay for making the test more descriptive and meaningful (see the discussion of DAMP versus DRY tests later in this chapter).
-If humans are bad at spotting bugs from string concatenation, we’re even worse at spotting bugs that come from more sophisticated programming constructs like loops and conditionals. The lesson is clear: in test code, stick to straight-line code over clever logic, and consider tolerating some duplication when it makes the test more descriptive and meaningful. We’ll discuss ideas around duplication and code sharing later in this chapter.
+文字列全体を書き出してみると、URLにスラッシュが1つではなく2つあると思っていることがすぐにわかります。本番のコードが同様のミスを犯した場合、このテストはバグを検出できません。ベースとなるURLを複製することは、テストをより説明的で意味のあるものにするための小さな代償でした（この章の後の方で、DAMPテストとDRYテストの議論を参照してください）。
 
-### Write Clear Failure Messages
+人間が文字列の連結によるバグを発見するのが苦手なのであれば、ループや条件分岐のような高度なプログラミング構造によるバグを発見するのはもっと苦手です。テストコードでは、巧妙なロジックよりも直線的なコードにこだわり、テストをより説明的で意味のあるものにするためには、多少の重複を許容することを検討してみてください。重複やコードの共有については、この章の後半で説明します。
 
-One last aspect of clarity has to do not with how a test is written, but with what an engineer sees when it fails. In an ideal world, an engineer could diagnose a problem just from reading its failure message in a log or report without ever having to look at the test itself. A good failure message contains much the same information as the test’s name: it should clearly express the desired outcome, the actual outcome, and any relevant parameters.
-Here’s an example of a bad failure message:
+### 明確な失敗メッセージを書く
+
+明瞭さの最後の側面は、テストの書き方ではなく、テストが失敗したときにエンジニアが見るものに関係します。理想的な世界では、エンジニアはテストそのものを見なくても、 ログやレポートに書かれた失敗メッセージを読むだけで問題を診断することができます。優れた失敗メッセージには、テストの名前とほぼ同じ情報が含まれています。つまり、望ましい結果、実際の結果、関連するパラメータを明確に表現する必要があります。
+以下は、悪い失敗メッセージの例です。
 
 ```
 Test failed: account is closed
 ```
 
-Did the test fail because the account was closed, or was the account expected to be closed and the test failed because it wasn’t? A better failure message clearly distinguishes the expected from the actual state and gives more context about the result:
+アカウントが閉鎖されたためにテストが失敗したのか、それともアカウントが閉鎖されると予想されていて、そうではなかったためにテストが失敗したのか？より良い失敗メッセージは、期待される状態と実際の状態を明確に区別し、結果についてより多くのコンテキストを与えます。
 
 ```
    Expected an account in state CLOSED, but got account:
         <{name: "my-account", state: "OPEN"}
 ```
 
-Good libraries can help make it easier to write useful failure messages. Consider the assertions in Example 12-17 in a Java test, the first of which uses classical JUnit asserts, and the second of which uses Truth, an assertion library developed by Google:
+優れたライブラリを使えば、有用な失敗メッセージを簡単に書くことができます。例12-17のアサーションをJavaのテストで考えてみましょう。1つ目のアサーションは従来のJUnitのアサーションを使用し、2つ目のアサーションはGoogleが開発したアサーションライブラリTruthを使用しています。
 
-Example 12-17. An assertion using the Truth library
+例 12-17. Truthライブラリを使用したアサーション
 ```java
 Set<String> colors = ImmutableSet.of("red", "green", "blue");
 assertTrue(colors.contains("orange")); // JUnit
 assertThat(colors).contains("orange"); // Truth
 ```
 
-Because the first assertion only receives a Boolean value, it is only able to give a generic error message like “expected <true> but was <false>,” which isn’t very informative in a failing test output. Because the second assertion explicitly receives the subject of the assertion, it is able to give a much more useful error message: AssertionError: <[red, green, blue]> should have contained <orange>.”
-Not all languages have such helpers available, but it should always be possible to manually specify the important information in the failure message. For example, test assertions in Go conventionally look like Example 12-18.
+最初のアサーションはブール値を受け取るだけなので、 「期待された <true> が <false> になった」 といった一般的なエラーメッセージしか表示することができません。2 番目のアサーションでは、アサーションのサブジェクトを明示的に受け取るため、より有用なエラーメッセージを表示することができます。AssertionError: <[red, green, blue]> は <orange> を含むべきでした。"
 
-Example 12-18. A test assertion in Go
+すべての言語でこのようなヘルパーが利用できるわけではありませんが、失敗メッセージの重要な情報を手動で指定することは常に可能であるべきです。例えば、Goのテストアサーションは慣習的に例12-18のようになります。
+
+例 12-18. Goでのテストアサーション
 ```go
 result := Add(2, 3)
 if result !=5 {
@@ -455,13 +458,15 @@ if result !=5 {
 }
 ```
 
-## Tests and Code Sharing: DAMP, Not DRY
+## テストとコードの共有。DRYではなくDAMP
 
-One final aspect of writing clear tests and avoiding brittleness has to do with code sharing. Most software attempts to achieve a principle called DRY --- “Don’t Repeat Yourself.” DRY states that software is easier to maintain if every concept is canonically represented in one place and code duplication is kept to a minimum. This approach is especially valuable in making changes easier because an engineer needs to update only one piece of code rather than tracking down multiple references. The downside to such consolidation is that it can make code unclear, requiring readers to follow chains of references to understand what the code is doing.
-In normal production code, that downside is usually a small price to pay for making code easier to change and work with. But this cost/benefit analysis plays out a little differently in the context of test code. Good tests are designed to be stable, and in fact you usually want them to break when the system being tested changes. So DRY doesn’t have quite as much benefit when it comes to test code. At the same time, the costs of complexity are greater for tests: production code has the benefit of a test suite to ensure that it keeps working as it becomes complex, whereas tests must stand by themselves, risking bugs if they aren’t self-evidently correct. As mentioned earlier, something has gone wrong if tests start becoming complex enough that it feels like they need their own tests to ensure that they’re working properly.
-Instead of being completely DRY, test code should often strive to be DAMP --- that is, to promote “Descriptive And Meaningful Phrases.” A little bit of duplication is OK in tests so long as that duplication makes the test simpler and clearer. To illustrate, Example 12-19 presents some tests that are far too DRY.
+明確なテストを書き、もろさを回避するための最後の側面は、コードの共有に関係しています。ほとんどのソフトウェアは DRY (Don't Repeat Yourself) と呼ばれる原則を達成しようとしています。DRYとは、すべての概念が1つの場所に統一され、コードの重複が最小限に抑えられていれば、ソフトウェアの保守が容易になるというものです。このアプローチは、特に変更を容易にするという点で価値があります。エンジニアは、複数の参照を追跡するのではなく、1つのコードだけを更新する必要があるからです。しかし、このような統合は、コードを不明確にし、コードが何をしているのかを理解するために読者が参照の連鎖を辿らなければならなくなるというデメリットがあります。
 
-Example 12-19. A test that is too DRY
+通常のプロダクションコードでは、コードの変更や作業を容易にするためには、このようなデメリットは小さな代償となります。しかし、この費用対効果の分析は、テストコードの文脈では少し違ってきます。優れたテストは安定しているように設計されており、実際にはテスト対象のシステムが変更されたときにテストが壊れることを望んでいます。そのため、テストコードに関しては、DRYはそれほどメリットがありません。一方、テストは単独で行わなければならず、自明の正しさでなければバグのリスクがあります。先に述べたように、テストが複雑になり、適切に動作しているかどうかを確認するために独自のテストが必要だと感じられるようになったら、何かが間違っている。
+
+完全な DRY である代わりに、テストコードはしばしば DAMP（Descriptive And Meaningful Phrases）であるように努めるべきです。多少の重複があっても、それがテストをよりシンプルで明確なものにするのであれば問題ありません。例12-19では、DRYすぎるテストを紹介しています。
+
+例 12-19. DRY に過ぎるテスト
 ```java
 @Test
 public void shouldAllowMultipleUsers() {
@@ -508,9 +513,9 @@ private static void validateForumAndUsers(Forum forum, List<User> users) {
 }
 ```
 
-The problems in this code should be apparent based on the previous discussion of clarity. For one, although the test bodies are very concise, they are not complete: important details are hidden away in helper methods that the reader can’t see without having to scroll to a completely different part of the file. Those helpers are also full of logic that makes them more difficult to verify at a glance (did you spot the bug?). The test becomes much clearer when it’s rewritten to use DAMP, as shown in Example 12-20.
+このコードの問題点は、先ほどのわかりやすさの話からも明らかでしょう。重要な詳細はヘルパーメソッドに隠されていて、読者はファイルのまったく別の部分にスクロールしないと見ることができません。また、これらのヘルパーには、一見しただけでは検証が困難なロジックがたくさん含まれています（バグを発見しましたか？例12-20のように、DAMPを使うように書き換えると、テストの内容がより明確になります。
 
-Example 12-20. Tests should be DAMP
+例 12-20. テストはDAMPであるべき
 ```java
 @Test
 public void shouldAllowMultipleUsers() {
@@ -538,14 +543,15 @@ public void shouldNotRegisterBannedUsers() {
 }
 ```
 
-These tests have more duplication, and the test bodies are a bit longer, but the extra verbosity is worth it. Each individual test is far more meaningful and can be understood entirely without leaving the test body. A reader of these tests can feel confident that the tests do what they claim to do and aren’t hiding any bugs.
-DAMP is not a replacement for DRY; it is complementary to it. Helper methods and test infrastructure can still help make tests clearer by making them more concise, factoring out repetitive steps whose details aren’t relevant to the particular behavior being tested. The important point is that such refactoring should be done with an eye toward making tests more descriptive and meaningful, and not solely in the name of reducing repetition. The rest of this section will explore common patterns for sharing code across tests.
+これらのテストは重複が多く、テスト本体も少し長くなりますが、余分な冗長性には価値があります。個々のテストははるかに意味のあるものであり、 テスト本体から離れることなく完全に理解することができます。これらのテストを読む人は、テストが主張することを実行しており、バグを隠していないことを確信できます。
 
-### Shared Values
+DAMPはDRYの代わりではなく、DRYを補完するものです。ヘルパーメソッドやテストインフラストラクチャは、テストをより簡潔にし、テスト対象の特定の動作に関係のない反復的なステップを省くことで、テストをより明確にすることができます。重要なのは、このようなリファクタリングはテストをより説明的で意味のあるものにすることを念頭に置いて行うべきであり、 単に繰り返しを減らすという名目で行うべきではないということです。このセクションの残りの部分では、テスト間でコードを共有するための一般的なパターンについて説明します。
 
-Many tests are structured by defining a set of shared values to be used by tests and then by defining the tests that cover various cases for how these values interact. Example 12-21 illustrates what such tests look like.
+### 共有値
 
-Example 12-21. Shared values with ambiguous names
+多くのテストでは、テストで使用する共通の価値観を定義し、 その価値観がどのように作用するかについての様々なケースをカバーするテストを定義することで構成されています。例 12-21 は、そのようなテストの例です。
+
+例 12-21. 曖昧な名前の共有値
 ```java
 private static final Account ACCOUNT_1 = Account.newBuilder()
  .setState(AccountState.OPEN).setBalance(50).build();
@@ -569,10 +575,11 @@ public void canBuyItem_returnsFalseWhenBalanceInsufficient() {
 }
 ```
 
-This strategy can make tests very concise, but it causes problems as the test suite grows. For one, it can be difficult to understand why a particular value was chosen for a test. In Example 12-21, the test names fortunately clarify which scenarios are being tested, but you still need to scroll up to the definitions to confirm that `ACCOUNT_1` and `ACCOUNT_2` are appropriate for those scenarios. More descriptive constant names (e.g., `CLOSED_ACCOUNT` and `ACCOUNT_WITH_LOW_BALANCE`) help a bit, but they still make it more difficult to see the exact details of the value being tested, and the ease of reusing these values can encourage engineers to do so even when the name doesn’t exactly describe what the test needs.
-Engineers are usually drawn to using shared constants because constructing individual values in each test can be verbose. A better way to accomplish this goal is to construct data using helper methods (see Example 12-22) that require the test author to specify only values they care about, and setting reasonable defaults(*7) for all other values. This construction is trivial to do in languages that support named parameters, but languages without named parameters can use constructs such as the Builder pattern to emulate them (often with the assistance of tools such as AutoValue):
+この方法はテストを非常に簡潔にすることができますが、 テストスイートが大きくなると問題が発生します。ひとつは、あるテストで特定の値が選ばれた理由を理解するのが難しいということです。例12-21では、テスト名を見ればどのシナリオがテストされているのかがわかりますが、それでも定義までスクロールして `ACCOUNT_1` や `ACCOUNT_2` がそのシナリオに適しているかどうかを確認する必要があります。より説明的な定数名（例えば、`CLOSED_ACCOUNT`や`ACCOUNT_WITH_LOW_BALANCE`）は少し助けになりますが、テストされる値の正確な詳細を確認することはまだ難しく、これらの値を再利用することが容易であるため、名前がテストに必要なものを正確に説明していなくても、エンジニアはそうすることができます。
 
-Example 12-22. Shared values using helper methods
+エンジニアは、テストごとに個別の値を作成すると冗長になってしまうため、共有定数を使用したいと考えるのが普通です。この目的を達成するためのより良い方法は、ヘルパーメソッドを使ってデータを構築することです（例12-22参照）。ヘルパーメソッドでは、テスト作成者が気になる値だけを指定し、それ以外の値には妥当なデフォルト(*7)を設定する必要があります。名前付きパラメータをサポートしている言語では、このような構造は些細なことですが、名前付きパラメータを持たない言語では、Builderパターンなどの構造を使ってそれを模倣することができます（多くの場合、AutoValueなどのツールの助けを借ります）。
+
+例12-22. ヘルパーメソッドによる値の共有
 ```
 # A helper method wraps a constructor by defining arbitrary defaults for 
 # each of its parameters.
@@ -609,16 +616,18 @@ public void fullNameShouldCombineFirstAndLastNames() {
 }
 ```
 
-Using helper methods to construct these values allows each test to create the exact values it needs without having to worry about specifying irrelevant information or conflicting with other tests.
+ヘルパーメソッドを使用してこれらの値を作成することで、各テストは必要な値を正確に作成することができ、無関係な情報を指定したり他のテストと衝突したりする心配はありません。
 
 
-### Shared Setup
+### 共有セットアップ
 
-A related way that tests shared code is via setup/initialization logic. Many test frameworks allow engineers to define methods to execute before each test in a suite is run. Used appropriately, these methods can make tests clearer and more concise by obviating the repetition of tedious and irrelevant initialization logic. Used inappropriately, these methods can harm a test’s completeness by hiding important details in a separate initialization method.
-The best use case for setup methods is to construct the object under tests and its collaborators. This is useful when the majority of tests don’t care about the specific arguments used to construct those objects and can let them stay in their default states. The same idea also applies to stubbing return values for test doubles, which is a concept that we explore in more detail in Chapter 13.
-One risk in using setup methods is that they can lead to unclear tests if those tests begin to depend on the particular values used in setup. For example, the test in Example 12-23 seems incomplete because a reader of the test needs to go hunting to discover where the string “Donald Knuth” came from.
+コードを共有してテストする方法として、セットアップや初期化のロジックがあります。多くのテストフレームワークでは、エンジニアがスイート内の各テストを実行する前に実行するメソッドを定義することができます。これらのメソッドを適切に使用すれば、退屈で無関係な初期化ロジックの繰り返しを避けることができ、テストをより明確かつ簡潔なものにすることができます。逆に不適切な使い方をすると、重要な内容を別の初期化メソッドに隠してしまうことで、テストの完成度を下げてしまうことになります。
 
-Example 12-23. Dependencies on values in setup methods
+セットアップメソッドの最も良い使用例は、 テスト対象のオブジェクトとその共同作業者を構築することです。これは、テストの大半がオブジェクトを構築する際の引数を気にせず、 デフォルトの状態のままにしておく場合に便利です。同じ考え方は、テストのダブルスの戻り値をスタブ化する場合にも当てはまります。 これについては第 13 章で詳しく説明します。
+
+セットアップメソッドを使用する際のリスクとして、 セットアップで使用する特定の値にテストが依存するようになると、 不明瞭なテストになってしまうことがあります。たとえば、例 12-23 のテストは、 "Donald Knuth" という文字列がどこから来たのかを知るために、 テストを読む人が探し回る必要があるため、不完全なものに見えます。
+
+例 12-23. setupメソッドの値への依存性
 ```java
 private NameService nameService;
 private UserStore userStore;
@@ -639,9 +648,9 @@ public void shouldReturnNameFromService() {
 }
 ```
 
-Tests like these that explicitly care about particular values should state those values directly, overriding the default defined in the setup method if need be. The resulting test contains slightly more repetition, as shown in Example 12-24, but the result is far more descriptive and meaningful.
+このように特定の値を明示的に指定するテストでは、 その値を直接指定し、必要に応じて setup メソッドで定義したデフォルト値を上書きします。結果として、例 12-24 に示すようにテストの繰り返しが若干多くなりますが、 結果ははるかに説明的で意味のあるものとなります。
 
-Example 12-24. Overriding values in setup mMethods
+例 12-24. mMethodsのセットアップで値を上書きする
 ```java
 private NameService nameService;
 private UserStore userStore;
