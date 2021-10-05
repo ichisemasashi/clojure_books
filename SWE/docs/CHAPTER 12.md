@@ -670,13 +670,15 @@ public void shouldReturnNameFromService() {
 }
 ```
 
-### Shared Helpers and Validation
+### ヘルパーの共有と検証
 
-The last common way that code is shared across tests is via “helper methods” called from the body of the test methods. We already discussed how helper methods can be a useful way for concisely constructing test values --- this usage is warranted, but other types of helper methods can be dangerous.
-One common type of helper is a method that performs a common set of assertions against a system under test. The extreme example is a validate method called at the end of every test method, which performs a set of fixed checks against the system under test. Such a validation strategy can be a bad habit to get into because tests using this approach are less behavior driven. With such tests, it is much more difficult to determine the intent of any particular test and to infer what exact case the author had in mind when writing it. When bugs are introduced, this strategy can also make them more difficult to localize because they will frequently cause a large number of tests to start failing.
-More focused validation methods can still be useful, however. The best validation helper methods assert a single conceptual fact about their inputs, in contrast to general-purpose validation methods that cover a range of conditions. Such methods can be particularly helpful when the condition that they are validating is conceptually simple but requires looping or conditional logic to implement that would reduce clarity were it included in the body of a test method. For example, the helper method in Example 12-25 might be useful in a test covering several different cases around account access.
+テスト間でコードが共有される最後の一般的な方法は、 テストメソッドの本体からコールされる「ヘルパーメソッド」によるものです。ヘルパーメソッドはテストの値を簡潔に作成するための便利な手段であることはすでに説明しましたが、 このような使い方は正当なものです。
 
-Example 12-25. A conceptually simple test
+一般的なヘルパーの種類としては、テスト対象のシステムに対して共通のアサーションを行うメソッドがあります。極端な例としては、すべてのテストメソッドの最後に呼び出される validate メソッドがあり、これはテスト対象のシステムに対して一連の固定されたチェックを行います。このような検証方法は、テストの動作があまり重視されないため、悪い習慣になる可能性があります。このようなテストでは、特定のテストの意図を判断したり、作者がどのようなケースを想定してテストを書いたのかを推測したりすることが非常に困難になります。また、バグが発生した場合、この方法では多くのテストが失敗することになるため、バグを特定するのが難しくなります。
+
+しかし、より焦点を絞った検証方法も有効です。最良の検証ヘルパーメソッドは、入力に対して単一の概念的な事実を主張するもので、さまざまな条件を網羅する汎用の検証メソッドとは対照的です。このようなメソッドは、検証対象の条件が概念的には単純なものであるにもかかわらず、 ループや条件付きのロジックを実装しなければならず、 テストメソッドの本文に含めるとわかりにくくなるような場合に特に役立ちます。たとえば、例 12-25 のヘルパーメソッドは、 アカウントへのアクセスに関するいくつかの異なるケースをテストする際に便利です。
+
+例 12-25. 概念的にシンプルなテスト
 ```java
 private void assertUserHasAccessToAccount(User user, Account account) {
   for (long userId : account.getUsersWithAccess()) {
@@ -688,29 +690,33 @@ private void assertUserHasAccessToAccount(User user, Account account) {
 }
 ```
 
-### Defining Test Infrastructure
+### テストインフラの定義
 
-The techniques we’ve discussed so far cover sharing code across methods in a single test class or suite. Sometimes, it can also be valuable to share code across multiple test suites. We refer to this sort of code as test infrastructure. Though it is usually more valuable in integration or end-to-end tests, carefully designed test infrastructure can make unit tests much easier to write in some circumstances.
-Custom test infrastructure must be approached more carefully than the code sharing that happens within a single test suite. In many ways, test infrastructure code is more similar to production code than it is to other test code given that it can have many callers that depend on it and can be difficult to change without introducing breakages. Most engineers aren’t expected to make changes to the common test infrastructure while testing their own features. Test infrastructure needs to be treated as its own separate product, and accordingly, test infrastructure must always have its own tests.
-Of course, most of the test infrastructure that most engineers use comes in the form of well-known third-party libraries like JUnit. A huge number of such libraries are available, and standardizing on them within an organization should happen as early and universally as possible. For example, Google many years ago mandated Mockito as the only mocking framework that should be used in new Java tests and banned new tests from using other mocking frameworks. This edict produced some grumbling at the time from people comfortable with other frameworks, but today, it’s universally seen as a good move that made our tests easier to understand and work with.
+これまで説明してきたテクニックは、単一のテストクラスやスイート内のメソッド間でコードを共有するものでした。時には、複数のテストスイート間でコードを共有することが有益な場合もあります。このようなコードをテストインフラと呼びます。通常は統合テストやエンドツーエンドのテストでより価値を発揮しますが、 慎重に設計されたテストインフラを使用することで、 状況によってはユニットテストをより簡単に書くことができます。
 
-## Conclusion
+カスタムのテストインフラは、単一のテストスイート内で行われるコードの共有よりも慎重に対処しなければなりません。多くの点で、テストインフラストラクチャのコードは、他のテストコードよりもプロダクションコードに似ています。それは、多くの呼び出し元がそれに依存していることや、障害を発生させずに変更することが難しいことを考慮してのことです。ほとんどのエンジニアは、自分の機能をテストする際に、共通のテストインフラに変更を加えることを期待されていません。テストインフラストラクチャは独立した製品として扱う必要があり、そのためにテストインフラストラクチャは常に独自のテストを持たなければなりません。
 
-Unit tests are one of the most powerful tools that we as software engineers have to make sure that our systems keep working over time in the face of unanticipated changes. But with great power comes great responsibility, and careless use of unit testing can result in a system that requires much more effort to maintain and takes much more effort to change without actually improving our confidence in said system.
-Unit tests at Google are far from perfect, but we’ve found tests that follow the practices outlined in this chapter to be orders of magnitude more valuable than those that don’t. We hope they’ll help you to improve the quality of your own tests!
+もちろん、多くのエンジニアが利用しているテストインフラは、JUnitのような有名なサードパーティのライブラリの形で提供されています。このようなライブラリは膨大な数が存在しており、組織内での標準化はできるだけ早い段階で、かつ普遍的に行われるべきです。例えば、Googleは何年も前に、新しいJavaテストで使用するべき唯一のモッキング・フレームワークとしてMockitoを義務づけ、他のモッキング・フレームワークを使用したテストを禁止しました。この命令は、当時、他のフレームワークに慣れている人たちから不満の声が上がっていましたが、今日では、テストを理解しやすくし、作業しやすくするための良い動きであると誰もが認めています。
+
+
+## まとめ
+
+ユニットテストは、私たちソフトウェアエンジニアにとって、 予期せぬ変更に直面してもシステムが長期にわたって動作し続けることを確認するための、 最も強力なツールのひとつです。しかし、大きな力には大きな責任が伴います。ユニットテストを不用意に使用すると、システムの維持に多くの労力を必要とし、システムに対する信頼性が向上しないまま、変更に多くの労力を要するシステムになってしまいます。
+
+Google のユニットテストは完璧なものではありませんが、この章で説明した方法に従ったテストは、そうでないテストよりもはるかに価値があることがわかりました。皆さんのテストの質を向上させるための参考になれば幸いです。
 
 ## TL;DRs
 
-- Strive for unchanging tests.
-- Test via public APIs.
-- Test state, not interactions.
-- Make your tests complete and concise.
-- Test behaviors, not methods.
-- Structure tests to emphasize behaviors.
-- Name tests after the behavior being tested.
-- Don’t put logic in tests.
-- Write clear failure messages.
-- Follow DAMP over DRY when sharing code for tests.
+- 不変のテストを目指しています。
+- 公開されたAPIでテストする。
+- インタラクションではなくステートをテストしましょう。
+- テストは完全で簡潔なものにしましょう。
+- メソッドではなくビヘイビアをテストしましょう。
+- ビヘイビアを強調するようにテストを構成しましょう。
+- テストの名前は、テスト対象の動作にちなんで付けましょう。
+- テストにロジックを入れない。
+- 明確な失敗メッセージを書きましょう。
+- テスト用のコードを共有するときは、DRYではなくDAMPに従いましょう。
 
 
 
@@ -719,13 +725,13 @@ Unit tests at Google are far from perfect, but we’ve found tests that follow t
 
 -----
 
-1 Note that this is slightly different from a flaky test, which fails nondeterministically without any change to production code.
-2 This is sometimes called the "Use the front door first principle.”
-3 These are also the same two reasons that a test can be “flaky.” Either the system under test has a nondeterministic fault, or the test is flawed such that it sometimes fails when it should pass.
-4 Seehttps://testing.googleblog.com/2014/04/testing-on-toilet-test-behaviors-not.htmlandhttps://dannorth.net/ introducing-bdd.
-5 Furthermore, a feature (in the product sense of the word) can be expressed as a collection of behaviors.
-6 These components are sometimes referred to as “arrange,” “act,” and “assert.”
-7 In many cases, it can even be useful to slightly randomize the default values returned for fields that aren’t explicitly set. This helps to ensure that two different instances won’t accidentally compare as equal, and makes it more difficult for engineers to hardcode dependencies on the defaults.
+1 これは、プロダクションコードに変更を加えることなく非決定論的に失敗するflakyテストとは若干異なることに注意してください。
+2 これは "Use the front door first principle" と呼ばれることもあります。
+3 この2つは、テストが "フレーキー "になる理由と同じです。テスト対象のシステムに非決定論的な欠陥があるか、あるいはテストに欠陥があり、合格すべきところで失敗してしまうことがあるのです。
+4https://testing.googleblog.com/2014/04/testing-on-toilet-test-behaviors-not.htmlandhttps://dannorth.net/ introduce-bddを参照。
+5 さらに、（製品の意味での）機能は、ビヘイビアの集まりとして表現することができます。
+6 これらのコンポーネントは、"arrange"、"act"、"assert "と呼ばれることもあります。
+7 多くの場合、明示的に設定されていないフィールドに返されるデフォルト値をわずかにランダム化することも有用である。これにより、2つの異なるインスタンスが誤って等しいものとして比較されないようにするとともに、エンジニアがデフォルト値に依存してハードコーディングすることを難しくしています。
 
 
 

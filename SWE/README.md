@@ -32,9 +32,9 @@ PART III プロセス
 
 [ch11: Testing Overview](docs/CHAPTER%2011.md)
 
+[ch12](docs/CHAPTER%2012.md)
 
-
-
+[ch13: Test Doubles](docs/CHAPTER13.md)
 
 
 www.DeepL.com/Translator（無料版）で翻訳しました。
