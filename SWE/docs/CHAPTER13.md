@@ -4,38 +4,44 @@ Written by Andrew Trenk and Dillon Bly
 
 Edited by Tom Manshreck
 
-Unit tests are a critical tool for keeping developers productive and reducing defects in code. Although they can be easy to write for simple code, writing them becomes difficult as code becomes more complex.
-For example, imagine trying to write a test for a function that sends a request to an external server and then stores the response in a database. Writing a handful of tests might be doable with some effort. But if you need to write hundreds or thousands of tests like this, your test suite will likely take hours to run, and could become flaky due to issues like random network failures or tests overwriting one another’s data.
-Test doubles come in handy in such cases. A test double is an object or function that can stand in for a real implementation in a test, similar to how a stunt double can stand in for an actor in a movie. The use of test doubles is often referred to as mocking, but we avoid that term in this chapter because, as we’ll see, that term is also used to refer to more specific aspects of test doubles.
-Perhaps the most obvious type of test double is a simpler implementation of an object that behaves similarly to the real implementation, such as an in-memory database. Other types of test doubles can make it possible to validate specific details of your system, such as by making it easy to trigger a rare error condition, or ensuring a heavyweight function is called without actually executing the function’s implementation.
-The previous two chapters introduced the concept of small tests and discussed why they should comprise the majority of tests in a test suite. However, production code often doesn’t fit within the constraints of small tests due to communication across multiple processes or machines. Test doubles can be much more lightweight than real implementations, allowing you to write many small tests that execute quickly and are not flaky.
+ユニットテストは、開発者の生産性を維持し、コードの欠陥を減らすための重要なツールです。単純なコードであれば簡単に書くことができますが、コードが複雑になるとテストを書くのが難しくなります。
 
-## The Impact of Test Doubles on Software Development
+例えば、外部のサーバーにリクエストを送信し、そのレスポンスをデータベースに格納する関数のテストを書こうとしたとします。一握りのテストを書くことは、多少の努力で可能かもしれません。しかし、このように何百、何千ものテストを書かなければならない場合、テストスイートの実行には何時間もかかるでしょう。また、ネットワークのランダムな障害やテスト同士のデータの上書きなどの問題によって、テストが不安定になる可能性もあります。
 
-The use of test doubles introduces a few complications to software development that require some trade-offs to be made. The concepts introduced here are discussed in more depth throughout this chapter:
+このような場合に便利なのがテストダブルです。テストダブルとは、映画でスタントダブルが俳優の代役を務めるように、テストで実際の実装の代わりとなるオブジェクトや関数のことです。テストダブルの使用はしばしばモッキングと呼ばれますが、この章ではその言葉を避けます。なぜなら、この言葉はテストダブルのより具体的な側面を指すのにも使われるからです。
 
-- Testability
-  - To use test doubles, a codebase needs to be designed to be testable --- it should be possible for tests to swap out real implementations with test doubles. For example, code that calls a database needs to be flexible enough to be able to use a test double in place of a real database. If the codebase isn’t designed with testing in mind and you later decide that tests are needed, it can require a major commitment to refactor the code to support the use of test doubles.
-- Applicability
-  - Although proper application of test doubles can provide a powerful boost to engineering velocity, their improper use can lead to tests that are brittle, complex, and less effective. These downsides are magnified when test doubles are used improperly across a large codebase, potentially resulting in major losses in productivity for engineers. In many cases, test doubles are not suitable and engineers should prefer to use real implementations instead.
-- Fidelity
-  - Fidelity refers to how closely the behavior of a test double resembles the behavior of the real implementation that it’s replacing. If the behavior of a test double significantly differs from the real implementation, tests that use the test double likely wouldn’t provide much value --- for example, imagine trying to write a test with a test double for a database that ignores any data added to the database and always returns empty results. But perfect fidelity might not be feasible; test doubles often need to be vastly simpler than the real implementation in order to be suitable for use in tests. In many situations, it is appropriate to use a test double even without perfect fidelity. Unit tests that use test doubles often need to be supplemented by larger-scope tests that exercise the real implementation.
+テストダブルの最も分かりやすいタイプは、インメモリデータベースのように、実際の実装と同様の動作をするオブジェクトの単純な実装です。その他のタイプのテストダブルでは、システムの特定の詳細を検証することができます。例えば、稀なエラー条件を簡単に引き起こすことができたり、実際にはその関数の実装を実行せずに重い関数を確実に呼び出すことができたりします。
 
-## Test Doubles at Google
+前の 2 つの章では、小規模なテストの概念を紹介し、 テストスイートの大部分のテストを小規模なテストで構成すべき理由を説明しました。しかし、実稼働中のコードは、複数のプロセスやマシンにまたがって通信を行うため、小規模なテストの制約に当てはまらないことがよくあります。テストダブルスは実際の実装よりもはるかに軽量であるため、 実行速度が速く、不安定さのない小さなテストをたくさん書くことができます。
 
-At Google, we’ve seen countless examples of the benefits to productivity and software quality that test doubles can bring to a codebase, as well as the negative impact they can cause when used improperly. The practices we follow at Google have evolved over time based on these experiences. Historically, we had few guidelines on how to effectively use test doubles, but best practices evolved as we saw common patterns and antipatterns arise in many teams’ codebases.
-One lesson we learned the hard way is the danger of overusing mocking frameworks, which allow you to easily create test doubles (we will discuss mocking frameworks in more detail later in this chapter). When mocking frameworks first came into use at Google, they seemed like a hammer fit for every nail --- they made it very easy to write highly focused tests against isolated pieces of code without having to worry about how to construct the dependencies of that code. It wasn’t until several years and countless tests later that we began to realize the cost of such tests: though these tests were easy to write, we suffered greatly given that they required constant effort to maintain while rarely finding bugs. The pendulum at Google has now begun swinging in the other direction, with many engineers avoiding mocking frameworks in favor of writing more realistic tests.
-Even though the practices discussed in this chapter are generally agreed upon at Google, the actual application of them varies widely from team to team. This variance stems from engineers having inconsistent knowledge of these practices, inertia in an existing codebase that doesn’t conform to these practices, or teams doing what is easiest for the short term without thinking about the long-term implications.
+## テストダブルスがソフトウェア開発に与える影響
 
-### Basic Concepts
+テストダブルスを使用すると、ソフトウェア開発にいくつかの複雑な問題が発生し、いくつかのトレードオフが必要になります。ここで紹介した概念は、この章でさらに詳しく説明します。
 
-Before we dive into how to effectively use test doubles, let’s cover some of the basic concepts related to them. These build the foundation for best practices that we will discuss later in this chapter.
+- テスト可能性
+  - テストダブルを使用するためには、コードベースがテスト可能に設計されている必要があります。つまり、テストで実際の実装とテストダブルを入れ替えることが可能でなければなりません。例えば、データベースを呼び出すコードは、実際のデータベースの代わりにテストダブルを使用できるような柔軟性が必要です。コードベースがテストを考慮して設計されておらず、後になってテストが必要だと判断した場合、テストダブルの使用をサポートするためにコードをリファクタリングするには大きなコミットメントが必要になります。
+- 適用性
+  - テストダブルスを適切に使用することで、エンジニアリングの速度を強力に向上させることができますが、不適切な使い方をすると、テストが脆弱で複雑になり、効果も低くなります。大規模なコードベースでテストダブルスが不適切に使用された場合、これらの欠点は拡大し、エンジニアの生産性が大きく損なわれる可能性があります。多くの場合、テスト替え玉は適切ではなく、エンジニアは代わりに実際の実装を使用することを好むべきです。
+- 忠実度
+  - 忠実度とは、テストダブルの動作が、置き換えようとしている実際の実装の動作にどれだけ似ているかということです。例えば、データベースに追加されたデータを無視して常に空の結果を返すデータベースのテストを書こうとしたとしましょう。しかし、完全な忠実性は実現できないかもしれません。テストダブルをテストに使用するためには、実際の実装よりもはるかにシンプルでなければならないことがよくあります。多くの場合、完全な忠実性がなくてもテストダブルを使用することは適切です。テストダブルを使ったユニットテストは、実際の実装を使ったより大規模なテストで補う必要があります。
 
-#### An Example Test Double
+## Googleにおけるテストダブルス
 
-Imagine an ecommerce site that needs to process credit card payments. At its core, it might have something like the code shown in Example 13-1.
+Google では、テストの二重化がコードベースにもたらす生産性やソフトウェア品質への恩恵と、不適切に使用した場合の悪影響について、数多くの例を見てきました。Googleで行っているプラクティスは、これらの経験に基づいて時間をかけて進化してきました。歴史的には、テストダブルを効果的に使用するためのガイドラインはほとんどありませんでしたが、多くのチームのコードベースに共通のパターンやアンチパターンが発生するのを見て、ベストプラクティスが進化していきました。
 
-Example 13-1. A credit card service
+私たちが苦労して学んだ教訓のひとつは、テストダブルスを簡単に作成できるモッキング・フレームワークを使いすぎることの危険性です（モッキング・フレームワークについては、この章の後半で詳しく説明します）。モッキング・フレームワークは、Googleで初めて使用されたとき、あらゆる釘に対応するハンマーのように思えました。そのようなテストの代償に気付き始めたのは、数年後、数え切れないほどのテストを行った後でした。これらのテストは簡単に書けるにもかかわらず、バグを発見することはほとんどなく、維持するために絶え間ない努力が必要であることに、私たちは大きな苦しみを感じていました。現在、Googleでは振り子が反対方向に振れ始めており、多くのエンジニアがモッキング・フレームワークを避け、より現実的なテストを書くようになっています。
+
+本章で取り上げたプラクティスは、Googleでは一般的に合意されているものですが、実際の適用はチームによって大きく異なります。このばらつきは、エンジニアがこれらのプラクティスについて一貫した知識を持っていないこと、既存のコードベースがこれらのプラクティスに準拠していない惰性的なものであること、またはチームが長期的な影響を考えずに短期的に最も簡単なことを行うことに起因する。
+
+### 基本的な概念
+
+テストダブルスの効果的な使い方を説明する前に、テストダブルスに関連する基本的な概念を説明します。これらは、この章の後半で説明するベスト・プラクティスの基礎となります。
+
+#### テストダブルの例
+
+クレジットカードでの支払いを処理する必要のあるeコマースサイトを想像してみてください。その中核となるのが、例 13-1 に示すようなコードです。
+
+例 13-1. クレジットカードのサービス
 ```java
 class PaymentProcessor {
   private CreditCardService creditCardService;
@@ -49,9 +55,9 @@ class PaymentProcessor {
 }
 ```
 
-It would be infeasible to use a real credit card service in a test (imagine all the transaction fees from running the test!), but a test double could be used in its place to simulate the behavior of the real system. The code in Example 13-2 shows an extremely simple test double.
+実際のクレジットカードサービスをテストに使うのは不可能ですが (テストを実行することによる取引手数料を想像してみてください!)、 その代わりにテストダブルを使って実際のシステムの動作をシミュレートすることができます。例 13-2 のコードは、非常にシンプルなテストダブルを示しています。
 
-Example 13-2. A trivial test double
+例 13-2. 些細なテストダブル
 ```java
 class TestDoubleCreditCardService implements CreditCardService {
   @Override
@@ -61,9 +67,9 @@ class TestDoubleCreditCardService implements CreditCardService {
 }
 ```
 
-Although this test double doesn’t look very useful, using it in a test still allows us to test some of the logic in the makePayment() method. For example, in Example 13-3, we can validate that the method behaves properly when the credit card is expired because the code path that the test exercises doesn’t rely on the behavior of the credit card service.
+このテストダブルはあまり役に立たないように見えますが、 これをテストに使用することで、makePayment() メソッドのロジックの一部をテストすることができます。たとえば例 13-3 では、クレジットカードの有効期限が切れたときにこのメソッドが適切に動作するかどうかを検証することができます。なぜなら、このテストが実行するコードパスはクレジットカードサービスの動作に依存していないからです。
 
-Example 13-3. Using the test double
+例 13-3. テストダブルの使用
 ```java
 @Test public void cardIsExpired_returnFalse() {
   boolean success = paymentProcessor.makePayment(EXPIRED_CARD, AMOUNT);
@@ -71,7 +77,7 @@ Example 13-3. Using the test double
 }
 ```
 
-The following sections in this chapter will discuss how to make use of test doubles in more complex situations than this one.
+この章の次のセクションでは、今回よりも複雑な状況でのテストダブルスの活用方法について説明します。
 
 #### Seams
 
