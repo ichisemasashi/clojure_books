@@ -79,13 +79,15 @@ class TestDoubleCreditCardService implements CreditCardService {
 
 この章の次のセクションでは、今回よりも複雑な状況でのテストダブルスの活用方法について説明します。
 
-#### Seams
+#### 継ぎ目
 
-Code is said to be testable if it is written in a way that makes it possible to write unit tests for the code. A seam is a way to make code testable by allowing for the use of test doubles --- it makes it possible to use different dependencies for the system under test rather than the dependencies used in a production environment.
-Dependency injection is a common technique for introducing seams. In short, when a class utilizes dependency injection, any classes it needs to use (i.e., the class’s dependencies) are passed to it rather than instantiated directly, making it possible for these dependencies to be substituted in tests.
-Example 13-4 shows an example of dependency injection. Rather than the constructor creating an instance of CreditCardService, it accepts an instance as a parameter.
+コードのユニットテストを書くことができるように書かれたコードは、テスト可能であると言われています。シーム(継ぎ目)とは、テストダブルの使用を可能にすることでコードをテスト可能にする方法である。
 
-Example 13-4. Dependency injection
+ディペンデンシー・インジェクションは、シームを導入するための一般的な手法です。つまり、クラスが依存性注入を使用すると、 そのクラスが使用する必要のあるクラス (つまりクラスの依存関係) が直接インスタンス化されずにクラスに渡されるので、 テストの中でこれらの依存関係を置き換えることが可能になります。
+
+例 13-4 は、依存性の注入の例です。コンストラクタは、CreditCardService のインスタンスを生成するのではなく、 パラメータとしてインスタンスを受け取ります。
+
+例 13-4. ディペンデンシー・インジェクション
 ```java
 class PaymentProcessor {
   private CreditCardService creditCardService;
@@ -97,33 +99,36 @@ class PaymentProcessor {
 }
 ```
 
-The code that calls this constructor is responsible for creating an appropriate Credit CardService instance. Whereas the production code can pass in an implementation of CreditCardService that communicates with an external server, the test can pass in a test double, as demonstrated in Example 13-5.
+このコンストラクタを呼び出したコードは、適切な Credit CardService インスタンスを生成する責任があります。本番環境のコードでは、外部サーバーと通信するCreditCardServiceの実装を渡すことができますが、テストでは例13-5のようにテスト用のダブルを渡すことができます。
 
-Example 13-5. Passing in a test double
+例 13-5. テスト用のダブルを渡す
 ```java
 PaymentProcessor paymentProcessor =
     new PaymentProcessor(new TestDoubleCreditCardService());
 ```
 
-To reduce boilerplate associated with manually specifying constructors, automated dependency injection frameworks can be used for constructing object graphs automatically. At Google, Guice and Dagger are automated dependency injection frameworks that are commonly used for Java code.
-With dynamically typed languages such as Python or JavaScript, it is possible to dynamically replace individual functions or object methods. Dependency injection is less important in these languages because this capability makes it possible to use real implementations of dependencies in tests while only overriding functions or methods of the dependency that are unsuitable for tests.
-Writing testable code requires an upfront investment. It is especially critical early in the lifetime of a codebase because the later testability is taken into account, the more difficult it is to apply to a codebase. Code written without testing in mind typically needs to be refactored or rewritten before you can add appropriate tests.
+コンストラクタを手動で指定する際の煩雑な作業を軽減するために、自動依存性注入フレームワークを使用して、オブジェクトグラフを自動的に構築することができる。Googleでは、GuiceやDaggerといった自動依存性注入フレームワークが、Javaコードによく使われています。
 
-#### Mocking Frameworks
+また、PythonやJavaScriptなどの動的型付け言語では、個々の関数やオブジェクトのメソッドを動的に置き換えることができる。これらの言語では、依存性注入の重要性は低い。なぜなら、この機能により、テストに適さない依存性の関数やメソッドをオーバーライドするだけで、実際の依存性の実装をテストで使用することができるからである。
 
-A mocking framework is a software library that makes it easier to create test doubles within tests; it allows you to replace an object with a mock, which is a test double whose behavior is specified inline in a test. The use of mocking frameworks reduces boilerplate because you don’t need to define a new class each time you need a test double.
-Example 13-6 demonstrates the use of Mockito, a mocking framework for Java. Mockito creates a test double for `CreditCardService` and instructs it to return a specific value.
+テスト可能なコードを書くには、先行投資が必要です。テスト可能性を考慮するのが遅くなればなるほど、コードベースに適用するのが難しくなるため、コードベースのライフタイムの早い段階でのテストが特に重要です。テストを考慮せずに書かれたコードは、通常、適切なテストを追加する前にリファクタリングやリライトを行う必要があります。
 
-Example 13-6. Mocking frameworks
+#### モッキングフレームワーク
+
+モッキングフレームワークとは、テスト内でのテストダブルの作成を容易にするためのソフトウェアライブラリです。モックフレームワークを使用すると、テストダブルが必要になるたびに新しいクラスを定義する必要がなくなるため、定型的な作業を減らすことができます。
+
+例 13-6 では、Java 用のモッキング・フレームワークである Mockito を使用しています。Mockitoは`CreditCardService`用のテストダブルを作成し、特定の値を返すように指示しています。
+
+例 13-6. モッキングフレームワーク
 ```java
 class PaymentProcessorTest {
   ...
   PaymentProcessor paymentProcessor;
 
-  // Create a test double of CreditCardService with just one line of code.
+  // たった1行のコードでCreditCardServiceのテストダブルを作成します。
   @Mock CreditCardService mockCreditCardService;
   @Before public void setUp() {
-    // Pass in the test double to the system under test.
+    // テストダブルでテスト対象のシステムに渡す。
     paymentProcessor = new PaymentProcessor(mockCreditCardService);
   }
   @Test public void chargeCreditCardFails_returnFalse() {
@@ -139,8 +144,9 @@ class PaymentProcessorTest {
 }
 ```
 
-Mocking frameworks exist for most major programming languages. At Google, we use Mockito for Java, the googlemock component of Googletest for C++, and unittest.mock for Python.
-Although mocking frameworks facilitate easier usage of test doubles, they come with some significant caveats given that their overuse will often make a codebase more difficult to maintain. We cover some of these problems later in this chapter.
+モッキング・フレームワークは、ほとんどの主要なプログラミング言語に対応しています。Googleでは、JavaにはMockito、C++にはGoogletestのgooglemockコンポーネント、Pythonにはunittest.mockを使用しています。
+
+モッキング・フレームワークは、テスト・ダブルスの使用を容易にしてくれますが、使いすぎるとコードベースのメンテナンスが難しくなるという重大な注意点があります。この章の後の方で、これらの問題のいくつかを取り上げます。
 
 ## Techniques for Using Test Doubles
 
