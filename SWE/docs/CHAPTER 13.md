@@ -148,96 +148,106 @@ class PaymentProcessorTest {
 
 モッキング・フレームワークは、テスト・ダブルスの使用を容易にしてくれますが、使いすぎるとコードベースのメンテナンスが難しくなるという重大な注意点があります。この章の後の方で、これらの問題のいくつかを取り上げます。
 
-## Techniques for Using Test Doubles
+## テストダブルスの使い方
 
-There are three primary techniques for using test doubles. This section presents a brief introduction to these techniques to give you a quick overview of what they are and how they differ. Later sections in this chapter go into more details on how to effectively apply them.
-An engineer who is aware of the distinctions between these techniques is more likely to know the appropriate technique to use when faced with the need to use a test double.
+テストダブルスを使用するための主なテクニックは 3 つあります。このセクションでは、これらのテクニックがどのようなもので、どのように違うのかを簡単にご紹介します。この章の後のセクションでは、これらのテクニックを効果的に活用する方法について詳しく説明します。
 
-### Faking
+これらのテクニックの違いを認識しているエンジニアは、テストダブルを使用する必要に迫られたときに、どのテクニックを使用するのが適切かを知ることができます。
 
-A fake is a lightweight implementation of an API that behaves similar to the real implementation but isn’t suitable for production; for example, an in-memory database. Example 13-7 presents an example of faking.
+### フェイク
 
-Example 13-7. A simple fake
+フェイクとは、あるAPIの軽量な実装のことです。実際の実装に似た動作をしますが、実運用には適していません。例えば、インメモリデータベースなどです。例 13-7 は、フェイクの例を示しています。
+
+例 13-7. 単純な偽物
 ```java
-// Creating the fake is fast and easy.
+// フェイクの作成は迅速かつ簡単です。
 AuthorizationService fakeAuthorizationService =
     new FakeAuthorizationService();
 AccessManager accessManager = new AccessManager(fakeAuthorizationService):
 
-// Unknown user IDs shouldn’t have access.
+// 未知のユーザーIDではアクセスできないはずです。
 assertFalse(accessManager.userHasAccess(USER_ID));
 
-// The user ID should have access after it is added to
-// the authorization service.
+// ユーザーIDは、認証サービスに追加された後にアクセスできる必要があります。
 fakeAuthorizationService.addAuthorizedUser(new User(USER_ID));
 assertThat(accessManager.userHasAccess(USER_ID)).isTrue();
 ```
 
-Using a fake is often the ideal technique when you need to use a test double, but a fake might not exist for an object you need to use in a test, and writing one can be challenging because you need to ensure that it has similar behavior to the real implementation, now and in the future.
+しかし、テストで使用する必要のあるオブジェクトのフェイクが存在しない場合もありますし、フェイクを作成することは、現在および将来の実際の実装と同様の動作を保証する必要があるため、困難を伴います。
 
-### Stubbing
+### スタッビング
 
-Stubbing is the process of giving behavior to a function that otherwise has no behavior on its own --- you specify to the function exactly what values to return (that is, you stub the return values).
-Example 13-8 illustrates stubbing. The `when(...).thenReturn(...)` method calls from the Mockito mocking framework specify the behavior of the `lookupUser()` method.
+スタビングとは、それ自体では何の動作もしない関数に動作を与えることです。つまり、どのような値を返すかを関数に正確に指定します（つまり、戻り値をスタブ化します）。
+例13-8はスタブの例です。Mockitoモッキングフレームワークの`when(...).thenReturn(...)`メソッドコールは、`lookupUser()`メソッドの振る舞いを指定しています。
 
-Example 13-8. Stubbing
+例 13-8. スタブ
 ```java
-// Pass in a test double that was created by a mocking framework.
+// モッキングフレームワークで作成されたテストダブルを渡します。
 AccessManager accessManager = new AccessManager(mockAuthorizationService):
 
-// The user ID shouldn’t have access if null is returned.
+// nullが返された場合、そのユーザーIDはアクセスできないはずです。
 when(mockAuthorizationService.lookupUser(USER_ID)).thenReturn(null);
 assertThat(accessManager.userHasAccess(USER_ID)).isFalse();
 
-// The user ID should have access if a non-null value is returned.
+// 非nullの値が返された場合に、アクセス権を持つべきユーザーIDです。
 when(mockAuthorizationService.lookupUser(USER_ID)).thenReturn(USER);
 assertThat(accessManager.userHasAccess(USER_ID)).isTrue();
 ```
 
-Stubbing is typically done through mocking frameworks to reduce boilerplate that would otherwise be needed for manually creating new classes that hardcode return values.
-Although stubbing can be a quick and simple technique to apply, it has limitations, which we’ll discuss later in this chapter.
+スタッビングは一般的にモッキングフレームワークを使って行われ、戻り値をハードコードする新しいクラスを手動で作成する際に必要となる定型文を減らすことができます。
 
-### Interaction Testing
+スタッビングは迅速かつシンプルな手法ですが、この章の後で説明するように、制限があります。
 
-Interaction testing is a way to validate how a function is called without actually calling the implementation of the function. A test should fail if a function isn’t called the correct way --- for example, if the function isn’t called at all, it’s called too many times, or it’s called with the wrong arguments.
-Example 13-9 presents an instance of interaction testing. The `verify(...)` method from the Mockito mocking framework is used to validate that `lookupUser()` is called as expected.
+### インタラクションテスト
 
-Example 13-9. Interaction testing
+インタラクションテストとは、関数の実装を実際に呼び出すことなく、その関数がどのように呼び出されるかを検証する方法です。関数が正しい方法で呼び出されていないと、テストは失敗します。例えば、関数がまったく呼び出されていない、何度も呼び出されている、間違った引数で呼び出されている、などです。
+
+例13-9はインタラクションテストの一例です。Mockitoモッキングフレームワークの`verify(...)`メソッドを使って、`lookupUser()`が期待通りに呼ばれているかどうかを検証しています。
+
+例 13-9. インタラクションテスト
 ```java
-// Pass in a test double that was created by a mocking framework.
+// モッキングフレームワークで作成されたテストダブルを渡します。
 AccessManager accessManager = new AccessManager(mockAuthorizationService);
 accessManager.userHasAccess(USER_ID);
 
-// The test will fail if accessManager.userHasAccess(USER_ID) didn’t call
-// mockAuthorizationService.lookupUser(USER_ID).
+// accessManager.userHasAccess(USER_ID)がmockAuthorizationService.lookupUser(USER_ID)を
+// 呼び出さなかった場合、テストは失敗します。
 verify(mockAuthorizationService).lookupUser(USER_ID);
 ```
 
-Similar to stubbing, interaction testing is typically done through mocking frameworks. This reduces boilerplate compared to manually creating new classes that contain code to keep track of how often a function is called and which arguments were passed in.
-Interaction testing is sometimes called mocking. We avoid this terminology in this chapter because it can be confused with mocking frameworks, which can be used for stubbing as well as for interaction testing.
-As discussed later in this chapter, interaction testing is useful in certain situations but should be avoided when possible because overuse can easily result in brittle tests.
+スタビングと同様に、インタラクション・テストは一般的にモッキング・フレームワークによって行われます。これにより、関数が呼び出された頻度や、どの引数が渡されたかを追跡するコードを含む新しいクラスを手動で作成する場合に比べて、定型的な作業を減らすことができます。
 
-## Real Implementations
+インタラクション・テストはモッキングと呼ばれることもあります。本章ではこの用語を避けていますが、これはモッキング・フレームワークと混同される可能性があるからです。モッキング・フレームワークはインタラクション・テストだけでなくスタブにも使用できます。
 
-Although test doubles can be invaluable testing tools, our first choice for tests is to use the real implementations of the system under test’s dependencies; that is, the same implementations that are used in production code. Tests have higher fidelity when they execute code as it will be executed in production, and using real implementations helps accomplish this.
-At Google, the preference for real implementations developed over time as we saw that overuse of mocking frameworks had a tendency to pollute tests with repetitive code that got out of sync with the real implementation and made refactoring difficult. We’ll look at this topic in more detail later in this chapter.
-Preferring real implementations in tests is known as classical testing. There is also a style of testing known as mockist testing, in which the preference is to use mocking frameworks instead of real implementations. Even though some people in the software industry practice mockist testing (including the creators of the first mocking frameworks), at Google, we have found that this style of testing is difficult to scale. It requires engineers to follow strict guidelines when designing the system under test, and the default behavior of most engineers at Google has been to write code in a way that is more suitable for the classical testing style.
+この章で後述するように、インタラクション・テストは特定の状況では有用ですが、使いすぎるとテストがもろくなってしまうので、可能な限り避けたほうがよいでしょう。
 
-### Prefer Realism Over Isolation
+## 実際の実装
 
-Using real implementations for dependencies makes the system under test more realistic given that all code in these real implementations will be executed in the test. In contrast, a test that utilizes test doubles isolates the system under test from its dependencies so that the test does not execute code in the dependencies of the system under test.
-We prefer realistic tests because they give more confidence that the system under test is working properly. If unit tests rely too much on test doubles, an engineer might need to run integration tests or manually verify that their feature is working as expected in order to gain this same level of confidence. Carrying out these extra tasks can slow down development and can even allow bugs to slip through if engineers skip these tasks entirely when they are too time consuming to carry out compared to running unit tests.
-Replacing all dependencies of a class with test doubles arbitrarily isolates the system under test to the implementation that the author happens to put directly into the class and excludes implementation that happens to be in different classes. However, a good test should be independent of implementation --- it should be written in terms of the API being tested rather than in terms of how the implementation is structured.
-Using real implementations can cause your test to fail if there is a bug in the real implementation. This is good! You want your tests to fail in such cases because it indicates that your code won’t work properly in production. Sometimes, a bug in a real implementation can cause a cascade of test failures because other tests that use the real implementation might fail, too. But with good developer tools, such as a Continuous Integration (CI) system, it is usually easy to track down the change that caused the failure.
+テストダブルは非常に貴重なテストツールですが、私たちがテストで最初に選ぶのは、テスト対象のシステムの依存関係の実際の実装、つまり本番コードで使用されているのと同じ実装を使用することです。テストは、本番環境で実行されるのと同じようにコードを実行することで、より高い忠実度を得ることができますが、実際の実装を使用することでこれを実現することができます。
+
+Googleでは、モッキングフレームワークを使いすぎると、実際の実装と同期しない反復的なコードでテストが汚染され、リファクタリングが困難になる傾向が見られたため、時間をかけて実際の実装を優先するようになりました。このトピックについては、この章の後半で詳しく説明します。
+
+テストにおいて実際の実装を優先することは、古典的なテストとして知られています。また、テストのスタイルには、本物の実装ではなく、モッキング・フレームワークを使用することを優先するモキスト・テストというものがあります。ソフトウェア業界にはモックテストを実践している人がいますが（最初にモックフレームワークを開発した人もいます）、Googleでは、このスタイルのテストを拡張するのは難しいと考えています。テスト対象のシステムを設計する際、エンジニアは厳格なガイドラインに従う必要がありますが、Googleのほとんどのエンジニアのデフォルトの行動は、古典的なテストスタイルに適した方法でコードを書くことでした。
+
+### 分離よりも現実性を優先する
+
+依存関係に実際の実装を使用することで、実際の実装のコードがすべてテストで実行されることになり、テスト対象のシステムがより現実的になります。一方、テストダブ ルを利用したテストでは、テスト対象のシステムをその依存関係から分離し、テスト対象のシステムの依存関係にあるコードをテストで実行しないようにします。
+
+現実的なテストは、テスト対象のシステムが正しく動作していることをより確信させてくれるからです。ユニットテストがテストダブりに依存しすぎている場合、エンジニアが同じレベルの信頼性を得るためには、統合テストを実行したり、その機能が期待通りに動作していることを手動で検証したりする必要があります。このような余分な作業を行うと、開発速度が低下するだけでなく、ユニットテストの実行に比べて時間がかかりすぎるために、エンジニアがこれらの作業を完全に省略してしまうと、バグがすり抜けてしまう可能性があります。
+
+クラスのすべての依存関係をテストダブルに置き換えることで、テスト対象のシステムを、作者がたまたまクラスに直接入れた実装に恣意的に隔離し、たまたま別のクラスにある実装を除外することができます。しかし、良いテストは実装に依存しないものでなければなりません。つまり、実装がどのように構成されているかではなく、テストされるAPIの観点から書かれるべきなのです。
+
+実際の実装を使用すると、実際の実装にバグがあった場合にテストが失敗することがあります。これは良いことです。なぜなら、テストが失敗するということは、あなたのコードが本番で正しく動作しないことを意味するからです。実際の実装にバグがあると、その実装を使用している他のテストも失敗するため、テストの失敗が連鎖的に発生することがあります。しかし、継続的インテグレーション(CI)システムなどの優れた開発ツールを使えば、失敗の原因となった変更を簡単に突き止めることができます。
 
 -----
 
-#### Case Study: @DoNotMock
+#### ケーススタディ @DoNotMock
 
-At Google, we’ve seen enough tests that over-rely on mocking frameworks to motivate the creation of the `@DoNotMock` annotation in Java, which is available as part of the ErrorProne static analysis tool. This annotation is a way for API owners to declare, “this type should not be mocked because better alternatives exist.”
-If an engineer attempts to use a mocking framework to create an instance of a class or interface that has been annotated as `@DoNotMock`, as demonstrated in Example 13-10, they will see an error directing them to use a more suitable test strategy, such as a real implementation or a fake. This annotation is most commonly used for value objects that are simple enough to use as-is, as well as for APIs that have well-engineered fakes available.
+Googleでは、モッキング・フレームワークに過度に依存したテストを十分に見てきたため、Javaに`@DoNotMock`アノテーションを作成することになり、ErrorProne静的解析ツールの一部として利用できるようになりました。このアノテーションは、APIの所有者が「この型は、より良い代替手段が存在するため、モックされるべきではない」と宣言する方法です。
 
-Example 13-10. The `@DoNotMock` annotation
+モッキングフレームワークを使って、例13-10のように `@DoNotMock` とアノテーションされたクラスやインターフェイスのインスタンスを作成しようとすると、実際の実装や偽物など、より適切なテスト戦略を使うように指示するエラーが表示されます。このアノテーションは、そのまま使用できるほど単純な値のオブジェクトや、 よくできた偽物が用意されている API によく使われます。
+
+例 13-10. DoNotMock` アノテーション
 ```java
 @DoNotMock("Use SimpleQuery.create() instead of mocking.")
 public abstract class Query {
@@ -245,31 +255,41 @@ public abstract class Query {
 }
 ```
 
-Why would an API owner care? In short, it severely constrains the API owner’s ability to make changes to their implementation over time. As we’ll explore later in the chapter, every time a mocking framework is used for stubbing or interaction testing, it duplicates behavior provided by the API.
-When the API owner wants to change their API, they might find that it has been mocked thousands or even tens of thousands of times throughout Google’s codebase! These test doubles are very likely to exhibit behavior that violates the API contract of the type being mocked --- for instance, returning null for a method that can never return null. Had the tests used the real implementation or a fake, the API owner could make changes to their implementation without first fixing thousands of flawed tests.
+なぜAPIオーナーが気にするのか？一言で言えば、APIの所有者が時間をかけて実装を変更する能力が著しく制限されるからです。後述するように、スタブやインタラクション・テストにモッキング・フレームワークを使用すると、APIが提供する動作が重複してしまいます。
+
+APIの所有者がそのAPIを変更しようとすると、Googleのコードベース全体で何千回、何万回もモックされていることに気づくかもしれません。これらのテストダブルは、モックされている型のAPIコントラクトに違反する動作を示す可能性が非常に高い。例えば、絶対にNULLを返してはいけないメソッドに対してNULLを返すなど。テストが本物の実装または偽物を使用していた場合、APIの所有者は、まず何千もの欠陥のあるテストを修正することなく、その実装に変更を加えることができる。
 
 -----
 
-### How to Decide When to Use a Real Implementation
+### 実際の実装を使用するタイミングを決定する方法
 
-A real implementation is preferred if it is fast, deterministic, and has simple dependencies. For example, a real implementation should be used for a value object. Examples include an amount of money, a date, a geographical address, or a collection class such as a list or a map.
-However, for more complex code, using a real implementation often isn’t feasible. There might not be an exact answer on when to use a real implementation or a test double given that there are trade-offs to be made, so you need to take the following considerations into account.
+実際の実装は、高速で決定性があり、依存関係が単純である場合に好まれます。例えば、値のオブジェクトには実数実装を使用する必要があります。例えば、金額、日付、地理的な住所、リストやマップなどのコレクションクラスなどです。
 
-#### Execution time
+しかし、より複雑なコードでは、実際の実装を使用することができない場合もあります。実際の実装とテストダブルのどちらを使うかは、トレードオフの関係にあるため、正確な答えはないかもしれませんが、以下のような点を考慮する必要があります。
 
-One of the most important qualities of unit tests is that they should be fast --- you want to be able to continually run them during development so that you can get quick feedback on whether your code is working (and you also want them to finish quickly when run in a CI system). As a result, a test double can be very useful when the real implementation is slow.
-How slow is too slow for a unit test? If a real implementation added one millisecond to the running time of each individual test case, few people would classify it as slow. But what if it added 10 milliseconds, 100 milliseconds, 1 second, and so on?
-There is no exact answer here --- it can depend on whether engineers feel a loss in productivity, and how many tests are using the real implementation (one second extra per test case may be reasonable if there are five test cases, but not if there are 500). For borderline situations, it is often simpler to use a real implementation until it becomes too slow to use, at which point the tests can be updated to use a test double instead.
-Parellelization of tests can also help reduce execution time. At Google, our test infrastructure makes it trivial to split up tests in a test suite to be executed across multiple servers. This increases the cost of CPU time, but it can provide a large savings in developer time. We discuss this more in Chapter 18.
-Another trade-off to be aware of: using a real implementation can result in increased build times given that the tests need to build the real implementation as well as all of its dependencies. Using a highly scalable build system like Bazel can help because it caches unchanged build artifacts.
+#### 実行時間
 
-#### Determinism
+ユニットテストの最も重要な品質のひとつは、高速であることです。コードが機能しているかどうかについて迅速なフィードバックを得られるように、開発中に継続的にテストを実行できるようにしたいものです (また、CI システムで実行したときにも迅速に終了するようにしたいものです)。その結果、実際の実装が遅い場合には、テストダブルが非常に有効になります。
 
-A test is deterministic if, for a given version of the system under test, running the test always results in the same outcome; that is, the test either always passes or always fails. In contrast, a test is nondeterministic if its outcome can change, even if the system under test remains unchanged.
-Nondeterminism in tests can lead to flakiness --- tests can occasionally fail even when there are no changes to the system under test. As discussed in Chapter 11, flakiness harms the health of a test suite if developers start to distrust the results of the test and ignore failures. If use of a real implementation rarely causes flakiness, it might not warrant a response, because there is little disruption to engineers. But if flakiness happens often, it might be time to replace a real implementation with a test double because doing so will improve the fidelity of the test.
-A real implementation can be much more complex compared to a test double, which increases the likelihood that it will be nondeterministic. For example, a real implementation that utilizes multithreading might occasionally cause a test to fail if the output of the system under test differs depending on the order in which the threads are executed.
-A common cause of nondeterminism is code that is not hermetic; that is, it has dependencies on external services that are outside the control of a test. For example, a test that tries to read the contents of a web page from an HTTP server might fail if the server is overloaded or if the web page contents change. Instead, a test double should be used to prevent the test from depending on an external server. If using a test double is not feasible, another option is to use a hermetic instance of a server, which has its life cycle controlled by the test. Hermetic instances are discussed in more detail in the next chapter.
-Another example of nondeterminism is code that relies on the system clock given that the output of the system under test can differ depending on the current time. Instead of relying on the system clock, a test can use a test double that hardcodes a specific time.
+ユニットテストの遅さとは？実際の実装が、個々のテストケースの実行時間に1ミリ秒を加えたとしても、それを遅いと分類する人はほとんどいないでしょう。しかし、10ミリ秒、100ミリ秒、1秒......と増えていったらどうでしょう？
+
+正確な答えはありません。エンジニアが生産性の低下を感じているかどうかや、実際の実装を使用しているテストの数にもよります（テストケースが5つの場合は1つのテストケースにつき1秒の追加が妥当かもしれませんが、500つの場合はそうではありません）。境界線上の状況では、実際の実装が遅すぎて使えなくなるまでは、実際の実装を使用した方がシンプルであることが多いですが、その時点でテストを更新して代わりにテストダブルを使用することができます。
+
+また、テストを並列化することで、実行時間を短縮することができます。Googleのテストインフラでは、テストスイート内のテストを分割して複数のサーバーで実行することが容易になっています。これにより、CPU時間のコストは増加しますが、開発者の時間を大幅に節約することができます。この点については第18章で詳しく説明します。
+
+もうひとつのトレードオフについて説明します。実際の実装を使用すると、 テストが実際の実装とその依存関係のすべてを構築する必要があるため、 ビルド時間が長くなります。Bazel のような拡張性の高いビルドシステムを使用すると、変更されていないビルド成果物がキャッシュされるので便利です。
+
+#### 決定論
+
+テスト対象のシステムのあるバージョンについて、テストを実行すると常に同じ結果になる場合、つまり、テストが常に合格または常に不合格である場合、テストは決定論的である。対照的に、テスト対象のシステムが変更されていなくても、テストの結果が変わる可能性がある場合、テストは非決定論的です。
+
+テストの非決定性はフレーキー性につながります。つまり、テスト対象のシステムに変更がなくても、テストが時々失敗することがあります。第11章で述べたように、開発者がテストの結果を信用せず、失敗を無視するようになると、テストスイートの健全性が損なわれます。実際の実装を使用してもフレーキーがめったに起こらないのであれば、技術者への混乱が少ないため、対応を必要としないかもしれません。しかし、フレーキーが頻繁に発生する場合は、実際の実装をテストダブルに置き換えるべきかもしれません。そうすることでテストの忠実度が向上するからです。
+
+実際の実装は、テストダブルスに比べてはるかに複雑であるため、非決定性になる可能性が高くなります。たとえば、マルチスレッドを利用した実際の実装では、スレッドの実行順序によってテスト対象のシステムの出力が異なるため、テストが失敗することがあります。
+
+不確定性の一般的な原因は、密閉されていないコードです。つまり、テストの制御対象外である外部サービスに依存しているコードです。例えば、HTTP サーバーから Web ページのコンテンツを読み込もうとするテストは、サーバーが過負荷状態になったり、Web ページのコンテンツが変更されたりすると失敗する可能性があります。代わりに、テストダブルを使用して、テストが外部のサーバーに依存しないようにする必要があります。テストダブルの使用が困難な場合は、サーバーのハーメチックインスタンスを使用するという方法もあります。ハーメチックインスタンスは、そのライフサイクルがテストによって制御されます。ハーメチック・インスタンスについては、次の章で詳しく説明します。
+
+非決定論のもう一つの例は、システムクロックに依存するコードです。テスト対象のシステムの出力は、現在の時刻によって異なる可能性があります。システムクロックに頼る代わりに、特定の時間をハードコードしたテストダブルを使用することができます。
 
 #### Dependency construction
 
