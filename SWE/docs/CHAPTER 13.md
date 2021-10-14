@@ -291,10 +291,11 @@ APIの所有者がそのAPIを変更しようとすると、Googleのコード�
 
 非決定論のもう一つの例は、システムクロックに依存するコードです。テスト対象のシステムの出力は、現在の時刻によって異なる可能性があります。システムクロックに頼る代わりに、特定の時間をハードコードしたテストダブルを使用することができます。
 
-#### Dependency construction
+#### 依存関係の構築
 
-When using a real implementation, you need to construct all of its dependencies. For example, an object needs its entire dependency tree to be constructed: all objects that it depends on, all objects that these dependent objects depend on, and so on. A test double often has no dependencies, so constructing a test double can be much simpler compared to constructing a real implementation.
-As an extreme example, imagine trying to create the object in the code snippet that follows in a test. It would be time consuming to determine how to construct each individual object. Tests will also require constant maintenance because they need to be updated when the signature of these objects’ constructors is modified:
+実際の実装を使用する際には、その依存関係のすべてを構築する必要があります。たとえば、あるオブジェクトは、そのオブジェクトが依存しているすべてのオブジェクト、その依存しているオブジェクトが依存しているすべてのオブジェクトなど、依存関係のツリー全体を構築する必要があります。テストダブルは依存関係を持たないことが多いので、テストダブルの構築は実際の実装の構築に比べてはるかにシンプルになります。
+
+極端な例として、次のコードスニペットのオブジェクトをテストで作成しようとした場合を考えてみましょう。個々のオブジェクトをどのように構築するかを決定するには時間がかかります。また、これらのオブジェクトのコンストラクタのシグネチャが変更された場合、テストを更新する必要があるため、常にメンテナンスが必要になります。
 
 ```
  Foo foo = new Foo(new A(new B(new C()), new D()), new E(), ..., new Z());
