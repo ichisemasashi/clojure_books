@@ -301,18 +301,19 @@ APIの所有者がそのAPIを変更しようとすると、Googleのコード�
  Foo foo = new Foo(new A(new B(new C()), new D()), new E(), ..., new Z());
 ```
 
-It can be tempting to instead use a test double because constructing one can be trivial. For example, this is all it takes to construct a test double when using the Mockito mocking framework:
+代わりにテストダブルを使いたくなるのは、テストダブルの構築が簡単だからです。たとえば、Mockito モッキング・フレームワークを使用した場合、テストダブルを作成するには次のような手順が必要です。
 
 ```
 @Mock Foo mockFoo;
 ```
 
-Although creating this test double is much simpler, there are significant benefits to using the real implementation, as discussed earlier in this section. There are also often significant downsides to overusing test doubles in this way, which we look at later in this chapter. So, a trade-off needs to be made when considering whether to use a real implementation or a test double.
-Rather than manually constructing the object in tests, the ideal solution is to use the same object construction code that is used in the production code, such as a factory method or automated dependency injection. To support the use case for tests, the object construction code needs to be flexible enough to be able to use test doubles rather than hardcoding the implementations that will be used for production.
+このテストダブルの作成ははるかに簡単ですが、このセクションの前半で説明したように、実際の実装を使用することには大きな利点があります。また、このようにテストダブルを使いすぎると、後述するように大きなマイナス面もあります。そのため、実際の実装とテストダブルのどちらを使用するかを検討する際には、トレードオフを行う必要があります。
 
-## Faking
+テストでオブジェクトを手動で構築するのではなく、 ファクトリーメソッドや自動化された依存性注入など、 本番コードで使用するのと同じオブジェクト構築コードを使用するのが理想的なソリューションです。テストのユースケースをサポートするためには、オブジェクト構築コードは、プロダクションで使用される実装をハードコーディングするのではなく、テストダブルを使用できるような柔軟性が必要です。
 
-If using a real implementation is not feasible within a test, the best option is often to use a fake in its place. A fake is preferred over other test double techniques because it behaves similarly to the real implementation: the system under test shouldn’t even be able to tell whether it is interacting with a real implementation or a fake. Example 13-11 illustrates a fake file system.
+## フェイク
+
+テストの中で本物の実装を使うことができない場合、最良の選択肢はしばしば偽物を代わりに使うことです。偽物は本物の実装と同じように動作するので、他のテスト手法よりも好まれます。テスト対象のシステムは、本物の実装と偽物のどちらとやりとりしているのか分からないはずです。例 13-11 は偽物のファイルシステムを示しています。
 
 Example 13-11. A fake file system
 ```java
