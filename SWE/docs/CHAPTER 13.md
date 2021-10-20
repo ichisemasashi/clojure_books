@@ -339,18 +339,23 @@ public class FakeFileSystem implements FileSystem {
 }
 ```
 
-### Why Are Fakes Important?
+### フェイクはなぜ重要なのか？
 
-Fakes can be a powerful tool for testing: they execute quickly and allow you to effectively test your code without the drawbacks of using real implementations.
-A single fake has the power to radically improve the testing experience of an API. If you scale that to a large number of fakes for all sorts of APIs, fakes can provide an enormous boost to engineering velocity across a software organization.
-At the other end of the spectrum, in a software organization where fakes are rare, velocity will be slower because engineers can end up struggling with using real implementations that lead to slow and flaky tests. Or engineers might resort to other test double techniques such as stubbing or interaction testing, which, as we’ll examine later in this chapter, can result in tests that are unclear, brittle, and less effective.
+フェイクはテストのための強力なツールとなります。フェイクは実行速度が速く、実際の実装を使用することによる欠点がなく、コードを効果的にテストすることができます。
 
-### When Should Fakes Be Written?
+たった1つのフェイクが、APIのテスト環境を劇的に改善する力を持っている。これをあらゆる種類のAPIに対する多数のフェイクに拡大すれば、フェイクはソフトウェア組織全体のエンジニアリング速度を大幅に向上させることができる。
 
-A fake requires more effort and more domain experience to create because it needs to behave similarly to the real implementation. A fake also requires maintenance: whenever the behavior of the real implementation changes, the fake must also be updated to match this behavior. Because of this, the team that owns the real implementation should write and maintain a fake.
-If a team is considering writing a fake, a trade-off needs to be made on whether the productivity improvements that will result from the use of the fake outweigh the costs of writing and maintaining it. If there are only a handful of users, it might not be worth their time, whereas if there are hundreds of users, it can result in an obvious productivity improvement.
-To reduce the number of fakes that need to be maintained, a fake should typically be created only at the root of the code that isn’t feasible for use in tests. For example, if a database can’t be used in tests, a fake should exist for the database API itself rather than for each class that calls the database API.
-Maintaining a fake can be burdensome if its implementation needs to be duplicated across programming languages, such as for a service that has client libraries that allow the service to be invoked from different languages. One solution for this case is to create a single fake service implementation and have tests configure the client libraries to send requests to this fake service. This approach is more heavyweight compared to having the fake written entirely in memory because it requires the test to communicate across processes. However, it can be a reasonable trade-off to make, as long as the tests can still execute quickly.
+一方で、偽物が少ないソフトウェア組織では、エンジニアが実際の実装を使用することに苦労してしまい、テストが遅くなったり、不安定になったりするため、速度が低下します。また、スタブやインタラクションテストなど、テストを二重にする技術に頼ることになるかもしれません。この章の後半で検討するように、不明確で脆く、効果の低いテストになってしまう可能性があります。
+
+### フェイクはどのような場合に書かれるべきか？
+
+フェイクは、実際の実装と同様の動作をする必要があるため、作成にはより多くの労力とドメインの経験が必要となります。また、フェイクにはメンテナンスが必要です。実際の実装の動作が変更されるたびに、フェイクもその動作に合わせて更新する必要があります。このため、本物の実装を所有するチームがフェイクを作成し、メンテナンスを行うべきである。
+
+チームがフェイクの作成を検討している場合、フェイクを使用することで得られる生産性の向上が、フェイクの作成と保守のコストを上回るかどうかのトレードオフを行う必要があります。一握りのユーザーしかいない場合は、時間を割く価値がないかもしれませんが、何百人ものユーザーがいる場合は、明らかな生産性の向上につながる可能性があります。
+
+管理する必要のあるフェイクの数を減らすために、通常はテストで使用できないコードのルートにのみフェイクを作成するべきです。たとえば、データベースをテストで使用できない場合は、データベース API を呼び出す各クラスではなく、データベース API 自体にフェイクを作成します。
+
+例えば、異なる言語からサービスを呼び出すことができるクライアントライブラリを持つサービスのように、プログラミング言語間でフェイクの実装を重複させる必要がある場合、フェイクを維持することは負担になります。このような場合の解決策としては、単一のフェイクのサービス実装を作成し、テストではこのフェイクのサービスにリクエストを送信するようにクライアントライブラリを設定するという方法があります。この方法は、フェイクのサービスを完全にメモリ上に記述する場合に比べて、テストがプロセス間で通信する必要があるため、より重くなります。しかし、テストが高速に実行できるのであれば、 これは妥当なトレードオフと言えるでしょう。
 
 ### The Fidelity of Fakes
 
