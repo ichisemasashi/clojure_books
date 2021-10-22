@@ -371,17 +371,21 @@ public class FakeFileSystem implements FileSystem {
 
 偽物は、対応する実際の実装の機能を100%持っている必要はないかもしれません。特に、そのような動作がほとんどのテストで必要とされていない場合には（たとえば、まれなエッジケースのためのエラー処理コードなど）。例えば、サポートされていないコードパスが実行された場合にエラーを発生させるなどです。例えば、サポートされていないコードパスが実行された場合にエラーを発生させるなどです。この失敗により、エンジニアに偽物がこの状況では適切でないことを伝えます。
 
-### Fakes Should Be Tested
+### 偽物はテストされるべき
 
-A fake must have its own tests to ensure that it conforms to the API of its corresponding real implementation. A fake without tests might initially provide realistic behavior, but without tests, this behavior can diverge over time as the real implementation evolves.
-One approach to writing tests for fakes involves writing tests against the API’s public interface and running those tests against both the real implementation and the fake (these are known as contract tests). The tests that run against the real implementation will likely be slower, but their downside is minimized because they need to be run only by the owners of the fake.
+偽物には、対応する本物の実装の API に準拠していることを確認するための独自のテストが必要です。テストのない偽物は、最初は現実的な動作をするかもしれませんが、 テストがないと、実際の実装が進化するにつれて動作が変わってしまう可能性があります。
 
-### What to Do If a Fake Is Not Available
+偽物用のテストを書くためのひとつの方法として、API のパブリックインターフェイスに対するテストを書き、それらのテストを実際の実装と偽物の両方に対して実行するというものがあります (これをコントラクトテストと呼びます)。本物の実装に対して実行されるテストは速度が遅くなる可能性がありますが、偽物の所有者だけが実行する必要があるため、その弊害は最小限に抑えられます。
 
-If a fake is not available, first ask the owners of the API to create one. The owners might not be familiar with the concept of fakes, or they might not realize the benefit they provide to users of an API.
-If the owners of an API are unwilling or unable to create a fake, you might be able to write your own. One way to do this is to wrap all calls to the API in a single class and then create a fake version of the class that doesn’t talk to the API. Doing this can also be much simpler than creating a fake for the entire API because often you’ll need to use only a subset of the API’s behavior anyway. At Google, some teams have even contributed their fake to the owners of the API, which has allowed other teams to benefit from the fake.
-Finally, you could decide to settle on using a real implementation (and deal with the trade-offs of real implementations that are mentioned earlier in this chapter), or resort to other test double techniques (and deal with the trade-offs that we will mention later in this chapter).
-In some cases, you can think of a fake as an optimization: if tests are too slow using a real implementation, you can create a fake to make them run faster. But if the speedup from a fake doesn’t outweigh the work it would take to create and maintain the fake, it would be better to stick with using the real implementation.
+### 偽物がない場合の対処法
+
+偽物が入手できない場合は、まずAPIの所有者に偽物の作成を依頼します。APIの所有者は偽物の概念に慣れていないかもしれませんし、APIのユーザーに偽物がもたらすメリットを理解していないかもしれません。
+
+APIの所有者が偽物を作りたくない、あるいは作れない場合は、自分で書くことができるかもしれない。ひとつの方法は、APIへのすべての呼び出しを単一のクラスでラップし、そのクラスのフェイクバージョンを作成してAPIと会話しないようにすることだ。この方法は、API全体のフェイクを作成するよりもはるかに簡単です。なぜなら、多くの場合、APIの動作のサブセットのみを使用する必要があるからです。Googleでは、偽物をAPIの所有者に提供して、他のチームがその偽物の恩恵を受けられるようにしているチームもある。
+
+最終的には、実際に実装したものを使うことにするか (そして、この章の前半で述べた実際の実装のトレードオフに対処するか)、 あるいは他のテスト二重化手法に頼るか (そして、この章の後半で述べるトレードオフに対処するか)、 ということになります。
+
+場合によっては、偽物を最適化と考えることもできます。実際の実装でテストが遅すぎる場合には、 偽物を作成してテストを高速化することができます。しかし、偽物による高速化が偽物の作成や保守にかかる労力を上回らないのであれば、 本物の実装を使い続けたほうがよいでしょう。
 
 ## Stubbing
 
