@@ -387,11 +387,11 @@ APIの所有者が偽物を作りたくない、あるいは作れない場合�
 
 場合によっては、偽物を最適化と考えることもできます。実際の実装でテストが遅すぎる場合には、 偽物を作成してテストを高速化することができます。しかし、偽物による高速化が偽物の作成や保守にかかる労力を上回らないのであれば、 本物の実装を使い続けたほうがよいでしょう。
 
-## Stubbing
+## スタッビング
 
-As discussed earlier in this chapter, stubbing is a way for a test to hardcode behavior for a function that otherwise has no behavior on its own. It is often a quick and easy way to replace a real implementation in a test. For example, the code in Example 13-12 uses stubbing to simulate the response from a credit card server.
+この章の前半で説明したように、スタッビングとは、 それ自体では何の振る舞いもしない関数の振る舞いを、 テストでハードコーディングする方法です。スタブは、テストの中で実際の実装を置き換えるための迅速かつ容易な方法です。たとえば、例 13-12 のコードではスタブを使用してクレジットカードサーバからのレスポンスをシミュレートしています。
 
-Example 13-12. Using stubbing to simulate responses
+例 13-12. スタブを使用したレスポンスのシミュレート
 ```java
 @Test public void getTransactionCount() {
   transactionCounter = new TransactionCounter(mockCreditCardServer);
@@ -402,18 +402,19 @@ Example 13-12. Using stubbing to simulate responses
 }
 ```
 
-### The Dangers of Overusing Stubbing
+### スタッビングの使いすぎの危険性
 
-Because stubbing is so easy to apply in tests, it can be tempting to use this technique anytime it’s not trivial to use a real implementation. However, overuse of stubbing can result in major losses in productivity for engineers who need to maintain these tests.
+スタビングはテストに簡単に適用できるため、実際の実装を使用するのが容易でない場合には、いつでもこのテクニックを使用したくなることがあります。しかし、スタブを使いすぎると、テストのメンテナンスを行うエンジニアの生産性が大きく低下します。
 
-#### Tests become unclear
+#### テストが不明確になる
 
-Stubbing involves writing extra code to define the behavior of the functions being stubbed. Having this extra code detracts from the intent of the test, and this code can be difficult to understand if you’re not familiar with the implementation of the system under test.
-A key sign that stubbing isn’t appropriate for a test is if you find yourself mentally stepping through the system under test in order to understand why certain functions in the test are stubbed.
+スタブ化とは、スタブ化する関数の動作を定義するために余分なコードを書くことです。余分なコードがあると、テストの意図が損なわれますし、テスト対象のシステムの実装に精通していないと、このコードを理解するのは難しいでしょう。
 
-#### Tests become brittle
+また、テスト対象のシステムの実装に精通していないと、このコードを理解することは困難です。スタブ化がテストに適していないことを示す重要な兆候は、テスト内の特定の関数がなぜスタブ化されているのかを理解するために、テスト対象のシステムを頭で理解していることです。
 
-Stubbing leaks implementation details of your code into your test. When implementation details in your production code change, you’ll need to update your tests to reflect these changes. Ideally, a good test should need to change only if user-facing behavior of an API changes; it should remain unaffected by changes to the API’s implementation.
+#### テストがもろくなる
+
+スタブ化すると、コードの実装の詳細がテストに漏れてしまいます。本番コードの実装の詳細が変更された場合は、 その変更を反映させるためにテストを更新する必要があります。理想的には、優れたテストは API のユーザ側の挙動が変更されたときにのみ変更する必要があり、 API の実装が変更されても影響を受けないものでなければなりません。
 
 #### Tests become less effective
 
