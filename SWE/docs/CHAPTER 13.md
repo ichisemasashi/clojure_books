@@ -416,23 +416,23 @@ APIの所有者が偽物を作りたくない、あるいは作れない場合�
 
 スタブ化すると、コードの実装の詳細がテストに漏れてしまいます。本番コードの実装の詳細が変更された場合は、 その変更を反映させるためにテストを更新する必要があります。理想的には、優れたテストは API のユーザ側の挙動が変更されたときにのみ変更する必要があり、 API の実装が変更されても影響を受けないものでなければなりません。
 
-#### Tests become less effective
+#### テストの効果が薄れる
 
-With stubbing, there is no way to ensure the function being stubbed behaves like the real implementation, such as in a statement like that shown in the following snippet that hardcodes part of the contract of the `add()` method (“If 1 and 2 are passed in, 3 will be returned”):
+スタブ化では、スタブ化された関数が実際の実装と同じように動作することを保証する方法がありません。たとえば、次のスニペットに示されているようなステートメントでは、`add()`メソッドのコントラクトの一部がハードコードされています（「1と2が渡された場合、3が返されます」）。
 
 ```
 when(stubCalculator.add(1, 2)).thenReturn(3);
 ```
 
-Stubbing is a poor choice if the system under test depends on the real implementation’s contract because you will be forced to duplicate the details of the contract, and there is no way to guarantee that the contract is correct (i.e., that the stubbed function has fidelity to the real implementation).
+スタブは、テスト対象のシステムが実際の実装のコントラクトに依存している場合には適していません。なぜなら、コントラクトの詳細を複製する必要があり、コントラクトが正しいこと（スタブ化された関数が実際の実装に忠実であること）を保証する方法がないからです。
 
-Additionally, with stubbing there is no way to store state, which can make it difficult to test certain aspects of your code. For example, if you call `database.save(item)` on either a real implementation or a fake, you might be able to retrieve the item by calling `database.get(item.id())` given that both of these calls are accessing internal state, but with stubbing, there is no way to do this.
+また、スタブの場合、状態を保存する手段がないため、コードの特定の側面をテストすることが難しくなります。例えば、本物の実装でも偽物でも、`database.save(item)`を呼び出した場合、`database.get(item.id())`を呼び出すことで、どちらも内部状態にアクセスしているので、アイテムを取り出すことができるかもしれませんが、スタブの場合はその方法がありません。
 
-#### An example of overusing stubbing
+#### スタブの使いすぎの例
 
-Example 13-13 illustrates a test that overuses stubbing.
+例 13-13 は、スタブを使いすぎたテストの例です。
 
-Example 13-13. Overuse of stubbing
+例 13-13. スタッブの使いすぎ
 ```java
 @Test public void creditCardIsCharged() {
   // Pass in test doubles that were created by a mocking framework.
@@ -454,9 +454,9 @@ Example 13-13. Overuse of stubbing
 }
 ```
 
-Example 13-14 rewrites the same test but avoids using stubbing. Notice how the test is shorter and that implementation details (such as how the transaction processor is used) are not exposed in the test. No special setup is needed because the credit card server knows how to behave.
+例 13-14 は同じテストを書き直したものですが、スタブの使用を避けています。テストの長さが短くなっていることと、 実装の詳細 (トランザクションプロセッサの使用方法など) がテスト内で公開されていないことに注意しましょう。特別な設定は必要ありません。 というのも、クレジットカードのサーバはどのように動作するかを知っているからです。
 
-Example 13-14. Refactoring a test to avoid stubbing
+例 13-14. スタブ化を避けるためのテストのリファクタリング
 ```java
 @Test public void creditCardIsCharged() {
   paymentProcessor =
@@ -469,13 +469,15 @@ Example 13-14. Refactoring a test to avoid stubbing
 }
 ```
 
-We obviously don’t want such a test to talk to an external credit card server, so a fake credit card server would be more suitable. If a fake isn’t available, another option is to use a real implementation that talks to a hermetic credit card server, although this will increase the execution time of the tests. (We explore hermetic servers in the next chapter.)
+このようなテストでは、当然ながら外部のクレジットカード・サーバーとは通信したくないので、偽のクレジットカード・サーバーの方が適しています。偽物がない場合は、テストの実行時間が長くなってしまいますが、 密閉型のクレジットカードサーバーと通信する本物の実装を使用するという方法もあります。(隠蔽型サーバーについては次の章で説明します）。)
 
-### When Is Stubbing Appropriate?
+### スタブはどのような場合に適しているか？
 
-Rather than a catch-all replacement for a real implementation, stubbing is appropriate when you need a function to return a specific value to get the system under test into a certain state, such as Example 13-12 that requires the system under test to return a non-empty list of transactions. Because a function’s behavior is defined inline in the test, stubbing can simulate a wide variety of return values or errors that might not be possible to trigger from a real implementation or a fake.
-To ensure its purpose is clear, each stubbed function should have a direct relationship with the test’s assertions. As a result, a test typically should stub out a small number of functions because stubbing out many functions can lead to tests that are less clear. A test that requires many functions to be stubbed can be a sign that stubbing is being overused, or that the system under test is too complex and should be refactored.
-Note that even when stubbing is appropriate, real implementations or fakes are still preferred because they don’t expose implementation details and they give you more guarantees about the correctness of the code compared to stubbing. But stubbing can be a reasonable technique to use, as long as its usage is constrained so that tests don’t become overly complex.
+スタブは、実際の実装の代わりというよりは、テスト対象のシステムを特定の状態にするために、ある関数が特定の値を返す必要がある場合に適しています。たとえば、例 13-12 では、テスト対象のシステムが空ではないトランザクションのリストを返す必要があります。関数の動作はテストのインラインで定義されているため、スタブは、実際の実装や偽物からは起動できないような、さまざまな戻り値やエラーをシミュレートすることができます。
+
+目的を明確にするために、スタブ化された各関数はテストのアサーションと直接関係している必要があります。多くの関数をスタブ化すると、テストの目的が明確でなくなる可能性があるため、テストでは通常、少数の関数をスタブ化する必要があります。多くの関数をスタブ化する必要があるテストは、スタブを使いすぎているか、テスト対象のシステムが複雑すぎてリファクタリングが必要であることを示しています。
+
+スタブ化が適切な場合でも、実際の実装やフェイクが望ましいことに注意してください。なぜなら、スタブ化は実装の詳細を公開せず、スタブ化に比べてコードの正しさをより保証してくれるからです。しかし、テストが過度に複雑にならないように使用方法を制限する限り、スタブ化は合理的なテクニックと言えます。
 
 ## Interaction Testing
 
