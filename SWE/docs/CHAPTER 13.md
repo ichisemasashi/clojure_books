@@ -479,10 +479,11 @@ when(stubCalculator.add(1, 2)).thenReturn(3);
 
 スタブ化が適切な場合でも、実際の実装やフェイクが望ましいことに注意してください。なぜなら、スタブ化は実装の詳細を公開せず、スタブ化に比べてコードの正しさをより保証してくれるからです。しかし、テストが過度に複雑にならないように使用方法を制限する限り、スタブ化は合理的なテクニックと言えます。
 
-## Interaction Testing
+## インタラクションテスト
 
-As discussed earlier in this chapter, interaction testing is a way to validate how a function is called without actually calling the implementation of the function.
-Mocking frameworks make it easy to perform interaction testing. However, to keep tests useful, readable, and resilient to change, it’s important to perform interaction testing only when necessary.
+この章の前半で説明したように、インタラクション・テストとは、ある関数の実装を実際に呼び出すことなく、その関数がどのように呼び出されるかを検証する方法です。
+
+モッキング・フレームワークを使えば、インタラクション・テストを簡単に行うことができます。しかし、テストの有用性や可読性、変更への対応力を維持するためには、インタラクションテストは必要なときだけ行うことが重要です。
 
 ### Prefer State Testing Over Interaction Testing
 
