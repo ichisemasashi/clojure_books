@@ -1,0 +1,153 @@
+\section{ドメイン操作}
+
+多くの異なるタイプのドメインエンティティに適用できるドメイン用の関数を定義する必要があることがよくあります。これは，異なるタイプのドメインエンティティが複合データ構造にまとめられている場合に，特に有用である．
+
+オブジェクト指向言語では，このようなニーズに対応するために，一般的にポリモーフィズムを用います．ポリモーフィズムは抽象化の手段であり，ドメイン操作を適用可能な型から切り離すことを可能にする．これにより、ドメインの実装がより一般的になり、既存のコードを修正することなく動作を拡張する方法が提供されます。
+
+Clojureは、汎用的なドメイン操作の作成を可能にする2つの機能、マルチメソッドとプロトコルを提供します。ジェネリック操作のために呼び出す特定の関数を選択することは、ディスパッチとして知られています。プロトコルとマルチメソッドはどちらも引数の型に基づいてディスパッチすることができますが、マルチメソッドだけは引数の値に基づいてディスパッチすることができます。まず、型に基づくディスパッチとマルチメソッドの比較から始め、値に基づくディスパッチとプロトコルの重ね方について見ていきます。
+
+\subsection{マルチメソッドとプロトコルの比較}
+
+レシピマネージャーアプリケーションと、各レシピの推定食料品コストを計算する必要性を考えてみましょう。各レシピのコストはすべての食材のコストを合計することに依存します。私たちは2つの特定のタイプのエンティティで同じ一般的なドメイン操作("How much does it cost?")を呼び出したいと思っています。レシピと食材である．
+
+このドメイン操作をマルチメソッドで実装するには、\texttt{defmulti}と\texttt{defmethod}という2つの形式を使う。\texttt{defmulti} フォームでは、関数の名前とシグネチャ、およびディスパッチ関数を定義する。それぞれの \texttt{defmethod} フォームは、特定のディスパッチ値に対する関数実装を提供する。マルチメソッドを起動すると、まずディスパッチ関数を呼び出してディスパッチ値を生成し、その値に最もマッチするものを選択し、最後にその関数実装を呼び出すことになります。
+
+私たちは、\texttt{Store}ドメインエンティティを追加し、特定の食料品店の食材のコストを調べることができる関数を追加するために、\texttt{recipe-manager}ドメインを少し拡張する必要があります。これらを完全に実装することなく、スケッチすることができます。
+
+\begin{lstlisting}[numbers=none]
+(defrecord Store [,,,])
+
+(defn cost-of [store ingredient] ,,,)
+\end{lstlisting}
+
+これで、\texttt{Recipe} と \texttt{Ingredients} の両方に対して\texttt{cost}マルチメソッドを実装することができました。
+
+\begin{lstlisting}[numbers=none]
+(defmulti cost (fn [entity store] (class entity)))
+
+(defmethod cost Recipe [recipe store]
+  (reduce +$ zero-dollars
+    (map #(cost % store) (:ingredients recipe))))
+
+(defmethod cost Ingredient [ingredient store]
+  (cost-of store ingredient))
+\end{lstlisting}
+
+まず、\texttt{defmulti} はディスパッチ関数を (\texttt{class entity}) として定義し、型に基づいたディスパッチ値を生成します。もしレコードの代わりにマップを使っているならば、代わりにディスパッチ関数として (\texttt{:type entity})で型属性を抽出することになります。
+
+ディスパッチ関数が型を生成するためにエンティティで呼び出されると、その型は利用可能な \texttt{defmethod} 実装とマッチングされ、\texttt{Recipe} または \texttt{Ingredient} 関数実装が呼び出されます。
+
+次に、これと同じ機能をどのようにプロトコルで実装するかを考えてみよう。プロトコルもまた2つのステップで定義される。まず、\texttt{defprotocol} フォームで名前と一連の関数シグネチャを宣言する(ただし、関数の実装はない)。次に、\texttt{extend-protocol}、\texttt{extend-type}、\texttt{extend}を使用して、ある型があるプロトコルを拡張することを宣言します。
+
+\begin{lstlisting}[numbers=none]
+(defprotocol Cost
+  (cost [entity store]))
+
+(extend-protocol Cost
+  Recipe
+  (cost [recipe store]
+    (reduce +$ zero-dollars
+      (map #(cost % store) (:ingredients recipe))))
+  Ingredient
+  (cost [ingredient store]
+    (cost-of store ingredient)))
+\end{lstlisting}
+
+ここでは、\texttt{Cost}プロトコルを定義する。\texttt{Cost}プロトコルは、単一の関数を持つ（ただし、多くの関数を持つことも可能）。次に、\texttt{Recipe} と \texttt{Ingredient} という二つの型を \texttt{Cost} プロトコルに拡張する。これらは は便宜上、1つの\texttt{extend-protocol}で行っているが、別々に拡張することも可能である。
+
+この二つの型ベースのディスパッチを比較してみよう。プロトコルは、この種のディスパッチのために基礎となるJVMランタイムの最適化を活用するので、型ディスパッチのためのマルチメソッドより高速です（これはJavaでは一般的です）。また、プロトコルは、関連する関数をまとめて一つのプロトコルにすることができます。これらの理由から、プロトコルは通常、型ベースのディスパッチに好まれます。
+
+しかし、プロトコルは汎用関数の最初の引数に対してのみ型ベースのディスパッチをサポートするのに対し、マルチメソッドは関数の引数のいずれか、あるいはすべてに基づいて値ベースのディスパッチを提供することができます。マルチメソッドとプロトコルはどちらも Java の型階層に基づくマッチングをサポートしますが、 マルチメソッドは独自の値階層を定義して使用することができ、マッチする値が複数ある場合には 実装間で優先順位を宣言することができます。
+
+したがって、プロトコルは型ベースのディスパッチという狭い (しかし一般的な) ケースに適した選択肢であり、マルチメソッドは他の幅広いケースに対してより大きな柔軟性を提供します。
+
+次に、プロトコルではカバーできない、マルチメソッドによる値ベースのディスパッチの例を見てみましょう。
+
+\subsection{値に基づくディスパッチ}
+
+多くのプログラムでは、型に基づくディスパッチが最も一般的ですが、値に基づくディスパッチが必要な場合も多く、そのような場合にマルチメソッドは輝きを発揮します。
+
+レシピ管理アプリケーションの新機能を考えてみよう。1つまたは複数のレシピの材料をすべて足し合わせて買い物リストを作るのである。食材は量と単位で指定します。例えば、スパゲッティーをポンドで指定するレシピもあれば、オンスで指定するレシピもあるでしょう。単位変換ができるシステムが必要です。マルチメソッドは、ソースとターゲットの型に依存した変換を提供する機能を備えています。
+
+\begin{lstlisting}[numbers=none]
+(defmulti convert
+  "Convert quantity from unit1 to unit2, matching on [unit1 unit2]"
+  (fn [unit1 unit2 quantity] [unit1 unit2]))
+
+;; lb to oz
+(defmethod convert [:lb :oz] [_ _ lb] (* lb 16))
+
+;; oz to lb
+(defmethod convert [:oz :lb] [_ _ oz] (/ oz 16))
+
+;; fallthrough
+(defmethod convert :default [u1 u2 q]
+  (if (= u1 u2)
+    q
+    (assert false (str "Unknown unit conversion from " u1 " to " u2))))
+
+(defn ingredient+
+  "Add two ingredients into a single ingredient, combining their
+  quantities with unit conversion if necessary."
+  [{q1 :quantity u1 :unit :as i1} {q2 :quantity u2 :unit}]
+  (assoc i1 :quantity (+ q1 (convert u2 u1 q2))))
+\end{lstlisting}
+
+\texttt{convert} マルチメソッドは、ソースとターゲットの型ではなく、その値に対してディスパッチします。新しい変換を追加するには、システムで許可しているすべてのソースとターゲットの単位のペアに\texttt{defmethod}を提供する必要があります。
+
+また、\texttt{:default}でフォールスルーケースを提供します。単位が同じ場合は、単に元の量を返せばよいのです。単位が異なるのに \texttt{:default} にした場合、定義されていない変換を試みていることになります。これはおそらくプログラミングのエラーなので、このようなことは起こらないことを保証します。変換が行われないと、テスト中に有用なエラーが発生します。
+
+これは実際にどのように見えるかを示しています。
+
+\begin{lstlisting}[numbers=none]
+user=> (ingredient+ (->Ingredient "Spaghetti" 1/2 :lb)
+                    (->Ingredient "Spaghetti" 4 :oz))
+#user.Ingredient{:name "Spaghetti", :quantity 3/4, :unit :lb}
+\end{lstlisting}
+
+ここでは、1/2ポンド（8オンス）と4オンスを足して、3/4ポンド（12オンス）とします。
+
+新しい単位を追加する場合、その単位と組み合わせる可能性のある他のすべての単位との変換を定義する必要があります。レシピマネージャーアプリケーションでは、必要な変換の範囲は、典型的なレシピの使用に基づいて、おそらくある程度限定されます。
+
+\subsection{プロトコルをプロトコルに拡張する}
+
+マルチメソッドもプロトコルもオープンシステムである。抽象化における型や値の参加は、抽象化の定義や型とは別に（\texttt{defmethod} や \texttt{extend-protocol} によって）指定することができる。新しい参加者は、システムの寿命が尽きるまで動的に追加することができる。
+
+プロトコルで生じる特別なケースとして、特定の具象型をプロトコルでどのように扱うべきかを実行時に決定する必要がある。このニーズは、他のプロトコルの上にレイヤーを重ねるプロトコルを作成するときによく発生する。
+
+例えば、レシピマネージャをさらに拡張して、アイテムのコストだけでなく、特定の店から買った場合のコスト、場所固有の税金を含めて計算する必要があるかもしれません。これは新しいプロトコルに取り込むことができます。
+
+\begin{lstlisting}[numbers=none]
+(defprotocol TaxedCost
+  (taxed-cost [entity store]))
+\end{lstlisting}
+
+私たちはすでに、アイテムとアイテムのレシピの両方についてこの計算を行うことができるプロトコルをもっています。私たちは\texttt{TaxedCost}プロトコルを既存の\texttt{Cost}プロトコルの上に重ねたいのですが、Clojureではこれは許可されていません。
+
+\begin{lstlisting}[numbers=none]
+(extend-protocol TaxedCost
+  Cost
+  (taxed-cost [entity store]
+    (* (cost entity store) (+ 1 (tax-rate store)))))
+;;=> exception!
+\end{lstlisting}
+
+Clojureでは、プロトコルがプロトコルを拡張することを認めていません。それは、適切な実装関数を選択するための曖昧で混乱したケースを開くからです。しかし、実行時に遭遇する具象型ごとにこのケースを検出し、その型に適応したプロトコルを動的にインストールすることで、同じ効果を提供することができます。
+
+\begin{lstlisting}[numbers=none]
+(extend-protocol TaxedCost
+  Object ;; default fallthrough
+  (taxed-cost [entity store]
+    (if (satisfies? Cost entity)
+      (do (extend-protocol TaxedCost
+            (class entity)
+            (taxed-cost [entity store]
+              (* (cost entity store) (+ 1 (tax-rate store)))))
+          (taxed-cost entity store))
+      (assert false (str "Unhandled entity: " entity)))))
+\end{lstlisting}
+
+もしエンティティの型が\texttt{TaxedCost}プロトコルに拡張されておらず、\texttt{Cost}プロトコルに拡張されている場合、\texttt{TaxedCost}プロトコルへの具体的な型の拡張も動的にインストールされます。インストールされた後、同じ呼び出しを再度行うと、インストールされたばかりの実装にリルートされます。
+
+これは、未知のエンティティタイプを持つ最初の呼び出しにのみ発生することに注意してください。それ以降は、プロトコルが拡張され、\texttt{Object}を経由しなくなります。
+
