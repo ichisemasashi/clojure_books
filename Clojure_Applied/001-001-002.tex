@@ -17,7 +17,7 @@
 \subsection{オプションを使った構築}
 
 オプションの引数を使用することで、コンストラクタに柔軟性を持たせることができます。さまざまな方法で実体を構築することを想定している場合、 オプションの引数を使用すると便利です。
-関数の定義にオプションの引数を含めるには、引数ベクトルに \texttt{& opt} を追加します。
+関数の定義にオプションの引数を含めるには、引数ベクトルに \texttt{\& opt} を追加します。
 
 
 \begin{lstlisting}[numbers=none]
@@ -35,9 +35,254 @@
 (defn make-entity [f1 f2 & [f3 f4]] ,,, )
 \end{lstlisting}
 
+これは、任意の数のオプション引数を許可し、その位置に基づいてf3およびf4をバインドします。Clojureのデストラクチャリング機能は、開発者としての生活の質を大きく向上させることができます。
+      
+\texttt{first}, \texttt{second}, \texttt{nth}のような位置関数を頻繁に使うようなコードは、通常、構造化でより簡単に書くことができます。
+
+このテクニックを使って、0個以上のフィールドを受け取り、依存関係によって優先順位をつけるコンストラクタ関数を定義することができます。通貨の操作に関連するスニペットを見てみましょう。通貨の足し算(\texttt{+\$)}や掛け算(\texttt{*\$})のメソッドに加えて、特定の通貨でのお金の価値をカプセル化した\texttt{Money}エンティティが必要です。
+
+Martin Fowler は Patterns of Enterprise Application Architecture [Fow03] の中で、通貨の問題を抽象化しつつ、浮動小数点数を使うことの落とし穴の多くを回避する貨幣価値の表現について説明しています。Clojureで\texttt{Money}値オブジェクトを構築してみましょう。まず、値をモデル化するためのレコードから始めます。
+
+\begin{lstlisting}[numbers=none]
+(ns ch1.money)
+
+(declare validate-same-currency)
+
+(defrecord Currency [divisor sym desc])
+
+(defrecord Money [amount ^Currency currency]
+  java.lang.Comparable
+    (compareTo [m1 m2]
+      (validate-same-currency m1 m2)
+      (compare (:amount m1) (:amount m2))))
+
+(def currencies {:usd (->Currency 100 "USD" "US Dollars")
+                 :eur (->Currency 100 "EUR" "Euro")})
+\end{lstlisting}
+
+また、足し算、比較、掛け算などの演算を行うための関数も必要です。
+
+\begin{lstlisting}[numbers=none]
+(defn- validate-same-currency
+  [m1 m2]
+  (or (= (:currency m1) (:currency m2))
+      (throw
+        (ex-info "Currencies do not match."
+          {:m1 m1 :m2 m2}))))
+
+(defn =$
+  ([m1] true)
+  ([m1 m2] (zero? (.compareTo m1 m2)))
+  ([m1 m2 & monies]
+    (every? zero? (map #(.compareTo m1 %) (conj monies m2)))))
+
+(defn +$
+  ([m1] m1)
+  ([m1 m2]
+    (validate-same-currency m1 m2)
+    (->Money (+ (:amount m1) (:amount m2)) (:currency m1)))
+  ([m1 m2 & monies]
+    (reduce +$ m1 (conj monies m2))))
+
+(defn *$ [m n] (->Money (* n (:amount m)) (:currency m)))
+\end{lstlisting}
+
+では、デフォルト値を含む柔軟な\texttt{Money}コンストラクタを構築してみましょう。
 
 
 
+\begin{lstlisting}[numbers=none]
+(defn make-money
+  ([] (make-money 0))
+  ([amount] (make-money amount :usd))
+  ([amount currency] (->Money amount currency)))
+\end{lstlisting}
+
+さて、REPL からは、さまざまな方法で \texttt{make-money} を呼び出すことができます。
+
+
+
+\begin{lstlisting}[numbers=none]
+(make-money)
+;;-> #money.Money{:amount 0,
+;;                :currency #money.Currency{:divisor 100,
+;;                                          :sym "USD",
+;;                                          :desc "US Dollars"}}
+(make-money 1)
+;;-> #money.Money{:amount 1,
+;;                :currency #money.Currency{:divisor 100,
+;;                                          :sym "USD",
+;;                                          :desc "US Dollars"}}
+(make-money 5 (:eur currencies))
+;;-> #money.Money{:amount 5,
+;;                :currency #money.Currency{:divisor 100,
+;;                                          :sym "EUR",
+;;                                          :desc "Euro"}}
+\end{lstlisting}
+
+関数本体では、より必要とされる可能性の高い値を引数リストの早い段階で配置する。
+
+\subsubsection{マップのデストラクチャリング}
+
+しかし、多くの場合、任意の順序でオプションの引数を受け入れることが有用である。この場合、オプションのマップを受け取って構造化するのがひとつの簡単な方法です。
+
+\begin{lstlisting}[numbers=none]
+(defn make-entity [f1 f2 {:keys [f3 f4] :as opts}] ,,, )
+\end{lstlisting}
+
+例えば、宇宙シミュレーションを拡張して、アポロ計画に関するデータも含めるとします。このミッションは、有人であるか、月着陸船を持っているかなど、様々な種類があります。これらのオプションは、1つのオプションのマップを再構築することで、すべて受け入れることができます。
+
+
+\begin{lstlisting}[numbers=none]
+(defn make-mission
+  [name system launched manned? opts]
+  (let [{:keys [cm-name ;; command module
+                lm-name ;; lunar module
+                orbits
+                evas]} opts]
+    ,,, ))
+
+(def apollo-4
+  (make-mission "Apollo 4"
+                "Saturn V"
+                #inst "1967-11-09T12:00:01-00:00"
+                false
+                {:orbits 3}))
+\end{lstlisting}
+
+デフォルト値のセットは、入力されるoptsマップをデフォルトのマップにマージすることで提供することができる。
+
+\begin{lstlisting}[numbers=none]
+(def mission-defaults {:orbits 0, :evas 0})
+
+(defn make-mission
+  [name system launched manned? opts]
+  (let [{:keys [cm-name ;; command module
+                lm-name ;; lunar module
+                orbits
+                evas]} (merge mission-defaults opts)]
+       ,,, ))
+\end{lstlisting}
+
+\texttt{merge}は左から右へ動作し、連続したエントリは前のエントリを置き換えるので、この場合 この例では、\texttt{mission-defaults} が最初に来て、opts が渡された場合はそれが上書きされます。
+
+オプションの引数を受け取るもう一つの一般的な方法は、\texttt{varargs}シーケンスをマップとして再構築することです（余分な\&に注意してください）。
+
+\begin{lstlisting}[numbers=none]
+(defn make-mission
+  [name system launched manned? & opts]
+  (let [{:keys [cm-name ;; command module
+                lm-name ;; lunar module
+                orbits
+                evas]} opts]
+       ,,, ))
+
+(def apollo-4 (make-mission "Apollo 4"
+                            "Saturn V"
+                            #inst "1967-11-09T12:00:01-00:00"
+                            false
+                            :orbits 3))
+
+(def apollo-11 (make-mission "Apollo 11"
+                             "Saturn V"
+                             #inst "1969-07-16T13:32:00-00:00" true
+                             :cm-name "Columbia"
+                             :lm-name "Eagle"
+                             :orbits 30
+                             :evas 1))
+\end{lstlisting}
+
+これらのいずれの場合も、いくつかのオプションにデフォルト値を与えておくと便利です。これは :orデストラクチャリングを使ってデフォルトを提供することで実現できます。
+
+\begin{lstlisting}[numbers=none]
+(defn make-mission
+  [name system launched manned? & opts]
+  (let [{:keys [cm-name ;; command module
+                lm-name ;; lunar module
+                orbits
+                evas]
+         :or {orbits 0, evas 0}} opts]  ;; default to 0
+       ,,, ))
+
+(def apollo-4 (make-mission "Apollo 4"
+                            "Saturn V"
+                            #inst "1967-11-09T12:00:01-00:00"
+                            false
+                            :orbits 3))
+\end{lstlisting}
+
+この例では、\texttt{evas}と\texttt{orbits}のキーにデフォルト値として0を指定しています。他のデフォルト値も同様に:orのmapに追加することができる。
+
+\subsection{コンストラクタの計算}
+
+これまで、コンストラクタはエンティティにオプションを設定するための手段であることを説明してきました。コンストラクタには、派生値からエンティティを作成するために必要な計算を含めることもできます。このことを示すために、ここで定義した \texttt{Planet} エンティティを再考してみましょう。
+
+\begin{lstlisting}[numbers=none]
+(defrecord Planet [name moons volume
+                   mass aphelion perihelion])
+\end{lstlisting}
+
+
+この定義は、惑星カタログには十分でしょう。しかし、中心星の周りにある惑星の軌道力学をモデル化するアプリケーションを書くのであれば、惑星の軌道についてもう少し知る必要があるかもしれません。軌道力学の背後にある数学について理解することは心配しないでください。
+
+惑星の実体を作るために得た情報の中に、離心率のベクトルが含まれていると仮定しましょう。そのベクトルを使って、惑星の軌道の離心率（軌道が真円からどれだけずれているか）を実体に追加してみましょう。
+
+
+\begin{lstlisting}[numbers=none]
+(defn euclidean-norm [ecc-vector] ,,,)
+
+(defrecord Planet
+  [name moons volume mass aphelion perihelion orbital-eccentricity])
+
+(defn make-planet
+  "Make a planet from field values and an eccentricity vector"
+  [name moons volume mass aphelion perhelion ecc-vector]
+  (->Planet
+    name moons volume mass aphelion perhelion
+    (euclidean-norm ecc-vector)))
+\end{lstlisting}
+
+離心率ベクトルから軌道の離心率を得るには、そのベクトルにユークリッドノームを適用します。その結果を使って、レコードの位置ファクトリ関数 (->Planet) を呼び出します。
+
+\subsection{副作用のあるコンストラクタ}
+
+エンティティの初期化には、I/Oのような避けられない副作用が含まれることがあります。このような場合にコンストラクタを使用すると、副作用を他のコードから切り離すことができます。
+
+例えば、太陽系シミュレーションで\texttt{PlanetImage}として使用するために画像ファイルをロードする必要がある場合を考えてみましょう。
+
+
+\begin{lstlisting}[numbers=none]
+(ns ch1.image
+  (:require [clojure.java.io :as io])
+  (:import [javax.imageio ImageIO]
+           [java.awt.image BufferedImage]))
+
+(defrecord PlanetImage [src ^BufferedImage contents])
+
+(defn make-planet-image
+  "Make a PlanetImage; may throw IOException"
+  [src]
+  (with-open [img (ImageIO/read (io/input-stream src))]
+    (->PlanetImage src img)))
+\end{lstlisting}
+
+画像をレンダリングするには、コンテンツに取り込まれた\texttt{BufferedImage}が必要です。これをコンストラクタにまとめることで、必要なことがわかっているI/Oを効果的に自動化することができます。しかし、この方法で副作用を使用すると、しばしば複雑さが増します。この例では、\texttt{PlanetImage} を構築するたびに \texttt{ImageIO/read} または \texttt{input-stream} によってスローされる \texttt{IOException} に対処する準備をしなければなりません。
+
+\begin{itembox}[l]{コンストラクタ関数とJavaの相互運用}
+コンストラクタ関数は、ドメインエンティティの1つがJavaからインポートされる場合に便利です。Javaクラスにはさまざまな型のコンストラクタがあり、その中には同じアリティを持つものもあり、必ずしも思い通りに動作するとは限りません。コンストラクタ関数は、このような場合に使用するきれいな API を提供し、相互運用と型ヒンティングを邪魔しないようにすることができます。
+\end{itembox}
+
+\subsection{デフォルトのエンティティ}
+
+最後に、数量ゼロや空の容器を表すエンティティを作成したい場合があります。そのような場合は、単一のエンティティをデフォルトの状態で作成する関数を作成します。たとえば、\texttt{new-money} は、値が \$0.00 usd の \texttt{Money} インスタンスを作成します。
+
+
+
+
+
+\begin{lstlisting}[numbers=none]
+
+\end{lstlisting}
 
 
 
