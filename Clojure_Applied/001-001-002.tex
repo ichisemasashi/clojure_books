@@ -276,19 +276,21 @@ Martin Fowler は Patterns of Enterprise Application Architecture [Fow03] の中
 
 最後に、数量ゼロや空の容器を表すエンティティを作成したい場合があります。そのような場合は、単一のエンティティをデフォルトの状態で作成する関数を作成します。たとえば、\texttt{new-money} は、値が \$0.00 usd の \texttt{Money} インスタンスを作成します。
 
+\begin{lstlisting}[numbers=none]
+(defn new-money
+  "$0.00 usd"
+  []
+  (->Money 0 :usd))
+\end{lstlisting}
 
-
+しかし、Clojureはイミュータブルな値を使用することを忘れないでください。もしデフォルトのエンティティ関数が常に同じ値を返すのであれば、関数としてではなく、ゼロドル値として宣言する方が効率的です。
 
 
 \begin{lstlisting}[numbers=none]
-
+(def zero-dollars (->Money 0 :usd))
 \end{lstlisting}
 
-
-
-
-
-
-
-
+このように考えることは、Clojureの不変性の流れに沿うものであり、コードをすっきりさせることができます。
+      
+さて、エンティティをモデル化し構築する多くの方法を知ったので、それらをどのようにリレーションシップと組み合わせ始めることができるかを考えてみましょう。
 
