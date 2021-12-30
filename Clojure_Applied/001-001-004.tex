@@ -1,0 +1,139 @@
+\section{エンティティの検証}
+
+ドメインモデルができたら、データがそれに適合しているかどうかを検証する方法が必要です。Clojureの動的型は私たちに大きなパワーと柔軟性を与えますが、デフォルトで強制される制約も少なくなっています。データ検証は、Clojureがいつ、どこで、どの程度の検証を提供したいかについての選択肢を与えてくれる領域です。データが我々のコードによって作成される領域では、我々はほとんど、あるいは全く検証をしたくないかもしれません、一方、外部ソースからデータを受け入れるときには、かなりの検証が必要かもしれません。
+
+データの記述と検証をサポートする外部ライブラリが多数存在します。ここでは\texttt{Prismatic}の\texttt{Schema}ライブラリを取り上げますが、\texttt{core.typed}、\texttt{clj-schema}、\texttt{Strucjure}、\texttt{seqex}も見ておくとよいかもしれません。
+
+\texttt{Prismatic Schema}ライブラリは、型のメタデータをデータとして記述し、その記述を自動化し、実行時にそのメタデータに対してデータを検証します。\texttt{Schema}ライブラリをプロジェクトに追加するには、Leiningenで以下の依存関係を追加します。
+
+
+\begin{lstlisting}[numbers=none]
+[prismatic/schema "0.4.3"]
+\end{lstlisting}
+
+レシピマネージャのアプリケーションのコンテキストで、あるデータをスキーマで記述する方法を見てみましょう。今回は、レシピの食材の詳細について作業します。
+
+
+\begin{lstlisting}[numbers=none]
+(defrecord Recipe
+  [name ;; string
+   description ;; string
+   ingredients ;; sequence of Ingredient
+   steps ;; sequence of string
+   servings ;; number of servings
+  ])
+
+(defrecord Ingredient
+  [name ;; string
+   quantity ;; amount
+   unit ;; keyword
+  ])
+\end{lstlisting}
+
+これらのレコードには、私たちが何を期待しているかを同僚（そしておそらく数カ月後の私たち自身）が理解できるよう、コメントを付けています。レシピの特定のインスタンスは、次のようになります。
+
+
+\begin{lstlisting}[numbers=none]
+(def spaghetti-tacos
+  (map->Recipe
+    {:name "Spaghetti tacos"
+     :description "It's spaghetti... in a taco."
+     :ingredients [(->Ingredient "Spaghetti" 1 :lb)
+                   (->Ingredient "Spaghetti sauce" 16 :oz)
+                   (->Ingredient "Taco shell" 12 :shell)]
+     :steps ["Cook spaghetti according to box."
+             "Heat spaghetti sauce until warm."
+             "Mix spaghetti and sauce."
+             "Put spaghetti in taco shells and serve."]
+     :servings 4}))
+\end{lstlisting}
+
+代わりにSchemaを使ってレシピを記述してみましょう。スキーマは \texttt{defrecord} の独自のバージョンで、（\texttt{defrecord} の通常の効果に加え）各フィールドの値に対してスキーマを指定する機能を追加しています。Schemaは\texttt{:-}の後に指定されるが、これはSchemaが構文上の目印として使う特別なキーワードである。
+
+まず，Schemaの名前空間を引き出します．
+
+\begin{lstlisting}[numbers=none]
+(ns ch1.validate
+  (:require [schema.core :as s])
+\end{lstlisting}
+
+次に、Schema版の\texttt{defrecord}を使ってレコードを再定義する。
+
+\begin{lstlisting}[numbers=none]
+(s/defrecord Ingredient
+  [name     :- s/Str
+   quantity :- s/Int
+   unit     :- s/Keyword])
+
+(s/defrecord Recipe
+  [name        :- s/Str
+   description :- s/Str
+   ingredients :- [Ingredient]
+   steps       :- [s/Str]
+   servings    :- s/Int])
+\end{lstlisting}
+
+通常の型ヒントやクラス名（\texttt{String}など）も有効なスキーマ記述ですが、ここでは代わりに\texttt{s/Str}などの組み込みスキーマを使用しました。これらのスキーマは移植性が高く、ClojureとClojureScriptの両方で適切なチェックが行われます。食材のスキーマは、\texttt{Ingredient}型のアイテムのシーケンスです。\texttt{steps}フィールドは文字列のシーケンスです。
+
+レコードにスキーマ情報をアノテーションしたら、スキーマの説明を求めることができ、それはデータとして返され、印刷されます。
+
+\begin{lstlisting}[numbers=none]
+user=> (require 'ch1.validate)
+user=> (in-ns 'ch1.validate)
+ch1.validate=> (pprint (schema.core/explain ch1.validate.Recipe))
+(record
+ch1.validate.Recipe
+{:name java.lang.String,
+  :description java.lang.String,
+  :ingredients
+  [(record
+    ch1.validate.Ingredient
+    {:name java.lang.String, :quantity Int, :unit Keyword})],
+  :steps [java.lang.String],
+  :servings Int})
+\end{lstlisting}
+
+また、スキーマに照らし合わせてデータを検証することもできます。
+
+\begin{lstlisting}[numbers=none]
+ch1.validate=> (s/check Recipe spaghetti-tacos)
+nil
+\end{lstlisting}
+
+データが有効な場合、\texttt{s/check} は \texttt{nil} を返します。データが無効な場合、\texttt{s/check} はスキーマの不一致の詳細を示す説明的なエラーメッセージを返します。例えば、説明を省略し、無効な\texttt{servings}の値を持つレシピを渡した場合、エラーメッセージが表示されます。
+
+\begin{lstlisting}[numbers=none]
+ch1.validate=> (s/check Recipe
+         (map->Recipe
+           {:name "Spaghetti tacos"
+            :ingredients [(->Ingredient "Spaghetti" 1 :lb)
+                          (->Ingredient "Spaghetti sauce" 16 :oz)
+                          (->Ingredient "Taco" 12 :taco)]
+            :steps ["Cook spaghetti according to box."
+                    "Heat spaghetti sauce until warm."
+                    "Mix spaghetti and sauce."
+                    "Put spaghetti in tacos and serve."]
+            :servings "lots!"}))
+{:servings (not (integer? "lots!")),
+:description (not (instance? java.lang.String nil))}
+\end{lstlisting}
+
+エラーメッセージには、スキーマに適合しなかったフィールドとその理由が明記される。これらのチェックは、ドメインデータに対してプログラムの各部分に渡される、あるいは各部分の間で渡される無効なデータを検出する上で大きな助けとなる。
+
+Schemaにもある種の\texttt{defn}のバージョンがあり、入力パラメータや戻り値の型としてスキーマの形状を指定することができます。この型は、役に立つ\texttt{docstring}を作成するために使われます。
+
+\begin{lstlisting}[numbers=none]
+ch1.validate=> (s/defn add-ingredients :- Recipe
+                 [recipe :- Recipe & ingredients :- [Ingredient]]
+                 (update-in recipe [:ingredients] into ingredients))
+ch1.validate=> (doc add-ingredients)
+-------------------------
+ch1.validate/add-ingredients
+([recipe & ingredients])
+  Inputs: [recipe :- Recipe & ingredients :- [Ingredient]]
+  Returns: Recipe
+\end{lstlisting}
+
+Schemaはオプションとして、\texttt{s/with-fn-validation}関数を使って実行時の入力を検証し、スキーマ不一致のエラーを報告することもできます。
+
+ここまでで、ドメインの実体を表現し、実体を連結し、実体を検証するための様々なトレードオフについて見てきました。次は、ドメインタイプの動作をどのように実装するかを検討する番です。
