@@ -70,8 +70,95 @@ Clojureの永続的なコレクションは、イミュータブルです。効�
 
 
 \begin{lstlisting}[numbers=none]
-
+(defn import-catalog [data]
+  (reduce #(conj %1 %2) [] data))
 \end{lstlisting}
+
+変更できるようにして、誰にも知られずに多くの修正を加えることができたらどうでしょうか。Clojureのトランジェントがこれを可能にしてくれます。限られたスコープ内で、Clojureのコレクションを変更させることができます。
+
+transientを呼び出すと、mutableバージョンのvector、hash-map、hash-setが得られます（オリジナルはimmutableのままです）。トランジェントコレクションはconjやassocのような永続的な変更関数では変更できません。 トランジェントコレクションにはインスタンスを変更する同等の関数セットがあり、すべて「\texttt{!}」接尾辞がつきます： \texttt{conj!}、 \texttt{assoc!}、などなどです。 読み込みインターフェイス（\texttt{get}、\texttt{contains?}など）は変更されずに動作し続けます。変更が完了したら、\texttt{persistent!}を呼んで、永続的なコレクションに戻ります。
+
+以下は、transientコレクションを代わりに使用する\texttt{import-catalog}の更新版です。
+
+\begin{lstlisting}[numbers=none]
+(defn import-catalog-fast [data]
+  (persistent!
+    (reduce #(conj! %1 %2) (transient []) data)))
+\end{lstlisting}
+
+また、\texttt{item-data}にベクターのベクターとして読み込まれた約100万点のカタログアイテムをインポートしているときの速度を、時間を使って2つのバージョンの性能差を確認することができます。
+
+\begin{lstlisting}[numbers=none]
+catalog-import.core=> (time (import-catalog item-data)))
+"Elapsed time: 129.602 msecs"
+catalog-import.core=> (time (import-catalog-fast item-data)))
+"Elapsed time: 110.104 msecs"
+\end{lstlisting}
+
+トランジェントは、バルクインポートを行う際に大きな力を発揮します。Clojureのinto関数が変換コレクションを取り、それがトランジェントにできるかどうかを判断するのはこのためです。もしそうなら、出力コレクションは自動的にトランジエントにされ、トランジエント関数を使用して充填され、永続的なコレクションに戻されます。
+
+リストとベクター内の要素は、通常、更新されない。その代わり、シーケンシャルなコレクションでは、コレクションの挿入ポイントで要素の追加と削除を行うことがほとんどです。しかし、マップの内部内容は頻繁に更新され、マップはいくつかの一般的な方法で変換される必要がある。
+
+\subsection{マップの更新}
+
+マップを修正する基本的なツールは\texttt{assoc}と\texttt{dissoc}です。 \texttt{assoc}関数はキーに新しい値が供給されると、その値を更新します。Clojure 1.7では、関数の適用に基づいてキーの値を変換することができる\texttt{update}関数が追加されました。
+
+例えば、宇宙シミュレーションの惑星の1つを記述するエンティティ（適切なマップ・インターフェイスも実装しています）を考えてみましょう。
+
+
+
+\begin{lstlisting}[numbers=none]
+(def earth {:name       "Earth"
+            :moons      1
+            :volume     1.08321e12 ;; km^3
+            :mass       5.97219e24 ;; kg
+            :aphelion   152098232  ;; km, farthest from sun
+            :perihelion 147098290  ;; km, closest to sun
+           }
+\end{lstlisting}
+
+ユーザーがシミュレーションに月を追加した場合の効果を調べるための機能を追加することを検討します。\texttt{update}関数を使って、月の数を増やす\texttt{inc}関数を適用することができます。
+
+
+\begin{lstlisting}[numbers=none]
+(update earth :moons inc)
+\end{lstlisting}
+
+\texttt{update}関数は、コレクション内の値に関数を適用し、その結果として更新されたコレクションを受け取るという処理をカプセル化したものです。
+
+時には、マップ内の1つの値だけでなく、多くの値を同時に更新する必要があります。多くの場合、実体を表すマップは、CSVファイル、JSONデータ、データベースなどの外部データソースから取り込まれます。キーはキーワードではなく文字列であったり、キーワードが間違った名前空間や大文字小文字であったりと、求めるものと異なる形式であることがある。
+
+Clojureコア・ライブラリには、マップ内のすべてのキーを更新するための単一の関数はまだ含まれていませんが、多くの外部ユーティリティ・ライブラリが解決策を提供しています。ここでは、多くの開発者が便利だと思う少数の関数を含む \texttt{Medley} ライブラリを使用します。
+
+例えば、以下のような形式の文字列キーを持つJSONソースから惑星データを受信することを考える。
+
+
+\begin{lstlisting}[numbers=none]
+{"name" "Earth"
+ "moons" 1
+ "volume" 1.08321e12
+ "mass" 5.97219e24
+ "aphelion" 152098232
+ "perihelion" 147098290}
+\end{lstlisting}
+
+\texttt{Medley}の\texttt{map-keys}関数を使って、このエンティティのキーを全て変更することができます。
+
+\begin{lstlisting}[numbers=none]
+(:require [medley.core :refer (map-keys)])
+\end{lstlisting}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
