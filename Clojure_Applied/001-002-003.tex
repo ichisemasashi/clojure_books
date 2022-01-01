@@ -1,0 +1,96 @@
+\section{コレクションにアクセスする}
+
+コレクションの目的はデータを保存することですが、データをコレクションから取り出せてこそ、コレクションは役に立ちます。まず、キーによる索引検索をサポートするコレクションを考えてみましょう。
+
+\subsection{インデックス付きアクセス}
+
+Clojureで提供されるインデックス付きコレクションは、マップとベクターの2つです。ベクターは0ベースのインデックスを使用し、インデックスから要素への連想コレクションとして扱われます。ドメインをモデリングしているときに見たレコードもマップインターフェースを実装しており、インデックス付きコレクションとして扱うことができます。
+
+インデックス付きコレクションは3つのメソッドで検索をサポートする。1つ目は、コレクションとキーを指定して\texttt{get}関数を呼び出す方法である。2つ目は、コレクションそのものをキーとともに呼び出す方法である。3つ目は、コレクションをキーワードやシンボルで呼び出す方法です。以下は、3つの方法の例である。
+
+\begin{lstlisting}[numbers=none]
+(def earth {:name "Earth" :moons 1})
+
+(get earth :name) ;; (1) using get
+(earth :name) ;; (2) invoking the map
+(:name earth) ;; (3) invoking the keyword key
+\end{lstlisting}
+
+これらの3つの方法はすべて典型的なClojureプログラムで使用されますが、それぞれトレードオフが異なり、状況によって好まれる方法が異なります。
+
+エンティティ（マップまたはレコード）については、関数としてキーワードを呼び出すことが好ましい方法であり、このスタイルの検索は広く使用されています。関数としてのキーワードキーの使用は、他の関数を入力として受け取るClojureライブラリの多くの関数とうまく連動します。
+
+マップがデータの定数ルックアップ・テーブルとして、またはキーから値への関数として使用されている場合、マップを関数として呼び出すのが一般的です。この呼び出しスタイルの欠点は、呼び出されるマップが\texttt{null}の可能性がある場合、\texttt{NullPointerException}が発生することです。このため、この呼び出しスタイルは、\texttt{def}を使用して、決して\texttt{null}にならない一定のグローバルマップを作成した場合によく見受けられます。レコードは呼び出すことができないので、この方法では呼び出すことができないことに注意してください。
+
+何が起こっているのかが不明な場合は、\texttt{get}を直接呼び出すと便利です。例えば、マップを作成する関数が使われているとき、関数の戻り値がたまたまルックアップテーブルであった場合に呼び出すと混乱することがある。
+
+例えば、ここにある \texttt{opposite-colors} 関数は、特定のパレットにある色と対照的な色のマッピングを返します。
+
+\begin{lstlisting}[numbers=none]
+(defn opposite-colors
+  "Compute an opposite-color mapping for a given palette."
+  [palette]
+  ;; This function should compute the mapping for the palette and
+  ;; return a map like this with many entries: {:magenta :green}
+  )
+\end{lstlisting}
+
+それに対する呼びかけを紹介します。
+
+\begin{lstlisting}[numbers=none]
+((opposite-colors palette) :magenta) ;; ok, but confusing
+(get (opposite-colors palette) :magenta) ;; less confusing
+\end{lstlisting}
+
+最初の呼び出しの例は \texttt{opposite-colors} が返すマップを直接呼び出していますが、多くの Clojure 読者はこの使い方につまずき、何が起こっているのか不思議に思ってから解決することでしょう。一般的に、式の右側で閉じ括弧を山ほど見ることはよくありますが、左側で同じことを見ることは比較的まれです。関数を呼び出して、その戻り値をすぐに呼び出すということはほとんどありません。
+
+2番目の呼び出しの例では、代わりに明示的にget関数を使用しています。これは、読者に対して、\texttt{opposite-colors}から返される値がマップであることを強く知らせるものです。このコードでは、\texttt{opposite-colors}が\texttt{nil}を返す場合にも対応しており、その場合は\texttt{get}も\texttt{nil}を返します。
+
+マップから単一の値を取り出すこれらの方法に加えて、時にはサブマップを取り出し、エントリーの部分的なセットを選択することが有用である。Clojureはこの目的のために\texttt{select-keys}関数を提供します。この関数は常にハッシュ・マップを返し、ソース・タイプ（レコード、ソート・マップなど）のマップは返しません。
+
+もし、私たちが宇宙シミュレーションからデータのエクスポートを準備していたなら、最も重要なキーのうちのいくつかだけを選択して、情報の一部を省略した簡略化したエクスポートを提供することができます。
+
+\begin{lstlisting}[numbers=none]
+(defn export-planet
+  [planet]
+  (select-keys planet [:name :moons]))
+\end{lstlisting}
+
+エクスポートされる惑星は、単純なマップになります。\texttt{\{:name "Earth" :moons 1\}} というシンプルなマップになります。次に、シーケンシャルなデータ構造の中のものを探すことに目を向けましょう。
+
+\subsection{逐次探索}
+
+前節で扱ったマップは、ある値を効率的に一定時間で調べたいときに常に理想的な選択肢となる。同様に、セットも\texttt{contains?}関数を使って、あるセットが特定の値を含んでいるかどうかを素早くチェックすることができます。しかし、\texttt{contains?}関数はリストやベクトル内の値で項目を探すのには使えません。
+
+順番に並んだコレクションが必要で、かつそのコレクションの中の値も見つける必要がある場合、コレクションを順番に検索して一致するものを見つける方法が必要です。この検索にかかる時間は、コレクションのサイズに比例することに注意する必要があります。
+
+Clojureで見られる逐次探索の最も一般的なテクニックの1つは、some関数を使うことです。この関数はコレクションの各要素に対して述語を評価し、最初の論理的に真となる値（元の要素ではありません）を返します。これは単純な値のコレクションで最も便利です。
+
+\begin{lstlisting}[numbers=none]
+(def units [:lb :oz :kg])
+
+(some #{:oz} units)
+;;=> :oz
+\end{lstlisting}
+
+\texttt{some}と一緒に使われている述語は、1つの値を含むセットです。ここでは、前のセクションと同じコレクション呼び出しのスタイルを活用し、ユニットベクタの各要素を順番に持つ関数としてセットを呼び出しています。マッチングが成立すると、その値が返されます。結果は真理値として使用することができます。マッチしない場合は、\texttt{nil}が返される。
+
+この目的のために\texttt{some}を使うことはよくあるが、論理的に偽である\texttt{nil}や\texttt{false}を探すという特殊なケースで破綻する。
+
+論理的に偽の値の検索をサポートし、早期に終了する比較的効率的な線形探索の実装は以下のように定義できる。
+
+\begin{lstlisting}[numbers=none]
+(defn contains-val?
+  [coll val]
+  (reduce
+    (fn [ret elem] (if (= val elem) (reduced true) ret))
+    false coll))
+
+(contains-val? units :oz)
+;;=> true
+\end{lstlisting}
+
+\texttt{reduce}と\texttt{reduced}の使い方は、Reducing to a Valueで詳しく説明します。
+
+Clojureが提供するコレクションをどのように活用するか決めたところで、独自のコレクションを構築する方法を検討することで、自分のアプリケーションに固有の問題を解決する方法も考えたいと思います。
+
