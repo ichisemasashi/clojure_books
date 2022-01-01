@@ -148,30 +148,48 @@ Clojureコア・ライブラリには、マップ内のすべてのキーを更�
 (:require [medley.core :refer (map-keys)])
 \end{lstlisting}
 
+\begin{lstlisting}[numbers=none]
+(defn keywordize-entity [entity]
+  (map-keys keyword entity))
 
+(keywordize-entity {"name"   "Earth"
+                    "moon"   1
+                    "volume" 1.08321e12
+                    "mass"   5.97219e24
+                    "aphelion" 152098232
+                    "perihelion" 147098290})
+;; {:name "Earth",
+;;  :moons 1,
+;;  :volume 1.08321E12,
+;;  :mass 5.97219E24,
+;;  :aphelion 152098232,
+;;  :perihelion 147098290}
+\end{lstlisting}
 
+おそらくもっと一般的なのは、マップをインデックスとして使用する場合、1回の呼び出しですべてのマップの値を更新する必要があることでしょう。\texttt{Medley}ライブラリには、この目的のために\texttt{map-vals}関数も用意されています。
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+モデリングの関係で考えたレシピのインデックスがレシピ識別子からレシピへのマップであったことを思い出してください。もし私たちがインデックス内のすべてのレシピにカロリー情報を追加する必要があるならば、次のように\texttt{map-valsas}を使うことでレシピのインデックスを更新することができます。レシピの総カロリー数を生成できる\texttt{compute-calories}関数を持っていると仮定します。
 
 \begin{lstlisting}[numbers=none]
-
+(:require [medley.core :refer (map-vals)])
 \end{lstlisting}
 
 
+\begin{lstlisting}[numbers=none]
+(defn- update-calories
+  [recipe]
+  (assoc recipe :calories (compute-calories recipe)))
 
+(defn include-calories
+  [recipe-index]
+  (map-vals update-calories recipe-index))
+\end{lstlisting}
 
+まず、\texttt{update-calories}ヘルパー関数を定義します。これは、新しい\texttt{:calories}フィールドを計算し、単一のレシピに関連付けるために使用されます。それから、\texttt{include-calories}で、マップのすべての値にこの関数を適用するために\texttt{map-vals}を使用します。
+   
+マップのすべてのキーや値を更新するこれらの単純な関数は驚くほど便利で、ほとんどのプロジェクトは最終的にこれらのユーティリティを書いたり、含めたりしています。\texttt{Medley}では、これらの関数の実装にトランジェントを使用してパフォーマンスを向上させています。トランジェントの利点は、Bulk Importでご覧いただいたとおりです。
+
+\texttt{Medley}には他にも、\texttt{filter-keys}、\texttt{filter-val}、\texttt{remove-keys}、\texttt{remove-val}という便利なマップ変換関数がいくつかあります。これらは、述語関数(ブール値を返す)を適用した結果に基づいて、マップエントリのサブセットを保持または削除することができます。
+
+さて、コレクションを選んでデータを入れたら、次はそこからデータを取り出す方法を考えましょう。
 
