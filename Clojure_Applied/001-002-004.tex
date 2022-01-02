@@ -95,20 +95,33 @@ user> p
 
 \subsection{型のカスタム表示}
 
+先ほど見たように、型にはクラス名と識別子を含むあらかじめ定義された表示フォーマットがあります。私たちの型の表示形式には、インスタンスデータが含まれるようにしたいのです。リーダーはClojure内部のコンポーネントで、文字列を読み込んでClojureデータを返します。理想的には、リーダーによって読むことができるフォームで私たちの型を表示したいです -- これはリテラル値として私たちに完全なラウンドトリップ能力を与えます。
 
+表示装置は、カスタムプリンターを供給するフックを定義するマルチメソッドを持つオープンシステムです。考慮すべきは、\texttt{print-method}（ユーザのために表示するときに呼び出される）と\texttt{print-dup}（リーダーのために表示するときに呼び出される）の2つのフックである。例えば、Clojure文字列は、\texttt{print-method}では周囲の引用符なしで表示されますが、 \texttt{print-dup}では周囲の引用符で表示されます。
 
-
-
-
-
-
-
+私たちの目的のために、私たちはどちらの場合でも同じようにペアタイプを表示したいので、単に\texttt{print-method}を呼び出すために\texttt{print-dup}を実装することにします。
 
 \begin{lstlisting}[numbers=none]
+(defmethod print-method Pair
+  [pair ^Writer w]
+  (.write w "#ch2.pair.Pair")
+  (print-method (vec (seq pair)) w))
 
+(defmethod print-dup Pair
+  [pair w]
+  (print-method pair w))
 \end{lstlisting}
 
+そのため、今回のプリンターでは、\texttt{Pair}データをベクターに変換し、既存のベクター用\texttt{print-method}に対応させることで簡略化しています。試してみましょう。
 
+\begin{lstlisting}[numbers=none]
+user> (use 'ch2.pair.print)
+nil
+user> (->Pair 1 2)
+#ch2.pair.Pair[1 2]
+user> #ch2.pair.Pair[3 4]
+#ch2.pair.Pair[3 4]
+\end{lstlisting}
 
-
+Clojureリーダーはこの形式を使用してJavaオブジェクトを構築するため、今回表示する構文は特別に選択されました。フォーマットは\tex{#class\[args\]}です。前のコードでは、コンストラクタ・クラスの構文を REPL に置くと、リーダーはそれを \texttt{Pair} オブジェクトに読み込んで、プリンタは私たちの \texttt{print-method} プリンタを使用して結果のオブジェクトを表示します。
 
