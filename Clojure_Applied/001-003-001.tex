@@ -1,0 +1,88 @@
+\section{値のマッピング}
+
+アプリケーションの中でデータが移動するとき、ある部分が別の形でデータを必要とすることはよくあることです。あるサブシステムは、30列のスプレッドシートから30個のキーを持つ汎用マップにデータをインポートする。別のサブシステムでは、5列のデータをエンティティの形で必要とし、さらに別のシステムでは、一連のエンティティから1つのフィールドのみを必要とし、計算を実行したり画面に表示したりします。
+
+これらのユースケースはすべて、シーケンシャルなソースにある値をある形式から別の形式に変換する必要があります。Clojureでは、map関数はシーケンスの各要素に関数を適用して、その結果の新しいシーケンスを生成するために使用されます。
+
+例えば、宇宙シミュレーションの各惑星エンティティの軌道周期を抽出して画面に表示する必要があるとします。入力は惑星のベクターであり、これはシーケンス、つまり論理的には値のリストとして扱われます。
+
+このシーケンシャルな惑星の集合を、各惑星の軌道周期のシーケンシャルな集合に変換する必要がある。軌道周期とは、惑星が太陽の周りを完全に1周するのにかかる時間である。例えば、地球の場合、公転周期は約365.25日である。
+
+$$
+\mu = GM
+$$
+
+$$
+T = 2 \pi \sqrt{\frac{a^3}{\mu}}
+$$
+
+任意の惑星の公転周期を計算する関数を書くことができる。この関数の詳細を理解することは、特に重要ではありません。(もし興味があれば、ここにその方程式を示す。Tは惑星の公転周期、$μ$は標準的な重力パラメータです)。
+
+この値は、惑星だけでなく、中心星の質量にも依存する。公転周期を計算する関数は、惑星と恒星の質量を引数として受け取り、公転周期を返す。
+
+
+
+\begin{lstlisting}[numbers=none]
+(defn semi-major-axis
+  "The planet's average distance from the star"
+  [p]
+  (/ (+ (:aphelion p) (:perihelion p)) 2))
+
+(defn mu [mass] (* G mass))
+
+(defn orbital-period
+  "The time it takes for a planet to make a complete
+  orbit around a mass, in seconds"
+  [p mass]
+  (* Math/PI 2
+    (Math/sqrt (/ (Math/pow (semi-major-axis p) 3) (mu mass)))))
+\end{lstlisting}
+
+さて、変換関数ができたので、それを使って惑星のコレクションを公転周期のコレクションに変換しなければなりません。Clojureのマップ関数は、惑星のベクターに変換関数を適用して、連続したソース内のすべての値を新しい値に「マップ」する方法です。
+
+1つの引数(値)を取り、新しい値を返す変換関数が必要です。しかし、\texttt{orbital-period}関数は2つの引数を取る関数なので、今ある関数を正しい形（1つの引数）の変換関数にラップする必要があります。これは、定数値（太陽質量）が現在の関数スコープで利用可能な無名関数を使用することでしばしば行われる。
+
+\begin{lstlisting}[numbers=none]
+(defn orbital-periods
+  "Given a collection of planets, and a star, return the
+  orbital periods of every planet."
+  [planets star]
+  (let [solar-mass (:mass star)]
+    (map (fn [planet] (orbital-period planet solar-mass))
+         planets)))
+\end{lstlisting}
+
+この例では、惑星のコレクションと星を受け取り、星から太陽質量を取り出しています。そして、惑星を受け取り、その惑星と太陽質量を用いてorbital-period関数を呼び出す無名関数でmapを呼び出すことができます。map関数は、この関数をすべての惑星に適用しながらコレクションを走査し、結果を一連のシーケンスにまとめて最後に返します。
+
+mapが何をしているのか、コレクションの世界からシーケンスの世界へどのように入り込んでいるのか、もっと詳しく見ていきましょう。
+
+
+\subsection{シーケンス処理}
+
+ mapの仕事は、シーケンスのすべての値に関数を適用することである。ここでは Clojureがこの関数を実装する方法の簡略版です。このバージョンを \texttt{simple-map} と呼ぶことにします。
+
+
+\begin{lstlisting}[numbers=none]
+(defn simple-map
+  "Map f over the elements of coll."
+  [f coll]
+  (when (seq coll)
+    (cons (f (first coll))
+          (simple-map f (rest coll)))))
+\end{lstlisting}
+
+
+
+
+
+
+
+
+
+\begin{lstlisting}[numbers=none]
+
+\end{lstlisting}
+
+
+
+
