@@ -1,0 +1,22 @@
+\section{値のフィルタリングと削除}
+
+惑星のコレクションではなく、太陽系内の全エンティティのコレクションを渡されることもある。その場合、月の総数を計算するには、惑星だけをフィルタリングして月の数を抽出し、月の総数を計算する必要がある。まずは配列を使ってどのように見えるか見てみましょう。
+
+
+\begin{lstlisting}[numbers=none]
+(defn planet?
+  [entity]
+  (instance? Planet entity))
+
+(defn total-moons
+  [entities]
+  (reduce + 0
+    (map :moons
+      (filter planet?
+        entities))))
+\end{lstlisting}
+
+
+
+
+
