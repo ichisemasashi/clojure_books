@@ -1,0 +1,34 @@
+\section{takeとdrop}
+
+述語に基づいてコレクションのサブセットを構築する代わりに、コレクションの先頭を取得または削除することがしばしば有用である。Clojureでは、\texttt{take}と\texttt{drop}関数がこれを達成することができます。例えば、外部ソースから太陽系エンティティのシーケンスを受け取る場合、次のような関数で結果のn番目のページを取得することができます。
+
+
+\begin{lstlisting}[numbers=none]
+(defn nth-page
+  "sourceのn番目（0ベース）のpageに対して、page-sizeまでの結果を返す"
+  [source page-size page]
+  (->> source
+       (drop (* page page-size))
+       (take page-size)))
+\end{lstlisting}
+
+この関数は、まず要求されたページまでのページ数を落とし、次に要求されたページの集合を取り込む。この関数はシーケンスを使用し，要求されたページの結果を超える要素は実現しない．トランスデューサのフォームは、早期終了を知らせるために\texttt{reduced}を使用し、また要求された範囲を超えた結果を実現しないようにします。
+
+ページを返すだけでなく、そのページと残りのコレクションの両方をさらなる処理のために必要とする場合もあります。split-at ヘルパー関数は \texttt{take} と \texttt{drop} の両方を実行し、両方をタプルとして返します。
+
+
+\begin{lstlisting}[numbers=none]
+(defn page-and-rest
+  [source page-size]
+  (split-at page-size source))
+\end{lstlisting}
+
+これは、最初のページと、最初のページ以外のすべてのベクターを返します。さらに処理を進めると、最初のページ以降の結果に対して再びこれを呼び出すことができる。
+
+また、\texttt{take}と\texttt{drop}はカウントではなく述語で動作するバージョン、\texttt{take-while}と\texttt{drop-while}も使用できる。\texttt{split-with}関数は\texttt{split-at}と等価な述語です。
+
+\texttt{take}と\texttt{drop}関数で要素のサブセットを選択する前に、コレクション内の要素の順序を指示するためにソートを組み合わせることはしばしば有用である。
+
+
+
+
