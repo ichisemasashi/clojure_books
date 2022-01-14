@@ -5,7 +5,8 @@
 
 \begin{lstlisting}[numbers=none]
 (defn nth-page
-  "sourceのn番目（0ベース）のpageに対して、page-sizeまでの結果を返す"
+  "sourceのn番目（0ベース）のpageに対して、
+   page-sizeまでの結果を返す"
   [source page-size page]
   (->> source
        (drop (* page page-size))
