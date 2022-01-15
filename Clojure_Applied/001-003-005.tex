@@ -1,0 +1,16 @@
+\section{ソートと重複排除}
+
+最も基本的なソート機能は \texttt{sort} で、デフォルトのコンパレータまたは必要に応じてカスタムのコンパレータでソートすることができます。例えば、これはアルファベット順で最初の5つの惑星名を取得します。
+
+
+\begin{lstlisting}[numbers=none]
+(take 5 (sort (map (:name planets))))
+\end{lstlisting}
+
+この例では、惑星の名前を取得し、その名前をソートしています。しかし、しばしば、元の実体を惑星名で並べ替えたいことがある。つまり、値を取り出すのではなく、各要素に適用される関数でソートしたいのです。これは\texttt{sort-by}で実現できる。
+
+
+\begin{lstlisting}[numbers=none]
+(take 5 (sort-by :name planets))
+\end{lstlisting}
+
