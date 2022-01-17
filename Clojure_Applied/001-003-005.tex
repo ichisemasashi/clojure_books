@@ -14,3 +14,20 @@
 (take 5 (sort-by :name planets))
 \end{lstlisting}
 
+\texttt{sort} と \texttt{sort-by} はどちらも出力の実体化を必要とするので、遅延シーケンスを返すことはありません。どちらもトランスデューサのバージョンはありません。
+
+最小の\texttt{n}個の惑星を取り出すには、まず体積の大きい順にソートし、それから最初のn個を取り出す必要があります。
+
+
+
+\begin{lstlisting}[numbers=none]
+(defn smallest-n
+  [planets n]
+  (->> planets
+       (sort-by :volume)
+       (take n)))
+\end{lstlisting}
+
+非セットコレクションの中には、重複を含むものがあります。これらは\texttt{distinct}で除去できますが、これはこれまでに見た要素を追跡する必要があり、大きな入力コレクションではメモリの問題になる可能性があります。より限定された機能でこの問題を回避する代替案は、\texttt{dedupe}であり、後続の重複する値を削除する。\texttt{dedupe}関数は前の要素をメモリ上に保持するだけなので、大きな入力に対してより安全に使用できる。
+
+
