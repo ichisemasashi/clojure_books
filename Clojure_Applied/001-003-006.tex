@@ -1,0 +1,35 @@
+\section{値のグループ化}
+
+便利な\texttt{group-by}関数は、述語に基づいてデータをグループ化し、述語の結果とその結果にマッチするすべてのシーケンスのマップを返すことができます。例えば、惑星の最初の文字でインデックスを作成することができます。
+
+
+
+\begin{lstlisting}[numbers=none]
+(defn index-planets
+  [planets]
+  (group-by #(first (:name %)) planets))
+\end{lstlisting}
+
+この関数は、\texttt{E}, \texttt{J}, \texttt{M}, \texttt{N}, \texttt{S}, \texttt{U}, \texttt{V}をキーとするマップを返す。各値は、地球、木星、火星と水星、海王星、土星、天王星、金星の惑星エンティティのシーケンスである。
+
+\texttt{group-by}の一般的な使用方法の1つは、含むコードで両方が必要な場合に\texttt{true}と\texttt{false}のキーのマップを返す述語と組み合わせて使用することです。
+
+例えば、月のある惑星と月のない惑星を分けたい場合、述語は次のようになります。
+
+
+\begin{lstlisting}[numbers=none]
+(defn has-moons?
+  [planet]
+  (pos? (:moons planet)))
+\end{lstlisting}
+
+この述語は、マップ上で惑星を2つのバケツに分けるために使われる。
+
+
+\begin{lstlisting}[numbers=none]
+(defn split-moons
+  [planets]
+  (group-by has-moons? planets))
+\end{lstlisting}
+
+Clojureでシーケンシャルなデータを処理する一般的な方法のほとんどを示したので、より大きな例のコンテキストでそれがどのように見えるかを見てみましょう。
