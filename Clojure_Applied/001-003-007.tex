@@ -58,3 +58,31 @@
 
 \includegraphics[width=12cm]{fig_03_001.eps}
 
+私たちが求めているのは、もっとシンプルな、部門と金額の対応表です。
+
+
+
+\begin{lstlisting}[numbers=none]
+{:clothing #Money{:amount 2386424, :currency :usd}
+ :toys     #Money{:amount 1163277, :currency :usd}
+ ,,, }
+\end{lstlisting}
+
+カートの中身から目的の出力まで、順を追って説明しましょう。まず最初にやるべきことは、気になるデータを見つけることです。
+
+\subsection{選択}
+
+シーケンス処理の選択ステップでは、興味のある要素だけを含む部分シーケンスを識別して作成します。カートデータに対してフィルタを使用することで、その要素を取得することができます。
+
+レポートを作成する際、決済されたカートのみを考慮します。決済されるまでは、実際の収益ではなく、潜在的な収益に過ぎないからです。まず、filterを使用してリストのサイズを小さくします。
+
+
+
+\begin{lstlisting}[numbers=none]
+(defn revenue-by-department [carts]
+  (->> (filter :settled? carts)
+       ,,,))
+\end{lstlisting}
+
+キーワード \texttt{:settled?} を関数として使用すると、 \texttt{:settled?} が\texttt{true}でないカートをすべてフィルタリングすることができます。
+
