@@ -86,3 +86,44 @@
 
 キーワード \texttt{:settled?} を関数として使用すると、 \texttt{:settled?} が\texttt{true}でないカートをすべてフィルタリングすることができます。
 
+\subsection{トランスフォーメーション}
+
+これで一連の決済カートが揃ったので、部門別に収益を分離することができるようになりました。カートは一切必要なく、品目とカタログ品だけが必要なことがわかります。今は一歩ずつ進めていきましょう。次のステップは、すべてのラインアイテムのシーケンスを作成することです。
+
+
+\begin{lstlisting}[numbers=none]
+(defn revenue-by-department [carts]
+  (->> (filter :settled? carts)
+       (mapcat :line-items)
+       ,,,))
+\end{lstlisting}
+
+\texttt{(mapcat :line-items ,,)} の結果は、このようになります。
+
+
+\begin{lstlisting}[numbers=none]
+[#LineItem{:quantity 3,
+           :catalog-item #CatalogItem{:number   664,
+                                      :dept  :clothing,
+                                      :desc "polo shirt L",
+                                      :price #Money{:amount 2515
+                                                    :currency :usd}},
+           :price #Money{:amount   7545
+                         :currency :usd}},
+ #LineItem{:quantity 1,
+           :catalog-item #CatalogItem{:number 621,
+                                      :dept :clothing,
+                                      :desc "khaki pants",
+                                      :price #Money{:amount 3500
+                                                    :currency :usd}},
+           :price #Money{:amount   3500
+                         :currency :usd}}, ,,, ]
+\end{lstlisting}
+
+\texttt{mapcat}関数は、行項目ベクターの内容を集積したものを構築する。
+
+\begin{itembox}[l]{mapcatとmap + flattenの使い分け}
+\texttt{mapcat}の代わりに、\texttt{map}と\texttt{flatten}を併用することで、同様の結果を得ることができます。\texttt{flatten}を使いたくなったら、一歩戻って、そもそも\texttt{flatten}する必要がある構造を作らないようにしましょう。最も一般的なのは、\texttt{map}ではなく\texttt{mapcat}を使うことです（\texttt{map}と\texttt{concatenate}を行うため）。
+\end{itembox}
+
+次のステップは、各ラインアイテムから、カタログアイテムの :dept 値とラインアイテムの親の :price 値という気になるデータのマップを抽出することである。これは map と line-summary ヘルパー関数によって行われます。
