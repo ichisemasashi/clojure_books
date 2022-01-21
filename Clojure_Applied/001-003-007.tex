@@ -126,4 +126,23 @@
 \texttt{mapcat}の代わりに、\texttt{map}と\texttt{flatten}を併用することで、同様の結果を得ることができます。\texttt{flatten}を使いたくなったら、一歩戻って、そもそも\texttt{flatten}する必要がある構造を作らないようにしましょう。最も一般的なのは、\texttt{map}ではなく\texttt{mapcat}を使うことです（\texttt{map}と\texttt{concatenate}を行うため）。
 \end{itembox}
 
-次のステップは、各ラインアイテムから、カタログアイテムの :dept 値とラインアイテムの親の :price 値という気になるデータのマップを抽出することである。これは map と line-summary ヘルパー関数によって行われます。
+次のステップは、各ラインアイテムから、カタログアイテムの \texttt{:dept} 値とラインアイテムの親の \texttt{:price} 値という気になるデータのマップを抽出することである。これは \texttt{map} と \texttt{line-summary} ヘルパー関数によって行われます。
+
+
+
+\begin{lstlisting}[numbers=none]
+(defn- line-summary
+  "CatalogItem を持つ LineItem が与えられた場合、
+   CatalogItem の :dept を :dept、LineItem の 
+   :price を :total として含むマップを返します。"
+  [line-item]
+  {:dept (get-in line-item [:catalog-item :dept])
+   :total (:price line-item)})
+
+(defn revenue-by-department [carts]
+  (->> (filter :settled? carts)
+       (mapcat :line-items)
+       (map line-summary)
+       ,,,))
+\end{lstlisting}
+
