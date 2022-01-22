@@ -146,3 +146,39 @@
        ,,,))
 \end{lstlisting}
 
+あと少しです。これで、報告する必要のあるデータのみを含む一連のマップができました。
+
+
+\begin{lstlisting}[numbers=none]
+[{:dept :clothing :total #Money{ ,,, }
+ {:dept :clothing :total #Money{ ,,, }
+ {:dept :toys     :total #Money{ ,,, }
+ {:dept :kitchen  :total #Money{ ,,, }
+ {:dept :toys     :total #Money{ ,,, }]
+\end{lstlisting}
+
+ここから、\texttt{group-by}を利用して、部門をキー、一連のサマリーを値とするマップを構築することができる。
+
+
+\begin{lstlisting}[numbers=none]
+(defn revenue-by-department [carts]
+  (->> (filter :settled? carts)
+       (mapcat :line-items)
+       (map line-summary)
+       (group-by :dept)
+       ,,,))
+\end{lstlisting}
+
+この時点で、私たちのデータはこのようになっています。
+
+
+\begin{lstlisting}[numbers=none]
+{:clothing [{:dept :clothing :total #Money{},
+            {:dept :clothing :total #Money{}, ,,,]
+ :toys     [{:dept :toys     :total #Money{},
+            {:dept :toys     :total #Money{}, ,,,]
+ :kitchen  [{:dept :kitchen  :total #Money{}, ,,,]}
+\end{lstlisting}
+
+\texttt{:total}の\texttt{\#Money\{\}}の値のベクトルでサマリーを置き換えるという余分なステップを踏むこともできますが、それは不要です。その代わりに、最後のステップである、これらの値の要約に移りましょう。
+
