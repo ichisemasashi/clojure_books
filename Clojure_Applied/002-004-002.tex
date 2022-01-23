@@ -13,7 +13,162 @@ Var & def & alter-var-root & var-set \\ \hline
 Agent & agent & send, send-off & restart-agent \\ \hline
 \end{tabular}
 
+これらのリファレンスタイプはどれも似たようなパターンです。
 
 
+\begin{lstlisting}[numbers=none]
+;; 作成
+(create-fn container)
+;; 更新
+(update-fn container data-fn & args)
+;; 値を設定する
+(set-fn container new-val)
+\end{lstlisting}
+
+エージェントの場合、作成時にエラー処理オプションを含めることができます。
+
+\texttt{var} はローカルメモリに変更可能なデータを保存し、管理されません。\texttt{atom}は、同期変換（\texttt{swap!}を使用）により保存された値の変更を制限しますが、これらの変更を調整することはありません。\texttt{Ref}は、STMによって、保存された値の制御された変換を提供します。\texttt{agent}は個々のアプリケーションの状態を保存するが、非同期で更新する。(このセクションでは、\texttt{atom}、\texttt{ref}、および \texttt{var} の概要と、それらの使用方法を示す例について説明します。
+
+まず、\texttt{atom}や\texttt{ref}を使用した変更の管理に注目しましょう。
+
+
+\subsection{Atomによるマネージドアップデート}
+
+データが複数のスレッドによって観測され始めると、それらのスレッドを、調整されていない部分的な更新の混乱から守ることが必要になります。これを怠ると、システムが無効な状態に陥る可能性がある。
+
+
+
+\subsubsection{買い物に行こう}
+
+アクティビティをどのようにコーディネートするのがベストなのか、思考を巡らせてみましょう。同時進行の実装を決定するたびに、どの情報を管理し、どの情報を管理しないようにするかを決めるために、同様の演習を行うことになります。
+
+練習のために、食料品の買い物に出かけましょう。まず、シングルスレッドで買い物をすることを考え、次にそのニーズを基に、より複雑なマルチスレッドの例を考えてみましょう。続けて、有用なものができるまで、様々なトランザクションメモリメカニズムを追加していきます。
+
+\subsubsection{ソロオペレーター}
+
+私たちは、食料品の買い物がどのように行われるかを知っています。リストを作り、店に行き、リストにあるものを買うのです。一人の場合、これはとても簡単なことです。リストを作った人が買い物に向かいます。
+
+
+\begin{lstlisting}[numbers=none]
+(defn go-shopping-naive
+  "購入した商品の一覧を返します。"
+  [shopping-list]
+  (loop [[item & items] shopping-list
+         cart []]
+    (if item
+       (recur items (conj cart item))
+       cart)))
+\end{lstlisting}
+
+
+このシナリオでは、状態管理は必要ない。1つのスレッド（人）がリストをたどり、おいしいジャンクフードでいっぱいのカートを返します。少なくとも、あなたが大学生の時はそうでしたね。
+
+この例では、すべてが無限の棚に置かれています。私たちは単に、あるリストから別のリストへ物を移動しているだけです。もっと完全な表現にすると、店の在庫を表すことになり、大学生は寮の友達が先にすべてのピザを手に入れたことを発見するかもしれません。その在庫を管理できるようなAPIを書いてみよう。
+
+\subsubsection{ストアAPIの構築}
+
+私たちの店の在庫を、商品と数量のマップとして表現する。複数のスレッドがこの在庫を操作することが予想されるので、どのオブザーバーも一貫したデータを見ることができるようにする必要があります。これは\texttt{atom}で実装することができます。
+
+\texttt{atom}は同期された構造体です。つまり、\texttt{atom}を使用することで、\texttt{atom}に加えたすべての変更が、次の変更が適用される前に完全に行われることを保証します。また、\texttt{atom}は独立であり、非協調でもあります。調整については、次のセクションでもう少し詳しく説明します。最後に、\texttt{atom}はすぐに更新されます。ストアに加え、\texttt{grab}関数と\texttt{stock}関数を定義して、我々の新生APIを形づくることにしよう。
+
+
+\begin{lstlisting}[numbers=none]
+(ns shopping.store)
+
+(def inventory (atom {}))
+
+(defn no-negative-values?
+  "マップの値が負であるかどうかをチェックする"
+  [m]
+  (not-any? neg? (vals m)))
+
+(defn in-stock?
+  "在庫を確認する"
+  [item]
+  (let [cnt (item @inventory)]
+    (and (pos? cnt))))
+
+(defn init
+"在庫を持つ店舗を構える。"
+[items]
+(set-validator! inventory no-negative-values?)
+(swap! inventory items))
+
+(defn grab
+  "棚から品物を取ってくる。"
+  [item]
+  (if (in-stock? item)
+    (swap! inventory update-in [item] dec)))
+
+(defn stock
+  "棚に商品を仕入れる"
+  [item]
+  (swap! inventory update-in [item] inc))
+\end{lstlisting}
+
+\texttt{atom}関数を用いて、インベントリがアトムであることを宣言し、その値の変更は、その変更を管理できる関数に限定されることを宣言している。これらの関数は \texttt{swap!}、\texttt{reset!}、さらに低いレベルでは \texttt{compare-and-set!}
+
+インベントリの値はアトム内に格納されているので、値を見るには \texttt{(deref inventory)} または \texttt{@inventory} で参照する必要があります。アトムの値を変更するとき、Clojureは隠れて次のようなことをします。
+
+
+\begin{enumerate}
+\item 現在値をデリファレンス（保存）する
+\item \texttt{swap!}に渡された関数を呼び出す.
+\item 新しい値を検証するか、例外をスローする
+\end{enumerate}
+
+\begin{enumerate}
+\item 比較検討する。
+
+\begin{itemize}
+\item 参照の現在値が（例えば他のスレッドによって）変更されていない場合、関数の呼び出し結果で置き換え、新しい値を返す。
+
+\item 現在の値がメソッド呼び出し中に変更された場合は、値を置き換えず、最初からやり直します。
+\end{itemize}
+\end{enumerate}
+
+
+\subsubsection{無効な状態に対する保護}
+
+\texttt{swap!}メソッドは任務が完了するまで繰り返されます。データの完全なスナップショットに対して関数を呼び出すことが保証されています。しかし、\texttt{swap!}が呼び出されたときにアトムが持っていた値に対して関数を呼び出すことは保証されていない。16行目で定義したバリデータがなければ、負の\texttt{:bacon}が生成される可能性がありますし、誰もそれを望んでいません。このような不運なタイミングの例を見てみましょう。
+
+
+\begin{lstlisting}[numbers=none]
+(:bacon @inventory)                          ;=>1
+(if (in-stock? item)                         ; thread 1
+(if (in-stock? item)                         ; thread 2
+    (swap! inventory update-in [item] dec))) ; thread 2
+    (swap! inventory update-in [item] dec))) ; thread 1
+(:bacon @inventory)                          ;=>-1
+\end{lstlisting}
+
+このように、ガードのタイミングが重要なのです。在庫がマイナスにならないようにするために、19行目でバリデータ関数を渡して保険をかける必要があります。バリデータを使うことで、在庫アイテムの持つ最小値が0であることを保証できます。
+
+アトムの値が変更される前に、新しい値の候補がバリデータ関数に渡されます。バリデータ関数が \texttt{false} を返した場合、アトムを変更しようとすると \texttt{IllegalStateException} がスローされます。バリデータ関数は独自の例外をスローすることも可能で、 その場合は \texttt{IllegalStateException} の代わりとなります。これが可能な場合 (たとえば、\texttt{store.clj} の 22 行目から \texttt{grab} 関数を呼び出す場合)、その可能性に対処する必要があります。一般に、バリデータは単一の引数を取る副作用のない関数 (または \texttt{nil}) でなければなりません。この関数は何度も呼び出すことができることを思い出してください。
+
+(インベントリを定義するときにバリデータ関数を宣言することも簡単にできます。
+
+
+\begin{lstlisting}[numbers=none]
+(def inventory (atom {} :validator no-negative-values?))
+\end{lstlisting}
+
+これは、特に初期状態を渡す場合に便利です。バリデータはアトム生成時に初期状態を検証します)。
+
+さて、エマージェント・ストアAPIを使い、ループを\texttt{reduce}に置き換えることで、よりすっきりしたアプローチになりました。このコードは\texttt{go-shopping-naive}関数を置き換えます。
+
+
+\begin{lstlisting}[numbers=none]
+(defn shop-for-item [cart item]
+  "商品を購入し、カートを更新して戻る。"
+  (if (store/grab item)
+    (conj cart item)
+    cart))
+
+(defn go-shopping
+  "購入した商品の一覧を返します。"
+  [shopping-list]
+  (reduce shop-for-item [] shopping-list))
+\end{lstlisting}
 
 
