@@ -202,7 +202,7 @@ line-summary関数と同様に、各部門の集計を行う関数を定義し�
        (reduce-kv dept-total)))
 \end{lstlisting}
 
-断片的な\texttt{dept-total}関数の中に、通常のシーケンス処理パイプラインの縮図を見ることができます。この場合、\texttt{map}はシーケンスの各要素から\texttt{:total}を選択し、\texttt{reduce +$}はそれを集計します。
+断片的な\texttt{dept-total}関数の中に、通常のシーケンス処理パイプラインの縮図を見ることができます。この場合、\texttt{map}はシーケンスの各要素から\texttt{:total}を選択し、\texttt{reduce +\$}はそれを集計します。
 
 \texttt{thread-last} マクロを使用した \texttt{dept-total} の代替実装は、読みやすいと思われます。
 
