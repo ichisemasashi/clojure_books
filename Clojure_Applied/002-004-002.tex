@@ -1,0 +1,19 @@
+\section{変更を管理するためのツール}
+
+Clojureには、アプリケーションの状態を保存するために使用できる4つの参照型（\texttt{var}、\texttt{atom}、\texttt{agent}、\texttt{ref}）があります。どの場合にも、メカニズムは、不変の値を格納するミュータブルコンテナを提供します。コンテナは初期値で作成し、その値をリセットすることができます。また、統一更新モデルを用いて状態を進めることもできる。このようにして、アプリケーションの状態を管理された方法で変更することができる。
+
+Clojureの参照型は\texttt{IRef}を実装しています。次の表は、これらの型と、それらの作成、更新、およびリセット関数の一覧です。
+
+\begin{tabular}{|l|l|l|l|}
+\hline
+IRef & create-fn & update-fn(s) & set-fn \\ \hline \hline
+Atom & atom & swap! & reset! \\ \hline
+Ref & ref & alter, commute & ref-set \\ \hline
+Var & def & alter-var-root & var-set \\ \hline
+Agent & agent & send, send-off & restart-agent \\ \hline
+\end{tabular}
+
+
+
+
+
