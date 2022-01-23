@@ -182,3 +182,47 @@
 
 \texttt{:total}の\texttt{\#Money\{\}}の値のベクトルでサマリーを置き換えるという余分なステップを踏むこともできますが、それは不要です。その代わりに、最後のステップである、これらの値の要約に移りましょう。
 
+\subsection{Reduction}
+
+line-summary関数と同様に、各部門の集計を行う関数を定義して、削減処理で利用できるようにしたいと思います。
+
+
+\begin{lstlisting}[numbers=none]
+(require '[money :refer [make-money +$ *$])
+
+(defn- dept-total
+  [m k v]
+  (assoc m k (reduce +$ (map :total v))))
+
+(defn revenue-by-department [carts]
+  (->> (filter :settled? carts)
+       (mapcat :line-items)
+       (map line-summary)
+       (group-by :dept)
+       (reduce-kv dept-total)))
+\end{lstlisting}
+
+断片的な\texttt{dept-total}関数の中に、通常のシーケンス処理パイプラインの縮図を見ることができます。この場合、\texttt{map}はシーケンスの各要素から\texttt{:total}を選択し、\texttt{reduce +$}はそれを集計します。
+
+\texttt{thread-last} マクロを使用した \texttt{dept-total} の代替実装は、読みやすいと思われます。
+
+
+\begin{lstlisting}[numbers=none]
+(defn- dept-total*
+  [m k v]
+  (assoc m k (->> (map :total v)
+                  (reduce +$))))
+\end{lstlisting}
+
+以上です。最初のカートのベクトルを部門別の収益マップに落とし込みました。最終的なデータは、約束通り、このような形になりました。
+
+
+\begin{lstlisting}[numbers=none]
+{:clothing #Money{},
+ :toys     #Money{},
+ :kitchen  #Money{}, ,,, }
+\end{lstlisting}
+
+このセクションで行ったデータパイプラインは、\texttt{select}、\texttt{transform}、\texttt{reduce}という極めて典型的なものです。これはシーケンス処理の一単位と考えた方がよいかもしれません。\texttt{dept-total}関数で見たように、1つのシーケンス処理の単位が他の単位全体を包むことができるのです。練習を重ねるうちに、スムーズなパイプラインを作ることが反射的にできるようになるはずです。
+
+もう一つ重要なことは、\texttt{revenue-by-department}関数で\texttt{thread-last}マクロ(\texttt{->>})を使っていることから明らかなように、シーケンスはプロセスの各段階に出入りしていることです。実際、最初の3つのステップ（\texttt{filter}, \texttt{mapcat}, \texttt{map}）において、開始シーケンスの各要素は、次の要素が始まる前に3つのステップをすべて成功させることができ、結果は同じになるのです。これらのステップでは、前や後に続くものを考慮することなく、一度にシーケンスの単一の要素に対して操作を行います。これは、パイプラインのこの部分にトランスデューサを使用することも選択肢の一つであることを示す良い手がかりとなります。
