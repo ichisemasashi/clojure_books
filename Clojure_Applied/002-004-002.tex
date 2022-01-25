@@ -185,3 +185,29 @@ Agent & agent & send, send-off & restart-agent \\ \hline
 例を挙げましょう。例えば、ある商品が在庫からなくなったときに、店に通知するためにウォッチ関数を使用するとします。
 
 
+\begin{lstlisting}[]
+(declare sold-items)
+
+(defn restock-order
+  "再入荷ウォッチ"
+  [k r ov nv]
+  (doseq [item (for [kw (keys ov)
+                     :when (not= (kw ov) (kw nv))] kw)]
+    (swap! sold-items update-in [item] (fnil inc 0))
+    (println "need to restock" item)))
+
+(defn init-with-restock
+  "店舗を構え、在庫を持つ"
+  [m]
+  (def inventory (atom m))
+  (def sold-items (atom {}))
+  (set-validator! inventory no-negative-values?)
+  (add-watch inventory :restock restock-order))
+\end{lstlisting}
+
+イニシャライザーを変更し、17行目にウォッチ関数を追加しています。ウォッチ関数は次のような形式をとります。
+
+\begin{lstlisting}[numbers=none]
+(defn watch-fn [watch-key reference old-value new-value] ,,,)
+\end{lstlisting}
+
