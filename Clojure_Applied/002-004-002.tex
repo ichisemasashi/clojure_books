@@ -231,7 +231,39 @@ Agent & agent & send, send-off & restart-agent \\ \hline
   ; be careful, here be dragons.
 \end{lstlisting}
 
+でも、ちょっと待ってください! このようにシンプルにしすぎたために、いくつかの重要なことを見逃しています。ストアのAPIを使うと、それがすぐにわかります。
 
 
+\begin{lstlisting}[numbers=none]
+user=> (use ['shopping.store :as 'store])
+nil
+user=> (store/init-with-restock {:apples 1 :bacon 3 :milk 2})
+#<Atom@eb74118: {:bacon 3, :apples 1, :milk 2}>
+user=> (store/grab :bacon)
+need to restock :bacon
+user=> (store/grab :bacon)
+need to restock :bacon
+{:bacon 1, :apples 1, :milk 2}
+user=> (store/grab :milk)
+need to restock :milk
+{:bacon 1, :apples 1, :milk 1}
+user=> @store/sold-items
+{:milk 1, :bacon 2}
+user=> @store/inventory
+{:bacon 1, :apples 1, :milk 1}
+user=> (store/restock-all)
+need to restock :bacon
+need to restock :milk
+\end{lstlisting}
+
+先ほどのセッションで出力された最後の2行は、私たちの見落としの一つを示すものです。\texttt{restock-all}の中で\texttt{swap!}を使って在庫を更新したとき、ウォッチ関数が呼び出され、売れた商品のリストに新しい項目が2つできました。なぜ、3つではなく2つなのでしょうか？なぜなら、ウォッチ関数は数量の変化を調べるようには設計されておらず、売れた商品の名前だけを記録するように設計されていたからです。同じことが、stockを呼び出した場合にも起こります。
+
+もうひとつの見落としは、もう少し曖昧なままです。私たちは、この世界を同時並行的に理解しようとしていることを思い出してください。\texttt{restock-all}関数では、5行目の直前にカオスが入り込む隙間ができています。もし他のスレッドがその時にインベントリからアイテムを取ってきたら、\texttt{sold-items}アトム内のそのアイテムのエントリは消去され、次に再入荷する時にアイテムが不足することになります。
+
+この場合、インベントリ・コンテナのアトム選びは失敗したことになる。この実装では、在庫は独立して同期的に追跡されることを意図していた。しかし、2つ目のアイテム追跡機構を追加すると、突然、物事を調整する必要が生じます。たとえ少数のものでも調整するのは難しい。このトリッキーさには \texttt{refs} を使って対処できます。
+
+\subsection{Refによるトランザクションの変更}
+
+より複雑なドメインでは、複数の値の同時更新を調整する必要があるため、アトムはもはや機能しません。トランザクションの力が必要であり、それには一連の参照関数が必要である。これを複雑な買い物の例で示そう。
 
 
