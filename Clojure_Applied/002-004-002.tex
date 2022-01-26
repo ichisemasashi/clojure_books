@@ -211,3 +211,27 @@ Agent & agent & send, send-off & restart-agent \\ \hline
 (defn watch-fn [watch-key reference old-value new-value] ,,,)
 \end{lstlisting}
 
+このメソッドは、アトムの値が正常に更新されるたびに呼び出されます。古いインベントリ値と新しいインベントリ値を比較し、変更されたアイテムを新しいアトムである\texttt{sold-items}に抽出します。\texttt{grab}は一度に1つのアイテムしか取り出さないことが分かっているので、単純なインクリメントで満足できます。
+
+ウォッチ関数は4つのパラメータを取ります。関数のキー、ウォッチされる参照、古い値、新しい値です。最後の3つは簡単ですが、キー（例えば\texttt{:restock}）は不透明な場合があります。裏を返せば、このキーはリファレンスに付けられたウォッチ関数のハッシュマップの中でウォッチ関数を特定するものです（\texttt{.getWatches}関数で取得可能）。このキーは \texttt{remove-watch} でウォッチ関数を削除したり、\texttt{add-watch} で既存のウォッチ関数を置き換えたりするのに使用されます。一般に、キーはラベルとして扱うことができ、あまり気にする必要はありません。
+
+これで、棚から商品が取り出されたことを検出できるようになったので、棚を補充してみましょう。
+
+\subsection{棚の再入荷}
+
+売れた商品を記録するようになったら、定期的に棚を補充したくなるかもしれません。ここでは、かなり地味な補充方法を実装することにする。在庫と売れた商品の両方をリセットします。
+
+
+
+\begin{lstlisting}[numbers=none]
+(defn restock-all
+  "restock all items sold" 3 []
+  (swap! inventory #(merge-with + % @sold-items))
+  (reset! sold-items {}))
+  ; be careful, here be dragons.
+\end{lstlisting}
+
+
+
+
+
