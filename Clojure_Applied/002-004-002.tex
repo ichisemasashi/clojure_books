@@ -450,7 +450,7 @@ need to restock :milk
 
 
 
-\subsubsection{}Varでローカルな状態を追跡する
+\subsubsection{Varでローカルな状態を追跡する}
 
 最後に、すべての状態について管理が必要なわけではありません。変更されないデータ（システムの状態など）には変更管理は必要ありません。同様に、他のスレッドから観測されないデータも管理する必要はありません。このような場合、データを保存するためにvarを使用します。\texttt{def}を使って、var を設定する:
 
@@ -459,4 +459,33 @@ need to restock :milk
 user=> (def my-kids #{:alice :bobby :cindi})
 \end{lstlisting}
 
+このvarは、現在の名前空間内のシンボル（\texttt{my-kids}）を持つグローバルなスコープを持つ。もしその var がすでに存在すれば、新しい値が設定される。この var は好きなように読み込んで再定義することができます。\texttt{alter-var-root} を使って、var を更新します。\texttt{my-kids} の前の \texttt{#'} に注意してください: \texttt{alter-var-root} には、その値ではなく、var 自体を渡します。
 
+
+\begin{lstlisting}[numbers=none]
+user=> (defn born! [new-kid] (alter-var-root #'my-kids conj new-kid))
+#'user/born!
+user=> (born! :donnie)
+#{:donnie :alice :bobby :cindi}
+\end{lstlisting}
+
+グローバルな定義を損なうことなく、ローカルバインディングやスレッドでvarを再定義できるようにしたい場合、定義時にこの効果を持たせるためのメタデータを追加することが可能です。
+
+
+\begin{lstlisting}[numbers=none]
+user=> (def ^:dynamic my-kids #{:alice :bobby :cindi})
+#'user/my-kids
+user=> (print my-kids)
+#{:alice :bobby :cindi}
+user=> (binding [my-kids #{:luke :leia}]
+#_=>     (print my-kids))
+#{:leia :luke}
+user=> (print my-kids)
+#{:alice :bobby :cindi}
+\end{lstlisting}
+
+Varsはステートフルですが、ローカルメモリに保存されるため、管理されることはありません。var に動的スコープを追加すると、そのバインディングはローカライズされますが、別の問題が発生します。Stuart Sierra はこの問題について "On the Perils of Dynamic Scope" という記事を書いています[18] 要するに、本当にそう思っていて、自分が何をしているのか分かっていない限り、この方法はとらない方がいいということです。
+
+我々は、Clojureがrefとatomとそれらに関連する更新関数でアプリケーションの状態の変更を管理するために提供する主要な構造のほとんどを歩いてきました。また、グローバルな状態を保存するための var も簡単にレビューしました。さて、変更を管理するためのツールを手に入れたので、どのように変更と付き合っていくかについて少し話をしましょう。
+
+次のセクションでは、管理された変更に関する適切な実装上の決定を行う方法と、変更可能性の影響を制限しながらAPIを成長させるための2つのアプローチについて学びます。
