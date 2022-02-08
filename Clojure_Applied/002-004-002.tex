@@ -459,7 +459,7 @@ need to restock :milk
 user=> (def my-kids #{:alice :bobby :cindi})
 \end{lstlisting}
 
-このvarは、現在の名前空間内のシンボル（\texttt{my-kids}）を持つグローバルなスコープを持つ。もしその var がすでに存在すれば、新しい値が設定される。この var は好きなように読み込んで再定義することができます。\texttt{alter-var-root} を使って、var を更新します。\texttt{my-kids} の前の \texttt{#'} に注意してください: \texttt{alter-var-root} には、その値ではなく、var 自体を渡します。
+このvarは、現在の名前空間内のシンボル（\texttt{my-kids}）を持つグローバルなスコープを持つ。もしその var がすでに存在すれば、新しい値が設定される。この var は好きなように読み込んで再定義することができます。\texttt{alter-var-root} を使って、var を更新します。\texttt{my-kids} の前の \texttt{\#'} に注意してください: \texttt{alter-var-root} には、その値ではなく、var 自体を渡します。
 
 
 \begin{lstlisting}[numbers=none]
