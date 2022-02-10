@@ -62,6 +62,12 @@ agentの更新ごとにリモートサービスを呼び出すのではなく、
 そして、アプリケーションが使用するインクリメント関数を、エージェント上で非同期的に実行される関数として定義することができます。
 
 
+\begin{lstlisting}[numbers=none]
+(defn inc-stat [stat]
+  (send-off stat inc))
+\end{lstlisting}
+
+
 
 
 
