@@ -71,6 +71,53 @@ Clojureは、agentに対して非同期で更新アクションを呼び出す�
 
 agentの追加機能として、STM トランザクション内またはagentアクション自体の内部でagentに対して呼び出された \texttt{send} または \texttt{send-off} は、トランザクションが完了するまで遅延されます。これにより、agentは、STMトランザクション内（成功するために再試行する必要があるかもしれません）や、他のagentの更新アクション内から呼び出されて、副作用を発生させることが安全になります。
 
+\begin{itembox}[l]{}シャットダウン
+Javaでは、スレッドをデーモンスレッドとしてマークすることができます。JVMは、すべてのノンデーモンスレッドがその作業を完了したとき、優雅にシャットダウンします（一般的に、これはメイン起動スレッドが完了したときに起こります）。スレッドをデーモンスレッドとしてマークすることは、それがバックグラウンドワーカーであり、シャットダウンを妨げてはならないことを意味します。
+
+ futureとagentアクションを処理するスレッドは、デーモンスレッドではありません。アプリケーションが期待通りに終了せず、ハングアップしているのを発見した場合、アプリケーションの終了時に \texttt{shutdown-agents} の呼び出しを追加する必要があると思われます。
+\end{itembox}
+
+これまでは、バックグラウンドでブロックするアクションを、レスポンスを使わずに実行してきました。ここでは、バックグラウンドのスレッドで行われた作業からどのようにレスポンスを受け取ることができるかを見てみましょう。
+
+\subsection{レスポンス待ち}
+
+時には、作業を後回しにし、後で結果を取りに来たいこともあります。例えば、ある商品を手に入れ、2つ以上のオンラインショップで価格を調べたい場合を考えてみましょう。このように、1つのスレッドで各店舗に順番に問い合わせをすることができます。
+
+\begin{lstlisting}[numbers=none]
+(defn query-stores [product stores]
+  (for [store stores]
+    (query store product)))
+\end{lstlisting}
+
+これを実行する時間は、次の図のように、各ストアに問い合わせる時間の合計となる。
+
+\includegraphics[width=10cm]{fig_05_003.eps}
+
+もっといい方法があるはずだ! バックグラウンドスレッドに作業をプッシュする魔法のような機能を使えば、すべてのストアを同時にクエリすることができます。各非同期クエリにfutureを使用します。
+
+
+\begin{lstlisting}[numbers=none]
+(defn query-stores [product stores]
+  (for [store stores]
+    (future (query store product))))
+\end{lstlisting}
+
+しかし、先ほど述べたように、futureを呼び出すと\texttt{java.lang.Future}オブジェクトを返すので、\texttt{query-stores}は実際の結果ではなく、それらのシーケンスを返すようになりました。非同期呼び出しの結果をブロックして待つには、\texttt{deref} または短縮形の \texttt{@} を使って \texttt{Future} を再参照する必要があります。
+
+\texttt{query-stores}関数は2段階で実装します。最初のステージは（既にある）全てのクエリを起動し、一連の\texttt{Future}オブジェクトを生成する。唯一の変更は、\texttt{doall}を呼び出すことで、クエリの起動を遅延させるのではなく熱心に行うようにすることです。もし\texttt{doall}を呼ばなければ、クエリは後でシーケンスが実現されるまで起動されません。第2ステージでは、それぞれの\texttt{Future}を参照し、それぞれが完了するまでブロックします。
+
+
+\begin{lstlisting}[numbers=none]
+(defn query-stores [product stores]
+  (let [futures (doall
+                  (for [store stores]
+                    (future (query store product))))]
+    (map deref futures)))
+\end{lstlisting}
+
+
+
+
 
 
 
