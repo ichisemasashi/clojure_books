@@ -1,0 +1,111 @@
+\section{キューとワーカー}
+
+多くのプログラムは、その全体または一部をタスク処理系として見ることができます。タスクとは、通常、外部からの要求に対応する作業の単位です。ウェブアプリケーションは、ウェブページを作成するためのリクエストを受け取ります。ウェブサービスは、APIコールを処理するリクエストを受け取ります。バッチプログラムはディスクやデータベースからファイルを読み込んで、それぞれを適切に処理する。これらの一般的なパターンはすべて、ワーカーのプールに委託された作業のキューとしてモデル化することができます。
+
+キューは、タスクの順序付けと保持を行い、ワークが到着する場所と処理される場所を切り離します。ワーカープールでは、異なる特性を持つワーカーのプールを作成し、並行処理や、作業の管理・監視に使用するポリシーを制御することができます。その制御により、自由に使えるハードウェアをフルに活用することができるのです。
+
+Clojureはキューとワーカーのためのいくつかのツールを提供しますが、Javaですでに利用可能な高品質のツールを再発明することも避けます。Clojureで既に見てきた部分から、キューとワーカープールをどのように作成できるか考えてみましょう。
+
+\subsection{組み立てが必要}
+
+第1章Model Your Domainでは、Clojureの永続キューを使用して、FIFOデータに対してリストやベクターよりも効率的なアクセスを提供しました。しかし、これはシングルスレッドのコンテキストで行われました。永続的なキューでは、キューを変更するたびに、更新されたバージョンが返されます。もし複数のスレッドがキューを共有するならば、それら全てが同じインスタンスを共有する必要があります。そのため、(atom や ref などの) 状態管理構造体か、状態管理型のキュー実装のいずれかが必要になります。
+
+1つのオプションは、キューの両端が安定したアイデンティティを維持するように、Clojureのアトムまたは参照に永続的なキューをラップすることです。アトムでこれを行おうとすると、アトムの\texttt{swap!}関数がアトムの新しい値（私たちの場合はキュー）を返すだけで、ポップした値を返さないことに気づきます。このため、この種のキューからステートフルな方法でアイテムを取り出すことは困難です。
+
+refオプションはより有望に見えます。このように実装できるだろう。
+
+
+\begin{lstlisting}[numbers=none]
+(defn queue
+  "新しいステートフルキューの作成"
+  []
+  (ref clojure.lang.PersistentQueue/EMPTY))
+
+(defn enq
+  "qのitemを待ち受ける"
+  [q item]
+  (dosync
+    (alter q conj item)))
+
+(defn deq
+  "qからitemを取り出す（なければnil）。"
+  [q]
+  (dosync
+    (let [item (peek @q)]
+      (alter q pop)
+      item)))
+\end{lstlisting}
+
+しかし、このキューはブロックしない! 通常、キューが空でデータの到着を待っているときにコンシューマが \texttt{deq} でブロックすることを望みますが、この実装では \texttt{nil} を返すだけで、コンシューマが繰り返しポーリングすることを要求されます。この理由から、Clojureの永続的なキューは、通常、スレッド間で仕事のキューを管理するための良いツールではありません。
+
+代わりに、キューとワーカーに対するJavaのサポートに注目する必要があります。これは、Javaライブラリが多種多様な動作に対して強力なサポートを持っている分野です。
+
+\subsection{Javaキュー}
+
+キューとワーカーをサポートするJavaクラスのほとんどは、\texttt{java.util.concurrent}パッケージで見つけることができます。Javaは多くのブロッキングキュー実装（すべて\texttt{java.util.concurrent.BlockingQueue}の実装）を提供し、それらはClojureから簡単に使用することができます。
+
+Java のキュー実装の主な違いの1つは、データのバッファリング方法です。例えば、\texttt{LinkedBlockingQueue}はオプションで境界付きバッファを提供し、\texttt{ArrayBlockingQueue}は境界付きバッファを提供し、\texttt{SynchronousQueue}はバッファを全く提供しません。\texttt{LinkedTransferQueue} は、\texttt{SynchronousQueue} のハンドオフ機能と、オプションで制限されたバッファを組み合わせています。
+
+これまで述べてきたすべてのキューは FIFO 順で値を提供しますが、Java は項目を並べ替えるキューも 2 つ提供します。\texttt{PriorityBlockingQueue} は、優先度の高い項目をキューの先頭にバブリングします。\texttt{DelayQueue}は、遅延のあるメッセージを受け取り、遅延の期限が切れたものだけを利用できるようにします。
+
+Bounded buffer queue は、producer が満杯のバッファに遭遇したときに、カスタマイズする機会も提供します。Java のブロッキングキュー API では，ブロッキング，タイムドブロッキング，特別な値の返送，例外の発生が可能です．
+
+\texttt{put} や \texttt{take} などの \texttt{BlockingQueue} メソッドは、通常の Java interop メソッド呼び出しで呼び出すことができます。それでは、いくつかのメッセージをキューにプッシュしてみましょう。
+
+\begin{lstlisting}[numbers=none]
+(ns ch5.jqueue
+  (:import [java.util.concurrent LinkedBlockingQueue]))
+
+(defn pusher [q n]
+  (loop [i 0]
+    (when (< i n)
+      (.put q i)
+      (recur (inc i))))
+    (.put q :END))
+
+(defn popper [q]
+  (loop [items []]
+    (let [item (.take q)]
+      (if (= item :END)
+          items
+          (recur (conj items item))))))
+
+(defn flow [n]
+  (let [q (LinkedBlockingQueue.)
+        consumer (future (popper q))
+        begin (System/currentTimeMillis)
+        producer (future (pusher q n))
+        received @consumer
+        end (System/currentTimeMillis)]
+    (println "Received:" (count received) "in" (- end begin) "ms")))
+\end{lstlisting}
+
+\texttt{pusher}関数は、キューに\texttt{n}個の数値をプッシュし、最後に完了を知らせる\texttt{:END}メッセージを送ります。\texttt{popper}関数は同じキューから\texttt{:END}メッセージを受け取るまでメッセージを引き離します。これらの関数は両方ともバックグラウンドのスレッドプールで実行される \texttt{futures} で実行されます。
+
+しかし、どのスレッドがこれらの\texttt{future}を実行するかは制御できません。Clojureのfutureとagentは非同期実行のための比較的簡単なAPIを提供しますが、監視と制御が多少損なわれます。その代わりに、多くのスレッド上で作業を実行するためのJavaのビルトインサポートを使用することができます。
+
+\subsection{スレッドの作成}
+
+Javaには、スレッドのファクトリー（\texttt{ThreadFactory}）と、キューとワーカープールの組み合わせ（\texttt{ExecutorService}）を表現するインタフェースが用意されています。
+
+このように、プロセッサ数に応じた大きさの計算スレッドの固定プールを作成することができます。
+
+
+\begin{lstlisting}[numbers=none]
+(import '[java.util.concurrent Executors])
+
+(def processors (.availableProcessors (Runtime/getRuntime)))
+
+(defonce executor (Executors/newFixedThreadPool processors))
+
+(defn submit-task [^Runnable task]
+  (.submit executor task))
+\end{lstlisting}
+
+Javaでは、\texttt{Runnable}または\texttt{Callable}インタフェースを用いて実行可能なタスクを表現します。役に立つことに、すべてのClojure無引数関数はこれらのインターフェイスを実装しています。タスク（任意のClojure関数）は、呼び出すために\texttt{ExecutorService}に渡すことができます。したがって、リクエストのストリームをタップして、それらを実行のためのタスクとして送信するのは簡単です。
+
+Java 5で追加されたJavaエグゼキュータは、当時一般的だった4～8コアのマシンで粗視化されたタスク並列をサポートするように設計されています。しかし、マシンのコアが増えるにつれ、1つのキューで待つことによる競合が、キューからアイテムを取得するワーカーのボトルネックとなりました。
+
+この問題に対処し、他の計算パターンを利用するために、Java 7 では \texttt{fork/join} という新しいフレームワークが導入されました。\texttt{fork/join} は、より小さな粒度の細かい計算タスク、再帰的な計算、より多くのコアをサポートするように設計され、調整されています。\texttt{fork/join} は多数のワーカーキューを使用し、それらのキューが互いに仕事を「盗む」ことを可能にします。つまり、あるキューがやるべき仕事を使い果たした場合、別のキューの後ろからタスクを取り出し、キュー間の仕事のバランスを自動的に調整します。
+
+\texttt{java.util.concurrent.ForkJoinPool} クラスは、Java のフォーク/ジョイン実装の主要なエントリポイントです。\texttt{ForkJoinPool}を構築すると、それは\texttt{ExecutorService}でもあり、同じようにタスクを投入することができます。しかし、Clojureは、Clojure開発者にとってより自然な方法で\texttt{fork/join}を活用するフレームワークを提供します。次に、そのフレームワークをいつ、どのように使用するかを見ていきます。
