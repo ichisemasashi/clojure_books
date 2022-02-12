@@ -115,9 +115,27 @@ Javaでは、スレッドをデーモンスレッドとしてマークするこ�
     (map deref futures)))
 \end{lstlisting}
 
+\texttt{query-stores}関数は、各ストアからの結果の遅延シーケンスを返す。また、futureをデリファレンスすることなく、遅延シーケンスを返すこともできます。この場合、呼び出し側は、各結果を解決するためにいつブロックするかを完全に制御することができます。
+
+さて、クエリを同時に実行することで、次の図に示すように、複数のサービスを同時に待つことができ、より多くのスレッドを活用することで全体の時間を短縮することができます。この図では、3つのクエリストアがfutureで呼び出され、それぞれのクエリの結果をデリファレンスするために待機している様子を示しています。
+
+\includegraphics[width=10cm]{fig_05_004.eps}
+
+この方法でfuturesを使用すると、1つの欠点があります。非同期の計算では、元のコードに1つの結果しか返せないのです。もし、計算の異なる時点で複数の値を返したい場合は、\texttt{promise}を使うことができます。
+
+\subsection{プロミスの作成}
+
+プロミスは1つのスレッドから別のスレッドに1つの値（そして1つだけ！）を転送するために使用されます。したがって、複数のプロミスは、非同期計算の異なる時間に値を返すために使用することができます。例えば、非同期計算の時間を計って、後でその実行の開始と終了の時間を取得したいとします。
 
 
-
-
-
+\begin{lstlisting}[numbers=none]
+(defn launch-timed []
+  (let [begin-promise (promise)
+        end-promise (promise)]
+    (future (deliver begin-promise (System/currentTimeMillis))
+      (long-running-task)
+      (deliver end-promise (System/currentTimeMillis)))
+    (println "task begin at" @begin-promise)
+    (println "task end at" @end-promise)))
+\end{lstlisting}
 
