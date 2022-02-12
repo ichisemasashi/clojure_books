@@ -77,7 +77,8 @@ Bounded buffer queue は、producer が満杯のバッファに遭遇したと�
         producer (future (pusher q n))
         received @consumer
         end (System/currentTimeMillis)]
-    (println "Received:" (count received) "in" (- end begin) "ms")))
+    (println "Received:" (count received) "in"
+             (- end begin) "ms")))
 \end{lstlisting}
 
 \texttt{pusher}関数は、キューに\texttt{n}個の数値をプッシュし、最後に完了を知らせる\texttt{:END}メッセージを送ります。\texttt{popper}関数は同じキューから\texttt{:END}メッセージを受け取るまでメッセージを引き離します。これらの関数は両方ともバックグラウンドのスレッドプールで実行される \texttt{futures} で実行されます。
