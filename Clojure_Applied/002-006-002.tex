@@ -106,12 +106,26 @@ API全体のプロトコルを作成すると、どのような実装でもす�
 \begin{lstlisting}[numbers=none]
   (let [response-future (fire-rules ke request)]
     ;; ... other work...
-    @response-future) ;; dereference to get the response
+    @response-future) ;; レスポンスを取得するために参照する
 \end{lstlisting}
 
 応答のためにブロックするのではなく、futureを返すことで、呼び出し側がブロックするタイミングを選択できる（futureをdereferencingすることで）。もう一つの選択肢は、ここに示すように、コールバックを受け取るか（関数を呼び出す）、プロミスを返すか（結果を提供する）である。
 
 
+\begin{lstlisting}[numbers=none]
+;; 知識エンジンが起動するfire-rulesにコールバックを送る。
+(let [callback (fn [response] ...)]
+  (fire-rules ke request callback))
+
+  ;; 知識エンジンが応答を返すために使うpromiseを送る
+(let [result-promise (fire-rules ke request)]
+  ;; 必要なときにresult-promiseを参照する。
+  @result-promise)
+\end{lstlisting}
+
+非同期API呼び出しにどちらが適しているかは、APIそのものよりも呼び出し側のコードに依存します。
+
+さて、直接または非同期の関数呼び出しでAPIを作成する方法を見てきましたが、アプリケーションの寿命を通じてより永続的な関係でコンポーネントを接続する方法についても検討する必要があります。
 
 
 
