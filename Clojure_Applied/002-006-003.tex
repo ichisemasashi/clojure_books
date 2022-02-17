@@ -47,3 +47,38 @@
 
 パイプラインで見たように、 \texttt{core.async} は \texttt{pipeline} 関数も提供しており、それを使って2つのパイプを並列変換ステージで繋ぐことができます。
 
+\subsection{ファンアウト（1対多）}
+
+\texttt{core.async}ライブラリを使うと、チャネル上のメッセージを多くのコンシューマに簡単に公開することができます。ファンアウトする最も一般的な理由は、独立したコンシューマが異なる目的でメッセージを処理できるようにすることです（先の例では、ロギングとセンチメント分析のように）。\texttt{core.async} ライブラリはこれを行うためのいくつかの方法を提供します: \texttt{split}, \texttt{mult}, \texttt{pub/sub}.
+
+
+\includegraphics[width=8cm]{fig_06_003.eps}
+
+
+\texttt{core.async}の \texttt{split} 関数は、1つのチャネルを受け取り、述語の真偽に基づいてトラフィックを2つの出力チャネルに分割します。これは図に示すとおりです。
+
+例えば、\texttt{split} はストリームから無効なメッセージを分割し、別のプロセスに送って処理するのに適した方法です。
+
+
+\includegraphics[width=8cm]{fig_06_004.eps}
+
+\texttt{core.async}の \texttt{mult} 抽象化は、入力チャネルを受け取り、それを複数の出力チャネルに乗算します。
+
+入力チャネルから項目が読み込まれると、次の値に移る前にすべての出力チャネルに供給されます。タップは \texttt{tap} 関数で \texttt{mult} に追加され（\texttt{untap} で削除され）ます。タップが閉じていることが判明した場合、そのタップは mult から削除されます。
+
+すべてのチャネルが各値を受信する必要があるため、1つの遅いタップが \texttt{mult} を停止させる可能性があります。そこで、別のバッファリング戦略を使用することが有効です。例えば、パイプラインの特定の部分の出力ストリームをタップしてログにシャントし、何が起こっているかを覗き見ることができるようにしたいとします。
+
+この関数は、入力と出力のチャネルを接続します（ \texttt{pipe} で行ったことと同様です）が、返されるログのタップもインストールします。
+
+
+\begin{lstlisting}[numbers=none]
+(defn connect-and-tap
+  "入力と出力を接続し、その間を流れるチャネルロギングデータを返します。"
+  [input output]
+  (let [m (mult input)
+       log (chan (dropping-buffer 100))]
+    (tap m output)
+    (tap m log)
+    log))
+\end{lstlisting}
+
