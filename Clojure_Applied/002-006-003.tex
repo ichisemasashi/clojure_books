@@ -82,3 +82,88 @@
     log))
 \end{lstlisting}
 
+ここで重要なことは、ロギングチャネルが \texttt{droping-buffer} で作成されていることです。もしロギングチャンネルが追いつかないようなら、入ってくるメッセージはドロップされます。悲しいことに、私たちはそれらをログで見ることはできませんが、幸せなことに、私たちのシステムは稼働し続け、動作し続けます。これは、未束縛のバッファがないために、ジャンクでいっぱいのログバッファで夜中にプロセスが死ぬのではなく、早期にこれらのシナリオについて考えることを余儀なくされる良い例です。
+
+\texttt{mult} 抽象は、すべてのメッセージをすべての \texttt{tap} に提供します。しかし、 \texttt{tap} が自分にとって適切なメッセージだけを受け取るようなメッセージバスが必要な場合はどうでしょうか？ \texttt{core.async} はまさにこのような場合のために \texttt{pub/sub} 抽象化も提供しています。 \texttt{pub} 関数は、指定されたトピック関数を持つ公開チャネルを作成するために使用されます。\texttt{split} と同様に、トピック関数は各メッセージに適用され、値を返す必要がありますが、その値は何でもかまいません。 \texttt{sub} 関数は、トピック（トピック関数から返される値）上の \texttt{pub} に出力チャネルをサブスクライブするために使用されます。
+
+例えば、ここでは \texttt{:topic} キー (関数として) を使用して、各マップ (またはレコード) メッセージのトピックを検索する \texttt{pub} があります。2 つの出力チャネル ( \texttt{news-ch} と \texttt{weather-ch} ) は、それぞれトピック \texttt{:news} と \texttt{:weather} でサブスクライブされています。
+
+\includegraphics[width=8cm]{fig_06_005.eps}
+
+\begin{lstlisting}[numbers=none]
+(defn assemble-chans []
+  (let [in (chan 10)
+        p (pub in :topic)
+        news-ch (chan 10)
+        weather-ch (chan 10)]
+    (sub p :news news-ch)
+    (sub p :weather weather-ch)
+    [in news-ch weather-ch]))
+\end{lstlisting}
+
+メッセージの \texttt{:topic} に \texttt{:news} が含まれる場合、\texttt{news-ch} に送信されます。トピックに \texttt{:weather} を含むメッセージは、\texttt{weather-ch} に送信されます。
+
+チャネルは動的にサブスクライブとアンサブスクライブを行うことができ、これは有能なインメモリメッセージバスとなります。
+
+さて、一つの入力チャネルを複数の出力チャンネルに分岐させる方法を見てきましたが、今度は多くの入力から一つの出力に分岐させる方法を考えてみましょう。
+
+\subsection{ファンイン（Many-to-One）}
+
+\texttt{merge} と \texttt{mix} は、多くの受信メッセージを単一の線形出力ストリームに結合するための 2 つのレベルの機能を提供します。
+
+まず、より単純な \texttt{merge} を考えてみましょう。これは、任意の入力チャンネルに到着したすべてのメッセージを、単一の出力メッセージのストリームに単純に結合するものです。
+
+\begin{lstlisting}[numbers=none]
+(defn combine-channels
+  [twitter-channel facebook-channel]
+  (merge [twitter-channel facebook-channel] 100))
+\end{lstlisting}
+
+マージは下図のように表現されます。
+
+\includegraphics[width=8cm]{fig_06_006.eps}
+
+チャネルの収集の後，\texttt{chan} と同様に出力チャネルにバッファまたは固定サイズバッファのチャネル設定を与えることができることに注意してください．マージされたチャネルは，作成後に変更することはできません．
+
+多数のチャンネルを結合する場合、\texttt{mix} はオーディオミキサーのように動作し、下図のように各入力から出力チャネルに送られるメッセージのミックスを制御することができるようになります。
+
+\includegraphics[width=8cm]{fig_06_007.eps}
+
+入力チャンネルは \texttt{admix} で動的に追加し、 \texttt{unmix} で削除することができます。各入力チャネルは3つのトグル可能なモードを持っています。
+\begin{itemize}
+\item \texttt{:pause}-入力チャネルを消費せず、出力チャネルに含めない。
+
+\item \texttt{:mute}-入力チャネルを消費し、出力チャネルには含めない。
+
+\item \texttt{:solo}-True の場合、出力チャネルミックスにはソロ化されたチャネルのみが含まれます（この場合、pause と mute の設定は無視されます）。
+\end{itemize}
+
+これらのフラグはすべて、\texttt{toggle} 関数によって入力チャネルごとに設定することができます。
+
+\begin{lstlisting}[numbers=none]
+(defn mix-channels
+      [twitter-channel facebook-channel out]
+  (let [m (mix out)]
+    (admix m twitter-channel)
+    (admix m facebook-channel)
+    (toggle m {twitter-channel {:mute true}
+               facebook-channel {:mute true}})
+    m))
+\end{lstlisting}
+
+このミックスは、両方のチャネルがミュートされた状態で作成されています。つまり、それらの入力は含まれずに読み込まれ、落とされることになります。
+
+ソロモードのトグルを設定することで、そのうちの1つのチャネルをソロにすることができます。
+
+\begin{lstlisting}[numbers=none]
+(toggle m {twitter-channel {:solo true}})
+\end{lstlisting}
+
+入力チャネルのトグルの設定に加えて、出力チャネルのソロモードの状態を \texttt{solo-mode} で設定することが可能です。これは \texttt{:mute} または \texttt{:pause} に設定することができ、ソロになった入力チャネルをミュートまたは一時停止します。
+
+ここまでで、 \texttt{core.async} の組み込みプリミティブを使用したチャネル接続の方法をすべて網羅しました。いくつかのケースでは、入出力チャネルの両端にアクセスすることで、接続方法を選択したり（例えば、ロギングタップを挿入する）、中間プロセスなしで同じ接続を使用したりすることができるようになります。両方の理由から、コンポーネント内でチャネルを作成するのではなく、通常、構成の一部としてチャネルを受け入れることをお勧めします。
+
+さて、コンポーネントAPIの外面を設計する方法について見てきましたが、コンポーネントを実装する方法について、より細かい点を考えてみましょう。
+
+
+
