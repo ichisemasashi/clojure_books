@@ -1,0 +1,108 @@
+\section{Componentを用いた実装}
+
+各コンポーネントについて、必要な構成、実行時の状態、他のコンポーネントとの接続を考慮する必要があります。コンポーネントとそのライフサイクルメソッドを定義したら、コンポーネントをどのように組み立てて実行システムにするかを見ていきましょう。
+
+まず、ソーシャルメディアのフィードから始めましょう。各フィードには、そのフィードに接続するための認証設定が必要です。システムによっては、ユーザー名やパスワード、その他のアクセスキーが必要になります。また、フィードをアクティブにするか一時停止するかという実行時の状態も維持することになります。最後に、新しいメッセージを core.async チャネルでプッシュし、送信メッセージを別のチャネルで受信することを想定しています。このような情報を持つレコードとして、コンポーネントを定義します。
+
+
+\begin{lstlisting}[numbers=none]
+(defrecord Feed [auth status msg-chan response-chan])
+
+(defn new-feed [auth msg-chan response-chan]
+  (->Feed auth (atom :init) msg-chan response-chan))
+\end{lstlisting}
+
+最初の\texttt{auth}フィールドは、フィードタイプに指定された認証情報のマップを含む。\texttt{status}は、変化する実行時の状態です（アトムに保持されます）。最後の2つのフィールドは、メッセージの送信と受信に使用する実行時チャネルです。これらは起動時に接続され、その後変更されることはありません。
+
+次に、\texttt{component/Lifecycle} プロトコルを実装してフィードの定義を拡張する必要があります。まず、Component をプロジェクトに追加し、以下の依存関係を設定します。
+
+\begin{lstlisting}[numbers=none]
+[com.stuartsierra/component "0.2.3"]
+\end{lstlisting}
+
+次に、名前空間に以下のrequireを追加します。
+
+\begin{lstlisting}[numbers=none]
+[com.stuartsierra.component :as component]
+\end{lstlisting}
+
+そして、コンポーネントの開始と停止のための2つのメソッドだけを持つ、\texttt{component/Lifecycle}プロトコルを拡張することができるようになりました。
+
+\begin{lstlisting}[numbers=none]
+(defrecord Feed [auth status msg-chan response-chan]
+  component/Lifecycle
+  (start [component]
+    (reset! (:status component) :running)
+    (process-messages status msg-chan)
+    (handle-responses status response-chan)
+    component)
+  (stop [component]
+    (reset! (:status component) :stopped)
+    component))
+\end{lstlisting}
+
+\texttt{start}関数は、コンポーネントの状態を\texttt{:running}に設定し、受信メッセージを\texttt{msg-chan}に流す処理を開始し、応答を\texttt{response-chan}のフィードに戻す処理を開始します。サブプロセスはいずれもステータスを受け取り、ステータスが\texttt{:running}から変化したときに自分自身を停止させることができます。最後に、この関数は残りの起動のために同じコンポーネントのインスタンスを返します。
+
+\texttt{stop}関数はステータスを\texttt{:stopped}に設定するだけです。残りの部分はサブプロセスが処理します。
+
+次に、ナレッジエンジンコンポーネントを考えてみましょう。知識エンジンは、ルールの外部データベースに対する認証情報と、使用するルールセットで構成されます。実行時の状態は、外部のルール・データベースへの接続で構成されます。また、このコンポーネントにはフィードコンポーネントからの受信チャンネルと、承認コンポーネントへの送信フィードが必要です。
+
+\begin{lstlisting}[numbers=none]
+(defrecord KnowledgeEngine
+  [ke-config feed-chan alert-chan rules]
+  component/Lifecycle
+  (start [component]
+    (watch-feeds feed-chan alert-chan)
+    component)
+  (stop [component]
+    component))
+
+(defn new-knowledge-engine
+  "初期ルールのない新しい知識エンジンを作成する"
+  [ke-config feed-chan alert-chan]
+  (->KnowledgeEngine ke-config feed-chan alert-chan
+                     (atom (:rule-set ke-config))))
+\end{lstlisting}
+
+\texttt{KnowledgeEngine} コンポーネントは、コンポーネント構成データ、受信 \texttt{feed-chan} 、送信 \texttt{alert-chan} を保持するための \texttt{ke-config} を持ちます。さらに、この実装では、内部 \texttt{rules} を持ちます。これは、コンストラクタで公開されない実装の詳細です。他の実装では、外部のデータベースやルールシステムでルールを管理することができます。
+
+知識エンジンの \texttt{start} 関数は、送られてくるフィードを監視し、ルールを処理し、必要と判断されればアラートチャンネルでアラートメッセージを発するプロセスをセットアップします。\texttt{stop} 関数は特別なことをする必要はありませんが、サブプロセスを停止させることは可能です。
+
+知識エンジンは、ルールセットを管理するために、承認コンポーネントから直接呼び出すことができるAPIを持っています。回答を承認する人は、ナレッジエンジンから出力される内容に基づいてルールを追加、修正、削除することもでき、最終的にシステム全体を向上させることができます。ルールを追加するためのAPI関数の例は次のとおりです。
+
+\begin{lstlisting}[numbers=none]
+(defn add-rule
+  "セットへのルール追加"
+  [ke rule]
+  (swap! (:rules ke) conj rule))
+\end{lstlisting}
+
+\texttt{add-rule}のようなコンポーネント関数は、通常、第一引数としてコンポーネントを取る通常の関数です。知識エンジンのインスタンスが承認コンポーネントに注入されると、そのコンポーネントはこれらの関数を直接呼び出すことができるようになります。
+
+最後に、承認(approvals)コンポーネントを検証する必要がある。このコンポーネントは、アラートが発生した場合に適切な人にメールを送信するためのいくつかの設定を持っています。アラート・チャネルで受信したメッセージを、電子メールや他の通知システムで適切な人に転送する。応答は応答チャネルで受信し、フィードに送り返す応答や、 将来この種のメッセージをどのように処理するかについて知識エンジンに 追加する新しいルールを含むことができます。
+
+\begin{lstlisting}[numbers=none]
+(defrecord Approvals
+   [approval-config ;; 承認コンフィグ
+    alert-chan ;; 受信アラートメッセージ
+    knowledge-engine ;; ナレッジエンジンへの直接フック
+    response-chan] ;; 出力応答メッセージ pub/sub
+  component/Lifecycle
+  (start [component]
+    (process-alerts alert-chan)
+    (process-responses knowledge-engine
+                       response-chan)
+    component)
+  (stop [component]
+    component))
+  (defn new-approvals
+    [approval-config alert-chan response-chan]
+    (map->Approvals {:approval-config approval-config
+                     :alert-chan      alert-chan
+                     :response-chan response-chan}))
+\end{lstlisting}
+
+なお、\texttt{Approvals}コンポーネントは、コンポーネントが適切に起動し、呼び出される前に知識エンジンが注入されることを想定しています。
+
+さて、すべてのコンポーネントが揃ったところで、それらを組み立てるためにコンポーネントシステムを使用する必要があります。
+
