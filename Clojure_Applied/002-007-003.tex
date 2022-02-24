@@ -1,0 +1,38 @@
+\section{物事をまとめる}
+
+Componentでは、システムは他のコンポーネントを起動したり停止したりできる特別なコンポーネントである。システム内のコンポーネントは、依存関係が常にコンポーネントの前に開始されるような順序で開始される。このため、コンポーネントの依存関係グラフにサイクルが存在しないことが必要である。同様に、システムが停止されるとき、コンポーネントは開始と逆の順序で停止される。
+
+システムは、\texttt{component/system-map}関数で定義される。マップは、コンポーネント名からコンポーネントインスタンスへのマッピングを定義する。コンポーネントがコンポーネントの依存関係を持つ場合、これは \texttt{component/using} で指定され、注入されたコンポーネントのベクトル（システム内とコンポーネント内で名前が同じ場合）またはコンポーネント名からシステム名へのマッピングのいずれかを取ります。
+
+この関数は、システムで定義したコンポーネントから、コンポーネントシステムマップを作成します。
+
+\begin{lstlisting}[numbers=none]
+(defn system [{:keys (twitter facebook knowledge approvals) :as config}]
+  (let [twitter-chan (async/chan 100)
+        twitter-response-chan (async/chan 10)
+        facebook-chan (async/chan 100)
+        facebook-response-chan (async/chan 10)
+        alert-chan (async/chan 100)
+        response-chan (async/chan 100)
+        feed-chan (async/merge [twitter-chan facebook-chan])
+        response-pub (async/pub response-chan :feed)]
+    (async/sub response-pub :twitter twitter-response-chan)
+    (async/sub response-pub :facebook facebook-response-chan)
+    (component/system-map
+      :twitter (feed/new-feed twitter twitter-chan twitter-response-chan)
+      :facebook (feed/new-feed facebook facebook-chan facebook-response-chan)
+      :knowledge-engine
+        (kengine/new-knowledge-engine knowledge feed-chan alert-chan)
+      :approvals (component/using
+                   (approvals/new-approvals approvals alert-chan response-chan)
+                   [:knowledge-engine]))))
+\end{lstlisting}
+
+
+
+
+
+
+
+
+
