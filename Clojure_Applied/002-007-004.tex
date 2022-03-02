@@ -8,9 +8,48 @@
 
 \subsection{Environ}
 
+Environライブラリは、Leiningenプロファイル、環境変数、およびJavaシステムプロパティから取得した設定値を一元的に表示するものです。\texttt{:rule-set}（使用する知識エンジンのルールセット）、\texttt{:feed1-user}（ソーシャルメディアのフィードのユーザー名）、\texttt{:verbose}（開発時のデバッグフラグ）の3つのシステム構成プロパティを考えてみましょう。
+
+開発時には、ローカルビルドで\texttt{rule-set}と\texttt{feed1-user}を設定したいと思うかもしれません。Environでこの設定を行うには、まずLeiningenの\texttt{project.clj}を更新して、Environを依存関係として（コードに）、lein-environプラグインを（ビルドに）追加する必要があります。
 
 
+\begin{lstlisting}[numbers=none]
+:dependencies [[environ "1.0.0"]]
+:plugins [[lein-environ "1.0.0"]]
+\end{lstlisting}
+
+システム構成プロパティを設定する最初の場所は、\texttt{project.clj} の中で Leiningen プロファイルの一部として直接設定することができます。プロファイルを使用すると、プロジェクトのビルドにオプションで含まれるプロジェクト設定のバンドルを作成することができます。プロファイルの一般的な使い方の1つは、環境固有のプロジェクト環境を作成することです。Leiningen では、プロファイル名とプロファイル固有のプロジェクト設定のマップを含む \texttt{:profiles} キーを使用します。
+
+\begin{lstlisting}[numbers=none]
+:profiles {:dev  { ,,, }
+           :qa   { ,,, }
+           :prod { ,,, }}
+\end{lstlisting}
+
+Environライブラリは、プロジェクト設定にある\texttt{:env}キーからシステム設定を読み込むことを想定しています。
+
+\begin{lstlisting}[numbers=none]
+:profiles {:dev {:env {:rule-set "basic"}}
+           :prod {:env {:rule-set "advanced"}}}
+\end{lstlisting}
+
+Leiningenでは \texttt{:user} と \texttt{:dev} のプロファイルはよく知られていて、デフォルトでオンになっているので、\texttt{lein repl}でいつも通りREPLを起動すれば、devの設定が利用できるようになります。
+
+\begin{lstlisting}[numbers=none]
+user=> (require '[environ.core :refer (env)])
+nil
+user=> (env :rule-set)
+"basic"
+\end{lstlisting}
+
+しかし、\texttt{project.clj}ファイルは、通常、ソースコントロールシステムで追跡されます。\texttt{:rule-set}のような環境設定は問題ありませんが、別の構成設定（データベースのユーザー名とパスワードなど）はおそらく受け入れられません。その場合、開発者固有の設定として、ソース・コントロールの外にある別の Leiningen \texttt{profiles.clj} に設定を保存することをお勧めします。
+
+この例では、\texttt{project.clj} から \texttt{:profiles} を削除し、代わりに \texttt{profiles.clj} の中に \texttt{:profiles} キーの値を入れることで、この例を変更することができます。
 
 
+\begin{lstlisting}[numbers=none]
+{:dev {:env {:rule-set "basic"}}
+ :prod {:env {:rule-set "advanced"}}}
+\end{lstlisting}
 
 
