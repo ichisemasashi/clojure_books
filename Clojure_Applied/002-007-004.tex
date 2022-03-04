@@ -56,3 +56,27 @@ user=> (env :rule-set)
 
 本番環境にデプロイするときは、もう Leiningen を使うことはありません。代わりに、JVMシステムプロパティまたはシステム環境変数によって、これらのプロパティを提供することができます。
 
+\begin{lstlisting}[numbers=none]
+# Invoking your app with Java system properties
+java -cp myapp.jar -Drule-set="experimental"
+# Invoking your app with environment variables
+export rule_set=experimental
+java -cp myapp.jar
+\end{lstlisting}
+
+なお、環境変数名はハイフンでは作成できないので、アンダースコアを代わりに使用します。Environでは、アンダースコアとピリオドをハイフンに置き換えて、プロパティ名を変換します。
+
+もう一つの重要な注意点は、\texttt{project.clj} や \texttt{profiles.clj} ファイルで実際の Clojure データ（キーワードなど）を使用できますが、システムのプロパティや環境変数から読み込む値はすべて文字列になることです。ですから、設定ソースに依存しない一貫したデータを得るために、プロパティとして文字列値のみを使用することがベストプラクティスです。
+
+Environ は、環境固有の設定を提供するためのシンプルで効果的なソリューションですが、いくつかの欠点もあります。まず、設定はキーワードと文字列のフラットマップとして使用されることが想定されています。リッチなデータ構造にアクセスできるClojureプログラマーとして、ネストしたマップを作成し、他の種類のClojureデータ（キーワード、数値など）を使用する機能があれば良いと思います。第二に、Environがプロファイルベースの設定を拾うには、lein-environ Leiningenプラグインが必要です。このため、ビルドツールの選択肢が狭まり、プラグイン要件も追加されます。
+
+Immuconfは、設定を管理するための別のライブラリで、これらの懸念事項を回避し、いくつかの追加機能を提供する、異なるアプローチを取ります。
+
+
+\subsection{Immuconf}
+
+
+
+
+
+
