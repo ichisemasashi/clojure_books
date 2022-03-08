@@ -75,8 +75,40 @@ Immuconfは、設定を管理するための別のライブラリで、これら
 
 \subsection{Immuconf}
 
+Immuconfは、様々なプロパティソースから設定を構築するのではなく、設定ファイルのセットを指定し、指定された順序で組み合わせることに重点を置いています。
+
+Immuconfの設定ファイルはすべてExtensible Data Notation (edn) フォーマットで定義されています。この形式は、第9章「データのフォーマット」で詳しく説明しますが、基本的にClojureデータのサブセットです。Environが提供する文字列プロパティの単一のフラットマップの代わりに、Clojureデータの全範囲、最も一般的にはネストされたマップを使用することができます。
+
+Immuconfを使って、Environで見たのと同じ構成にしてみましょう。まず、LeiningenプロジェクトのdependenciesにImmuconfを含める必要があります。
 
 
+\begin{lstlisting}[numbers=none]
+[levand/immuconf "0.1.0"]
+\end{lstlisting}
+
+次に、設定ファイル\texttt{config.edn}を定義します（名前は何でも構いません）。プロジェクトリソースのディレクトリ\texttt{resources/config.edn}に置くと便利ですが、必須ではありません。中身はedn（Clojure）記法で定義されたマップでなければなりません。
+
+
+\begin{lstlisting}[numbers=none]
+{:rule-set :basic}
+\end{lstlisting}
+
+アプリケーションの内部では、Immuconf API を使って設定ファイルを読み込むことができます。この例では設定ファイルを var に保存していますが、 アプリケーションの状態に保存して、すべてのアプリケーションコンポーネントで使用できるようにしたほうがよいでしょう。
+
+
+\begin{lstlisting}[numbers=none]
+(def config (immuconf.config/load "resources/config.edn"))
+\end{lstlisting}
+
+Immuconf の \texttt{get} 関数を使って、設定マップの値を探すことができます。\texttt{immuconf.config/get} 関数は \texttt{clojure.core/get-in} と目的が似ています。これは設定マップと、ネストされたマップへのパスを定義する一連の引数を取ります。
+
+
+\begin{lstlisting}[numbers=none]
+(immuconf.config/get config :rule-set)
+\end{lstlisting}
+
+
+\subsection{複数のコンフィグソースを使用する}
 
 
 
