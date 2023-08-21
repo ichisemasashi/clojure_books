@@ -3,7 +3,7 @@
 
 You can trace the arguments supplied, to and the result values produced by functions using kbd:[C-c M-t v]. CIDER will prompt you for the name of the function you want to trace, defaulting to the previous top-level definition.
 
-image::tracing.png[Tracing]
+image::images/tracing.png[Tracing]
 
 Invoking kbd:[C-c M-t v] again for the same function will result in the function being untraced.
 

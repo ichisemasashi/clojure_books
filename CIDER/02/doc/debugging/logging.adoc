@@ -3,7 +3,7 @@
 
 CIDER Log Mode allows you to capture, debug, inspect and view log events emitted by Java logging frameworks. The captured log events can be searched, streamed to the client, pretty printed and are integrated with the CIDER link:inspector.html[Inspector] and link:../usage/dealing_with_errors.html[Stacktrace Mode]. Here is a screenshot of CIDER Log Mode in action.
 
-image::cider-log.png[CIDER Log]
+image::images/cider-log.png[CIDER Log]
 
 NOTE: The screenshot displays the list of log events in the `+*cider-log*+` buffer on the left. To the right, a log event is visible in the `+*cider-inspect*+` buffer, where the exception of the event is also displayed in the CIDER Stacktrace Mode. From the Stacktrace Mode buffer you can jump to the source of each frame. At the bottom the CIDER log menu is shown from which you can perform logging related actions.
 

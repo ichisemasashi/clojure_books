@@ -12,25 +12,25 @@ CIDERはもともと、強力なCommon Lisp対話型開発環境 https://github.
 *ぜひご検討ください。
 xref:contributing/funding.adoc[継続的な発展を財政的に支援する].*
 
-== Overview
+== 概要
 
-CIDER aims to provide an interactive development experience similar to the one you'd get when programming in Emacs Lisp, Common Lisp (with https://github.com/slime/slime[SLIME] or https://github.com/joaotavora/sly[Sly]), Scheme (with https://github.com/jaor/geiser[Geiser]) and Smalltalk.
+CIDERは、Emacs Lisp、Common Lisp（ https://github.com/slime/slime[SLIME] または https://github.com/joaotavora/sly[Sly] を使用）、Scheme（ https://github.com/jaor/geiser[Geiser] を使用）、およびSmalltalkでプログラミングするときのようなインタラクティブな開発体験を提供することを目指しています。
 
-Programmers are expected to program in a very dynamic and incremental manner, constantly re-evaluating existing Clojure definitions and adding new ones to their running applications. You never stop/start a Clojure application while using CIDER - you're constantly interacting with it and changing it.  Depending on who you're asking that approach is named either "interactive programming/development" or "REPL-driven programming". We prefer the former term and we'll be using it throughout CIDER's documentation.
+プログラマは、常に既存のClojure定義を再評価し、実行中のアプリケーションに新しい定義を追加する、非常に動的でインクリメンタルな方法でプログラミングすることが期待されています。CIDERを使用している間、Clojureアプリケーションを停止/開始することはありません。 あなたが誰に尋ねるかによって、そのアプローチは "対話型プログラミング/開発 "または "REPL駆動型プログラミング "と名付けられます。私たちは前者の呼び方を好み、CIDERのドキュメント全体を通してこの呼び方を使います。
 
-TIP: You can find more details about the typical CIDER workflow in the xref:usage/interactive_programming.adoc[Interactive Programming] section.
+ヒント：典型的なCIDERのワークフローについての詳細は、 xref:usage/interactive_programming.adoc[インタラクティブプログラミング] セクションにあります。
 
-CIDER's built on top of https://github.com/nrepl/nrepl[nREPL], the Clojure networked REPL server.
+CIDERは https://github.com/nrepl/nrepl[nREPL] , ClojureネットワークREPLサーバーの上に構築されています。
 
-CIDER's basic architecture looks something like this:
+CIDERの基本的なアーキテクチャは以下のようなものです：
 
-image::cider_architecture.png[,600]
+image::images/cider_architecture.png[,600]
 
-Clojure code gets executed by an nREPL server. CIDER sends requests to the server and processes its responses. The server's functionality is augmented by additional https://github.com/clojure-emacs/cider-nrepl[nREPL middleware], designed specifically to address the needs of an interactive development environment like CIDER.
+ClojureコードはnREPLサーバーによって実行される。CIDERはサーバにリクエストを送り、そのレスポンスを処理します。サーバーの機能は、CIDERのようなインタラクティブな開発環境のニーズに対応するために特別に設計された、追加の https://github.com/clojure-emacs/cider-nrepl[nREPLミドルウェア] によって増強されます。
 
-.An Editor-agnostic Foundation
+.エディターにとらわれない基礎
 ****
-Much of the nREPL middleware we originally developed for CIDER is editor-agnostic and is being used by other Clojure development environments as well (e.g. https://github.com/tpope/vim-fireplace[vim-fireplace] & https://github.com/BetterThanTomorrow/calva[Calva]).
+私たちが元々CIDERのために開発したnREPLミドルウェアの多くは、エディタにとらわれず、他のClojure開発環境でも使用されています(例えば、 https://github.com/tpope/vim-fireplace[vim-fireplace] や https://github.com/BetterThanTomorrow/calva[Calva] )。
 ****
 
 == Features
@@ -55,7 +55,7 @@ And many many more... The rest of this manual will be exploring CIDER's features
 
 Below you can see a typical CIDER session.
 
-image::cider-overview.png[CIDER Screenshot]
+image::images/cider-overview.png[CIDER Screenshot]
 
 Here the user checked the documentation for `clojure.core/merge` straight from the source buffer and then jumped to a REPL buffer to try out something there.
 

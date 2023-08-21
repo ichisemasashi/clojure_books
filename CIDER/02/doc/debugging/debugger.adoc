@@ -3,7 +3,7 @@
 
 CIDER ships with a *powerful* interactive Clojure debugger inspired by Emacs's own http://www.gnu.org/software/emacs/manual/html_node/elisp/Edebug.html[Edebug]. You're going to love it!
 
-image::cider_debugger.gif[CIDER Debugger]
+image::images/cider_debugger.gif[CIDER Debugger]
 
 WARNING: The debugger currently **does not** support ClojureScript. See https://github.com/clojure-emacs/cider/issues/1416[this issue] for more details.
 

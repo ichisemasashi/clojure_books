@@ -5,7 +5,7 @@ You can browse your REPL input history with the command kbd:[M-x] `cider-repl-hi
 
 The history is displayed in reverse order, with the most recent input at the top of the buffer, and the oldest input at the bottom.  You can scroll through the history, and when you find the history item you were looking for, you can insert it from the history buffer into your REPL buffer.
 
-image::history_browser.png[History Browser]
+image::images/history_browser.png[History Browser]
 
 == Mode
 

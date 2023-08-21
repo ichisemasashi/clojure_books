@@ -11,7 +11,7 @@ Improvements to the two libraries automatically translate to improvements in CID
 
 Out-of-the box CIDER uses the standard Emacs tooling for code completion. When you press kbd:[TAB] or kbd:[M-TAB] you'll get completion candidates in a dedicated buffer.
 
-image::code_completion.png[Code Completion]
+image::images/code_completion.png[Code Completion]
 
 [NOTE]
 ====
@@ -82,7 +82,7 @@ Now, `company-mode` will accept certain fuzziness when matching candidates again
 
 Completion candidates will be annotated by default with an abbreviation corresponding to their type, and (contextually) their namespace. The function used to format the annotation can be configured by `cider-annotate-completion-function.` The abbreviations used are configured by `cider-completion-annotations-alist` and the context in which their namespace is included is configured by `cider-completion-annotations-include-ns.`
 
-image::completion-annotations.png[Completion Annotations]
+image::images/completion-annotations.png[Completion Annotations]
 
 TIP: Completion annotations can be disabled by setting `cider-annotate-completion-candidates` to `nil`.
 

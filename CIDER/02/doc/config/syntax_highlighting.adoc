@@ -11,17 +11,17 @@ CIDER can syntax highlight symbols that are known to be defined. By default, thi
 
 Here's how code looks without dynamic syntax highlighting.
 
-image::dynamic_font_lock_off.png[Dynamic Font-lock Off]
+image::images/dynamic_font_lock_off.png[Dynamic Font-lock Off]
 
 And here's how the code looks when it's turned on.
 
-image::dynamic_font_lock_on.png[Dynamic Font-lock On]
+image::images/dynamic_font_lock_on.png[Dynamic Font-lock On]
 
 == Syntax highlighting for reader conditionals
 
 By default CIDER will apply font-locking to unused reader conditional expressions depending on the buffer's CIDER connection type.
 
-image::reader_conditionals.png[Reader Conditionals]
+image::images/reader_conditionals.png[Reader Conditionals]
 
 You can disable this behavior by adjusting `cider-font-lock-reader-conditionals`:
 

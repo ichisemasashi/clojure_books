@@ -49,7 +49,7 @@ You can change the delimiters that CIDER uses to find references if you want to 
 (setq cider-doc-xref-regexp "\\\\ref{\\(?1:[^}]+\\)}")
 ----
 
-image::cider_see_also.gif[CIDER See Also]
+image::images/cider_see_also.gif[CIDER See Also]
 
 == Displaying Documentation as Tooltips
 

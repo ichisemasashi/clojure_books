@@ -302,9 +302,9 @@ kbd:[C-c C-t C-b]
 ====
 There's no need to memorize this list. If you're in a Clojure buffer with `cider-mode` active you'll have a CIDER menu available. The menu lists all the most important commands and their keybindings. You can also invoke kbd:[C-h f RET cider-mode] to get a list of the keybindings for `cider-mode`.
 
-image::menu_example.png[CIDER interactions menu]
+image::images/menu_example.png[CIDER interactions menu]
 
 An even better solution would be to install https://github.com/justbur/emacs-which-key[which-key], which will automatically show you a list of available keybindings as you start typing some keys. This will simplify your interactions with CIDER quite a lot, especially in the beginning. Here's what you'd see if you typed kbd:[C-c C-d] in a Clojure buffer:
 
-image::cider-which-key.png[CIDER which-key]
+image::images/cider-which-key.png[CIDER which-key]
 ====
