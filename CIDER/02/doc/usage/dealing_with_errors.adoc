@@ -1,0 +1,206 @@
+= Dealing with Errors
+:experimental:
+
+Every now and then you'll make some mistake in your code which is going to result in an evaluation error. Clojure's errors are notorious for their complexity and CIDER takes a lot of effort to make it easier to decipher those.
+
+Most of the time CIDER will display the errors in a dedicated buffer alongside the buffer you're currently evaluating code in.
+
+TIP: Use kbd:[q] to quickly close an error buffer.
+
+== Configuration
+
+By default, when an exception occurs, CIDER will display the exception in an error buffer using `cider-stacktrace-mode`. You can suppress this behavior, which causes just the error message to be output as a temporary overlay or in the echo area:
+
+[source,lisp]
+----
+(setq cider-show-error-buffer nil)
+----
+
+At times, the error being displayed will originate from a bug in CIDER itself. These internal errors might frequently occur and interrupt your workflow, but you might not want to suppress *all* stacktrace buffers by using `cider-show-error-buffer`. Instead, you might only want to suppress _this specific type_ of internal error. The stacktrace buffers provide such an option when displaying an internal error. A toggle button will be displayed with the error type's name, and you can toggle whether this particular type of error will cause the stacktrace buffer to automatically show itself.  The toggle button controls this behavior only during the current Emacs session, but if you would like to make the suppression more permanent, you can do so by customizing the `cider-stacktrace-suppressed-errors` variable.  The buffer will also provide a direct link to the bug reporting page to help facilitate its diagnosis and repair.
+
+Independently of the value of `cider-show-error-buffer` or `cider-stacktrace-suppressed-errors`, CIDER always generates the error buffer in the background. You can use `cider-selector` (kbd:[C-c M-s]) to visit this buffer if you decide that you need to.
+
+There are two more selective strategies for the error buffer:
+
+[source,lisp]
+----
+(setq cider-show-error-buffer 'except-in-repl) ; or
+(setq cider-show-error-buffer 'only-in-repl)
+----
+
+To disable auto-selection of the error buffer when it's displayed:
+
+[source,lisp]
+----
+(setq cider-auto-select-error-buffer nil)
+----
+
+By default, when you jump to the source of a given stack frame, an Emacs window other than that of `+*cider-error*+` will be chosen.  If you wish to reuse `+*cider-error*+`'s window instead, please configure:
+
+[source,lisp]
+----
+(setq cider-stacktrace-navigate-to-other-window nil)
+----
+
+TIP: If you have customized this setting, when you have navigated to a given source file, you can navigate back to `+*cider-error*+` with kbd:[C-x <left>] (`previous-buffer`) or kbd:[M-,] (`xref-pop-marker-stack`).
+
+== Navigating Stacktraces
+
+CIDER comes with a powerful solution for dealing with Clojure stacktraces. CIDER presents stack traces in a special major mode, `cider-stacktrace-mode`, which gives you gives you some key features:
+
+* the ability to filter out certain stack frames to reduce clutter
+* some handy ways to navigate to the cause of the exception
+* the ability to jump straight to code with a single keystroke
+
+=== Keybindings
+
+|===
+| Command | Keyboard shortcut | Description
+
+| `cider-stacktrace-previous-cause`
+| kbd:[M-p]
+| Move point to previous cause
+
+| `cider-stacktrace-next-cause`
+| kbd:[M-n]
+| Move point to next cause
+
+| `cider-stacktrace-jump`
+| kbd:[M-.] or kbd:[Return]
+| Navigate to the source location (if available) for the stacktrace frame
+
+| `cider-stacktrace-cycle-current-cause`
+| kbd:[Tab]
+| Cycle current cause detail
+
+| `cider-stacktrace-cycle-all-causes`
+| kbd:[0] or kbd:[S-Tab]
+| Cycle all cause detail
+
+| `cider-stacktrace-cycle-cause-1`
+| kbd:[1]
+| Cycle cause #1 detail
+
+| `cider-stacktrace-cycle-cause-2`
+| kbd:[2]
+| Cycle cause #2 detail
+
+| `cider-stacktrace-cycle-cause-3`
+| kbd:[3]
+| Cycle cause #3 detail
+
+| `cider-stacktrace-cycle-cause-4`
+| kbd:[4]
+| Cycle cause #4 detail
+
+| `cider-stacktrace-cycle-cause-5`
+| kbd:[5]
+| Cycle cause #5 detail
+
+| `cider-stacktrace-toggle-java`
+| kbd:[j]
+| Toggle display of Java frames
+
+| `cider-stacktrace-toggle-clj`
+| kbd:[c]
+| Toggle display of Clojure frames
+
+| `cider-stacktrace-toggle-repl`
+| kbd:[r]
+| Toggle display of REPL frames
+
+| `cider-stacktrace-toggle-tooling`
+| kbd:[t]
+| Toggle display of tooling frames (e.g. compiler, nREPL middleware)
+
+| `cider-stacktrace-toggle-duplicates`
+| kbd:[d]
+| Toggle display of duplicate frames
+
+| `cider-stacktrace-show-only-project`
+| kbd:[p]
+| Toggle display only project frames
+
+| `cider-stacktrace-toggle-all`
+| kbd:[a]
+| Toggle display of all frames
+|===
+
+=== Filtering Stack Frames
+
+CIDER helps you cut through the clutter of Clojure stacktraces by allowing you to apply a list of filters using the `cider-stacktrace-default-filters` variable. Valid filter types include `java`, `clj`, `repl`, `tooling`, and `dup`. Specifying one of these filters will remove the corresponding frames from the stacktrace display. There are also "positive" filtering types (reverse filters) that specify what should be shown. The value of `project`, for instance, will cause only project frames to be shown, and `all` will force all stackframes to be shown. Note that `project` and `all` are mutually exclusive. Whichever one is first will determine the behavior if they are both present.
+
+[source,lisp]
+----
+(setq cider-stacktrace-default-filters '(tooling dup))
+;; or
+(setq cider-stacktrace-default-filters '(project))
+----
+
+=== Wrapping Error Messages
+
+Finally, CIDER can wrap error messages when they are displayed in a buffer to help improve their readability. CIDER uses `cider-stacktrace-fill-column` for this, which can take on three types of values:
+
+* `nil`: The error is not wrapped.
+* numeric: The error message is wrapped to the specified fill column.
+* Something truthy but non-numeric: The error message is wrapped using the value of `fill-column`.
+
+The following will cause error messages to be wrapped to 80 columns, for instance:
+
+[source,lisp]
+----
+(setq cider-stacktrace-fill-column 80)
+----
+
+=== Inspecting printed stacktraces
+
+Some of the errors you encounter as a Clojurists aren't necessarily evaluation errors that happened in your REPL. Many times, you see errors printed in a textual representation in other buffers as well, like log files or the REPL for example. Cider can parse and analyze some of those printed errors as well and show them in `cider-stacktrace-mode` with the following commands:
+
+* The `cider-stacktrace-analyze-at-point` command uses the `thingatpt` library to extract the current stacktrace at point. It sends the extracted stacktrace to the middleware in order to parse and analyze it, and then shows the result in Cider's `cider-stacktrace-mode`.
+
+* The `cider-stacktrace-analyze-in-region` command does the same as `cider-stacktrace-analyze-at-point`, but uses the current region to extract the stacktrace.
+
+==== Examples
+
+Here is an example of a stacktrace printed with the Java `printStackTrace` method:
+
+[source,text]
+----
+clojure.lang.ExceptionInfo: BOOM-1 {:boom "1"}
+  at java.base/java.lang.Thread.run(Thread.java:829)
+----
+
+To open this stacktrace in the Cider stacktrace inspector, move point somewhere over the exception and run `M-x cider-stacktrace-analyze-at-point`.
+
+This also works to some extend for exceptions that are buried inside a string like the following exception:
+
+[source,text]
+----
+"clojure.lang.ExceptionInfo: BOOM-1 {:boom \"1\"}\n at java.base/java.lang.Thread.run(Thread.java:829)"
+----
+
+Those exceptions are often hard to read. The Cider stacktrace inspector can help you navigating exceptions even in those cases.
+
+==== Supported formats
+
+Cider recognizes stacktraces printed in the following formats:
+
+- `Aviso` - Exceptions printed with the https://ioavisopretty.readthedocs.io/en/latest/exceptions.html[write-exception] function of the https://github.com/AvisoNovate/pretty[Aviso] library.
+
+- `clojure.repl` - Exceptions printed with the https://clojure.github.io/clojure/branch-master/clojure.repl-api.html#clojure.repl/pst[clojure.repl/pst] function.
+
+- `clojure.stacktrace` - Exceptions printed with the https://clojure.github.io/clojure/branch-master/clojure.stacktrace-api.html#clojure.stacktrace/print-cause-trace[clojure.stacktrace/print-cause-trace] function.
+
+- `Java` - Exceptions printed with the https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html#printStackTrace--[Throwable/printStackTrace] method.
+
+- `Tagged Literal` - Exceptions printed with the https://clojure.github.io/clojure/clojure.core-api.html#clojure.core/pr[clojure.core/pr] function.
+
+==== Limitations
+
+- Cider only recognizes stacktraces that have been printed in one of the supported formats.
+
+- The buffers in which `cider-stacktrace-analyze-at-point` or `cider-stacktrace-analyze-in-region` are called in, must have a Cider session associated with them. Tip: Use `sesman-link-with-project` and friends in case the buffer containing the exception is not linked to a Cider session.
+
+- Stacktraces are analyzed with the classpath of the Cider session the buffer is associated with. If the stacktrace contains references to classes not on this classpath, some information might be missing from the analysis.
+
+- The `cider-stacktrace-analyze-at-point` function might not detect the stacktrace at point in every situation. The thing at point might be different depending on which major mode is active in a buffer. When `cider-stacktrace-analyze-at-point` fails to detect the stacktrace, `cider-stacktrace-analyze-in-region` can be used to select the stacktrace manually.

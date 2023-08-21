@@ -1,0 +1,270 @@
+= Up and Running
+:experimental:
+
+To use CIDER, you'll need to connect it to a running nREPL server that is associated with your program. Most Clojure developers use standard build tooling such as Leiningen, Boot, or Gradle, and CIDER can automatically work with those tools to get you up and running quickly. But those tools are not required; CIDER can connect to an nREPL server that is already started and is managed separately.
+
+NOTE: CIDER will automatically work with Leiningen 2.9.0+ or Boot 2.8.3+. Older versions are not supported.
+
+There are two ways to connect CIDER to an nREPL server:
+
+. CIDER can launch an nREPL server for your project from Emacs.
+. You can connect CIDER to an already-running nREPL server, managed separately.
+
+The following sections describe each of these methods.
+
+== Launch an nREPL Server From Emacs
+
+If you have a Clojure project in your file system and want CIDER to launch an nREPL session for it, simply visit a file that belongs to the project, and type kbd:[M-x] `cider-jack-in` kbd:[RET].footnote:[Yeah, that's a "Neuromancer" reference.] CIDER will start an nREPL server and automatically connect to it.
+
+TIP: In Clojure(Script) buffers the command `cider-jack-in` is bound to kbd:[C-c C-x (C-)j (C-)j].
+
+The process of jacking-in is pretty simple:
+
+* CIDER determines the build system for your project (e.g. Leiningen) and picks the necessary command to start an nREPL server.
+* CIDER shells out and runs a command like `lein repl :headless` to start an nREPL server.
+* CIDER waits for the nREPL server to start.  CIDER figures out this by parsing the output from the command and waiting for a line like `nREPL server started on port 53005 on host localhost - nrepl://localhost:53005` to appear there.
+* CIDER extracts the port of the nREPL from the preceding message.
+* It connects to the running nREPL server.
+
+TIP: You can see the exact command that `cider-jack-in` invoked in your minibuffer, while waiting for nREPL to start. You can also find this command in Emacs's `+*Messages*+` buffer.
+
+In some cases one project might have multiple project markers in it - e.g. `project.clj` and `deps.edn`.  When this happens CIDER will prompt you to select the build tool to use. You can override this behavior by setting the variable `cider-preferred-build-tool`. While you can set it globally in your Emacs config, most of the time you'd probably want to have a project-specific setting for it in your `.dir-locals.el`:
+
+[source,emacs-lisp]
+----
+((clojure-mode
+  (cider-preferred-build-tool . lein)))
+----
+
+=== Auto-Injecting Dependencies
+
+While CIDER's core functionality requires nothing more than an nREPL server, there are many advanced features that depend on the presence of additional nREPL middleware. In the early versions of CIDER (up to CIDER 0.11) users had to add those dependencies themselves, which was a painful and error-prone process.  Fortunately today that's handled auto-magically when you're using `cider-jack-in`.
+
+If your project uses `lein`, `boot` or `tools.deps` (`deps.edn`), CIDER will automatically inject all the necessary nREPL dependencies (e.g. `cider-nrepl` or `piggieback`) when it starts the server.  The injection process is extremely simple - CIDER simply passes the extra dependencies and nREPL configuration to your build tool in the command it runs to start the nREPL server. Here's how this looks for `tools.deps`:
+
+  $ clojure -Sdeps '{:deps {nrepl {:mvn/version "0.6.0"} cider/cider-nrepl {:mvn/version "0.35.1"}}}' -m nrepl.cmdline --middleware '["cider.nrepl/cider-middleware"]'
+
+TIP: If you don't want `cider-jack-in` to inject dependencies automatically, set `cider-inject-dependencies-at-jack-in` to `nil`. Note that you'll have to setup the dependencies yourself (see xref:basics/middleware_setup.adoc[nREPL Middleware Setup]), just as in CIDER 0.10 and older.
+
+Normally `cider-jack-in` would inject only `cider-nrepl` and `cider-jack-in-cljs` would add `piggieback` as well. The injection mechanism is configurable and you can easily add more libraries there. Some CIDER extensions would use this mechanism to auto-inject their own dependencies.
+
+Here's how you can modify the injected dependencies for `cider-jack-in-clj`:
+
+[source,lisp]
+----
+;; auto-inject version 1.0 of the library foo/bar
+(cider-add-to-alist 'cider-jack-in-dependencies
+                    "foo/bar" "1.0")
+;; if you want to have full control over the coordinate description set it as an alist
+;; auto-inject {:git/sha "6ae2b6f71773de7549d7f22759e8b09fec27f0d9" for library org.clojure/tools.deps
+;;              :git/url "https://github.com/clojure/tools.deps/"}
+(cider-add-to-alist 'cider-jack-in-dependencies
+                    "org.clojure/tools.deps"
+                    '(("git/sha" . "6ae2b6f71773de7549d7f22759e8b09fec27f0d9")
+                      ("git/url" . "https://github.com/clojure/tools.deps/")))
+----
+
+IMPORTANT: Always use the fully qualified `group/artifact` (e.g. `re-frame/re-frame`) in these dependencies, since only Leiningen supports the bare `re-frame` syntax.
+
+CIDER will also inject the most recent version of nREPL that it supports. This is a simple trick to override the version of nREPL bundled with your build tool (e.g. Leiningen), so you can gain access to the newest nREPL features. Generally that's one aspect of CIDER's inner workings that end-users will rarely have to think about.
+
+You can override the injected versions of `cider-nrepl` and nREPL by customizing `cider-injected-middleware-version` and `cider-injected-nrepl-version`.  Generally you should avoid doing this, but it may be useful if you want to try a newer version or you encounter some regression that forces you to temporarily use an older version.
+
+CIDER can also inject a Clojure dependency into your project, which is useful, for example, if your project defaults to an older version of Clojure than that supported by the CIDER middleware. Set `cider-jack-in-auto-inject-clojure` appropriately to enable this.
+
+=== Jacking-in without a Project
+
+If you try to run `cider-jack-in` outside a project directory, CIDER will warn you and ask you to confirm whether you really want to do this; more often than not, this is an accident.  If you decide to proceed, CIDER will invoke the command configured in `cider-jack-in-default`. Prior to CIDER 0.17, this defaulted to `lein` but was subsequently switched to `clj`, Clojure's basic startup command.
+
+TIP: You can set `cider-allow-jack-in-without-project` to `t` if you'd like to disable the warning displayed when jacking-in outside a project.
+
+==== Universal jack-in
+
+`cider-jack-in-universal` kbd:[C-c C-x j u] is another way to quickly jack in without a project choosing from a list of pre-configured Clojure build tools. When this command is called from outside of a project, the user is given the option to select to jack in with one of the pre-configured tools, as well as to confirm the root directory to use as a base. If the command is called from within a project directory, it behaves exactly the same as `cider-jack-in` does.
+
+It utilizes Emacs's
+https://www.gnu.org/software/emacs/manual/html_node/elisp/Prefix-Command-Arguments.html[numeric prefix arguments] to quickly jack in with a specific build tool. Numeric prefix arguments can be set with the `Meta` key followed by a number.
+
+The following Clojure build tools are supported so far
+
+- kbd:[M-1 C-c C-x j u] jack-in using clojure-cli.
+- kbd:[M-2 C-c C-x j u] jack-in using leiningen.
+- kbd:[M-3 C-c C-x j u] jack-in using babashka.
+- kbd:[M-4 C-c C-x j u] jack-in using nbb.
+
+Here is an example of how to bind kbd:[F12] for quickly bringing up a babashka REPL:
+
+[source,lisp]
+----
+(global-set-key (kbd "<f12>") (lambda ()
+                                (interactive)
+                                (cider-jack-in-universal 3)))
+----
+
+The list of available build tools to consider is configured in `cider-jack-in-universal-options`. Each element of the list consists of the tool name and its setup options. Taking `nbb` as an example from the list:
+
+[source,lisp]
+----
+(nbb         (:prefix-arg 4 :cmd (:jack-in-type cljs :project-type nbb :cljs-repl-type nbb :edit-project-dir t)))
+----
+
+with
+
+. `:prefix-arg` assigns the `nbb` tool name a numerical argument prefix of 4.
+. `:cmd` how to invoke the command.
+.. `:jack-in-type` use a `cljs` repl.
+.. `:project-type` use `nbb` (see `jack-in-command`) to bring up the nREPL server.
+.. `:cljs-repl-type` client uses the `nbb` cljs repl type (see `cider-cljs-repl-types`) to initialize server.
+.. `:edit-project-dir` ask the user to confirm root directory to use as base.
+
+=== Customizing the Jack-in Command Behavior
+
+You can use kbd:[C-u M-x] `cider-jack-in` kbd:[RET] to specify the exact command that `cider-jack-in` would run.  This option is very useful is you want to specify a something like a `lein` or `deps.edn` profile.
+
+Alternatively you can kbd:[C-u C-u M-x] `cider-jack-in` kbd:[RET], which is a variation of the previous command. This command will first prompt you for the project you want to launch `cider-jack-in` in, which is pretty handy if you're in some other directory currently. This option is also useful if your project contains some combination of project.clj, build.boot and deps.edn and you want to launch a REPL for one or the other.
+
+NOTE: The examples use only `cider-jack-in`, but this behavior is consistent for all `cider-jack-in-*` commands.
+
+You can further customize the command line CIDER uses for `cider-jack-in` by modifying the some options. Those differ a bit between the various tools, so we'll examine them tool by tool.
+
+==== Leiningen Options
+
+* `cider-lein-command` - the name of the Leiningen executable (`lein` by default)
+* `cider-lein-parameters` - the command-line params to start a REPL (e.g. `repl :headless` or -o to enable offline mode)
+
+==== Clojure CLI Options
+
+* `cider-clojure-cli-command` - the name of the `clojure` executable (`clojure` by default)
+* `cider-clojure-cli-parameters` - the command-line parameters to start a REPL
+* `cider-clojure-cli-aliases` - a list of aliases to be used at jack-in time
+
+To use `cider-jack-in` with `tools.deps` on Windows set the `cider-clojure-cli-command` to `"powershell"`. This happens by default if you are on Windows and no `clojure` executable is found. Using `"powershell"` will Base64 encode the clojure launch command before passing it to PowerShell and avoids shell-escaping issues.
+
+NOTE: Alternatively you can use WSL (e.g. to run nREPL and Emacs there), which will likely result in a better overall development experience.
+
+==== Boot Options
+
+* `cider-boot-command` - the name of the Boot executable (`boot` by default)
+* `cider-boot-parameters` - these are usually task names and their parameters
+(e.g., `dev` for launching boot's dev task instead of the standard `repl -s wait`)
+
+==== Gradle Options
+
+* `cider-gradle-command` - the name of the Gradle executable (`./gradlew` by default)
+* `cider-gradle-parameters` - the Gradle arguments to invoke the repl task (e.g. `--no-daemon` or `--configuration-cache`) (`clojureRepl` by default)
+
+==== shadow-cljs
+
+* `cider-shadow-cljs-command` - the command to run `shadow-cljs` (`npx shadow-cljs` by default). By default we favor the project-specific shadow-cljs over the system-wide.
+* `cider-shadow-cljs-parameters` - the task to start a REPL server (`server` by default)
+
+=== Override the Jack-In Command
+
+Which Jack-In Command is used is based on the project type. You can override the Jack-In Command either project-wide or as an argument in Lisp.  This allows for fine-grained control over how cider starts the nrepl-server.
+
+The precedence order for determining the Jack-In Command is:
+1) :jack-in-cmd if provided as a parameter,
+2) `cider-jack-in-command` if set as a directory local variable, and
+3) inferred from the project type (the default).
+
+==== Setting a project-wide command
+
+You can set a local variable `cider-jack-in-command` to override the jack-in command.
+
+[source,emacs-lisp]
+----
+((nil
+  (cider-jack-in-cmd . "nbb nrepl-server")))
+----
+
+==== Passing the Command Programmatically as a Parameter
+
+You can provide an override Jack-In command as an argument to `cider-jack-in`.  Here is an example Nbb Jack-In command, providing a custom `:jack-in-cmd`.
+
+[source,emacs-lisp]
+----
+(defun cider-jack-in-nbb-2 ()
+  "Start a Cider nREPL server with the 'nbb nrepl-server' command."
+  (interactive)
+  (cider-jack-in-clj '(:jack-in-cmd "nbb nrepl-server")))
+----
+
+
+== Connect to a Running nREPL Server
+
+If you have an nREPL server already running, CIDER can connect to it. For instance, if you have a Leiningen-based project, go to your project's directory in a terminal session and type:
+
+[source,sh]
+----
+$ lein repl :headless
+----
+
+This will start the project's nREPL server.
+
+If your project uses `boot`, do this instead:
+
+[source,sh]
+----
+$ boot repl -s wait (or whatever task launches a repl)
+----
+
+It is also possible for plain `clj`, although the command is somewhat longer:
+
+[source,sh]
+----
+$ clj -Sdeps '{:deps {cider/cider-nrepl {:mvn/version "0.35.1"}}}' -m nrepl.cmdline --middleware "[cider.nrepl/cider-middleware]"
+----
+
+Alternatively, you can start nREPL either manually or using the facilities provided by your project's build tool (Gradle, Maven, etc).
+
+After you get your nREPL server running, go back to Emacs and connect to it: kbd:[M-x] `cider-connect` kbd:[RET]. CIDER will prompt you for the host and port information, which should have been printed when the previous commands started the nREPL server in your project.
+
+TIP: In Clojure(Script) buffers the command `cider-connect` is bound to kbd:[C-c C-x c s].
+
+If you frequently connect to the same hosts and ports, you can tell CIDER about them and it will use the information to do completing reads for the host and port prompts when you invoke `cider-connect`. You can identify each host with an optional label.
+
+[source,lisp]
+----
+(setq cider-known-endpoints
+  '(("host-a" "10.10.10.1" "7888")
+    ("host-b" "7888")))
+----
+
+== Working with Remote Hosts
+
+While most of the time you'd be connecting to a locally running nREPL server, that was started manually or via `cider-jack-in-*`, there's also the option to connect to remote nREPL hosts. For the sake of security CIDER has the ability to tunnel a connection over SSH in such cases.  This behavior is controlled by `nrepl-use-ssh-fallback-for-remote-hosts`: when true, CIDER will attempt to connect via ssh to remote hosts when unable to connect directly. It's `nil` by default.
+
+There's also `nrepl-force-ssh-for-remote-hosts` which will force the use of ssh for remote connection unconditionally.
+
+WARNING: As nREPL connections are insecure by default you're encouraged to use only SSH tunneling when connecting to servers running outside of your network.
+
+There's a another case in which CIDER may optionally leverage the `ssh` command - when trying to figure out potential target hosts and ports when you're doing `cider-connect-*`.  If  `cider-infer-remote-nrepl-ports` is true, CIDER will use ssh to try to infer nREPL ports on remote hosts (for a direct connection). That option is also set to `nil` by default.
+
+NOTE: Enabling either of these causes CIDER to use https://www.gnu.org/software/tramp/[TRAMP] for some SSH operations, which parses config files such as `~/.ssh/config` and `~/.ssh/known_hosts`. This is known to cause problems with complex or nonstandard ssh configs.
+
+You can safely run `cider-jack-in-*` while working with remote files over TRAMP. CIDER will reuse existing SSH connection's parameters (like port and username) for establishing SSH tunnel.  The same will happen if you try to `cider-connect-*` to a host that matches the one you're currently connected to.
+
+== Connecting via unix domain file socket
+
+NOTE: Unix socket support was introduced in nREPL 0.9. Currently CIDER's support for Unix sockets is considered experimental and its interface might change in future CIDER releases.
+
+When locally running nREPL servers, there is the option to listen on a socket file instead of opening a network port.  As long as access to the parent directory of the socket is sufficiently protected, this is much more secure than the network port, since any local user can access the port-provided REPL.  It can also be be helpful in other cases, e.g. when working with virtual networks (containers) where sharing a file socket can be vastly simpler than managing bridge networks and firewall setups.
+
+After having started an nREPL server on a file socket, e.g. with the `clj` command (see https://nrepl.org/nrepl/usage/server.html for other examples),
+
+[source,sh]
+----
+$ clj -R:nREPL -m nrepl.cmdline --socket nrepl.sock
+----
+
+you can then connect CIDER by using the `local-unix-domain-socket` special hostname with `cider-connect`: kbd:[M-x] `cider-connect` kbd:[RET] `local-unix-domain-socket` kbd:[RET] `nrepl.sock` kbd:[RET].
+
+At the moment only with `leiningen`, commands like `cider-jack-in` will detect and use the unix domain socket if one is requested via the `:socket` argument.  This can be arranged by specifying a prefix argument to `cider-jack-in`, e.g. kbd:[C-u] kbd:[M-x] `cider-jack-in`, or by adjusting `cider-lein-parameters`.
+
+== What's Next?
+
+So, what to do next now that CIDER's ready for action? Here are a few ideas:
+
+* Get familiar with xref:usage/interactive_programming.adoc[interactive programming] and xref:usage/cider_mode.adoc[cider-mode]
+* xref:config/basic_config.adoc[Configure] CIDER to your liking
+* Explore the xref:additional_packages.adoc[additional packages] that can make you more productive

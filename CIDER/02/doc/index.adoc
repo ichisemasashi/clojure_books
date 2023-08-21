@@ -1,0 +1,75 @@
+= CIDER
+
+CIDERは**C**lojure( Script) **I**nteractive **D**evelopment **E**nvironment の**R**ocks! 
+
+CIDERは、Clojureの xref:usage/interactive_programming.adoc[対話型プログラミング] のサポート機能をEmacsに拡張します。この機能は xref:usage/cider_mode.adoc[cider-mode] を中心としたもので、 https://github.com/clojure-emacs/clojure-mode[clojure-mode] を補完するEmacsのマイナーモードです。`clojure-mode`がClojureソースファイルの編集をサポートするのに対して、`cider-mode`はコンパイル、デバッグ、定義とドキュメントの検索、テストの実行などのために実行中のClojureプロセスと対話するためのサポートを追加します。
+
+.SLIMEからインスピレーションを得た
+****
+CIDERはもともと、強力なCommon Lisp対話型開発環境 https://github.com/slime/slime[SLIME] にインスパイアされた。当初、私たちはSLIMEのコア機能をClojureに適応させることから始めましたが、時間の経過とともにCIDERは多くの分野でSLIMEとはかなり異なるものになりました。CIDERの初期の歴史についてもっと知りたい方は、 https://www.youtube.com/watch?v=4X-1fJm25Ww&list=PLZdCLR02grLoc322bYirANEso3mmzvCiI&index=6[この発表] をチェックしてください。
+****
+
+*ぜひご検討ください。
+xref:contributing/funding.adoc[継続的な発展を財政的に支援する].*
+
+== Overview
+
+CIDER aims to provide an interactive development experience similar to the one you'd get when programming in Emacs Lisp, Common Lisp (with https://github.com/slime/slime[SLIME] or https://github.com/joaotavora/sly[Sly]), Scheme (with https://github.com/jaor/geiser[Geiser]) and Smalltalk.
+
+Programmers are expected to program in a very dynamic and incremental manner, constantly re-evaluating existing Clojure definitions and adding new ones to their running applications. You never stop/start a Clojure application while using CIDER - you're constantly interacting with it and changing it.  Depending on who you're asking that approach is named either "interactive programming/development" or "REPL-driven programming". We prefer the former term and we'll be using it throughout CIDER's documentation.
+
+TIP: You can find more details about the typical CIDER workflow in the xref:usage/interactive_programming.adoc[Interactive Programming] section.
+
+CIDER's built on top of https://github.com/nrepl/nrepl[nREPL], the Clojure networked REPL server.
+
+CIDER's basic architecture looks something like this:
+
+image::cider_architecture.png[,600]
+
+Clojure code gets executed by an nREPL server. CIDER sends requests to the server and processes its responses. The server's functionality is augmented by additional https://github.com/clojure-emacs/cider-nrepl[nREPL middleware], designed specifically to address the needs of an interactive development environment like CIDER.
+
+.An Editor-agnostic Foundation
+****
+Much of the nREPL middleware we originally developed for CIDER is editor-agnostic and is being used by other Clojure development environments as well (e.g. https://github.com/tpope/vim-fireplace[vim-fireplace] & https://github.com/BetterThanTomorrow/calva[Calva]).
+****
+
+== Features
+
+CIDER packs plenty of features. Here are some of them (in no particular order):
+
+* Interactive code evaluation
+* Powerful REPL
+* Code completion
+* Code reloading
+* Definition & documentation lookup
+* Enhanced error reporting
+* `clojure.test` integration
+* `clojure.spec` integration
+* Interactive debugger
+* ClojureScript support
+* Support for xref:platforms/overview.adoc[alternative Clojure platforms](e.g. ClojureCLR, babashka, nbb & lumo)
+
+And many many more... The rest of this manual will be exploring CIDER's features in great detail.
+
+== CIDER in Action
+
+Below you can see a typical CIDER session.
+
+image::cider-overview.png[CIDER Screenshot]
+
+Here the user checked the documentation for `clojure.core/merge` straight from the source buffer and then jumped to a REPL buffer to try out something there.
+
+Here's also a video demo of CIDER's essential functionality:
+
+video::aYA4AAjLfT0[youtube]
+
+You can find several other demo videos on the xref:additional_resources.adoc[Additional Resources] page.
+
+== What's Next?
+
+So, what to do next? While you can peruse the documentation in whatever way you’d like, here are a few recommendations:
+
+* xref:basics/installation.adoc[Install] CIDER and get it xref:basics/up_and_running.adoc[up and running]
+* Get familiar with xref:usage/interactive_programming.adoc[interactive programming] and xref:usage/cider_mode.adoc[cider-mode]
+* xref:config/basic_config.adoc[Configure] CIDER to your liking
+* Explore the xref:additional_packages.adoc[additional packages] that can make you more productive
