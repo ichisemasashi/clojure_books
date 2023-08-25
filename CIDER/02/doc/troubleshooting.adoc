@@ -9,7 +9,7 @@
 
 Emacsには超強力なビルトイン  http://www.gnu.org/software/emacs/manual/html_node/elisp/Edebug.html[Emacs Lispデバッガ] があり、これを使うことはあらゆる種類の問題を診断する最良の方法です。
 
-ヒント: デバッガの使い方に関する https://www.youtube.com/watch?v=odkYXXYOxpo[すばらしい実践講座] があります。
+TIP: デバッガの使い方に関する https://www.youtube.com/watch?v=odkYXXYOxpo[すばらしい実践講座] があります。
 
 あるコマンドをデバッグするには、以下のことをする必要があります：
 
@@ -61,7 +61,7 @@ nREPL メッセージのロギングはデフォルトでは有効になって�
 
 メッセージログは `+*nrepl-messages repl-info*+` バッファにあります。アクティブな REPL ごとに1つのバッファがあります。
 
-ヒント: kbd:[C-c M-s m]を押すと関連するメッセージバッファに素早くジャンプできます。
+TIP: kbd:[C-c M-s m]を押すと関連するメッセージバッファに素早くジャンプできます。
 
 == よく遭遇する問題（とその解決方法）
 
@@ -111,62 +111,62 @@ java.net.UnknownServiceException: protocol doesn't support input
 
 CIDER 0.25からはデフォルトで無効になっている。
 
-=== Debugging freezes & lock-ups
+=== フリーズとロックのデバッグ
 
-Sometimes a CIDER command might hang for a while (e.g. due to a bug or a configuration issue). Such problems are super annoying, but are relatively easy to debug. Here are a few steps you can take in such situations:
+CIDERコマンドが（バグや設定の問題などで）しばらくハングアップすることがある。このような問題は非常に厄介ですが、デバッグは比較的簡単です。このような場合に取ることのできるいくつかのステップを紹介しよう：
 
-* Do kbd:[M-x] `toggle-debug-on-quit`
-* Reproduce the problem
-* Hit kbd:[C-g] around 10 seconds into the hang
+* kbd:[M-x] `toggle-debug-on-quit` を実行する。
+* 問題を再現する
+* kbd:[C-g] をハングしてから10秒前後に実行する。
 
-This will bring up a backtrace with the entire function stack, including function arguments. So you should be able to figure out what's going on (or at least what's being required).
+これにより、関数の引数を含む関数スタック全体のバックトレースが表示されます。これで何が起こっているのか（少なくとも何が要求されているのか）がわかるはずだ。
 
-=== Warning saying you have to use newer nREPL
+=== より新しいnREPLを使用しなければならないという警告
 
-CIDER currently requires at least nREPL 0.6 to work properly. As nREPL comes bundled with Leiningen and Boot, from time to time you might have to override the version supplied by them (e.g. if you're forced to use an older version of Leiningen or there's no release bundling the required nREPL version yet). Leiningen users can add this to their `profiles.clj` to force the proper dependency:
+CIDERが正しく動作するためには、現在少なくともnREPL 0.6が必要です。nREPLはLeiningenとBootにバンドルされているため、時折、それらから提供されるバージョンを上書きする必要があるかもしれません（古いバージョンのLeiningenを使わざるを得ない場合や、必要なnREPLバージョンをバンドルしているリリースがまだない場合など）。Leiningen のユーザは `profiles.clj` にこれを追加することで、適切な依存関係を強制することができます：
 
 [source,clojure]
 ----
 {:repl {:dependencies [[nrepl/nrepl "x.y.z"]]}}
 ----
 
-The procedure is pretty similar for Boot.
+Boot でも手順はほぼ同じだ。
 
-IMPORTANT: Make sure you add the newer nREPL dependency to the `:dependencies` key instead of `:plugins` (where the `cider-nrepl` Lein plugin resides). That's a pretty common mistake.
+IMPORTANT: 新しい nREPL 依存関係を `:plugins` の代わりに `:dependencies` キーに追加してください（ここに `cider-nrepl` Lein プラグインがあります）。これはよくある間違いです。
 
-Generally you're advised to use the newest nREPL with CIDER, as bugs get fixed in pretty much every release.
+一般的に、CIDERでは最新のnREPLを使うことを勧められる。ほとんどのリリースでバグが修正されているからだ。
 
-=== Missing clojure-... function after CIDER update
+=== CIDERアップデート後にclojure-...関数が見つからない
 
-Most likely you've updated CIDER, without updating `clojure-mode` as well.
+おそらく、`clojure-mode`を更新せずにCIDERを更新したのでしょう。
 
-CIDER depends on `clojure-mode` and you should always update them together, as the latest CIDER version might depend on functionality present only in the latest `clojure-mode` version.
+CIDERは`clojure-mode`に依存しており、常に一緒に更新する必要があります。最新のCIDERバージョンは、最新の`clojure-mode`バージョンにのみ存在する機能に依存しているかもしれません。
 
-=== I upgraded CIDER using `package.el` and it broke
+=== `package.el` を使ってCIDERをアップグレードしたら壊れた。
 
-The built-in package manager isn't perfect and sometimes it messes up.  If you just updated and encountered an error you should try the following before opening an issue: Go into the `.emacs.d/elpa` directory, delete any folders related to CIDER, restart Emacs and then re-install the missing packages.  Note that the order here matters.
+ビルトインパッケージマネージャーは完璧ではないので、時々混乱します。 もしアップデートしたばかりでエラーに遭遇した場合は、issueを開く前に以下のことを試してみてください： `.emacs.d/elpa`ディレクトリに入り、CIDERに関連するフォルダをすべて削除し、Emacsを再起動してから、足りないパッケージを再インストールしてください。 ここでの順番は重要です。
 
-=== I upgraded CIDER using `package.el` and nothing changed
+=== `package.el` を使ってCIDERをアップグレードしましたが、何も変わりませんでした。
 
-Emacs doesn't load the new files, it only installs them on disk.  To see the effect of changes you have to restart Emacs.
+Emacsは新しいファイルを読み込まず、ディスクにインストールするだけです。 変更の効果を見るにはEmacsを再起動する必要があります。
 
-=== CIDER complains of the `cider-nrepl` version
+=== CIDER が `cider-nrepl` バージョンに文句を言う
 
-This is a warning displayed on the REPL buffer when it starts, and usually looks like this:
+これは REPL バッファが起動したときに表示される警告で、通常は次のようになります：
 
 ____
 *WARNING:* CIDER 0.18.0 requires cider-nrepl x.y.z, but you're currently using cider-nrepl a.b.c. Some functionality may not work properly!
 ____
 
-where `a.b.c` might be an actual version, like `0.17.0`, or it might be `not installed` or `nil`.  The solution to this depends on what you see and on what you're doing.
+ここで `a.b.c` は `0.17.0` のような実際のバージョンかもしれないし、`not installed` や `nil` かもしれない。 これに対する解決策は、何を見るか、何をしているかによる。
 
-==== You see a number like `X.X.X`, and you're starting the REPL with `cider-connect`
+==== `X.X.X` のような数字が表示され、`cider-connect` で REPL を開始しています。
 
-Your project specifies the wrong version for the cider-nrepl middleware. See the xref:basics/middleware_setup.adoc[instructions] in the "Middleware Setup" section.
+あなたのプロジェクトは cider-nrepl ミドルウェアに間違ったバージョンを指定しています。ミドルウェアのセットアップ" セクションの  xref:basics/middleware_setup.adoc[instructions] を参照してください。
 
-==== You see `not installed` or `nil`, and you're starting the REPL with `cider-connect`
+==== `not installed` または `nil` と表示され、`cider-connect` を使って REPL を起動しています。
 
-To use `cider-connect` you need to add the cider-nrepl middleware to your project. See the xref:basics/middleware_setup.adoc[instructions] in the "Middleware Setup" section.
+`cider-connect` を使用するには、プロジェクトに cider-nrepl ミドルウェアを追加する必要があります。「ミドルウェアのセットアップ」セクションの  xref:basics/middleware_setup.adoc[instructions] を参照してください。
 
 ==== You see `not installed` or `nil`, and you're starting the REPL with `cider-jack-in`
 
