@@ -33,43 +33,43 @@ ClojureコードはnREPLサーバーによって実行される。CIDERはサー
 私たちが元々CIDERのために開発したnREPLミドルウェアの多くは、エディタにとらわれず、他のClojure開発環境でも使用されています(例えば、 https://github.com/tpope/vim-fireplace[vim-fireplace] や https://github.com/BetterThanTomorrow/calva[Calva] )。
 ****
 
-== Features
+== 特徴
 
-CIDER packs plenty of features. Here are some of them (in no particular order):
+CIDERには多くの機能が搭載されている。以下はその一部である（順不同）：
 
-* Interactive code evaluation
-* Powerful REPL
-* Code completion
-* Code reloading
-* Definition & documentation lookup
-* Enhanced error reporting
-* `clojure.test` integration
-* `clojure.spec` integration
-* Interactive debugger
-* ClojureScript support
-* Support for xref:platforms/overview.adoc[alternative Clojure platforms](e.g. ClojureCLR, babashka, nbb & lumo)
+* 対話的なコード評価
+* 強力なREPL
+* コード補完
+* コード・リロード
+* 定義とドキュメントの検索
+* エラー報告の強化
+* `clojure.test` の統合
+* `clojure.spec` の統合
+* 対話型デバッガ
+* ClojureScript サポート
+* xref:platforms/overview.adoc[alternative Clojure platforms] (例: ClojureCLR, babashka, nbb & lumo) のサポート。
 
-And many many more... The rest of this manual will be exploring CIDER's features in great detail.
+その他にも... このマニュアルの残りの部分では、CIDERの機能を詳しく説明していきます。
 
-== CIDER in Action
+== 実際のCIDER
 
-Below you can see a typical CIDER session.
+以下は典型的なCIDERセッションの様子である。
 
 image::images/cider-overview.png[CIDER Screenshot]
 
-Here the user checked the documentation for `clojure.core/merge` straight from the source buffer and then jumped to a REPL buffer to try out something there.
+ここでは、ユーザーはソースバッファから直接 `clojure.core/merge` のドキュメントをチェックし、REPLバッファにジャンプしてそこで何かを試しています。
 
-Here's also a video demo of CIDER's essential functionality:
+CIDERの本質的な機能のビデオデモもあります：
 
 video::aYA4AAjLfT0[youtube]
 
-You can find several other demo videos on the xref:additional_resources.adoc[Additional Resources] page.
+xref:additional_resources.adoc[追加リソース] ページには、他にもいくつかのデモビデオがあります。
 
-== What's Next?
+== 次はどうする？
 
-So, what to do next? While you can peruse the documentation in whatever way you’d like, here are a few recommendations:
+では、次に何をすればいいのか？お好きなようにドキュメントを熟読していただきたいが、いくつかお勧めの方法がある：
 
-* xref:basics/installation.adoc[Install] CIDER and get it xref:basics/up_and_running.adoc[up and running]
-* Get familiar with xref:usage/interactive_programming.adoc[interactive programming] and xref:usage/cider_mode.adoc[cider-mode]
-* xref:config/basic_config.adoc[Configure] CIDER to your liking
-* Explore the xref:additional_packages.adoc[additional packages] that can make you more productive
+* xref:basics/installation.adoc[CIDERをインストールする]  xref:basics/up_and_running.adoc[稼働させる]
+* xref:usage/interactive_programming.adoc[対話型プログラミング] と xref:usage/cider_mode.adoc[ cider-mode] に慣れる。
+* xref:config/basic_config.adoc[設定] CIDER を自分好みにする。
+* xref:additional_packages.adoc[追加パッケージ] で生産性を上げることができます。

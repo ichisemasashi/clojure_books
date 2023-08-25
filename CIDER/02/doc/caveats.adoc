@@ -1,29 +1,29 @@
-= Caveats
+= 注意事項
 :experimental:
 
-CIDER is certainly not perfect and has some limitations that everyone should be aware of.
+CIDERは確かに完璧ではなく、誰もが知っておくべきいくつかの制限がある。
 
-== ClojureScript limitations
+== ClojureScriptの制限
 
-Currently, the following features are not supported for ClojureScript development:
+現在、以下の機能はClojureScript開発ではサポートされていません：
 
-* Reloading
-* Running tests
-* Tracing
-* Debugging (check out https://github.com/clojure-emacs/cider/issues/1416[this ticket] dedicated to porting the debugger to ClojureScript)
+* リロード
+* テストの実行
+* トレース
+* デバッグ (デバッガをClojureScriptに移植することに特化した https://github.com/clojure-emacs/cider/issues/1416[このチケット] をチェックしてください)
 * Enlighten
 
-There is currently no support for both Clojure and ClojureScript evaluation in the same nREPL session. If Piggieback is active, code evaluation and all features will assume ClojureScript.
+現在のところ、同じnREPLセッションでClojureとClojureScriptの両方を評価するサポートはありません。Piggiebackがアクティブな場合、コード評価とすべての機能はClojureScriptを想定しています。
 
 == Microsoft Windows
 
-=== Line separators
+=== 行区切り文字
 
-On Microsoft Windows the JVM default line separator string is `\r\n` which can appear in Emacs as `+^M+` characters at the end of lines printed out by the JVM. One option is to set the `buffer-display-table` to not show these characters as detailed http://stackoverflow.com/questions/10098925/m-character-showing-in-clojure-slime-repl/11787550#11787550[here] (changing `slime-repl-mode-hook` to `cider-repl-mode-hook`). Alternatively, setting the system property `line.separator` to `\n` at JVM startup will stop the carriage return from being printed and will fix output in all cider buffers. To do so add `"-Dline.separator=\"\n\""` to `:jvm-opts` in `~/.lein/profiles.clj`.
+Microsoft Windowsでは、JVMのデフォルトの行区切り文字列は `\r\n` で、EmacsではJVMが出力する行の最後に `+^M+` 文字として表示されることがある。1つのオプションは、 http://stackoverflow.com/questions/10098925/m-character-showing-in-clojure-slime-repl/11787550#11787550[こちら] で詳しく説明されているように、これらの文字を表示しないように `buffer-display-table` を設定することである（`slime-repl-mode-hook` を `cider-repl-mode-hook` に変更する）。あるいは、JVM起動時にシステムプロパティ `line.separator` を `\n` に設定すると、キャリッジリターンが出力されなくなり、すべてのサイダーバッファの出力が修正されます。そうするには、 `~/.lein/profiles.clj` の `:jvm-opts` に `"-Dline.separator=\”\n\""` を追加してください。
 
-=== Definition lookup in jar files
+=== jarファイルの定義検索
 
-In order for source lookup commands to work with `.jar` files you'll need to install either http://www.7-zip.org/[7zip] or `pkunzip` and add its installation folder to Emacs's `exec-path`. Here's an example:
+ソース検索コマンドを `.jar` ファイルで動作させるには、http://www.7-zip.org/[7zip] または `pkunzip` をインストールして、そのインストールフォルダを Emacs の `exec-path` に追加する必要があります。以下はその例です：
 
 [source,lisp]
 ----
@@ -32,29 +32,28 @@ In order for source lookup commands to work with `.jar` files you'll need to ins
 
 == powershell.el
 
-The powershell inferior shell mode truncates CIDER's REPL output when loaded. As a workaround remove
+powershellの劣ったシェル・モードは、ロード時にCIDERのREPL出力を切り捨てます。回避策として
 
 [source,lisp]
 ----
 (require 'powershell)
 ----
 
-from your Emacs config.
+をEmacsの設定から削除してください。
 
-== ClojureCLR Support
+== ClojureCLRサポート
 
-CIDER currently has very basic support ClojureCLR (via Arcadia's nREPL server). The reasons for this are the following:
+CIDERは現在、非常に基本的なClojureCLRをサポートしています（ArcadiaのnREPLサーバー経由）。その理由は以下の通りです：
 
-* nREPL itself runs only on the JVM (because it leverages Java APIs internally). There's an https://github.com/clojure/clr.tools.nrepl[nREPL port for ClojureCLR], but it's not actively maintained and it doesn't behave like the Clojure nREPL.
-* `cider-nrepl` uses a lot of Java code internally itself.
+* nREPL自体はJVM上でのみ動作します（内部的にJava APIを活用しているため）。 https://github.com/clojure/clr.tools.nrepl[nREPL port for ClojureCLR] がありますが、活発にメンテナンスされておらず、Clojure nREPLのようには動作しません。
+* `cider-nrepl`は内部的に多くのJavaコードを使用しています。
 
-Those issues are not insurmountable, but are beyond the scope of our current roadmap.  If someone would like to tackle them, we'd be happy to provide assistance.
+これらの問題は克服できないものではありませんが、現在のロードマップの範囲を超えています。 もし誰かがそれらに取り組みたいのであれば、喜んで支援を提供します。
 
-== Injecting dependencies and Leiningen pedantic: abort mode
+== 依存関係のインジェクションと Leiningen pedantic: アボートモード
 
-Because injection currently creates an override of the nREPL dependency that Leingingen also pulls in starting up the REPL will fail if `:pedantic? :abort` is set. There are several ways to address this:
+現在、インジェクションは nREPL 依存性のオーバーライドを作成し、Leiningen もそれをプルしているため、`:pedantic? :abort` が設定されていると REPL の起動に失敗します。これに対処するにはいくつかの方法があります：
 
-* Remove the `:pedantic? :abort` setting.
-* Switch off injecting the dependencies with setting `cider-inject-dependencies-at-jack-in` to `nil` and provide the dependencies by editing your `~/.lein/profiles.clj` as described in the xref:basics/middleware_setup.adoc#setting-up-a-standalone-repl[standalone REPL] section.
-* Adjust the value of `cider-injected-nrepl-version` to the same nREPL version as the
-one that's bundled with Leiningen.
+* `pedantic? :abort` の設定を削除する。
+* xref:basics/middleware_setup.adoc#setting-up-a-standalone-repl[standalone REPL] セクションで説明されているように `~/.lein/profiles.clj` を編集して依存関係を提供してください。
+* `cider-injected-nrepl-version` の値を Leiningen にバンドルされているものと同じ nREPL バージョンに調整してください。

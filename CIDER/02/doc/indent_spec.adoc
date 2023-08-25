@@ -1,8 +1,8 @@
-= Indentation Specification
+= インデント仕様
 
-== Overview
+== 概要
 
-An indent spec can be used to specify intricate indentation rules for the more complex macros (or functions). It is provided as a value in the var metadata, under the `:style/indent` key.
+インデント指定は、より複雑なマクロ（または関数）の複雑なインデントルールを指定するために使用できます。これは var メタデータの `:style/indent` キーの値として提供されます。
 
 [source,clojure]
 ----
@@ -13,25 +13,25 @@ An indent spec can be used to specify intricate indentation rules for the more c
   ...cut for brevity...)
 ----
 
-It can take one of 3 forms:
+このインデントには3つの形式がある：
 
-* Absent, meaning _"indent like a regular function call"_.
-* An integer or a keyword `x`, which is shorthand for the list `[x]`.
-* A list, meaning that this function/macro takes a number of special arguments, and then all other arguments are non-special.
- ** *The first element* describes how the arguments are indented relative to the sexp. It can be:
-  *** An integer `n`, which indicates this function/macro takes `n` special arguments (see below for the meaning of this).
-  *** The keyword `:form`, meaning _"every arg indents like a function form"_.
-  *** The keyword `:defn`, which means _"every arg not on the first line is non-special"_.
- ** *Each following element* is an indent spec on its own, and it details the internal structure of the argument on the same position as this element. So, when that argument is a form, this element specifies how to indent that form internally (if it's not a form the spec is irrelevant).
- ** If the function/macro has more arguments than the list has elements, the last element of the list applies to all remaining arguments.
+* 無し、つまり_""通常の関数呼び出しのようにインデントする"_。
+* 整数またはキーワード `x` 、これはリスト `[x]` の省略形です。
+* リスト、つまりこの関数/マクロはいくつかの特別な引数を取り、それ以外の引数はすべて特別な引数ではありません。
+** 最初の要素* は、引数が sexp に対してどのようにインデントされているかを表します。それは次のようになります：
+*** 整数 `n` は、この関数/マクロが `n` 個の特別な引数を取ることを示します(この意味については後述します)。
+  *** キーワード `:form` は、_"すべての引数は関数のフォームのようにインデントされる"_ を意味します。
+  *** キーワード `:defn` は、_"1行目にないすべての引数は特殊でない"_ を意味します。
+** 以下の*各要素*は、それ自体がインデント仕様であり、この要素と同じ位置にある引数の内部構造を詳述しています。つまり、引数がフォームである場合、この要素はそのフォームを内部的にどのようにインデントするかを指定します（フォームでない場合は、この指定は関係ありません）。
+ ** 関数/マクロがリストの要素数よりも多くの引数を持つ場合、リストの最後の要素が残りのすべての引数に適用されます。
 
 '''
 
-== Examples
+== 例
 
-Here we go into several examples using some well-known macros and forms from `clojure.core`. Obviously these are already known by `clojure-mode`, so you don't need to specify them. They are just examples to guide you when writing indent specs for your own macros, or for macros from third party libs.
+ここでは、`clojure.core` からいくつかのよく知られたマクロとフォームを使用したいくつかの例を紹介します。明らかに、これらは `clojure-mode` によって既に知られているので、指定する必要はありません。これらは、独自のマクロやサードパーティのライブラリにあるマクロのインデント仕様を書くときのガイドとなる単なる例です。
 
-One very simple example is the `do` form. All of its arguments get the same indentation, and none of them are special. So its indent spec is simply `[0]`, or `0` for short.
+非常に単純な例として `do` フォームがあります。引数はすべて同じインデントで、どれも特別なものではありません。そのため、インデント指定は単純に `[0]` 、略して `0` となります。
 
 [source,clojure]
 ----
@@ -44,15 +44,15 @@ One very simple example is the `do` form. All of its arguments get the same inde
     (want))
 ----
 
-Sticking to simplicity, the `when-let*` macro has one special argument (the binding vector) and there's no out-of-the-ordinary internal structure involved. So the indent spec is just `1` (which is shorthand for `[1]`).
+単純さにこだわって、`when-let*` マクロには特別な引数（バインディングベクター）が1つだけあり、特別な内部構造はありません。そのため、インデントの指定は `1` だけです（これは `[1]` の省略形です）。
 
 '''
 
-Let's see something more sophisticated. If the `defrecord` indent spec used by `clojure-mode` is `[2 :form :form [1]]`. This is saying:
+もっと洗練されたものを見てみよう。もし `clojure-mode` が使用する `defrecord` インデント指定が `[2 :form :form [1]]` である場合。これはこう言っています：
 
-* `defrecord` has 2 special arguments (the name and the arglist).
-* The first two arguments have no special internal structure.
-* All remaining arguments have an internal indent spec of `[1]` (which means only the arglist is indented specially and the rest is the body).
+* `defrecord`には2つの特別な引数（名前とarglist）があります。
+* 最初の2つの引数は特別な内部構造を持っていません。
+* 残りのすべての引数は `[1]` の内部インデント仕様を持っています（つまり、arglistだけが特別にインデントされ、残りは本体です）。
 
 [source,clojure]
 ----
@@ -65,11 +65,11 @@ Let's see something more sophisticated. If the `defrecord` indent spec used by `
     "My very own thing!!"))
 ----
 
-For something even more complicated: `letfn` is `+[1 [[:defn]] :form]+`. This means
+さらに複雑なものには `letfn` は `+[1 [[:defn]] :form]+` です。これは次のことを意味する。
 
-* `letfn` has one special argument (the bindings list).
-* The first arg has an indent spec of `+[[:defn]]+`, which means all forms _inside_ the first arg have an indent spec of `+[:defn]+`.
-* The second argument, and all other arguments, are regular forms.
+* `letfn` は1つの特別な引数（バインディングリスト）を持つ。
+* 最初の引数のインデント指定は `+[[:defn]]+` であり、これは最初の引数の内側のすべてのフォームのインデント指定が `+[:defn]+` であることを意味します。
+* 第2引数、そして他のすべての引数は通常のフォームである。
 
 [source,clojure]
 ----
@@ -80,11 +80,11 @@ For something even more complicated: `letfn` is `+[1 [[:defn]] :form]+`. This me
   (six-times 15))
 ----
 
-== Special Arguments
+== 特殊引数
 
-Many macros have a number of "special" arguments, followed by an arbitrary number of "non-special" arguments (sometimes called the body). The "non-special" arguments have a small indentation (usually 2 spaces). The special arguments are usually on the same line as the macro name, but, when necessary, they are placed on a separate line with additional indentation.
+多くのマクロは、いくつかの "特殊 "引数を持ち、その後に任意の数の "非特殊 "引数（ボディと呼ばれることもある）が続く。”非特殊"引数には小さなインデント（通常はスペース2個）がある。特殊引数は通常マクロ名と同じ行にありますが、必要な場合にはインデントを加えて別の行に置きます。
 
-For instance, `defrecord` has two special arguments, and here's how it might be indented:
+例えば、`defrecord`には2つの特別引数があり、以下のようにインデントされます：
 
 [source,clojure]
 ----
@@ -95,7 +95,7 @@ For instance, `defrecord` has two special arguments, and here's how it might be 
     (.assoc pretty x 10)))
 ----
 
-Here's another way one could do it:
+もう1つの方法を紹介しよう：
 
 [source,clojure]
 ----
@@ -106,48 +106,50 @@ Here's another way one could do it:
     (.assoc pretty x 10)))
 ----
 
-_The point of the indent spec is *not* to specify how many spaces to use._
+_インデント仕様のポイントは、いくつのスペースを使うかを指定することでは *ありません*。_
 
-The point is just to say "a defrecord has *2* special arguments", and then let the editor and the user come to an agreement on how many spaces they like to use for special and non-special arguments.
+要は、"defrecord has *2* special arguments "と言って、特別な引数とそうでない引数にいくつのスペースを使うかについて、エディターとユーザーが合意すればいいのです。
 
-== Internal indentation
+== 内部インデント
 
-The issue goes a bit deeper. Note the last argument in that `defrecord`. A regular function form would be internally indented as:
+問題はもう少し深い。`defrecord`の最後の引数に注目してほしい。通常の関数形式は内部的に次のようにインデントされる：
 
+[source,clojure]
 ----
 (assoc [_ x]
        (.assoc pretty x 10))
 ----
 
-But this is not a regular function call, it's a definition. So we want to specify that this form internally has 1 special argument (the arglist vector), so that it will be indented like this:
+しかし、これは通常の関数呼び出しではなく、関数定義である。そこで、この形式が内部的に1つの特別な引数（arglistベクトル）を持つことを指定し、このようにインデントされるようにしたい：
 
+[source,clojure]
 ----
 (assoc [_ x]
   (.assoc pretty x 10))
 ----
 
-The indent spec does this as well. It lets you specify that, for each argument beyond the 2nd, if it is a form, it should be internally indented as having 1 special argument.
+これはインデント仕様でも同様だ。2つ目以降の各引数について、それがフォームである場合は、内部的に1つの特別な引数を持つものとしてインデントするように指定できる。
 
-== Indentation inference
+== インデントの推論
 
-It's worth noting that starting from cider-nrepl 0.32, indentation can be inferred for you, so you wouldn't have to specify it.
+cider-nrepl 0.32から、インデントが推論されるようになり、指定する必要がなくなったことは注目に値します。
 
-For that to happen, it's most recommended that you write idiomatic Clojure macros:
+そのためには、慣用的なClojureマクロを書くことが最も推奨されます：
 
-* If your macro is analog to a clojure.core one, name it identically
-  * e.g. name your macro `defprotocol`, not `my-defprotocol`
-    * (this is intentful usage of Clojure's namespace system)
-* If your macro is analog to a clojure.core one, mirror all its arglists
-  * The exact names that you choose for your args do not matter
-  * It's the structure of the arglists that have to match.
-  * It doesn't matter if you express a given arg as a name, or as a destructured map/vector.
-* Name 'body' args like using clojure.core customs
+* あなたのマクロがclojure.coreのものと類似している場合、同じ名前を付けます。
+  * 例えば、 `my-defprotocol`ではなく、 `defprotocol`というマクロ名を付けます。
+    *  ( これはClojureの名前空間システムの意図的な使用法です)
+* あなたのマクロがclojure.coreのものに類似している場合、そのすべてのarglistをミラーします。
+  * 引数の正確な名前は重要ではありません。
+  * 一致しなければならないのは、arglistの構造です。
+  * 与えられたargを名前として表すか、構造化されていないマップ/ベクトルとして 表現するかは問題ではありません。
+* clojure.coreカスタムを使用するように、'body'argsに名前を付けます。
   * good: `[opts body]`
   * bad: `[opts etc]`
   * good: `[& body]`
   * bad: `[& etc]`
-  * Other commonly accepted names include `forms`, `clauses`, etc.
+  * 他の一般的に受け入れられている名前には `forms` や `clauses` などがあります。
 
-You certainly don't _have_ to follow these suggestions - it's only for your convenience, as the indentation produced by CIDER will be better.
+確かに、これらの提案に従わなければならないわけではありません -- CIDERが生成するインデントがより良いものになるため、便宜上そうしているだけです。
 
-Other tools may eventually also use these very same inference rules.
+他のツールも最終的にはこれらとまったく同じ推論ルールを使うかもしれません。

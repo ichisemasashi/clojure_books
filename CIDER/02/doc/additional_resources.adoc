@@ -1,12 +1,12 @@
-= Additional Resources
+= 追加リソース
 
-Here we're collecting external resources on CIDER that are complementary to the user's manual. Please, keep in mind that as CIDER is constantly evolving, some of those resources might be out-of-date by the time you get to them.
+ここでは、ユーザーマニュアルを補完するCIDERに関する外部リソースを集めています。CIDERは常に進化しているため、これらのリソースの中には、あなたが入手する頃には古くなっているものもあるかもしれないことをご留意ください。
 
-NOTE: Feel free to submit any useful CIDER resources that you've come across.
+注：あなたが見つけたCIDERの有用なリソースを自由に投稿してください。
 
-== Quick reference
+== クイックリファレンス
 
-A single-page quick reference PDF for CIDER commands is available https://github.com/clojure-emacs/cider/blob/master/refcard/cider-refcard.pdf[here]. This PDF can be created manually by running `pdflatex` on https://github.com/clojure-emacs/cider/blob/master/refcard/cider-refcard.tex[the CIDER refcard LaTeX file].
+CIDERコマンドのクイックリファレンスPDFが https://github.com/clojure-emacs/cider/blob/master/refcard/cider-refcard.pdf[こちら] にあります。このPDFは https://github.com/clojure-emacs/cider/blob/master/refcard/cider-refcard.tex[the CIDER refcard LaTeX file] で `pdflatex` を実行することで手動で作成することができます。
 
 == Demos
 
@@ -19,12 +19,12 @@ A single-page quick reference PDF for CIDER commands is available https://github
 * https://www.youtube.com/watch?v=efPPh2jUrkg[Clojure in Emacs from absolute zero]
 * https://www.youtube.com/watch?v=4ecC3jqHooc[Clojure Development Workflow with Spacemacs and CIDER]
 
-== Presentations
+== 発表内容
 
-* https://www.youtube.com/watch?v=4X-1fJm25Ww&list=PLZdCLR02grLoc322bYirANEso3mmzvCiI&index=6[The Evolution of the Emacs tooling for Clojure] - presented at Clojure/conj 2014; dedicated to the origin and the architecture of CIDER and related tooling
-* https://skillsmatter.com/skillscasts/7225-cider-the-journey-so-far-and-the-road-ahead[CIDER: The Journey so Far and the Road Ahead] - presented at ClojureX 2015; dedicated to CIDER 0.9 and 0.10 and the future of the project.
-* https://www.youtube.com/watch?v=3Q7APa2Htns&list=PLPgnbBCmP6ZMfHPJ4yMwuoLEZvEe5LVe8[A Few Pints of CIDER] - presented at Clojure Remote 2016; dedicated to CIDER 0.11; features a 10-minute live demo of some cool CIDER features.
-* https://www.youtube.com/watch?v=8wLwbpCxRf0&list=PLZdCLR02grLq4e8-1P2JNHBKUOLFTX3kb[CIDER: Inside the Brewery] - presented at Clojure/West 2016; dedicated to CIDER 0.12.
+* https://www.youtube.com/watch?v=4X-1fJm25Ww&list=PLZdCLR02grLoc322bYirANEso3mmzvCiI&index=6[The Evolution of the Emacs tooling for Clojure] - Clojure/conj 2014で発表; CIDERと関連ツールの起源とアーキテクチャについて。
+* https://skillsmatter.com/skillscasts/7225-cider-the-journey-so-far-and-the-road-ahead[CIDER: The Journey so Far and the Road Ahead] - ClojureX 2015で発表; CIDER 0.9と0.10とプロジェクトの未来について。
+* https://www.youtube.com/watch?v=3Q7APa2Htns&list=PLPgnbBCmP6ZMfHPJ4yMwuoLEZvEe5LVe8[A Few Pints of CIDER] - Clojure Remote 2016で発表; CIDER 0.11に向けたもの; いくつかのクールなCIDER機能の10分間のライブデモが特徴。
+* https://www.youtube.com/watch?v=8wLwbpCxRf0&list=PLZdCLR02grLq4e8-1P2JNHBKUOLFTX3kb[CIDER: Inside the Brewery] - Clojure/West 2016で発表; CIDER 0.12に対応。
 
 == Podcasts
 
@@ -32,8 +32,8 @@ A single-page quick reference PDF for CIDER commands is available https://github
 * https://soundcloud.com/defn-771544745/36-a-long-glass-of-cider-with-bozhidar-batsov-aka-bbatsov[defn's episode on CIDER]
 * https://www.therepl.net/episodes/34/[The REPL's episode on CIDER and its Orchard]
 
-== Tutorials
+== チュートリアル
 
-IMPORTANT: Keep in mind that third-party tutorials might be outdated by time you get to read them.
+重要: サードパーティのチュートリアルは、あなたが読む頃には古くなっているかもしれません。
 
-* https://practicalli.github.io/spacemacs/[Clojure Development with Spacemacs]
+* https://practicalli.github.io/spacemacs/[Clojure Development with Spacemacs].

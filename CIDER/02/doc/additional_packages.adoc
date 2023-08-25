@@ -1,74 +1,74 @@
-= Additional Packages
+= 追加パッケージ
 
-There are many additional Emacs packages that can enhance your Clojure programming experience. The majority of the minor modes listed here should be enabled for both `cider-repl-mode` and `clojure-mode` for optimal effects.
+あなたの Clojure プログラミング体験を向上させることができる多くの追加 Emacs パッケージがあります。ここに挙げたマイナーモードの大部分は、最適な効果を得るために `cider-repl-mode` と `clojure-mode` の両方で有効にする必要があります。
 
-The packages listed here belong to three categories:
+ここにリストされたパッケージは3つのカテゴリに属します：
 
-* CIDER extensions
-* Generic Emacs packages useful for Clojure programming
-* CIDER alternatives
+* CIDER 拡張
+* Clojure プログラミングに有用な汎用 Emacs パッケージ
+* CIDER 代替
 
-== CIDER Extensions
+== CIDER拡張機能
 
-IMPORTANT: Make sure that the version of any extension you've installed is compatible with your CIDER version.
+重要：インストールした拡張機能のバージョンがCIDERのバージョンと互換性があることを確認してください。
 
-CIDER extensions typically are Emacs packages that built on top of CIDER's Emacs Lisp API.  Some of them ship with extra nREPL middleware as well (e.g. `clj-refactor`). Typically packages that rely on middleware would hook into CIDER's middleware injection functionality and inject their own functionality automatically as well.
+CIDER拡張は通常、CIDERのEmacs Lisp API上に構築されたEmacsパッケージです。 その中には追加のnREPLミドルウェアも同梱されているものもあります(`clj-refactor`など)。通常、ミドルウェアに依存するパッケージはCIDERのミドルウェア注入機能にフックし、独自の機能も自動的に注入します。
 
-NOTE: Keep in mind that currently there are no "official" CIDER extensions and the packages on the list are not maintained by CIDER's Core Team. Their quality and level of maintenance may vary significantly.
+注意: 現在、CIDERの「公式な」拡張機能はなく、リストにあるパッケージはCIDERのコアチームによってメンテナンスされていないことに注意してください。その品質やメンテナンスのレベルは大きく異なる可能性があります。
 
 === clj-decompiler
 
-https://github.com/bsless/clj-decompiler.el[clj-decompiler] allows you to quickly decompile Clojure code to Java bytecode. It's based on https://github.com/clojure-goes-fast/clj-java-decompiler[clj-java-decompiler].
+https://github.com/bsless/clj-decompiler.el[clj-decompiler] を使うと、ClojureコードをJavaバイトコードに素早くデコンパイルできます。これは https://github.com/clojure-goes-fast/clj-java-decompiler[clj-java-decompiler] に基づいています。
 
 === clj-refactor
 
-https://github.com/clojure-emacs/clj-refactor.el[clj-refactor] builds on top of `clojure-mode` and CIDER and adds a ton of extra functionality (e.g. the ability to thread/unthread expression, find and replace usages, introduce let bindings, extract function and so on).
+https://github.com/clojure-emacs/clj-refactor.el[clj-refactor] は`clojure-mode`とCIDERの上に構築され、大量の追加機能(例えば、式をスレッド/アンスレッドする機能、用例の検索と置換、letバインディングの導入、関数の抽出など)を追加します。
 
-A full list of features is available https://github.com/clojure-emacs/clj-refactor.el/wiki[here].
+機能の完全なリストは https://github.com/clojure-emacs/clj-refactor.el/wiki[ここ] から入手できる。
 
-We hope to incorporate some of its features into `clojure-mode` and CIDER themselves down the road.
+将来的には、この機能のいくつかを `clojure-mode` と CIDER 自身に組み込みたいと考えています。
 
 === emidje
 
-https://github.com/nubank/emidje[Emidje] is a test runner, report viewer and formatting tool for https://github.com/marick/Midje[Midje] within Emacs.
+https://github.com/nubank/emidje[Emidje] は  https://github.com/marick/Midje[Midje]  用のテストランナー、レポートビューア、フォーマットツールです。
 
-Emidje extends CIDER to provide support for Midje tests in a similar fashion as `cider-test.el` does for `clojure.test` tests. In fact, most of Emidje's functionalities were strongly inspired by `cider-test.el` features.
+Emidje は CIDER を拡張して、`cider-test.el` が `clojure.test` テストをサポートしているのと同様の方法で Midje テストをサポートしています。実際、Emidje のほとんどの機能は `cider-test.el` の機能に強くインスパイアされています。
 
 === kaocha-runner
 
-https://github.com/magnars/kaocha-runner.el[kaocha-runner] provides https://github.com/lambdaisland/kaocha[Kaocha] integration for Emacs.
+https://github.com/magnars/kaocha-runner.el[kaocha-runner] は https://github.com/lambdaisland/kaocha[Kaocha] をEmacsに統合します。
 
 === helm-cider
 
-https://github.com/clojure-emacs/helm-cider[helm-cider] provides a Helm interface for certain CIDER commands (e.g. `cider-apropos`).
+https://github.com/clojure-emacs/helm-cider[helm-cider]は特定のCIDERコマンド（例えば`cider-apropos`）のためのHelmインターフェースを提供します。
 
 === cider-hydra
 
-https://github.com/clojure-emacs/cider-hydra[cider-hydra] provides a nice way to navigate groups of related CIDER commands.
+https://github.com/clojure-emacs/cider-hydra[cider-hydra] は、関連するCIDERコマンドのグループをナビゲートする素晴らしい方法を提供します。
 
-You can think of it as a fancier https://github.com/justbur/emacs-which-key[which-key].
+よりファンシーな https://github.com/justbur/emacs-which-key[which-key] と考えることができます。
 
 === flycheck-clj-kondo
 
-https://github.com/borkdude/flycheck-clj-kondo/[flycheck-clj-kondo] is a Flycheck checker for Clojure that provides instant linting of clojure code as you type, via https://github.com/borkdude/clj-kondo[clj-kondo].
+https://github.com/borkdude/flycheck-clj-kondo/[flycheck-clj-kondo] はClojure用のFlycheckチェッカーで、 https://github.com/borkdude/clj-kondo[clj-kondo] を介して、入力中に即座にclojureコードのリンティングを行います。
 
-https://github.com/borkdude/clj-kondo[clj-kondo] is a great way of preventing yourself from writing buggy code.
+https://github.com/borkdude/clj-kondo[clj-kondo] は、バグだらけのコードを書かないようにする素晴らしい方法です。
 
 === squiggly-clojure
 
-https://github.com/clojure-emacs/squiggly-clojure[squiggly-clojure] is a Flycheck checker for Clojure, using tools like https://github.com/jonase/eastwood[eastwood], http://typedclojure.org/[core.typed] and https://github.com/jonase/kibit[kibit].
+https://github.com/clojure-emacs/squiggly-clojure[squiggly-clojure] は、 https://github.com/jonase/eastwood[eastwood] 、 http://typedclojure.org/[core.typed]、https://github.com/jonase/kibit[kibit] といったツールを使ったClojure用のフライチェック・チェッカーです。
 
 === sayid
 
-http://clojure-emacs.github.io/sayid/[sayid] is a powerful alternative of CIDER's built-in basic tracing functionality.
+http://clojure-emacs.github.io/sayid/[sayid] は、CIDERに内蔵されている基本的なトレース機能の強力な代替機能です。
 
-== Generic Emacs Extensions
+== 汎用Emacs拡張
 
-Most packages in the following list are standard Emacs minor modes that work with most major modes, but are especially handy for Lisp-like languages like Clojure.
+以下のリストにあるパッケージのほとんどは、標準的なEmacsのマイナーモードで、ほとんどのメジャーモードで動作しますが、ClojureのようなLispライクな言語では特に便利です。
 
 === subword-mode
 
-Enabling `CamelCase` support for editing commands(like `forward-word`, `backward-word`, etc) in the REPL is quite useful since we often have to deal with Java class and method names. The built-in Emacs minor mode `subword-mode` provides such functionality:
+REPLで編集コマンド(`forward-word`、`backward-word`など)の `CamelCase` サポートを有効にすることは、Javaのクラス名やメソッド名を扱うことが多いので、とても便利です。Emacs組み込みのマイナーモード `subword-mode` はそのような機能を提供する：
 
 [source,lisp]
 ----
@@ -77,18 +77,18 @@ Enabling `CamelCase` support for editing commands(like `forward-word`, `backward
 
 === Paredit
 
-The use of http://mumble.net/~campbell/emacs/paredit.html[paredit] when editing Clojure (or any other Lisp) code is highly recommended.  You're probably using it already in your `clojure-mode` buffers (if you're not you probably should). You might also want to enable `paredit` in the REPL buffer as well:
+Clojure（または他のLisp）コードを編集するときは、 http://mumble.net/~campbell/emacs/paredit.html[paredit] の使用を強く推奨します。 おそらく `clojure-mode` バッファですでに使っていることでしょう(もし使っていないなら、使うべきでしょう)。また、REPLバッファでも `paredit` を有効にするとよいでしょう：
 
 [source,lisp]
 ----
 (add-hook 'cider-repl-mode-hook #'paredit-mode)
 ----
 
-==== Unsetting Paredit binding of RET key
+==== RETキーのPareditバインディングの解除
 
-In recent versions of Paredit (25+), `RET` is bound to `paredit-RET`. This can cause unexpected behaviour in the repl when `paredit-mode` is enabled, e.g. it appears to hang after hitting `RET` instead of evaluating the last form.
+Paredit の最近のバージョン (25+) では `RET` は `paredit-RET` にバインドされている。このため、`paredit-mode`が有効になっているときにreplが予期しない動作をすることがあります。例えば、`RET`を押した後に最後のフォームを評価せずにハングしてしまうようなことがあります。
 
-You can disable this Paredit behaviour by adding the following to your `init.el`:
+このPareditの動作を無効にするには、`init.el`に以下を追加してください：
 
 [source,lisp]
 ----
@@ -97,7 +97,7 @@ You can disable this Paredit behaviour by adding the following to your `init.el`
 
 === Smartparens
 
-https://github.com/Fuco1/smartparens[smartparens] is an excellent alternative to paredit. Many Clojure hackers have adopted it recently and you might want to give it a try as well. To enable `smartparens` in the REPL buffer use the following code:
+https://github.com/Fuco1/smartparens[smartparens] はpareditの優れた代替手段です。多くのClojureハッカーが最近これを採用しているので、あなたも試してみるとよいでしょう。REPLバッファで`smartparens`を有効にするには、以下のコードを使います：
 
 [source,lisp]
 ----
@@ -106,7 +106,7 @@ https://github.com/Fuco1/smartparens[smartparens] is an excellent alternative to
 
 === rainbow-delimiters
 
-https://github.com/Fanael/rainbow-delimiters[RainbowDelimiters] is a minor mode which highlights parentheses, brackets, and braces according to their depth. Each successive level is highlighted in a different color. This makes it easy to spot matching delimiters, orient yourself in the code, and tell which statements are at a given depth. Assuming you've already installed RainbowDelimiters you can enable it in the REPL like this:
+https://github.com/Fanael/rainbow-delimiters[RainbowDelimiters] は、括弧、波括弧、中括弧をその深さに応じてハイライトするマイナーモードです。各レベルは異なる色でハイライトされます。これによって、マッチする区切り記号を見つけやすくなり、コード内の方向が定まり、どのステートメントが指定された深さにあるかがわかります。すでにRainbowDelimitersがインストールされていれば、REPLで次のように有効にすることができる：
 
 [source,lisp]
 ----
@@ -115,23 +115,23 @@ https://github.com/Fanael/rainbow-delimiters[RainbowDelimiters] is a minor mode 
 
 === eval-sexp-fu
 
-https://github.com/hchbaw/eval-sexp-fu.el[eval-sexp-fu] provides some visual feedback when evaluating expressions. https://github.com/clojure-emacs/cider-eval-sexp-fu[cider-eval-sexp-fu] provides CIDER integration for `eval-sexp-fu`.
+https://github.com/hchbaw/eval-sexp-fu.el[eval-sexp-fu] は式を評価するときにいくつかの視覚的なフィードバックを提供します。 https://github.com/clojure-emacs/cider-eval-sexp-fu[cider-eval-sexp-fu] は`eval-sexp-fu`にCIDER統合を提供します。
 
 [source,lisp]
 ----
 (require 'cider-eval-sexp-fu)
 ----
 
-== Alternatives
+== 代替
 
-IMPORTANT: It's generally a bad idea to mix Clojure programming environments, as all of those tend to modify `clojure-mode` 's keymap while active. Run only one environment at a time unless you really know what you're doing.
+重要: 一般的にClojureプログラミング環境を混在させるのは良くない。一度に1つの環境だけを実行するようにしてください。
 
-This section enumerates other Emacs packages that provide a Clojure programming environment for Emacs.
+このセクションでは、Emacs用のClojureプログラミング環境を提供する他のEmacsパッケージを列挙します。
 
 === Inf-clojure
 
-This package provides basic interaction with a Clojure subprocess (REPL). It's based on ideas from the popular inferior-lisp package.
+本パッケージはClojureサブプロセス(REPL)との基本的なインタラクションを提供します。人気のある inferior-lisp パッケージからのアイデアに基づいています。
 
-https://github.com/clojure-emacs/inf-clojure[inf-clojure] has two components - a nice Clojure REPL with auto-completion and a minor mode (`inf-clojure-minor-mode`), which extends clojure-mode with commands to evaluate forms directly in the REPL.
+https://github.com/clojure-emacs/inf-clojure[inf-clojure] には2つのコンポーネントがあります - 自動補完のある素敵なClojure REPLと、マイナーモード(`inf-clojure-minor-mode`)であり、REPLでフォームを直接評価するコマンドでclojure-modeを拡張します。
 
-It's basically a simple alternative of CIDER, which provides a subset of CIDER's functionality.
+基本的にはCIDERの単純な代替で、CIDERの機能のサブセットを提供します。

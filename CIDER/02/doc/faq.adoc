@@ -1,133 +1,133 @@
-= Frequently Asked Questions
+= よくある質問
 
-== What does CIDER stand for?
+== CIDERとは何の略ですか？
 
-CIDER stands for **C**lojure **I**nteractive **D**evelopment **E**nvironment that **R**ocks.
+CIDERは、**C**lojure **I**nteractive **D**evelopment **E**nvironment that **R**ocksの略です。
 
-== Does it really rock?
+== 本当にロックなのか？
 
-Yes.
+そうだよ。
 
-== Is "jack-in" a reference to "Neuromancer"?
+== 「jack-in」は『ニューロマンサー』からの引用ですか？
 
-Yes.
+そうです。
 
-== Is "jack-in" a reference to "The Matrix"?
+== この「jack-in」は『マトリックス』のことを指しているのでしょうか？
 
-Yes.
+そうです。
 
-== What's the relationship between CIDER and nrepl.el?
+== CIDERとnrepl.elの関係は？
 
-`nrepl.el` was renamed to CIDER in version 0.3 to avoid confusion with the nREPL server itself and to better reflect the fact that CIDER is way more than an nREPL client for Emacs.  Additionally, the new name presents us with the opportunity to support alternative evaluation backends (e.g. the socket REPL introduced in Clojure 1.8) down the road.
+`nrepl.el` はバージョン0.3でCIDERに改名されました。nREPLサーバ自身との混同を避けるためと、CIDERがEmacs用のnREPLクライアント以上のものであるという事実をよりよく反映するためです。 さらに、この新しい名前は、代替の評価バックエンド(例えば、Clojure 1.8で導入されたソケットREPL)をサポートする機会を与えてくれます。
 
-== What's the relationship between CIDER and monroe?
+== CIDERとmonroeの関係は？
 
-https://github.com/sanel/monroe[monroe] is basically a fork of an old CIDER version before the time we started relying on nREPL middleware.  Monroe opted for a simpler UX, that's very REPL-centric, and uses only built-in nREPL ops (unlike CIDER, which relies on cider-nrepl heavily).
+https://github.com/sanel/monroe[monroe] は基本的に、nREPLミドルウェアに依存し始める前の古いCIDERバージョンのフォークです。 MonroeはよりシンプルなUXを選び、非常にREPL中心で、組み込みのnREPL opsのみを使用しています（cider-nreplに大きく依存しているCIDERとは異なります）。
 
-== What's the relationship between CIDER and inf-clojure?
+== CIDERとinf-clojureの関係は？
 
-There's pretty much no relationship, other than the fact they have the same author (Bozhidar). https://github.com/clojure-emacs/inf-clojure[inf-clojure] provides a REPL based on the `comint` Emacs package - you're basically running an external REPL process inside of Emacs (there's no network connectivity involved).  The advantage of this is that you have no external dependencies what-so-ever - you just need some command to start a REPL process for you (e.g. `lein repl`).
+https://github.com/clojure-emacs/inf-clojure[inf-clojure] は`comint` EmacsパッケージをベースにしたREPLを提供します - 基本的にはEmacsの中で外部のREPLプロセスを実行することになります（ネットワーク接続は関係ありません）。 この利点は、外部依存が全くないことです。REPLプロセスを開始するコマンド(例えば`lein repl`)が必要なだけです。
 
-== Isn't IntelliJ's Cursive the best Clojure IDE?
+== IntelliJのCursiveは最高のClojure IDEではないですか？
 
-Cursive is pretty awesome! Depending on your programming preferences (using an IDE vs building a custom editing experience tailored to your needs) it might be a better option for you than CIDER.
+Cursiveはかなり素晴らしいです！あなたのプログラミングの好み(IDEを使うか、あなたのニーズに合わせたカスタム編集体験を構築するか)によっては、CIDERよりも良い選択肢になるかもしれません。
 
-== What's the deal with the CIDER release codenames?
+== CIDERのリリースのコードネームはどうなっているのだろう？
 
-The codenames are usually some of the favourite places of CIDER's head maintainer (Bozhidar).
+コードネームは通常、CIDERのメンテナンス責任者（Bozhidar）のお気に入りの場所です。
 
-TIP: Bozhidar really loves Spain and the West Coast of the US, so he tends to name really special releases with codenames related to them (e.g.  Seattle, California, Andalucia, etc).
+ヒント：Bozhidarはスペインとアメリカ西海岸が大好きなので、本当に特別なリリースにはそれらに関連したコードネームをつける傾向があります（シアトル、カリフォルニア、アンダルシアなど）。
 
-== Why is CIDER's website using a .mx domain?
+== なぜCIDERのウェブサイトは.mxドメインを使用しているのですか？
 
-Because that's the https://emacsredux.com/blog/2018/11/17/the-perfect-domain-for-emacs-projects/[perfect domain for Emacs projects].
+https://emacsredux.com/blog/2018/11/17/the-perfect-domain-for-emacs-projects/[Emacsプロジェクトに最適なドメイン] だからです。
 
-== Is using CIDER a good idea if I'm new to both Emacs and Clojure?
+== EmacsとClojureの両方に慣れていない場合、CIDERを使うのは良いアイデアですか？
 
-There's nothing particularly complex in CIDER itself, but getting to grips with Emacs might be a bit challenging for some people.
+CIDER自体には特に複雑なところはありませんが、Emacsを使いこなすのは人によっては少し難しいかもしれません。
 
-Generally you can simplify the initial learning experience a lot by using some Emacs "starter kit" and picking up a good book on Emacs (e.g. https://www.masteringemacs.org/[Mastering Emacs]).
+一般的には、Emacsの "スターターキット "を使い、Emacsに関する良い本を手に入れることで、最初の学習経験をかなり簡略化できます(例えば、 https://www.masteringemacs.org/[Mastering Emacs] )。
 
-https://github.com/bbatsov/prelude[Prelude] and http://spacemacs.org/[Spacemacs] are some great Emacs distributions that you might consider using.
+https://github.com/bbatsov/prelude[Prelude] と http://spacemacs.org/[Spacemacs] は、あなたが使用を検討するかもしれないいくつかの素晴らしいEmacsディストリビューションです。
 
-Prelude is maintained by the primary CIDER author himself, while Spacemacs is an excellent option for vim refugees (as it places a heavy emphasis on vim emulation via `evil-mode`).
+PreludeはCIDERの主要な作者自身によってメンテナンスされていますし、Spacemacsはvim難民にとって素晴らしい選択肢です（`evil-mode`によるvimエミュレーションに重点を置いているからです）。
 
-== Do stable CIDER releases follow some predefined cadence?
+== CIDERの安定版リリースは、あらかじめ決められたサイクルで行われるのですか？
 
-No. Stable releases are issued when the maintainers feel a new release is warranted. The maintainers generally aim to deliver at least 2-3 stable releases per year.
+安定版リリースは、メンテナが新しいリリースが必要だと感じたときに発行されます。メンテナンス担当者は通常、1年に少なくとも2-3回の安定版リリースを目指しています。
 
-== Does CIDER have a roadmap?
+== CIDERにはロードマップがありますか？
 
-There's no precise roadmap, but there are a few major goals for the (near) future:
+正確なロードマップはありませんが、（近い）将来の大きな目標がいくつかあります：
 
-* improve session management (make it simpler and more predictable)
-* reach parity between the functionality for ClojureScript and Clojure (as it stands today a lot of functionality is Clojure-only)
-* integrate the most important refactoring functionality from our sibling project https://github.com/clojure-emacs/clj-refactor.el[clj-refactor] into CIDER.
+* セッション管理を改善する（よりシンプルで予測可能なものにする）。
+* ClojureScriptとClojureの機能を同等にする（現状では、多くの機能がClojureのみです）。
+* 兄弟プロジェクト https://github.com/clojure-emacs/clj-refactor.el[clj-refactor] からの最も重要なリファクタリング機能をCIDERに統合します。
 
-You can find more details in our https://github.com/clojure-emacs/cider/blob/master/ROADMAP.md[roadmap document].
+https://github.com/clojure-emacs/cider/blob/master/ROADMAP.md[roadmap document] に詳細があります。
 
-NOTE: If you'd like to tackle some item from the roadmap, Bozhidar will happy to help and guide you along the way.
+注：もしあなたがロードマップからいくつかの項目に取り組みたいのであれば、Bozhidarは喜んであなたを助け、道案内します。
 
-== Is it true that stable CIDER releases often happen around major Clojure conferences?
+== CIDERの安定版リリースは、主要なClojureカンファレンスの前後によく起こるというのは本当ですか？
 
-Yep. We want to give people a reason to talk about CIDER at such events. :-)
+そうです。そのようなイベントでCIDERについて話す理由を提供したいのです。:-)
 
-TIP: Inviting Bozhidar or any other core CIDER developers to present at Clojure conferences is likely going to results in more CIDER releases, so you should totally do this!
+TIP: Bozhidarや他のCIDERコア開発者をClojureカンファレンスに招待して発表してもらうと、CIDERのリリースが増える可能性が高いです！
 
-== How unstable is the MELPA (snapshot) build of CIDER?
+== CIDERのMELPA（スナップショット）ビルドはどれくらい不安定ですか？
 
-It's pretty stable. Serious regression are introduced rather rarely and are usually fixed within a few hours. Using the MELPA build gives you early access to new features and you're also helping the maintainers with the testing process.
+かなり安定しています。重大なリグレッションが発生することはほとんどなく、通常は数時間以内に修正されます。MELPAビルドを使用することで、新機能にいち早くアクセスすることができ、また、メンテナのテストプロセスを支援することにもなります。
 
-== Can I downgrade CIDER from a snapshot build to the latest stable version?
+== CIDERをスナップショットビルドから最新の安定版にダウングレードできますか？
 
-Yes, you can. You just need to remove the `cider` package, pin `cider` to MELPA Stable and reinstall it. Basically you need to do the following:
+はい、できます。`cider` パッケージを削除し、`cider` を MELPA 安定版に固定し、再インストールするだけです。基本的には以下のようにします：
 
-* `M-x package-remove cider`
-* Add `(add-to-list 'package-pinned-packages '(cider . "melpa-stable") t)` to your Emacs config
-* Restart Emacs (or reload your config)
-* `M-x package-install cider`
+* `M-x package-remove cider` を実行してください。
+* Emacs の設定に `(add-to-list 'package-pinned-packages '(cider . "melpa-stable") t)` を追加します。
+* Emacs を再起動します (または設定をリロードします)
+* `M-x package-install cider` を実行します。
 
-== Can I downgrade CIDER to a specific stable version?
+== CIDERを特定の安定バージョンにダウングレードできますか？
 
-No, you can't. Unfortunately `package.el` doesn't support the concept of historical versions of a package - there's always only one version that's available - the latest one.
+いいえ、できません。残念ながら `package.el` はパッケージの過去のバージョンという概念をサポートしていません。
 
-== Will CIDER eventually support the Clojure 1.8 socket REPL?
+== CIDERは最終的にClojure 1.8のソケットREPLをサポートしますか？
 
-Maybe. Our focus remains making the most out of nREPL, but down the road we might explore investing some time in adding support for additional REPL servers.
+多分。私たちの焦点はnREPLを最大限に活用することですが、将来的には追加のREPLサーバのサポートを追加するために時間を投資することを検討するかもしれません。
 
-TIP: There's more information about the work that needs to be done in our https://github.com/clojure-emacs/cider/blob/master/ROADMAP.md[roadmap] document.
+TIP: https://github.com/clojure-emacs/cider/blob/master/ROADMAP.md[roadmap] ドキュメントに、行うべき作業についての詳細な情報があります。
 
-== Will CIDER eventually support the Clojure 1.10 prepl?
+== CIDERは最終的にClojure 1.10 preplをサポートしますか?
 
-Same answer as above. One thing is certain - prepl is much more convenient for the purposes of CIDER than the plain socket REPL.
+上記と同じ答えです。一つ確かなことは、CIDERの目的には、プレーンなソケットREPLよりもpreplの方がずっと便利だということです。
 
-== Is CIDER's nREPL middleware Emacs specific?
+== CIDERのnREPLミドルウェアはEmacs専用ですか？
 
-Not at all. The functionality in `cider-nrepl` is pretty editor-agnostic and is utilized by various editor plugins. Some prominent examples would be `vim-fireplace` and Visual Studio Code's `calva`.
+全然違います。`cider-nrepl`の機能はエディタにとらわれず、様々なエディタプラグインに利用されています。代表的な例としては `vim-fireplace` や Visual Studio Code の `calva` などがあります。
 
-== How can I see all the configuration options available in CIDER?
+== CIDERで利用可能なすべての設定オプションを見るには？
 
-`M-x customize-group RET cider RET`.
+`M-x customize-group RET cider RET`。
 
-== Are there any interesting CIDER add-ons worth checking out?
+== チェックアウトする価値のある面白いCIDERアドオンはありますか？
 
-Sure! See xref:additional_packages.adoc[additional packages] for details.
+もちろんです！詳細は xref:additional_packages.adoc[additional packages] を参照してください。
 
-== Where can I get help regarding CIDER?
+== CIDERに関するヘルプはどこで手に入りますか？
 
-See the xref:about/support.adoc[Support] section of the manual.
+マニュアルの xref:about/support.adoc[サポート] セクションを参照してください。
 
-== What should I do if I run into some issues with CIDER?
+== CIDERで問題にぶつかったらどうすればいいですか？
 
-Don't panic! Next step - visit the xref:troubleshooting.adoc[Troubleshooting] section of the manual.
+慌てないでください！次のステップ - マニュアルの xref:troubleshooting.adoc[トラブルシューティング] セクションをご覧ください。
 
-== How can I help the project?
+== どうすればプロジェクトを助けることができますか？
 
-There are many ways in which you can help CIDER
+CIDERを支援する方法はたくさんあります。
 
-* Donate funds
-* Work on improving the documentation
-* Solve open issues
-* File bug reports and suggestions for improvements
-* Promote CIDER via blog posts or at meetups and conferences
-* Invite members of the CIDER team to speak about CIDER at meetups and conferences
+* 資金を寄付する
+* ドキュメントを改善する
+* 未解決の問題を解決する
+* バグレポートや改善提案の提出
+* ブログ投稿やミートアップやカンファレンスでCIDERを宣伝する。
+* CIDERチームのメンバーを招待し、MeetupやカンファレンスでCIDERについて話してもらう。

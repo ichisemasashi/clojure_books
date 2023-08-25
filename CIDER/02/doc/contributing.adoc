@@ -1,17 +1,17 @@
-= Contributing
+= 貢献
 
-== Issues
+== 課題
 
-Report issues and suggest features and improvements on the https://github.com/clojure-emacs/cider/issues[GitHub issue tracker]. Don't ask questions on the issue tracker - use the xref:about/support.adoc[support channels] instead.
+https://github.com/clojure-emacs/cider/issues[GitHub issue tracker] で問題を報告し、機能や改善を提案してください。issue trackerでは質問しないでください - 代わりにxref:about/support.adoc[support channels]を使ってください。
 
-If you want to file a bug, please provide all the necessary info listed in our issue reporting template (it's loaded automatically when you create a new GitHub issue).
+バグを報告したい場合は、私たちの課題報告テンプレートに記載されている必要な情報をすべて提供してください（新しい GitHub 課題を作成するときに自動的に読み込まれます）。
 
-It's usually a good idea to try to reproduce (obscure) bugs in isolation. You can do this by cloning CIDER's GitHub repo and running `make run-cider` inside it.  This will bring up Emacs with only the latest version of CIDER loaded. By starting fresh, with the latest code, we can ensure that the problem at hand isn't already fixed or caused by interactions with other packages.
+通常、（不明瞭な）バグを単独で再現してみるのは良いアイデアです。CIDERのGitHubレポをクローンし、その中で`make run-cider`を実行することでこれを行うことができます。 これにより、最新バージョンのCIDERのみがロードされた状態でEmacsが起動する。最新のコードで新しく始めることで、手元の問題がすでに修正されていたり、他のパッケージとの相互作用によって引き起こされていないことを確認できます。
 
-== Patches
+== パッチ
 
-Patches in any form are always welcome! GitHub pull requests are even better! :-)
+どのような形であれ、パッチはいつでも歓迎します！GitHubのプルリクエストならなおさらです！:-)
 
-If your changes do not require a REPL, consider submitting to https://github.com/clojure-emacs/clojure-mode[clojure-mode] instead.
+もしあなたの変更がREPLを必要としないのであれば、代わりに https://github.com/clojure-emacs/clojure-mode[clojure-mode] に投稿することを検討してください。
 
-Before submitting a patch or a pull request make sure all tests are passing and that your patch is in line with the https://github.com/clojure-emacs/cider/blob/master/.github/CONTRIBUTING.md[contribution guidelines].
+パッチやプルリクエストを提出する前に、すべてのテストがパスしていることと、あなたのパッチが https://github.com/clojure-emacs/cider/blob/master/.github/CONTRIBUTING.md[コントリビューション・ガイドライン] に沿っていることを確認してください。
