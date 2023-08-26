@@ -1,40 +1,40 @@
-= Compatibility
+= 互換性
 
 == Emacs
 
-CIDER supports Emacs 26.1+. More generally we try to support the last 3 major Emacs releases when that's feasible and doesn't add a lot of maintenance overhead.
+CIDERはEmacs 26.1+をサポートしています。より一般的には、実現可能で、メンテナンスのオーバーヘッドを増やさない限り、Emacsの最後の3つのメジャーリリースをサポートするようにしています。
 
-NOTE: We pay special attention to supporting whatever Emacs is bundled with the current stable Debian and RHEL GNU/Linux distributions.
+NOTE: 私たちは、現在の安定したDebianとRHEL GNU/LinuxディストリビューションにバンドルされているEmacsをサポートすることに特別な注意を払っています。
 
 == nREPL
 
-CIDER supports nREPL 0.6+.
+CIDERはnREPL 0.6+をサポートしています。
 
-NOTE: We pay special attention to supporting whatever nREPL is bundled with the current stable Leiningen and Boot releases.
+NOTE: 私たちは、現在の安定したLeiningenとBootのリリースにバンドルされているnREPLをサポートすることに特別な注意を払っています。
 
 == Java
 
-CIDER officially targets Java 8, Java 11, Java 17, and the most recent rapid release version (e.g. Java 18).  Generally speaking, we aim to support all Java releases that are currently officially supported by Oracle.
+CIDERは、Java 8、Java 11、Java 17、および最新のラピッドリリースバージョン（Java 18など）を公式に対象としています。 一般的には、現在オラクルが公式にサポートしているすべてのJavaリリースをサポートすることを目指しています。
 
-NOTE: The requirements for Java are pretty much ``cider-nrepl``'s requirements.
+NOTE: Java の要件は ``cider-nrepl`` の要件とほぼ同じです。
 
-On Linux you are also required to make sure that JDK sources and javadocs are installed.  You can find example commands in xref:troubleshooting.adoc#navigation-to-jdk-sources-doesnt-work[Troubleshooting].
+Linuxでは、JDKソースとjavadocsがインストールされていることを確認する必要もあります。 xref:troubleshooting.adoc#navigation-to-jdk-sources-doesnt-work[Troubleshooting] にコマンドの例があります。
 
 == Clojure
 
-CIDER targets Clojure 1.8+. As Clojure doesn't have the concept of supported releases we have to get a bit creative to determine the minimum version to target.
+CIDERはClojure 1.8+をターゲットにしています。Clojureにはサポートされるリリースの概念がないので、ターゲットとする最小バージョンを決定するために少し独創的になる必要があります。
 
-The minimum required Clojure version is currently derived using data from the https://clojure.org/news/2019/02/04/state-of-clojure-2020[State of Clojure] survey. In general we consider a Clojure release eligible for dropping once its usage drops below 5%, but we'd not drop support for any release just for the sake of doing it. We'd do it only if this would lessen the maintenance burden or open up the possibility for big CIDER improvements.
+最低限必要なClojureバージョンは、現在  https://clojure.org/news/2019/02/04/state-of-clojure-2020[State of Clojure] 調査からのデータを使って導き出されています。一般的に、私たちはClojureリリースの使用率が5%を下回ったら、そのリリースを削除する対象になると考えています。メンテナンスの負担を減らすか、CIDERの大きな改善の可能性を開く場合にのみ行います。
 
 == ClojureScript
 
-Currently we apply the same policy for Clojure and ClojureScript support.
+現在、私たちはClojureとClojureScriptのサポートに同じポリシーを適用しています。
 
-== Compatibility Matrix
+== 互換性マトリックス
 
-NOTE: For a very long time CIDER and cider-nrepl were released in lock-step, but this changed in CIDER 0.18. The actual releases diverged for the first time in CIDER 0.23.
+NOTE: 非常に長い間、CIDERとcider-nreplは同期してリリースされていたが、CIDER 0.18で変わった。実際のリリースはCIDER 0.23で初めて分かれました。
 
-Below you can find the official compatibility matrix for CIDER.
+以下はCIDERの公式互換性マトリックスです。
 
 .Compatibility Matrix
 |===
@@ -133,4 +133,4 @@ Below you can find the official compatibility matrix for CIDER.
 
 |===
 
-TIP: You can also check the requirements of a particular CIDER version by inspecting the values of some CIDER variables. For instance, the required `cider-nrepl` version is in `cider-required-middleware-version`, and so on.
+TIP: また、いくつかの CIDER 変数の値を調べることで、特定の CIDER バージョンの必要条件をチェックすることもできます。例えば、必要な `cider-nrepl` のバージョンは `cider-required-middleware-version` にあります。
