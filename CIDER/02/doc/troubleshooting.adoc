@@ -168,44 +168,45 @@ ____
 
 `cider-connect` を使用するには、プロジェクトに cider-nrepl ミドルウェアを追加する必要があります。「ミドルウェアのセットアップ」セクションの  xref:basics/middleware_setup.adoc[instructions] を参照してください。
 
-==== You see `not installed` or `nil`, and you're starting the REPL with `cider-jack-in`
+==== あなたは `not installed` または `nil` と表示され、`cider-jack-in` で REPL を開始しています。
 
-* Do `C-h v cider-inject-dependencies-at-jack-in`, and check that this variable is non-nil.
-* Make sure your project depends on at least Clojure `1.7.0`.
-* If you use Leiningen, make sure your `lein --version` is at least `2.9.0`.
-* If you use Boot and you've changed `cider-boot-parameters`, that's probably the cause.
+* `C-h v cider-inject-dependencies-at-jack-in` を実行して、この変数が `nil` でないことを確認してください。
+* プロジェクトが少なくとも Clojure `1.7.0` に依存していることを確認してください。
+* Leiningen を使用している場合、 `lein --version` が少なくとも `2.9.0` であることを確認してください。
+* Boot を使っていて、`cider-boot-parameters` を変更したのなら、おそらくそれが原因です。
 
-If the above doesn't work, you can try specifying the cider-nrepl middleware manually, as per the xref:basics/middleware_setup.adoc[instructions] in the "Middleware Setup" section.
+上記がうまくいかない場合は、"Middleware Setup" セクションの  xref:basics/middleware_setup.adoc[instructions] にあるように、手動で cider-nrepl ミドルウェアを指定してみてください。
 
 ==== You see a number like `X.X.X`, and you're starting the REPL with `cider-jack-in`
 
 This means you're manually adding the cider-nrepl middleware in your project, but you shouldn't do that because `cider-jack-in` already does that for you. Look into the following files, and ensure you've removed all references to `cider-nrepl` and `nrepl`: `project.clj`, `build.boot`, `~/.lein/profiles.clj` and `~/.boot/profile.boot`.
 
-=== I get some error related to refactor-nrepl on startup
+=== 起動時に refactor-nrepl に関するエラーが発生します。
 
-The package `clj-refactor` would normally inject its own middleware on `cider-jack-in`, just as CIDER itself would. Usually that's not a problem, as long as you're using compatible versions of CIDER and `clj-refactor`, but if you're getting some error probably that's not the case. You've got two options to solve this:
+パッケージ `clj-refactor` は通常、CIDER 自身がそうであるように、`cider-jack-in` で自身のミドルウェアをインジェクトします。通常、CIDER と `clj-refactor` の互換性のあるバージョンを使っている限り、それは問題ではありません。これを解決するには2つの選択肢があります：
 
-* Use compatible versions of the two projects (e.g. their most recent snapshots or most recent stable releases)
-* Disable the `clj-refactor` middleware injection:
+* 2つのプロジェクトの互換性のあるバージョンを使う。(例えば、最新のスナップショットや最新の安定リリース)
+* ミドルウェア `clj-refactor` インジェクションを無効にする：
 
 [source,lisp]
 ----
 (setq cljr-inject-dependencies-at-jack-in nil)
 ----
 
-=== Off-by-one column numbers
+=== カラム番号の1つ違い
 
-Emacs and Clojure differ in their indexing of column numbers -- Emacs starts counting from 0 while Clojure starts from 1. Accordingly, the `cider-nrepl` middleware uses 1-based indexing and all conversions to 0-based indexing should be handled client-side. See https://github.com/clojure-emacs/cider/issues/2852.
+Emacs と Clojure はカラム番号のインデックス付けが異なります -- Emacs は 0 からカウントを開始しますが、Clojure は 1 からカウントを開始します。したがって、`cider-nrepl` ミドルウェアは 1 ベースのインデックス付けを使用し、0 ベースのインデックス付けへの変換はすべてクライアントサイドで処理する必要があります。https://github.com/clojure-emacs/cider/issues/2852 を参照してください。
 
-=== Empty Java stacktraces
+=== 空のJavaスタックトレース
 
-Occasionally the JVM might remove some stack frames, resulting in no stacktrace information being displayed in CIDER's error buffer.
+時折、JVMがいくつかのスタックフレームを削除し、CIDERのエラーバッファにスタックトレース情報が表示されなくなることがあります。
 
-That's caused by an JVM optimization (`OmitStackTraceInFastThrow`, enabled by default), which optimizes "built-in" exceptions that are thrown frequently enough to be cached and have no stacktrace.
+これはJVMの最適化(`OmitStackTraceInFastThrow`、デフォルトで有効)によるもので、キャッシュされるのに十分な頻度でスローされ、スタックトレースを持たない「組み込み」例外を最適化します。
 
-You can turn off the optimization by adding the JVM flag `-XX:-OmitStackTraceInFastThrow` to whatever command you're using to start nREPL.
+JVMフラグ `-XX:-OmitStackTraceInFastThrow` をnREPLを起動するコマンドに追加することで最適化をオフにすることができる。
 
-In particular, by adding it to a `deps.edn` file under an alias (eg. `:dev`)
+特に、`deps.edn` ファイルにエイリアス(例: `:dev`)で追加します。
+
 [source,lisp]
 ---
 {:aliases
@@ -214,13 +215,13 @@ In particular, by adding it to a `deps.edn` file under an alias (eg. `:dev`)
   ...}}}
 ---
 
-Or by customising the jack-in options.
+あるいは、Jack-inのオプションをカスタマイズすることによって。
 [source,lisp]
 ---
 (setq cider-clojure-cli-parameters "-J-XX:-OmitStackTraceInFastThrow")
 ---
 
-NOTE: Leiningen disables `OmitStackTraceInFastThrow` by default.
+NOTE: Leiningen はデフォルトで `OmitStackTraceInFastThrow` を無効にする。
 
 === Errors Related to enrich-classpath
 
