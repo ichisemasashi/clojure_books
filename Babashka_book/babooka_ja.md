@@ -1,64 +1,60 @@
 [**Babashka Babooka**](/quests/deploy)
 
-Write Command-Line Clojure
-
-Follow [\@nonrecursive](https://twitter.com/nonrecursive) to hear about new content or subscribe:
+コマンドラインでClojureを書く
 
 
-# Babashka Babooka: Write Command-Line Clojure
+# Babashka Babooka： コマンドラインで Clojure を書く
 
-# Introduction 
-
-
--   [Buy the PDF and epub on gumroad](https://hotdogconfidential.gumroad.com/l/babooka)
-
-
-
-There are two types of programmers in the world: the practical, sensible, shell-resigned people who need to google the correct argument order for `ln -s`; and those twisted, Stockholmed souls who will gleefully run their company's entire infrastructure on 57 commands stitched together into a single-line bash script.
-
-
-This guide is for the former. For the latter: sorry, but I can't help you.
-
-
-
-[Babashka](https://babashka.org) is a Clojure scripting runtime that is a powerful, delightful alternative to the shell scripts you're used to.  This comprehensive tutorial will teach you:
-
-
--   What babashka is, what it does, how it works, and how it can fit into your workflow
-
--   How to write babashka scripts
-
--   How to organize your babashka projects
-
--   What pods are, and how they provide a native Clojure interface for external programs
-
--   How to use tasks to create interfaces similar to `make` or `npm`
-
-
-
-If you'd like to stop doing something that hurts (writing incomprehensible shell scripts) and start doing something that feels great (writing Babashka scripts), then read on!
-
-
-## Sponsor
-
-
-
-If you enjoy this tutorial, [consider sponsoring me, Daniel Higginbotham, through GitHub sponsors](https://github.com/sponsors/flyingmachine). As of April 2022 I am spending two days a week working on free Clojure educational materials and open source libraries to make Clojure more beginner-friendly, and appreciate any support!
-
-
-Please also [consider sponsoring Michiel Borkent, aka borkdude, who created babashka](https://github.com/sponsors/borkdude). Michiel is doing truly incredible work to transform the Clojure landscape, extending its usefulness and reach in ways that benefit us all. He has a proven track record of delivering useful tools and engaging with the commuity.
+# はじめに 
 
 
 
 
-## What is Babashka? 
+世の中には2種類のプログラマーがいる：実用的で良識があり、`ln -s` の正しい引数順序をググる必要があるシェルに身を任せた人たちと、57個のコマンドを1行のbashスクリプトにつなぎ合わせて会社のインフラ全体を嬉々として動かす、ひねくれたストックホルムの魂だ。
+
+
+このガイドは前者のためのものだ。後者については：申し訳ないが、力になれない。
 
 
 
-From a user perspective, babashka is a scripting runtime for the Clojure programming language. It lets you execute Clojure programs in contexts where you'd typically use bash, ruby, python, and the like. Use cases include build scripts, command line utilities, small web applications, git hooks, AWS Lambda functions, and everywhere you want to use Clojure where fast startup and/or low resource usage matters.
+[Babashka](https://babashka.org)はClojureスクリプトランタイムで、あなたが慣れ親しんだシェルスクリプトに代わる強力で楽しいものです。 この包括的なチュートリアルでは
 
 
-You can run something like the following in a terminal to immediately execute your Clojure program:
+- babashkaとは何か、何をするのか、どのように動作するのか、あなたのワークフローにどのようにフィットするのか。
+
+- babashkaスクリプトの書き方
+
+- babashkaプロジェクトの整理方法
+
+- ポッドとは何か、ポッドが外部プログラムにClojureネイティブインターフェイスを提供する方法
+
+- `make`や`npm`に似たインターフェースを作成するためのタスクの使い方
+
+
+
+もしあなたが、苦痛なこと(理解できないシェルスクリプトを書くこと)をやめて、素晴らしいこと(Babashkaスクリプトを書くこと)を始めたいのであれば、この先を読んでください！
+
+
+## スポンサー
+
+
+
+もしこのチュートリアルを楽しんでいただけたら、[GitHubスポンサーを通して私Daniel Higginbothamのスポンサーになることを検討してください](https://github.com/sponsors/flyingmachine)。2022年4月現在、私はClojureをより初心者に優しくするために、無料のClojure教材とオープンソースライブラリに週2日費やしています！
+
+
+また、[babashkaを作ったborkdudeことMichiel Borkentへのスポンサーもご検討ください](https://github.com/sponsors/borkdude)。Michielは、Clojureの状況を変えるために本当に信じられないような仕事をしており、私たち全員に利益をもたらす方法で、その有用性とリーチを拡張しています。彼は有用なツールを提供し、コミュニティと関わってきた実績があります。
+
+
+
+
+## Babashkaとは? 
+
+
+
+ユーザーの視点から見ると、babashkaはClojureプログラミング言語のためのスクリプトランタイムです。通常bashやruby、pythonなどを使用するコンテキストでClojureプログラムを実行することができます。使用例としては、ビルドスクリプト、コマンドラインユーティリティ、小さなウェブアプリケーション、gitフック、AWS Lambda関数など、高速起動や低リソース使用が重要なClojureを使いたいあらゆる場所があります。
+
+
+ターミナルで以下のように実行すれば、Clojureプログラムを即座に実行できる：
 
 
 
@@ -70,49 +66,49 @@ bb my-clojure-program.clj
 
 
 
-If you're familiar with Clojure, you'll find this significant because it eliminates the startup time you'd otherwise have to contend with for a JVM-compiled Clojure program, not to mention you don't have to compile the file. It also uses much less memory than running a jar. Babashka makes it feasible to use Clojure even more than you already do.
+Clojureに慣れている人なら、ファイルをコンパイルする必要がないのはもちろん、JVMコンパイルされたClojureプログラムのために悩まされるスタートアップ時間がなくなるので、これが重要だとわかるだろう。また、jarを実行するよりもはるかに少ないメモリしか使用しません。Babashkaを使えば、今以上にClojureを使いこなすことが可能です。
 
 
-If you're unfamiliar with Clojure, using Babashka is a great way to try out the language. Clojure is a *hosted* language, meaning that the language is defined independently of the underlying runtime environment.  Most Clojure programs are compiled to run on the Java Virtual Machine (JVM) so that they can be run anywhere Java runs. The other main target is JavaScript, allowing Clojure to run in a browser. With Babashka, you can now run Clojure programs where you'd normally run bash scripts. The time you spend investing in Clojure pays dividends as your knowledge transfers to these varied environments.
+Clojureに馴染みがない場合、Babashkaを使うことは、この言語を試すのに最適な方法です。Clojureは*ホスト型*言語であり、言語が基礎となる実行環境とは独立して定義されていることを意味します。 ほとんどのClojureプログラムはJava Virtual Machine (JVM)上で動作するようにコンパイルされているので、Javaが動作する場所であればどこでも実行できます。もう1つの主なターゲットはJavaScriptで、Clojureをブラウザで実行できるようにします。Babashkaを使えば、通常bashスクリプトを実行する場所でClojureプログラムを実行できる。あなたがClojureに投資する時間は、あなたの知識がこれらの多様な環境に移行する際に配当されます。
 
 
-From an implementation perspective, Babashka is a standalone, natively-compiled binary, meaning that the operating system executes it directly, rather than running in a JVM. When the babashka binary gets compiled, it includes many Clojure namespaces and libraries so that they are usable with native performance. You can [check out the full list of built-in namespaces](https://book.babashka.org/#libraries). Babashka can also include other libraries, just like if you're using deps.edn or Leiningen.
+実装の観点からは、Babashkaはスタンドアロンでネイティブにコンパイルされたバイナリであり、JVMで実行するのではなく、オペレーティングシステムが直接実行することを意味する。Babashkaバイナリがコンパイルされるとき、ネイティブパフォーマンスで使用できるように、多くのClojure名前空間とライブラリが含まれます。あなたは[組み込み名前空間の全リストをチェックする](https://book.babashka.org/#libraries)ことができます。Babashkaは、deps.ednやLeiningenを使用している場合のように、他のライブラリをインクルードすることもできます。
 
 
-The binary also includes the [Small Clojure Interpreter (SCI)](https://github.com/babashka/SCI) to interpret the Clojure you write and additional libraries you include on the fly. Its implementation of Clojure is nearly at parity with JVM Clojure, and it improves daily thanks to [Michiel Borkent](https://github.com/borkdude)\'s ceaseless work. It's built with GraalVM. This guide is focused on becoming productive with Babashka and doesn't cover the implementation in depth, but you can learn more about it by reading [this article on the GraalVM blog](https://medium.com/graalvm/babashka-how-graalvm-helped-create-a-fast-starting-scripting-environment-for-clojure-b0fcc38b0746).
-
-
-
-## Why should you use it? 
+このバイナリには[Small Clojure Interpreter (SCI)](https://github.com/babashka/SCI) も含まれており、あなたが書いたClojureや追加ライブラリをその場で解釈します。Clojureの実装はJVM Clojureとほぼ同等で、[Michiel Borkent](https://github.com/borkdude)氏の絶え間ない努力のおかげで日々改善されています。GraalVMで構築されています。このガイドは、Babashkaで生産的になることに重点を置いており、実装を深くカバーしていませんが、[GraalVMブログのこの記事](https://medium.com/graalvm/babashka-how-graalvm-helped-create-a-fast-starting-scripting-environment-for-clojure-b0fcc38b0746)を読むことで、より詳しく知ることができます。
 
 
 
-I won't go into the benefits of Clojure itself because there are plenty of materials on that [elsewhere](https://jobs-blog.braveclojure.com/2022/03/24/long-term-clojure-benefits.html).
-
-
-Beyond the fact that it's Clojure, Babashka brings a few features that make it stand apart from contenders:
+## なぜ使うべきなのか? 
 
 
 
-**First-class support for multi-threaded programming.** Clojure makes multi-threaded programming simple and easy to write and reason about.  With Babashka, you can write straightforward scripts that e.g. fetch and process data from multiple databases in parallel.
+Clojureそのものの利点については、[他](https://jobs-blog.braveclojure.com/2022/03/24/long-term-clojure-benefits.html)にたくさん資料があるので、ここでは触れません。
 
 
-**Real testing.** You can unit test your Babashka code just as you would any other Clojure project. How do you even test bash?
-
-
-
-**Real project organization.** Clojure namespaces are a sane way to organize your project's functions and build reusable libraries.
+Clojureであるという事実を超えて、Babashkaは競合から際立ついくつかの特徴をもたらします：
 
 
 
-**Cross-platform compatibility.** It's nice not having to worry that an OS X-developed script is broken in your continuous integration pipeline.
+**ファーストクラスのマルチスレッドプログラミングのサポート.** Clojureは、マルチスレッドプログラミングをシンプルで簡単に書くことができます。 Babashkaを使えば、例えば複数のデータベースから並列にデータを取得して処理するような簡単なスクリプトを書くことができます。
+
+
+**実際のテスト.** 他のClojureプロジェクトと同じように、Babashkaコードをユニットテストできます。bashのテストはどうやるの？
 
 
 
-**Interactive Development.** Following the lisp tradition, Babashka provides a read-eval-print loop (REPL) that gives you that good good bottom-up fast-feedback feeling. Script development is inherently a fast; Babashka makes it a faster.
+** 本当のプロジェクト管理.** Clojure名前空間は、プロジェクトの関数を整理し、再利用可能なライブラリを構築するまともな方法です。
 
 
-**Built-in tools for defining your script's interface.** One reason to write a shell script is to provide a concise, understandable interface for a complicated process. For example, you might write a build script that includes `build` and `deploy` commands that you call like
+
+**クロスプラットフォーム互換性.** OS Xで開発されたスクリプトが、継続的インテグレーション・パイプラインで壊れていることを心配する必要がないのは良いことです。
+
+
+
+**対話的な開発.** Lispの伝統に従って、BabashkaはREPL(read-eval-print loop)を提供します。スクリプト開発は本質的に速いものですが、Babashkaはそれをより速くします。
+
+
+**スクリプトのインターフェイスを定義するための組み込まれたツール.** シェルスクリプトを書く理由のひとつは、複雑な処理に簡潔でわかりやすいインターフェイスを提供することです。例えば、`build`コマンドと`deploy`コマンドを含むビルドスクリプトを書くとします。
 
 
 
@@ -125,65 +121,65 @@ Beyond the fact that it's Clojure, Babashka brings a few features that make it s
 
 
 
-Babashka comes with tools that gives you a consistent way of defining such commands, and for parsing command-line arguments into Clojure data structures. Take that, bash!
+Babashkaには、そのようなコマンドを定義し、コマンドライン引数をClojureデータ構造にパースするための一貫した方法を提供するツールが付属しています。bashもどうぞ！
 
 
-**A rich set of libraries.** Babashka comes with helper utilities for doing typical shell script grunt work like interacting with processes or mucking about with the filesystem. It also has support for the following without needing extra dependencies:
-
-
-
--   JSON parsing
-
--   YAML parsing
-
--   Starting an HTTP server
-
--   Writing generative tests
+**豊富なライブラリセット.** Babashkaには、プロセスとのやり取りやファイルシステムの操作など、典型的なシェルスクリプトの補助作業を行うためのヘルパーユーティリティが付属しています。また、余計な依存関係を必要とせず、以下のようなものもサポートしています：
 
 
 
-And of course, you can add Clojure libraries as dependencies to accomplish even more. Clojure is a gateway drug to other programming paradigms, so if you ever wanted to do e.g. logic programming from the command line, now's your chance!
+- JSON の解析
+
+- YAMLの解析
+
+- HTTPサーバーの起動
+
+- 生成テストを書く
 
 
 
-**Good error messages.** Babashka's error handling is the friendliest of all Clojure implementations, directing you precisely to where an error occurred.
+そしてもちろん、Clojureライブラリを依存関係として追加して、さらに多くのことを達成することができます。Clojureは他のプログラミング・パラダイムへの入り口であり、コマンドラインからロジック・プログラミングなどをやりたかったら、今がチャンスだ！
 
 
 
-
-
-## Installation 
-
-
-
-Installing with brew is `brew install borkdude/brew/babashka`.
-
-
-
-[For other systems, see Babashka's complete installation instructions.](https://github.com/babashka/babashka#installation)
+**良いエラーメッセージ.** Babashkaのエラー処理は、すべてのClojure実装の中で最も友好的で、エラーが発生した場所を正確に指示します。
 
 
 
 
-# Your first script 
 
-
-Throughout this tutorial we're going to play with building a little CLI-based dream journal. Why? Because the idea of you nerds recording your weird little subconscious hallucinations is deeply amusing to me.
-
-
-In this section, you're going to learn:
+## インストール 
 
 
 
--   How to write and run your first Babashka script
-
--   How default output is handled
-
--   A little about how Babashka treats namespaces
+brewでのインストールは `brew install borkdude/brew/babashka` です。
 
 
 
-Create a file named `hello.clj` and put this in it:
+[他のシステムについては、Babashkaの完全なインストール手順を参照してください](https://github.com/babashka/babashka#installation)
+
+
+
+
+# 最初のスクリプト 
+
+
+このチュートリアルでは、CLIベースの小さな夢の日記帳を作って遊びます。なぜかって？なぜなら、あなた方オタクが潜在意識に潜む奇妙な幻覚を記録するというアイデアが、私にはとても面白いからです。
+
+
+このセクションでは、以下のことを学びます：
+
+
+
+- 最初のBabashkaスクリプトの書き方と実行方法
+
+- デフォルト出力の扱い方
+
+- Babashkaの名前空間の扱い方
+
+
+
+`hello.clj`という名前のファイルを作成し、次のように記述します：
 
 
 
@@ -196,7 +192,7 @@ Create a file named `hello.clj` and put this in it:
 
 
 
-Now run it with `bb`, the babashka executable:
+次に、`bb`でbabashka実行ファイルを実行する：
 
 
 
@@ -208,48 +204,48 @@ bb hello.clj
 
 
 
-You should see it print the text `"Hello inner world!"`.
+すると、`"Hello inner world!"`というテキストが表示されるはずだ。
 
 
 
-There are a few things here to point out for experienced Clojurians:
+経験豊富なClojurianのために指摘しておくことがいくつかあります：
 
 
 
--   You didn't need a deps.edn file or project.clj
+- deps.ednファイルやproject.cljは必要ありません。
 
--   There's no namespace declaration; we use `(require …)`
+- 名前空間宣言がない; `(require ...)` を使っている。
 
--   It's just Clojure
-
-
-
-I very much recommend that you actually try this example before proceeding because it *feels* different from what you're used to. It's unlikely that you're used to throwing a few Clojure expressions into a file and being able to run them immediately.
-
-
-When I first started using Babashka, it felt so different that it was disorienting. It was like the first time I tried driving an electric car and my body freaked out a little because I wasn't getting the typical sensory cues like hearing and feeling the engine starting.
-
-
-Babashka's like that: the experience is so quiet and smooth it's jarring. No deps.edn, no namespace declaration, write only the code you need and it runs!
+- ただのClojureです。
 
 
 
-That's why I included the \"It's just Clojure\" bullet point. It might feel different, but this is still Clojure. Let's explore the other points in more detail.
+この例は、あなたが慣れ親しんでいるものとは異なるように*感じる*ので、先に進む前に実際に試してみることを強くお勧めします。ファイルにいくつかのClojure式を放り込んで、すぐに実行できることに慣れているとは思えない。
+
+
+私が初めてBabashkaを使い始めたとき、あまりの違いに戸惑いました。初めて電気自動車を運転してみたとき、エンジンがかかる音や感触といった典型的な感覚的な合図が得られなかったので、体が少しパニックになったような感じだった。
+
+
+Babashkaはそんな感じだ。体験はとても静かでスムーズで、衝撃的だ。deps.ednも名前空間宣言もなく、必要なコードだけを書けば実行される！
 
 
 
-## Babashka's output 
+必要なコードだけを書けば実行されるのです！だから私は「ただのClojureだ」という箇条書きを入れたのです。違うと感じるかもしれませんが、これはまだClojureです。他の点をもっと詳しく調べてみよう。
 
 
 
-Here's what's going on: `bb` interprets the Clojure code you've written, executing it on the fly. `prn` prints to `stdout`, which is why `"Hello, inner world!"` is returned in your terminal.
+## Babashkaの出力 
+
+
+
+何が起こっているかと言うと： `bb` はあなたが書いたClojureコードを解釈し、その場で実行する。`prn`は`stdout`に出力するので、`"Hello, inner world!"`がターミナルに返されます。
 
 **Note**
-When you print text to `stdout`, it gets printed to your terminal.  This tutorial doesn't get into `stdout` actually is, but can think of it as the between the internal of your program and the world of the environment your program. When your sends stuff to `stdout`, terminal receives it and it.
+テキストを `stdout` に出力すると、それがターミナルに出力されます。 このチュートリアルでは `stdout` が実際にどのようなものなのかについては触れませんが、あなたのプログラムの内部とあなたのプログラムの環境の世界の間にあるものと考えてください。あなたが `stdout` に何かを送信すると、ターミナルがそれを受信してそれを表示します。
 
 
 
-Notice that the quotes are maintained when the value is printed. `bb` will print the *stringified representation of your data structure*. If you updated `hello.clj` to read
+値が出力されるとき、引用符が維持されていることに注意してほしい。`bb`はあなたのデータ構造の*文字列化された表現*を表示します。もし`hello.clj`を更新して
 
 
 
@@ -261,10 +257,10 @@ Notice that the quotes are maintained when the value is printed. `bb` will print
 
 
 
-Then `["It’s" "me," "your" "wacky" "subconscious!"]` would get printed, and `"Hello, inner world!"` would not. You must use a printing function on a form for it to be sent to `stdout`
+そうすると、`[" It's" "me," "your" "wacky" "subconscious!" ]`は出力され、`"Hello, inner world!" `は出力されない。文字列を `stdout` に送信するには、フォーム上で表示関数を使用する必要があります。
 
 
-If you want to print a string without the surrounding quotes, you can use
+引用符で囲まずに文字列を表示したい場合は
 
 
 
@@ -278,15 +274,15 @@ If you want to print a string without the surrounding quotes, you can use
 
 
 
-## Namespace is optional 
+## 名前空間はオプションです 
 
 
 
-As for the lack of namespace: this is part of what makes Babashka useful as a scripting tool. When you're in a scripting state of mind, you want to start hacking on ideas immediately; you don't want to have to deal with boilerplate just to get started. Babashka has your babacka.
+名前空間がないことについては、Babashkaがスクリプトツールとして有用である理由のひとつです。スクリプティングを思いついたとき、すぐにでもアイデアをハックしたいものです；スクリプティングを始めるために、定型文を扱う必要はありません。BabashkaはあなたのBabackaを持っています。
 
 
 
-You *can* define a namespace (we'll look at that more when we get into project organization), but if you don't then Babashka uses the `user` namespace by default. Try updating your file to read:
+名前空間を定義することもできますが（プロジェクトの構成について説明するときに詳しく説明します）、定義しない場合、Babashkaはデフォルトで`user`名前空間を使用します。ファイルを更新してみてください：
 
 
 
@@ -297,17 +293,17 @@ You *can* define a namespace (we'll look at that more when we get into project o
 
 
 
-Running it will print `"Hello from user, inner world!"`. This might be surprising because there's a mismatch between filename (`hello.clj`) and namespace name. In other Clojure implementations, the current namespace strictly corresponds to the source file's filename, but Babashka relaxes that a little bit in this specific context. It provides a scripting experience that's more in line with what you'd expect from using other scripting languages.
+実行すると`"Hello from user, inner world!"`と表示される。これは、ファイル名(`hello.clj`)と名前空間名の間にミスマッチがあるためです。他のClojure実装では、現在の名前空間はソースファイルのファイル名に厳密に対応しますが、Babashkaはこの特定のコンテキストでそれを少し緩和します。これは、他のスクリプト言語を使用する際に期待されるものと、より一致したスクリプティング体験を提供します。
 
 
 
 
 
-## What about requiring other namespaces? 
+## 他の名前空間をrequireする場合は？
 
 
 
-You might want to include a namespace declaration because you want to require some namespaces. With JVM Clojure and Clojurescript, you typically require namespaces like this:
+いくつかの名前空間をrequireしたいので、名前空間宣言を含めたいかもしれません。JVM ClojureとClojurescriptでは、通常このように名前空間を要求します：
 
 
 
@@ -321,21 +317,21 @@ You might want to include a namespace declaration because you want to require so
 
 
 
-It's considered bad form to require namespaces by putting `(require '[clojure.string :as str])` in your source code.
+ソースコード中に`(require '[clojure.string :as str])`と記述して名前空間をrequireするのは悪い形式だと考えられています。
 
 
 
-That's not the case with Babashka. You'll see `(require …)` used liberally in other examples, and it's OK for you to do that too.
+しかし、Babashkaではそうではありません。他の例では `(require ...)` が自由に使われています、そして、あなたもそうしても構いません。
 
 
 
 
 
-## Make your script executable 
+## スクリプトを実行可能にする 
 
 
 
-What if you want to execute your script by typing something like `./hello` instead of `bb hello.clj`? You just need to rename your file, add a shebang, and `chmod +x` that bad boy. Update `hello.clj` to read:
+もし、`bb hello.clj`ではなく、`./hello`のように入力してスクリプトを実行したい場合はどうすればいいだろうか？ファイル名を変更し、shebangを追加し、`chmod +x` するだけです。`hello.clj`を更新する：
 
 
 
@@ -348,11 +344,11 @@ What if you want to execute your script by typing something like `./hello` inste
 
 
 **Note**
-The first line, `#!/usr/bin/env bb` is the \"shebang\", and I'm not going to it.
+最初の行、`#!/usr/bin/env bb`は「shebang」で、ここには書かない。
 
 
 
-Then run this in your terminal:
+そして、ターミナルでこれを実行する：
 
 
 
@@ -366,28 +362,28 @@ chmod +x hello
 
 
 
-First you rename the file, then you call `chmod +x` on it to make it executable. Then you actually execute it, saying hi to your own inner world which is kind of adorable.
+まずファイル名を変更し、次に`chmod +x`を呼び出して実行可能にする。そして実際に実行し、ちょっと愛らしい自分の内なる世界に挨拶する。
 
 
 
 
-## Summary 
+## まとめ 
 
 
 
-Here's what you learned in this section:
+このセクションで学んだことは以下の通りだ：
 
 
 
--   You can run scripts with `bb script-name.clj`
+- スクリプトは `bb script-name.clj` で実行できる。
 
--   You can make scripts directly executable by adding `#!/usr/bin/env bb` on the top line and adding the `execute` permission with `chmod +x script-name.clj`
+- スクリプトの先頭行に `#!/usr/bin/env bb` を追加し、 `chmod +x script-name.clj` で `execute` パーミッションを追加することで、スクリプトを直接実行可能にすることができる。
 
--   You don't have to include an `(ns …)` declaration in your script.  But it still runs and it's still Clojure!
+- スクリプトに `(ns ...)` 宣言を含める必要はない。 しかし、それでも実行され、Clojureであることに変わりはありません！
 
--   It's acceptable and even encouraged to require namespaces with `(require …)`.
+- 名前空間を `(require ...)` で require することは問題ありませんし、推奨されます。
 
--   Babashka writes the last value it encounters to `stdout`, except if that value is `nil`
+- Babashka は最後に出会った値を `stdout` に書き込みますが、その値が `nil` の場合は例外です。
 
 
 
