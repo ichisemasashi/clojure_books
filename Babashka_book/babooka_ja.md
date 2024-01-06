@@ -388,10 +388,10 @@ chmod +x hello
 
 
 
-# Working with files 
+# ファイルを扱う 
 
 
-Shell scripts often need to read input from the command line and produce output somewhere, and our dream journal utility is no exception. It's going to store entries in the file `entries.edn`. The journal will be a vector, and each entry will be a map with the keys `:timestamp` and `:entry` (the entry has linebreaks for readability):
+シェルスクリプトはしばしばコマンドラインから入力を読み込み、どこかで出力を生成する必要がありますが、今回の夢日記ユーティリティも例外ではありません。エントリーは `entries.edn` というファイルに保存されます。日記はベクターになり、各エントリーは `:timestamp` と `:entry` をキーとするマップになります（読みやすくするためにエントリーは改行されます）：
 
 
 
@@ -410,11 +410,11 @@ Shell scripts often need to read input from the command line and produce output 
 
 
 
-To write to the journal, we want to run the command `./journal add --entry "Hamsters. Hamsters everywhere. Again."`. The result should be that a map gets appended to the vector.
+日記に書き込むには、コマンド `./journal add --entry "Hamsters. Hamsters everywhere. Again"`.その結果、ベクターにマップが追加される。
 
 
 
-Let's get ourselves part of the way there. Create the file `journal` and make it executable with `chmod +x journal`, then make it look like this:
+では早速やってみよう。ファイル `journal` を作成し、`chmod +x journal` で実行可能な状態にする、そして次のようにする：
 
 
 
@@ -446,13 +446,13 @@ Let's get ourselves part of the way there. Create the file `journal` and make it
 
 
 
-We require a couple namespaces: `babashka.fs` and `clojure.edn`.  `babashka.fs` is a collection of functions for working with the filesystem; check out its [API docs](https://github.com/babashka/fs).  When you're writing shell scripts, you're very likely to work with the filesystem, so this namespace is going to be your friend.
+ここでは、`babashka.fs`と`clojure.edn`の2つの名前空間が必要である。 `babashka.fs` はファイルシステムを操作するための関数群で、[API docs](https://github.com/babashka/fs) を参照してほしい。 シェルスクリプトを書くときには、ファイルシステムを扱うことが多いので、この名前空間はとても便利です。
 
 
-Here, we're using the `fs/exists?` function to check that `entries.edn` exists before attempting to read it because `slurp` will throw an exception if it can't find the file for the path you passed it.
+なぜなら `slurp` は渡されたパスのファイルが見つからないと例外を投げるから、その前に `entries.edn` が存在するかどうかをチェックするために `fs/exists?` 関数を使用している。
 
 
-The `add-entry` function uses `read-entries` to get a vector of entries, uses `conj` to add an entry, and then uses `spit` to write back to `entries.edn`. By default, `spit` will overwrite a file; if you want to append to it, you would call it like
+関数 `add-entry` は `read-entries` を使用してエントリのベクトルを取得し、`conj` を使用してエントリを追加し、`spit` を使用して `entries.edn` に書き戻す。デフォルトでは `spit` はファイルを上書きする；もし追加したい場合は次のように呼び出す。
 
 
 
@@ -464,20 +464,20 @@ The `add-entry` function uses `read-entries` to get a vector of entries, uses `c
 
 
 
-Maybe overwriting the whole file is a little dirty, but that's the scripting life babyyyyy!
+ファイル全体を上書きするのは少し汚いかもしれないが、これがスクリプトの世界なのだ！
 
 
-# Creating an interface for your script 
+# スクリプトのインターフェースを作る 
 
 
-OK so in the last line we call `(add-entry (first *command-line-args*))`. `*command-line-args*` is a sequence containing, well, all the command line arguments that were passed to the script. If you were to create the file `args.clj` with the contents `*command-line-args*`, then ran `bb args.clj 1 2 3`, it would print `("1" "2" "3")`.
+さて、最後の行では `(add-entry (first *command-line-args*))` を呼び出している。`*command-line-args*`は、スクリプトに渡されたすべてのコマンドライン引数を含むシーケンスである。もし`*command-line-args*`という内容で`args.clj`というファイルを作成し、`bb args.clj 1 2 3`と実行すると、`("1" "2" "3")`と表示される。
 
 
-Our `journal` file is at the point where we can add an entry by calling `./journal "Flying\!\! But to Home Depot??"`. This is almost what we want; we actually want to call `./journal add --entry "Flying\!\! But to Home Depot??"`. The assumption here is that we'll want to have other commands like `./journal list` or `./journal delete`. (You have to escape the exclamation marks otherwise bash interprets them as history commands.)
+我々の `journal` ファイルは、`./journal “Flying\!\! But to Home Depot??"`を呼び出すことでエントリーを追加できる。これはほぼ我々が望んでいることである ；実際には、`./journal add --entry “Flying\!\! But to Home Depot??"`を呼びたい。ここでの前提は、`./journal list`や`./journal delete`のような他のコマンドも欲しいということだ。(感嘆符をエスケープしないと、bashはこれらをヒストリーコマンドとして解釈してしまう)。
 
 
 
-To accomplish this, we'll need to handle the command line arguments in a more sophisticated way. The most obvious and least-effort way to do this would be to dispatch on the first argument to `*command-line-args*`, something like this:
+これを実現するには、コマンドライン引数をより洗練された方法で処理する必要がある。最も簡単でわかりやすい方法は、`*command-line-args*`の第一引数をディスパッチすることである：
 
 
 
@@ -490,47 +490,47 @@ To accomplish this, we'll need to handle the command line arguments in a more so
 
 
 
-This might be totally fine for your use case, but sometimes you want something more robust. You might want your script to:
+このような使い方でも問題ないかもしれないが、もっと堅牢なものが必要な場合もある。次のようなスクリプトが必要かもしれない：
 
 
 
--   List valid commands
+- 有効なコマンドをリストアップする。
 
--   Give an intelligent error message when a user calls a command that doesn't exist (e.g. if the user calls `./journal add-dream` instead of `./journal add`)
+- ユーザが存在しないコマンドを呼び出したときに、適切なエラーメッセージを表示する (例: `./journal add` ではなく `./journal add-dream` を呼び出した場合)
 
--   Parse arguments, recognizing option flags and converting values to keywords, numbers, vectors, maps, etc
-
-
-
-Generally speaking, **you want a clear and consistent way to define an interface for your script**. This interface is responsible for taking the data provided at the command line --- arguments passed to the script, as well as data piped in through `stdin` --- and using that data to handle these three responsibilities:
-
-
--   Dispatching to a Clojure function
-
--   Parsing command-line arguments into Clojure data, and passing that to the dispatched function
-
--   Providing feedback in cases where there's a problem performing the above responsibilities.
+- 引数を解析し、オプションフラグを認識し、値をキーワード、数値、ベクター、マップなどに変換する。
 
 
 
-The broader Clojure ecosystem provides at least two libraries for handling argument parsing:
+一般的に言えば、**スクリプトのインターフェイスを定義するための明確で一貫性のある方法** が必要です。このインターフェイスは、コマンドラインで提供されたデータ --- スクリプトに渡された引数、および `stdin` を通してパイプインされたデータ --- を受け取り、そのデータを使用してこれら3つの役割を処理します：
+
+
+- Clojure関数へのディスパッチ
+
+- コマンドライン引数をClojureデータに解析し、それをディスパッチされた関数に渡す
+
+- 上記の役割を果たすのに問題がある場合、フィードバックを提供する。
 
 
 
--   [clojure.tools.cli](https://github.com/clojure/tools.cli)
-
--   [nubank/docopt.clj](https://github.com/nubank/docopt.clj)
+広範なClojureエコシステムは、引数解析を処理するための少なくとも2つのライブラリを提供します：
 
 
 
-Babashka provides the [babashka.cli library](https://github.com/babashka/cli) for both parsing options and dispatches subcommands. We're going to focus just on babashka.cli.
+- [clojure.tools.cli](https://github.com/clojure/tools.cli)
+
+- [nubank/docopt.clj](https://github.com/nubank/docopt.clj)
 
 
-## parsing options with babashka.cli 
+
+Babashkaは[babashka.cliライブラリ](https://github.com/babashka/cli)をオプションの解析とサブコマンドのディスパッチの両方に提供しています。ここでは、babashka. cliに絞って説明します。
+
+
+## babashka.cliでオプションを解析する 
 
 
 
-The [babashka.cli docs](https://github.com/babashka/cli) do a good job of explaining how to use the library to meet all your command line parsing needs. Rather than going over every option, I'll just focus on what we need to build our dream journal. To parse options, we require the `babashka.cli` namespace and we define a *CLI spec*:
+[babashka.cliドキュメント](https://github.com/babashka/cli)は、コマンドライン解析のニーズを満たすライブラリの使い方をよく説明している。すべてのオプションを説明するのではなく、私たちの夢日記を作るために必要なものだけに焦点を当てます。オプションを解析するには、`babashka.cli`名前空間が必要で、*CLI spec*を定義します：
 
 
 
@@ -548,14 +548,14 @@ The [babashka.cli docs](https://github.com/babashka/cli) do a good job of explai
 
 
 
-A CLI spec is a map where each key is a keyword, and each value is an *option spec*. This key is the *long name* of your option; `:entry` corresponds to the flag `--entry` on the command line.
+CLI spec はマップであり、各キーはキーワードで、各値は *option spec* である。このキーはオプションの *長い名前* で、`:entry` はコマンドラインのフラグ `--entry` に対応する。
 
 
-The option spec is a map you can use to further config the option.  `:alias` lets you specify a *short name* for you options, so that you can use e.g. `-e` instead of `--entry` at the command line. `:desc` is used to create a summary for your interface, and `:require` is used to enforce the presence of an option. `:coerce` is used to transform the option's value into some other data type.
+option spec はオプションをより詳細に設定するためのマップである。 `:alias` はオプションの *短い名前* を指定するもので、例えばコマンドラインで `--entry` の代わりに `-e` を使うことができる。`:desc` はインターフェースの概要を作成するために使用し、 `:require` はオプションの存在を必須にするために使用する。`:coerce` はオプションの値を他のデータ型に変換するために使用する。
 
 
 
-We can experiment with this CLI spec in a REPL. There are many options for starting a Babashka REPL, and the most straightforward is simply typing `bb repl` at the command line. If you want to use CIDER, first add the file `bb.edn` and put an empty map, `{}`, in it. Then you can use `cider-jack-in`. After that, you can paste in the code from the snippet above, then paste in this snippet:
+このCLI specをREPLで試すことができる。Babashka REPLを起動するためのオプションはたくさんあるが、一番簡単なのはコマンドラインで`bb repl`と入力することだ。CIDERを使いたい場合は、まず`bb.edn`ファイルを追加し、その中に空のマップ`{}`を置く。それから`cider-jack-in`を使う。その後、上のスニペットのコードを貼り付け、次に以下のスニペットを貼り付ける：
 
 
 
@@ -569,11 +569,11 @@ We can experiment with this CLI spec in a REPL. There are many options for start
 
 
 
-Note that `cli/parse-opts` returns a map with the parsed options, which will make it easy to use the options later.
+`cli/parse-opts`はパースされたオプションをマップとして返すので、後で簡単にオプションを使うことができる。
 
 
 
-Leaving out a required flag throws an exception:
+必須のフラグを省略すると例外がスローされる：
 
 
 
@@ -587,7 +587,7 @@ Leaving out a required flag throws an exception:
 
 
 
-`cli/parse-opts` is a great tool for building an interface for simple scripts! You can communicate that interface to the outside world with `cli/format-opts`. This function will take an option spec and return a string that you can print to aid people in using your program. Behold:
+`cli/parse-opts` はシンプルなスクリプトのインターフェースを構築するための素晴らしいツールである！`cli/format-opts` を使えば、そのインターフェイスを外部とやり取りすることができる。この関数は option spec を受け取って文字列を返す。ご覧あれ：
 
 
 
@@ -604,11 +604,11 @@ Leaving out a required flag throws an exception:
 
 
 
-## dispatching subcommands with babashka.cli 
+## babashka.cliでサブコマンドをディスパッチする 
 
 
 
-babashka.cli goes beyond option parsing to also giving you a way to dispatch subcommands, which is exactly what we want to get `./journal add --entry "…"` working. Here's the final version of `journal`:
+babashka.cliはオプションのパースだけでなく、サブコマンドをディスパッチする方法も提供している、まさに`./journal add --entry "..."`を動作させたいのだ。これが `journal` の最終バージョンだ：
 
 
 
@@ -660,7 +660,7 @@ babashka.cli goes beyond option parsing to also giving you a way to dispatch sub
 
 
 
-Try it out with the following at your terminal:
+お使いの端末で次のように試してみてください：
 
 
 
@@ -673,43 +673,43 @@ Try it out with the following at your terminal:
 
 
 
-The function `cli/dispatch` at the bottom takes a dispatch table as its first argument. `cli/dispatch` figures out which of the arguments you passed in at the command line correspond to commands, and then calls the corresponding `:fn`. If you type `./journal add …`, it will dispatch the `add-entry` function. If you just type `./journal` with no arguments, then the `help` function gets dispatched.
+一番下の関数 `cli/dispatch` はディスパッチテーブルを最初の引数として受け取る。`cli/dispatch`はコマンドラインで渡された引数のどれがコマンドに対応するかを判断し、対応する `:fn` を呼び出します。また `./journal add ...` と入力すると、`add-entry` 関数をディスパッチする。もし引数なしで `./journal` とタイプすると、 `help` 関数がディスパッチされます。
 
 
 
-The dispatched function receives a map as its argument, and that map contains the `:opts` key. This is a map of parsed command line options, and we use it to build our dream journal entry in the `add-entry` function.
+ディスパッチされた関数は引数としてマップを受け取り、そのマップには `:opts` キーが含まれる。これは解析されたコマンドラインオプションのマップであり、それを使って `add-entry` 関数で夢日記を作成する。
 
 
 
-And that, my friends, is how you build an interface for your script!
-
-
-
-
-
-## Summary 
-
-
-
--   For scripts of any complexity, you generally need to *parse* the command line options into Clojure data structures
-
--   The libraries `clojure.tools.cli` and `nubank/docopts` will parse command line arguments into options for you
-
--   I prefer using `babashka.cli` because it also handles subcommand dispatch, but really this decision is a matter of taste
-
--   `cli/parse-opts` takes an *options spec* and returns a map
-
--   `cli/format-opts` is useful for creating help text
-
--   Your script might provide *subcommands*, e.g. `add` in `journal add`, and you will need to map the command line arguments to the appropriate function in your script with `cli/dispatch`
+これがスクリプトのインターフェイスを構築する方法だ！
 
 
 
 
-# Organizing your project 
+
+## まとめ 
 
 
-You can now record your subconscious's nightly improv routine. That's great! High on this accomplishment, you decide to kick things up a notch and add the ability to list your entries. You want to run `./journal list` and have your script return something like this:
+
+- どんな複雑なスクリプトでも、コマンドラインオプションをClojureデータ構造に*パース*する必要があります。
+
+- ライブラリ `clojure.tools.cli` と `nubank/docopts` は、コマンドライン引数をオプションにパースしてくれます。
+
+- このライブラリはサブコマンドのディスパッチも行うので、私は `babashka.cli` を使用することを好みますが、これは好みの問題です。
+
+-`cli/parse-opts` は *options spec* を受け取り、マップを返す。
+
+- `cli/format-opts` はヘルプテキストを作成するのに便利である。
+
+- 例えば `journal add` の `add` のように、あなたのスクリプトは *サブコマンド* を提供するかもしれないので、 `cli/dispatch` を使ってコマンドライン引数をスクリプト内の適切な関数にマップする必要がある。
+
+
+
+
+# プロジェクトを管理する 
+
+
+潜在意識の毎晩の即興ルーティンを記録できるようになった。素晴らしいことだ！この達成感から、あなたはさらにステップアップして、エントリーをリストアップする機能を追加することにした。そして、`./journal list`を実行し、スクリプトが次のようなものを返すようにしたい：
 
 
 
@@ -727,18 +727,18 @@ making those sandwiches so I wouldn't get stranded at sea.
 
 
 
-You read somewhere that source files should be AT MOST 25 lines long, so you decide that you want to split up your codebase and put this list functionality in its own file. How do you do that?
+ソースファイルの長さはせいぜい25行程度にすべきだとどこかで読んだので、コードベースを分割して、このリスト機能を独自のファイルに置きたいと考えた。どうすればいいのでしょう？
 
 
 
-You can organize your Babashka projects just like your other Clojure projects, splitting your codebase into separate files, with each file defining a namespace and with namespaces corresponding to file names.  Let's reorganize our current codebase a bit, making sure everything still works, and then add a namespace for listing entries.
+他のClojureプロジェクトと同じように、コードベースを別々のファイルに分割し、それぞれのファイルで名前空間を定義し、名前空間をファイル名に対応させることで、Babashkaプロジェクトを管理することができます。 現在のコードベースを少し再編成して、すべてがまだ動作することを確認してから、一覧を表示するための名前空間を追加してみましょう。
 
 
-## File system structure 
+## ファイルシステムの構造 
 
 
 
-One way to organize our dream journal project would be to create the following file structure:
+夢日記プロジェクトを整理する一つの方法は、次のようなファイル構造を作ることだろう：
 
 
 
@@ -752,10 +752,10 @@ One way to organize our dream journal project would be to create the following f
 
 
 
-Already, you can see that this looks both similar to typical Clojure project file structures, and a bit different. We're placing our namespaces in the `src/journal` directory, which lines up with what you'd see in JVM or ClojureScript projects. What's different in our Babashka project is that we're still using `./journal` to serve as the executable entry point for our program, rather than the convention of using `./src/journal/core.clj` or something like that. This might feel a little weird but it's valid and it's still Clojure.
+すでに、これが典型的なClojureプロジェクトのファイルの構造に似ていると同時に、少し異なっていることがわかるでしょう。`src/journal` ディレクトリに名前空間を配置していますが、これはJVMやClojureScriptプロジェクトで見られるものと同じです。私たちのBabashkaプロジェクトにおいて異なっているのは、プログラムの実行可能なエントリーポイントとして、`./src/journal/core.clj`などを使用するのではなく、`./journal`を使用していることです。これは少し奇妙に感じるかもしれませんが、妥当であり、依然としてClojureなのです。
 
 
-And like other Clojure environments, you need to tell Babashka to look in the `src` directory when you require namespaces. You do that by creating the file `bb.edn` in the same directory as `journal` and putting this in it:
+他のClojure環境と同じように、名前空間が必要な場合は`src`ディレクトリを探すようにBabashkaに指示する必要があります。そのためには、`journal`と同じディレクトリに`bb.edn`というファイルを作成し、このように記述します：
 
 
 
