@@ -766,13 +766,13 @@ making those sandwiches so I wouldn't get stranded at sea.
 
 
 
-`bb.edn` is similar to a `deps.edn` file in that one of its responsibilities is telling Babashka how to construct your classpath.  The classpath is the set of the directories that Babashka should look in when you require namespaces, and by adding `"src"` to it you can use `(require '[journal.add])` in your project. Babashka will be able to find the corresponding file.
+`bb.edn`は`deps.edn`ファイルと似ていて、クラスパスの構築方法をBabashkaに指示します。 クラスパスとは、名前空間をrequireするときにBabashkaが参照するディレクトリのことで、これに`"src"`を追加することで、プロジェクト内で`(require '[journal.add])`を使うことができます。Babashkaは対応するファイルを見つけることができます。
 
 
-Note that there is nothing special about the `"src"` directory. You could use `"my-code"` or even `"."` if you wanted, and you can add more than one path. `"src"` is just the convention preferred by discerning Clojurians the world over.
+なお、`"src"`ディレクトリは特別なものではありません。必要であれば `"my-code"` や `"."` を使うこともできますし、複数のパスを追加することもできます。`"src"` は、世界中の目の肥えた Clojurian が好む慣例に過ぎません。
 
 
-With this in place, we'll now update `journal` so that it looks like this:
+これで、`journal`を次のように更新する：
 
 
 
@@ -800,17 +800,17 @@ With this in place, we'll now update `journal` so that it looks like this:
 
 
 
-Now the file is only responsible for parsing command line arguments and dispatching to the correct function. The add functionality has been moved to another namespace.
+これで、このファイルはコマンドライン引数のパースと正しい関数へのディスパッチだけを担当するようになった。追加機能は別の名前空間に移された。
 
 
 
 
 
-## Namespaces 
+## 名前空間 
 
 
 
-You can see on line 4 that we're requiring a new namespace, `journal.add`. The file corresponding to this namespace is `./src/journal/add.clj`. Here's what that looks like:
+4行目で、`journal.add`という新しい名前空間が必要であることがわかる。この名前空間に対応するファイルは `./src/journal/add.clj` です。これがそのファイルだ：
 
 
 
@@ -832,16 +832,16 @@ You can see on line 4 that we're requiring a new namespace, `journal.add`. The f
 
 
 
-Look, it's a namespace declaration! And that namespace declaration has a `(:require …)` form. We know that when you write Babashka scripts, you can forego declaring a namespace if all your code is in one file, like in the original version of `journal`. However, once you start splitting your code into multiple files, the normal rules of Clojure project organization apply:
+これは名前空間宣言だ！そして、この名前空間宣言には `(:require ...)` という形式があります。Babashkaスクリプトを書くとき、`journal`のオリジナルバージョンのように、すべてのコードが1つのファイルにまとまっていれば、名前空間宣言を省略できることは知っています。しかし、コードを複数のファイルに分割し始めると、通常のClojureプロジェクト構成のルールが適用されます：
 
 
 
--   Namespace names must correspond to filesystem paths. If you want to name a namespace `journal.add`, Babashka must be able to find it at `journal/add.clj`.
+- 名前空間 の名前はファイルシステムのパスに対応しなければなりません。名前空間に `journal.add` という名前を付けたい場合、Babashkaは `journal/add.clj` にある名前空間を見つけられなければなりません。
 
--   You must tell Babashka where to look to find the files that correspond to namespaces. You do this by creating a `bb.edn` file and putting `{:paths ["src"]}` in it.
+- 名前空間に対応するファイルを探すには、Babashkaに場所を教える必要があります。そのためには、`bb.edn`ファイルを作成し、その中に`{:paths ["src"]}`と記述します。
 
 
-To finish our tour of our new project organization, here's `./src/journal/utils.clj`:
+最後に、新しいプロジェクト構成について説明するために、`./src/journal/utils.clj`をご覧ください：
 
 
 
@@ -864,11 +864,11 @@ To finish our tour of our new project organization, here's `./src/journal/utils.
 
 
 
-If you call `./journal add -e "visited by the tooth fairy, except he was a balding 45-year-old man with a potbelly from Brooklyn"`, it should still work.
+`./journal add -e "visited by the tooth fairy, except he was a balding 45-year-old man with a potbelly from Brooklyn"`を呼び出しても動作するはずだ。
 
 
 
-Now lets create a the `journal.list` namespace. Open the file `src/journal/list.clj` and put this in it:
+では、`journal.list`ネームスペースを作ってみよう。まず、`src/journal/list.clj`ファイルを開き、次のように記述する：
 
 
 
@@ -889,11 +889,11 @@ Now lets create a the `journal.list` namespace. Open the file `src/journal/list.
 
 
 
-This doesn't format the timestamp, but other than that it lists our entries in reverse-chronologial order, just like we want. Yay!
+これはタイムスタンプをフォーマットしないが、それ以外は私たちが望むように、逆時系列順にエントリーをリストアップしてくれる。やった！
 
 
 
-To finish up, we need to add `journal.list/list-entries` to our dispatch table in the `journal` file. That file should now look like this:
+最後に、`journal`ファイルのディスパッチテーブルに`journal.list/list-entries`を追加する必要がある。このファイルはこのようになるはずだ：
 
 
 
@@ -925,21 +925,21 @@ To finish up, we need to add `journal.list/list-entries` to our dispatch table i
 
 
 
-## Summary 
+## まとめ 
 
 
 
--   Namespaces work like they do in JVM Clojure and Clojurescript: namespace names must correspond to file system structure
+- 名前空間はJVM ClojureやClojurescriptと同じように動作する：名前空間名はファイルシステム構造に対応しなければならない。
 
--   Put the map `{:paths ["src"]}` in `bb.edn` to tell Babashka where to find the files for namespaces
-
-
+- `bb.edn`に`{:paths ["src"]}`というマップを入れて、名前空間のファイルがどこにあるかをBabashkaに伝える。
 
 
-# Adding dependencies 
 
 
-You can add dependencies to your projects by adding a `:deps` key to your `bb.edn` file, resulting in something like this:
+# 依存関係の追加 
+
+
+プロジェクトに依存関係を追加するには、`bb.edn` ファイルに `:deps` キーを追加します：
 
 
 
@@ -952,7 +952,7 @@ You can add dependencies to your projects by adding a `:deps` key to your `bb.ed
 
 
 
-What's cool about Babashka though is that you can also add deps directly in your script, or even in the repl, like so:
+しかし、Babashkaのクールなところは、スクリプトに直接depを追加したり、あるいはreplにdepを追加することもできることだ：
 
 
 
@@ -965,31 +965,31 @@ What's cool about Babashka though is that you can also add deps directly in your
 
 
 
-This is in keeping with the nature of a scripting language, which should enable quick, low-ceremony development.
+これはスクリプト言語の性質に沿ったものであり、迅速で堅苦しくない開発を可能にするものです。
 
 
 
-At this point you should be fully equipped to start writing your own Clojure shell scripts with Babashka. Woohoo!
+この時点で、Babashkaを使って独自のClojureシェル・スクリプトを書き始めるための準備が完全に整っているはずです。うっほー！
 
 
 
-In the sections that follow, I'll cover aspects of Babashka that you might not need immediately but that will be useful to you as your love of Clojure scripting grows until it becomes all-consuming.
+この後のセクションでは、すぐに必要ではないかもしれないが、Clojureスクリプティングへの愛が大きくなり、それがすべてを覆い尽くすまでになったときに役に立つBabashkaの側面を取り上げます。
 
 # Pods 
 
 
-Babashka *pods* introduce a way to interact with external processes by calling Clojure functions, so that you can write code that looks and feels like Clojure (because it is) even when working with a process that's running outside your Clojure application, and even when that process is written in another language.
+Babashka *pods*は、Clojure関数を呼び出すことで外部プロセスと対話する方法を導入しており、Clojureアプリケーションの外部で実行されているプロセスで作業しているときでも、またそのプロセスが他の言語で書かれているときでも、Clojureのように見え、そう感じるコードを書くことができます。
 
 
 
-## Pod usage 
+## Podの使い方 
 
 
 
-Let's look at what that means in more concrete terms. Suppose you want to encrypt your dream journal. You find out about [stash](https://github.com/rorokimdim/stash), \"a command line program for storing text data in encrypted form.\" This is exactly what you need! Except it's written in Haskell, and furthermore it has a *terminal user interface* (TUI) rather than a command-line interface.
+より具体的にどういうことか見てみよう。夢日記を暗号化したいとします。あなたは[stash](https://github.com/rorokimdim/stash)という、"テキストデータを暗号化して保存するためのコマンドライン・プログラム "を見つけたとします。これはまさにあなたが必要としているものです！ただし、これはHaskellで書かれていて、しかもコマンドライン・インターフェイスというよりむしろ*ターミナル・ユーザー・インターフェイス*(TUI)を持っている。
 
 
-That is, when you run `stash` from the command line it \"draws\" an ascii interface in your terminal, and you must provide additional input to store text. You can't store text directly from the command line with something like
+つまり、コマンドラインから `stash` を実行すると、ターミナルに ascii インターフェースが描画されます ので、テキストを保存するには追加の入力を行う必要があります。次のようなコマンドラインから直接テキストを保存することはできません。
 
 
 
@@ -1005,7 +1005,7 @@ stash store dreams.stash \
 
 
 
-If that were possible, then you could use `stash` from within your Bashka project by using the `babashka.process/shell` function, like this:
+もしそれが可能であれば、`babashka.process/shell`関数を使うことで、Bashkaプロジェクトの中から`stash`を使うことができる：
 
 
 
@@ -1018,11 +1018,11 @@ If that were possible, then you could use `stash` from within your Bashka projec
 
 
 
-`bp/shell` is lets you take advantage of a program's command-line interface; but again, `stash` doesn't provide that.
+`bp/shell`はプログラムのコマンドラインインターフェイスを利用できるものだが、やはり`stash`はそれを提供していない。
 
 
 
-However, `stash` provides a *pod interface*, so we can use it like this in a Clojure file:
+しかし、`stash`は*podインターフェイス*を提供するので、Clojureファイルでこのように使うことができる：
 
 
 
