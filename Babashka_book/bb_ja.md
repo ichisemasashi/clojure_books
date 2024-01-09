@@ -4,45 +4,45 @@
 
 
 
-## [Introduction](#introduction)
+## はじめに
 
-Welcome reader! This is a book about scripting with Clojure and babashka. [Clojure](https://www.clojure.org) is a functional, dynamic programming language from the Lisp family which runs on the JVM.  Babashka is a scripting environment made with Clojure, compiled to native with [GraalVM](https://www.graalvm.org). The primary benefits of using babashka for scripting compared to the JVM are fast startup time and low memory consumption. Babashka comes with batteries included and packs libraries like `clojure.tools.cli` for parsing command line arguments and `cheshire` for working with JSON. Moreover, it can be installed just by downloading a self-contained binary.
-
-
-### [Target audience](#_target_audience) {#_target_audience}
+ようこそ読者！本書はClojureとbabashkaを使ったスクリプティングについての本です。[Clojure](https://www.clojure.org)は、JVM上で動作するLispファミリーの関数型動的プログラミング言語です。 BabashkaはClojureで作られたスクリプト環境で、[GraalVM](https://www.graalvm.org)でネイティブにコンパイルさ れています。JVMと比較して、スクリプティングにBabashkaを使用する主な利点は、起動時間の速さとメモリ消費量の少なさです。Babashkaにはバッテリーが付属しており、コマンドライン引数をパースするための`clojure.tools.cli`やJSONを扱うための`cheshire`のようなライブラリがパックされている。さらに、自己完結型のバイナリをダウンロードするだけでインストールできる。
 
 
-Babashka is written for developers who are familiar with Clojure on the JVM. This book assumes familiarity with Clojure and is not a Clojure tutorial. If you aren't that familiar with Clojure but you're curious to learn, check out [this](https://gist.github.com/yogthos/be323be0361c589570a6da4ccc85f58f) list of beginner resources.
+### 対象読者
 
 
-
-
-### [Setting expectations](#_setting_expectations) {#_setting_expectations}
-
-
-Babashka uses [SCI](https://github.com/babashka/SCI) for interpreting Clojure. SCI implements a substantial subset of Clojure. Interpreting code is in general not as performant as executing compiled code. If your script takes more than a few seconds to run or has lots of loops, Clojure on the JVM may be a better fit, as the performance on JVM is going to outweigh its startup time penalty. Read more about the differences with Clojure [here](#differences-with-clojure).
+Babashkaは、JVM上のClojureに精通している開発者向けに書かれています。本書はClojureに精通していることを前提としており、Clojureのチュートリアルではありません。Clojureにそれほど詳しくないが、学びたいという方は、[こちら](https://gist.github.com/yogthos/be323be0361c589570a6da4ccc85f58f)の初心者向けリソースのリストをチェックしてください。
 
 
 
 
+### 想定される設定
 
 
-## [Getting started](#getting_started) {#getting_started}
-
-
-
-### [Installation](#_installation) {#_installation}
-
-
-Installing babashka is as simple as downloading the binary for your platform and placing it on your path. Pre-built binaries are provided on the [releases](https://github.com/borkdude/babashka/releases) page of babashka's [Github repo](https://github.com/borkdude/babashka). Babashka is also available in various package managers like `brew` for macOS and linux and `scoop` for Windows. See [here](https://github.com/borkdude/babashka#installation) for details.
+BabashkaはClojureを解釈するために[SCI](https://github.com/babashka/SCI)を使用します。SCIはClojureの実質的なサブセットを実装しています。一般的に、コードの解釈はコンパイルされたコードを実行するほどパフォーマンスは高くありません。スクリプトの実行に数秒以上かかるか、ループが多い場合は、JVM上のClojureの方が適しているかもしれません。Clojureとの違いについて、詳しくは[こちら](#differences-with-clojure)をお読みください。
 
 
 
 
-### [Building from source](#_building_from_source) {#_building_from_source}
 
 
-If you would rather build babashka from source, download a copy of GraalVM and set the `GRAALVM_HOME` environment variable. Also make sure you have [lein](https://leiningen.org) installed. Then run:
+## はじめに
+
+
+
+### インストール
+
+
+babashkaのインストールは、プラットフォーム用のバイナリをダウンロードし、パスに置くだけの簡単なものです。ビルド済みのバイナリは、babashkaの[Github repo](https://github.com/borkdude/babashka)の[releases](https://github.com/borkdude/babashka/releases)ページで提供されている。babashkaはmacOSやlinuxの`brew`やWindowsの`scoop`のような様々なパッケージマネージャーでも利用できる。詳細は[こちら](https://github.com/borkdude/babashka#installation)を参照。
+
+
+
+
+### ソースからのビルド
+
+
+ソースからbabashkaをビルドしたい場合は、GraalVMのコピーをダウンロードし、`GRAALVM_HOME`環境変数を設定してください。また、[lein](https://leiningen.org)がインストールされていることを確認してください。それから実行してください：
 
 
 
@@ -59,7 +59,7 @@ See the babashka [build.md](https://github.com/borkdude/babashka/blob/master/doc
 
 
 
-### [Running babashka](#_running_babashka) {#_running_babashka}
+### Running babashka
 
 
 The babashka executable is called `bb`. You can either provide it with a Clojure expression directly:
@@ -136,7 +136,7 @@ Commonly, scripts have shebangs so you can invoke them with their filename only:
 
 
 
-## [Usage](#usage)
+## Usage
 
 
 
@@ -225,7 +225,7 @@ Typing `bb help` from the command line will print all the available command line
 
 
 
-### [Running a script](#_running_a_script) {#_running_a_script}
+### Running a script
 
 
 Scripts may be executed from a file using `-f` or `--file`:
@@ -316,7 +316,7 @@ $ cat script.clj
 
 
 
-### [Current file path](#_current_file_path) {#_current_file_path}
+### Current file path
 
 
 The var `*file*` contains the full path of the file that is currently being executed:
@@ -336,7 +336,7 @@ $ bb example.clj
 
 
 
-### [Parsing command line arguments](#_parsing_command_line_arguments) {#_parsing_command_line_arguments}
+### Parsing command line arguments
 
 
 Command-line arguments can be retrieved using `*command-line-args*`. If you want to parse command line arguments, you can use the built-in [`babashka.cli`](https://github.com/babashka/cli) namespace:
@@ -373,7 +373,7 @@ Note that [clojure.tools.cli](https://github.com/clojure/tools.cli) is also buil
 
 
 
-### [Classpath](#_classpath) {#_classpath}
+### Classpath
 
 
 It is recommended to use `bb.edn` to control what directories and libraries are included on babashka's classpath. See [Project setup](#project-setup)
@@ -454,7 +454,7 @@ The namespace [babashka.deps](#babashkadeps) integrates [tools.deps](https://git
 
 
 
-### [Invoking a main function](#main-function) {#main-function}
+### Invoking a main function
 
 
 A main function can be invoked with `-m` or `--main` like shown above.  When given the argument `foo.bar`, the namespace `foo.bar` will be required and the function `foo.bar/-main` will be called with command line arguments as strings.
@@ -483,7 +483,7 @@ When invoking `bb` with a main function, the expression `(System/getProperty "ba
 
 
 
-### [Preloads](#_preloads) {#_preloads}
+### Preloads
 
 
 The environment variable `BABASHKA_PRELOADS` allows to define code that will be available in all subsequent usages of babashka.
@@ -530,14 +530,14 @@ Note that `*input*` is not available in preloads.
 
 
 
-### [Running a REPL](#repl) {#repl}
+### Running a REPL
 
 
 Babashka supports running a REPL, a socket REPL and an nREPL server.
 
 
 
-#### [REPL](#_repl) {#_repl}
+#### REPL
 
 
 To start a REPL, type:
@@ -565,7 +565,7 @@ $ rlwrap bb repl
 
 
 
-#### [Socket REPL](#_socket_repl) {#_socket_repl}
+#### Socket REPL
 
 
 To start a socket REPL on port `1666`:
@@ -638,7 +638,7 @@ Editor plugins and tools known to work with a babashka socket REPL:
 
 
 
-#### [pREPL](#_prepl) {#_prepl}
+#### pREPL
 
 
 Launching a prepl can be done as follows:
@@ -668,7 +668,7 @@ $ bb -e '(clojure.core.server/io-prepl)'
 
 
 
-#### [nREPL](#_nrepl) {#_nrepl}
+#### nREPL
 
 
 To start an nREPL server:
@@ -753,7 +753,7 @@ The `babashka.nrepl.server` API is exposed since version 0.8.157.
 
 
 
-##### [Debugging the nREPL server](#_debugging_the_nrepl_server) {#_debugging_the_nrepl_server}
+##### Debugging the nREPL server
 
 
 To debug the nREPL server from the binary you can run:
@@ -788,7 +788,7 @@ $ BABASHKA_DEV=true clojure -A:main --nrepl-server 1667
 
 
 
-#### [REPL server port](#_repl_server_port) {#_repl_server_port}
+#### REPL server port
 
 
 For the socket REPL, pREPL, or nREPL, if a randomized port is needed, 0 can be used anywhere a port argument is accepted.
@@ -796,7 +796,7 @@ For the socket REPL, pREPL, or nREPL, if a randomized port is needed, 0 can be u
 
 
 
-### [Input and output flags](#_input_and_output_flags) {#_input_and_output_flags}
+### Input and output flags
 
 
 In one-liners the `*input*` value may come in handy. It contains the input read from stdin as EDN by default. If you want to read in text, use the `-i` flag, which binds `*input*` to a lazy seq of lines of text.  If you want to read multiple EDN values, use the `-I` flag. The `-o` option prints the result as lines of text. The `-O` option prints the result as lines of EDN values.
@@ -850,7 +850,7 @@ $ echo '{:a 1} {:a 2}' | bb --stream '*input*'
 
 
 
-#### [Scripts](#_scripts) {#_scripts}
+#### Scripts
 
 
 When writing scripts instead of one-liners on the command line, it is not recommended to use `*input*`. Here is how you can rewrite to standard Clojure code.
@@ -858,7 +858,7 @@ When writing scripts instead of one-liners on the command line, it is not recomm
 
 
 
-#### [EDN input](#_edn_input) {#_edn_input}
+#### EDN input
 
 
 Reading a single EDN value from stdin:
@@ -894,7 +894,7 @@ Reading multiple EDN values from stdin (the `-I` flag):
 
 
 
-#### [Text input](#_text_input) {#_text_input}
+#### Text input
 
 
 Reading text from stdin can be done with `(slurp *in*)`. To get a lazy seq of lines (the `-i` flag), you can use:
@@ -913,7 +913,7 @@ Reading text from stdin can be done with `(slurp *in*)`. To get a lazy seq of li
 
 
 
-#### [Output](#_output) {#_output}
+#### Output
 
 
 To print to stdout, use `println` for text and `prn` for EDN values.
@@ -922,7 +922,7 @@ To print to stdout, use `println` for text and `prn` for EDN values.
 
 
 
-### [Uberscript](#_uberscript) {#_uberscript}
+### Uberscript
 
 
 The `--uberscript` option collects the expressions in `BABASHKA_PRELOADS`, the command line expression or file, the main entrypoint and all required namespaces from the classpath into a single file. This can be convenient for debugging and deployment.
@@ -1027,7 +1027,7 @@ If any of the above is problematic for your project, using an [uberjar](#uberjar
 
 
 
-#### [Carve](#_carve) {#_carve}
+#### Carve
 
 
 Uberscripts can be optimized by cutting out unused vars with [carve](https://github.com/borkdude/carve).
@@ -1062,7 +1062,7 @@ bb glob-uberscript.clj '*.md'   0.02s  user 0.01s system 84% cpu 0.034 total
 
 
 
-### [Uberjar](#_uberjar) {#_uberjar}
+### Uberjar
 
 
 Babashka can create uberjars from a given classpath and optionally a main method:
@@ -1085,7 +1085,7 @@ $ bb foo.jar
 
 
 
-### [System properties](#_system_properties) {#_system_properties}
+### System properties
 
 
 Babashka sets the following system properties:
@@ -1101,7 +1101,7 @@ Babashka sets the following system properties:
 
 
 
-### [Data readers](#_data_readers) {#_data_readers}
+### Data readers
 
 
 Data readers can be enabled by setting `*data-readers*` to a hashmap of symbols to functions or vars:
@@ -1122,7 +1122,7 @@ To preserve good startup time, babashka does not scan the classpath for `data_re
 
 
 
-### [Reader conditionals](#_reader_conditionals) {#_reader_conditionals}
+### Reader conditionals
 
 
 Babashka supports reader conditionals by taking either the `:bb` or `:clj` branch, whichever comes first. NOTE: the `:clj` branch behavior was added in version 0.0.71, before that version the `:clj` branch was ignored.
@@ -1145,7 +1145,7 @@ $ bb -e "[1 2 #?@(:bb [] :clj [1])]"
 
 
 
-### [Invoking clojure](#_invoking_clojure) {#_invoking_clojure}
+### Invoking clojure
 
 
 Babashka bundles [deps.clj](https://github.com/borkdude/deps.clj) for invoking a `clojure` JVM process:
@@ -1168,11 +1168,11 @@ See the [clojure](#_clojure) function in the [babashka.deps](#babashkadeps) name
 
 
 
-## [Project setup](#project-setup)
+## Project setup
 
 
 
-### [bb.edn](#_bb_edn) {#_bb_edn}
+### bb.edn
 
 
 Since version 0.3.1, babashka supports a local `bb.edn` file to manage a project.
@@ -1180,7 +1180,7 @@ Since version 0.3.1, babashka supports a local `bb.edn` file to manage a project
 
 
 
-### [:paths and :deps](#_paths_and_deps) {#_paths_and_deps}
+### :paths and :deps
 
 
 You can declare one or multiple paths and dependencies so they are automatically added to the classpath:
@@ -1247,7 +1247,7 @@ $ bb -m my-project.main
 
 
 
-See [Invoking a main function](#main-function) for more details on how to invoke a function from the command line.
+See "Invoking a main function" for more details on how to invoke a function from the command line.
 
 
 
@@ -1256,7 +1256,7 @@ The `:deps` entry is managed by [deps.clj](https://github.com/borkdude/deps.clj)
 
 
 
-### [:min-bb-version](#_min_bb_version) {#_min_bb_version}
+### :min-bb-version
 
 
 Since version 0.3.6, babashka supports the `:min-bb-version` where the minimal babashka version can be declared:
@@ -1286,7 +1286,7 @@ WARNING: this project requires babashka 0.3.7 or newer, but you have: 0.3.6
 
 
 
-### [:tasks](#_tasks) {#_tasks}
+### :tasks
 
 
 Since babashka 0.4.0 the `bb.edn` file supports the `:tasks` entry which describes tasks that you can run in the current project. The tasks feature is similar to what people use `Makefile`, `Justfile` or `npm run` for. See [Task runner](#tasks) for more details.
@@ -1294,7 +1294,7 @@ Since babashka 0.4.0 the `bb.edn` file supports the `:tasks` entry which describ
 
 
 
-### [Script-adjacent bb.edn](#_script_adjacent_bb_edn) {#_script_adjacent_bb_edn}
+### Script-adjacent bb.edn
 
 
 Since babashka 1.3.177 a `bb.edn` file relative to the invoked file is respected. This makes writing system-global scripts with dependencies easier.
@@ -1361,7 +1361,7 @@ Of course you can just call your script `medley` without the `.bb` extension.
 
 
 
-#### [Windows](#script-adjacent-bb-edn-windows) {#script-adjacent-bb-edn-windows}
+#### Windows
 
 
 On Windows bash shebangs are not supported. An alternative is to create a script-adjacent `.bat` file, e.g `medley.bat`:
@@ -1397,11 +1397,11 @@ C:\Temp> medley
 
 
 
-## [Task runner](#tasks) {#tasks}
+## Task runner
 
 
 
-### [Introduction](#_introduction) {#_introduction}
+### Introduction
 
 
 People often use a `Makefile`, `Justfile`, `npm scripts` or `lein` aliases in their (clojure) projects to remember complex invocations and to create shortcuts for them. Since version 0.4.0, babashka supports a similar feature as part of the `bb.edn` project configuration file. For a general overview of what's available in `bb.edn`, go to [Project setup](#project-setup).
@@ -1492,7 +1492,7 @@ Removing target folder.
 
 
 
-### [Talk](#_talk) {#_talk}
+### Talk
 
 
 Go [here](https://www.youtube.com/watch?v=u5ECoR7KT1Y&ab_channel=LondonClojurians) if you would like to watch a talk on babashka tasks.
@@ -1500,7 +1500,7 @@ Go [here](https://www.youtube.com/watch?v=u5ECoR7KT1Y&ab_channel=LondonClojurian
 
 
 
-### [Task-local options](#_task_local_options) {#_task_local_options}
+### Task-local options
 
 
 Instead of naked expressions, tasks can be defined as maps with options.  The task expression should then be moved to the `:task` key:
@@ -1538,7 +1538,7 @@ Tasks support the `:doc` option which gives it a docstring which is printed when
 
 
 
-### [Discoverability](#_discoverability) {#_discoverability}
+### Discoverability
 
 
 When invoking `bb tasks`, babashka prints a list of all tasks found in `bb.edn` in the order of appearance. E.g. in the [clj-kondo.lsp](https://github.com/clj-kondo/clj-kondo.lsp) project it prints:
@@ -1567,7 +1567,7 @@ publish            The mother of all tasks: publishes everything needed for new 
 
 
 
-### [Command line arguments](#_command_line_arguments) {#_command_line_arguments}
+### Command line arguments
 
 
 Command line arguments are available as `*command-line-args*`, just like in Clojure. Since version `0.9.160`, you can use [babashka.cli](https://github.com/babashka/cli) in tasks via the [exec](#cli:exec) function to deal with command line arguments in a concise way. See the chapter on [babashka CLI](#cli).
@@ -1607,10 +1607,10 @@ bar ("2" "3")
 
 
 
-#### [Terminal tab-completion](#_terminal_tab_completion) {#_terminal_tab_completion}
+#### Terminal tab-completion
 
 
-##### [zsh](#_zsh) {#_zsh}
+##### zsh
 
 
 Add this to your `.zshrc` to get tab-complete feature on ZSH.
@@ -1631,7 +1631,7 @@ compdef _bb_tasks bb
 
 
 
-##### [bash](#_bash) {#_bash}
+##### bash
 
 
 Add this to your `.bashrc` to get tab-complete feature on bash.
@@ -1651,7 +1651,7 @@ complete -f -F _bb_tasks bb
 
 
 
-##### [fish](#_fish) {#_fish}
+##### fish
 
 
 Add this to your `.config/fish/completions/bb.fish` to get tab-complete feature on Fish shell.
@@ -1677,7 +1677,7 @@ complete -c bb -a "(__bb_complete_tasks)" -d 'tasks'
 
 
 
-### [Run](#_run) {#_run}
+### Run
 
 
 You can execute tasks using `bb <task-name>`. The babashka `run` subcommand can be used to execute with some additinoal options:
@@ -1726,14 +1726,14 @@ You can execute tasks using `bb <task-name>`. The babashka `run` subcommand can 
 
 
 
-### [Hooks](#_hooks) {#_hooks}
+### Hooks
 
 
 The task runner exposes the following hooks:
 
 
 
-#### [:init](#_init) {#_init}
+#### :init
 
 
 The `:init` is for expressions that are executed before any of the tasks are executed. It is typically used for defining helper functions and constants:
@@ -1762,7 +1762,7 @@ $ FOO=1 bb print-env FOO
 
 
 
-#### [:enter, :leave](#_enter_leave) {#_enter_leave}
+#### :enter, :leave
 
 
 The `:enter` hook is executed before each task. This is typically used to print the name of a task, which can be obtained using the `current-task` function:
@@ -1802,14 +1802,14 @@ Both hooks can be overriden as task-local options. Setting them to `nil` will di
 
 
 
-### [Tasks API](#_tasks_api) {#_tasks_api}
+### Tasks API
 
 
 The `babashka.tasks` namespace exposes the following functions: `run`, `shell`, `clojure` and `current-task`. They are implicitly imported, thus available without a namespace prefix.
 
 
 
-#### [run](#_run_2) {#_run_2}
+#### run
 
 
 Tasks provide the `run` function to explicitly invoke another task:
@@ -1857,7 +1857,7 @@ The `run` function accepts an additional map with options:
 
 
 
-##### [:parallel](#_parallel) {#_parallel}
+##### :parallel
 
 
 The `:parallel` option executes dependencies of the invoked task in parallel (when possible). See [Parallel tasks](#parallel).
@@ -1865,7 +1865,7 @@ The `:parallel` option executes dependencies of the invoked task in parallel (wh
 
 
 
-#### [shell](#_shell) {#_shell}
+#### shell
 
 
 Both `shell` and `clojure` return a [process](https://github.com/babashka/babashka.process) object which returns the `:exit` code among other info. By default these functions will throw an exception when a non-zero exit code was returned and they will inherit the stdin/stdout/stderr from the babashka process.
@@ -2036,7 +2036,7 @@ Also see the docstring of `shell` [here](https://github.com/babashka/process/blo
 
 
 
-#### [clojure](#tasks:clojure) {#tasks:clojure}
+#### clojure
 
 
 The `clojure` function starts a Clojure process using [deps.clj](https://github.com/borkdude/deps.clj). The interface is exactly the same as the clojure CLI. E.g. to evaluate an expression:
@@ -2092,7 +2092,7 @@ To run a `clojure` task in another directory:
 
 
 
-#### [current-task](#current-task)
+#### current-task
 
 
 The `current-task` function returns a map representing the currently running task. This function is typically used in the `:enter` and `:leave` hooks.
@@ -2100,7 +2100,7 @@ The `current-task` function returns a map representing the currently running tas
 
 
 
-#### [exec](#_exec) {#_exec}
+#### exec
 
 
 See [exec](#cli:exec).
@@ -2109,7 +2109,7 @@ See [exec](#cli:exec).
 
 
 
-### [Dependencies between tasks](#_dependencies_between_tasks) {#_dependencies_between_tasks}
+### Dependencies between tasks
 
 
 Dependencies between tasks can be declared using `:depends`:
@@ -2167,7 +2167,7 @@ It is common to define tasks that only serve as a helper to other tasks.  To not
 
 
 
-### [Parallel tasks](#parallel) {#parallel}
+### Parallel tasks
 
 
 The `:parallel` option executes dependencies of the invoked task in parallel (when possible). This can be used to speed up execution, but also to have multiple tasks running in parallel for development:
@@ -2199,7 +2199,7 @@ dev:backend {:doc  "Runs backend in dev mode"
 
 
 
-### [Invoking a main function](#_invoking_a_main_function) {#_invoking_a_main_function}
+### Invoking a main function
 
 
 Invoking a main function can be done by providing a fully qualified symbol:
@@ -2232,7 +2232,7 @@ $ bb foo-bar 1 2 3
 
 
 
-### [REPL](#_repl_2) {#_repl_2}
+### REPL
 
 
 To get a REPL within a task, you can use `clojure.main/repl`:
@@ -2256,7 +2256,7 @@ For REPL- and linting-friendliness, it's recommended to move task code longer th
 
 
 
-### [Real world examples](#_real_world_examples) {#_real_world_examples}
+### Real world examples
 
 
 -   [antq](https://github.com/borkdude/antq/blob/bb-run/bb.edn)
@@ -2281,10 +2281,10 @@ For REPL- and linting-friendliness, it's recommended to move task code longer th
 
 
 
-### [Naming](#_naming) {#_naming}
+### Naming
 
 
-#### [Valid names](#_valid_names) {#_valid_names}
+#### Valid names
 
 
 When running a task, babashka assembles a small program which defines vars bound to the return values of tasks. This brings the limitation that you can only choose names for your tasks that are valid as var names. You can't name your task `foo/bar` for this reason. If you want to use delimiters to indicate some sort of grouping, you can do it like `foo-bar`, `foo:bar` or `foo_bar`.
@@ -2295,7 +2295,7 @@ Names starting with a `-` are considered \"private\" and not listed in the `bb t
 
 
 
-#### [Conflicting file / task / subcommand names](#_conflicting_file_task_subcommand_names) {#_conflicting_file_task_subcommand_names}
+#### Conflicting file / task / subcommand names
 
 
 `bb <option>` is resolved in the order of file \> task \> subcommand.
@@ -2337,7 +2337,7 @@ $ bb -Sdeps '{:tasks {help {:task (prn :help) :override-builtin true}}}' help
 
 
 
-#### [Conflicting task and clojure.core var names](#_conflicting_task_and_clojure_core_var_names) {#_conflicting_task_and_clojure_core_var_names}
+#### Conflicting task and clojure.core var names
 
 
 You can name a task similar to a core var, let's say: `format`. If you want to refer to the core var, it is recommended to use the fully qualified `clojure.core/format` in that case, to avoid conflicts in `:enter` and `:leave` expressions and when using the `format` task as a dependency.
@@ -2346,7 +2346,7 @@ You can name a task similar to a core var, let's say: `format`. If you want to r
 
 
 
-### [Syntax](#_syntax) {#_syntax}
+### Syntax
 
 
 Because `bb.edn` is an EDN file, you cannot use all of Clojure's syntax in expressions. Most notably:
@@ -2366,7 +2366,7 @@ Because `bb.edn` is an EDN file, you cannot use all of Clojure's syntax in expre
 
 
 
-## [Babashka CLI](#cli) {#cli}
+## Babashka CLI
 
 
 
@@ -2374,7 +2374,7 @@ In version `0.9.160` of babashka, the [babashka CLI](https://github.com/babashka
 
 
 
-### [-x](#_x) {#_x}
+### -x
 
 
 For invoking functions from the command line, you can use the new `-x` flag (a pun to Clojure's `-X` of course!):
@@ -2447,7 +2447,7 @@ As you can see, the namespace options are merged with the function options. Defa
 
 
 
-### [exec](#cli:exec) {#cli:exec}
+### exec
 
 
 What about task integration? Let's adapt our `bb.edn`:
@@ -2511,11 +2511,11 @@ $ bb doit --cli-option :yeah -n 1 2 3
 
 
 
-## [Libraries](#libraries)
+## Libraries
 
 
 
-### [Built-in namespaces](#built-in-namespaces)
+### Built-in namespaces
 
 
 In addition to `clojure.core`, the following libraries / namespaces are available in babashka. Some are available through pre-defined aliases in the `user` namespace, which can be handy for one-liners. If not all vars are available, they are enumerated explicitly. If some important var is missing, an issue or PR is welcome.
@@ -2644,10 +2644,10 @@ A selection of Java classes are available, see [`babashka/impl/classes.clj`](htt
 
 
 
-### [Babashka namespaces](#_babashka_namespaces) {#_babashka_namespaces}
+### Babashka namespaces
 
 
-#### [babashka.classpath](#babashka_classpath) {#babashka_classpath}
+#### babashka.classpath
 
 
 Available functions:
@@ -2662,7 +2662,7 @@ Available functions:
 
 
 
-##### [add-classpath](#_add_classpath) {#_add_classpath}
+##### add-classpath
 
 
 The function `add-classpath` which can be used to add to the classpath dynamically:
@@ -2687,7 +2687,7 @@ The function `add-classpath` which can be used to add to the classpath dynamical
 
 
 
-##### [get-classpath](#_get_classpath) {#_get_classpath}
+##### get-classpath
 
 
 The function `get-classpath` returns the classpath as set by `--classpath`, `BABASHKA_CLASSPATH` and `add-classpath`.
@@ -2695,7 +2695,7 @@ The function `get-classpath` returns the classpath as set by `--classpath`, `BAB
 
 
 
-##### [split-classpath](#_split_classpath) {#_split_classpath}
+##### split-classpath
 
 
 Given a classpath, returns a seq of strings as the result of splitting the classpath by the platform specific path separatator.
@@ -2704,7 +2704,7 @@ Given a classpath, returns a seq of strings as the result of splitting the class
 
 
 
-#### [babashka.deps](#babashkadeps) {#babashkadeps}
+#### babashka.deps
 
 
 Available functions:
@@ -2719,7 +2719,7 @@ Available functions:
 
 
 
-##### [add-deps](#_add_deps) {#_add_deps}
+##### add-deps
 
 
 The function `add-deps` takes a deps edn map like `{:deps {medley/medley {:mvn/version "1.3.0"}}}`, resolves it using [deps.clj](https://github.com/borkdude/deps.clj) and then adds to the babashka classpath accordingly.
@@ -2761,7 +2761,7 @@ Example:
 
 
 
-##### [clojure](#_clojure) {#_clojure}
+##### clojure
 
 
 The function `clojure` takes a sequential collection of arguments, similar to the clojure CLI. The arguments are then passed to [deps.clj](https://github.com/borkdude/deps.clj). The `clojure` function returns `nil` and prints to `*out*` for commands like `-Stree`, and `-Spath`. For `-M`, `-X` and `-A` it invokes `java` with `babashka.process/process` (see [babashka.process](#babashkaprocess)) and returns the associated record. For more details, read the docstring with:
@@ -2802,7 +2802,7 @@ The following script passes through command line arguments to clojure, while add
 
 
 
-#### [babashka.wait](#babashkawait) {#babashkawait}
+#### babashka.wait
 
 
 Contains the functions: `wait-for-port` and `wait-for-path`.
@@ -2848,7 +2848,7 @@ The namespace `babashka.wait` is aliased as `wait` in the `user` namespace.
 
 
 
-#### [babashka.signal](#babashkasignal) {#babashkasignal}
+#### babashka.signal
 
 
 Contains the function `signal/pipe-signal-received?`. Usage:
@@ -2882,7 +2882,7 @@ The namespace `babashka.signal` is aliased as `signal` in the `user` namespace.
 
 
 
-#### [babashka.http-client](#babashkahttpclient) {#babashkahttpclient}
+#### babashka.http-client
 
 
 The `babashka.http-client` library for making HTTP requests. See [babashka.http-client](https://github.com/babashka/http-client) for how to use it.
@@ -2890,7 +2890,7 @@ The `babashka.http-client` library for making HTTP requests. See [babashka.http-
 
 
 
-#### [babashka.process](#babashkaprocess) {#babashkaprocess}
+#### babashka.process
 
 
 The `babashka.process` library. See the [process](https://github.com/babashka/process) repo for API docs.
@@ -2898,7 +2898,7 @@ The `babashka.process` library. See the [process](https://github.com/babashka/pr
 
 
 
-#### [babashka.fs](#babashkafs) {#babashkafs}
+#### babashka.fs
 
 
 The `babashka.fs` library offers file system utilities. See the [fs](https://github.com/babashka/fs) repo for API docs.
@@ -2906,7 +2906,7 @@ The `babashka.fs` library offers file system utilities. See the [fs](https://git
 
 
 
-#### [babashka.cli](#babashkacli) {#babashkacli}
+#### babashka.cli
 
 
 The `babashka.cli` library allows you to turn functions into CLIs. See the [cli](https://github.com/babashka/cli) repo for API docs and check out the [babashka CLI](https://book.babashka.org/#_babashka_cli) chapter on how to use it from the command line or with [tasks](https://book.babashka.org/#tasks).
@@ -2915,7 +2915,7 @@ The `babashka.cli` library allows you to turn functions into CLIs. See the [cli]
 
 
 
-### [Projects](#_projects) {#_projects}
+### Projects
 
 
 Babashka is able to run Clojure projects from source, if they are compatible with the subset of Clojure that sci is capable of running.
@@ -2937,7 +2937,7 @@ Do you have a library that is compatible with babashka? Add the official badge t
 
 
 
-## [Pods](#pods)
+## Pods
 
 
 
@@ -2979,7 +2979,7 @@ This is an example script which uses the [fswatcher](https://github.com/babashka
 
 
 
-### [Pods in bb.edn](#_pods_in_bb_edn) {#_pods_in_bb_edn}
+### Pods in bb.edn
 
 
 Since bb 0.8.0 pods can be declared in `bb.edn`:
@@ -3027,7 +3027,7 @@ $ bb -m my-project.db
 
 
 
-## [Style](#style)
+## Style
 
 
 
@@ -3035,7 +3035,7 @@ A note on style. Babashka recommends the following:
 
 
 
-### [Explicit requires](#_explicit_requires) {#_explicit_requires}
+### Explicit requires
 
 
 Use explicit requires with namespace aliases in scripts, unless you're writing one-liners.
@@ -3105,7 +3105,7 @@ Some reasons for this:
 
 
 
-## [Child processes](#child_processes) {#child_processes}
+## Child processes
 
 
 
@@ -3115,11 +3115,11 @@ For child processes, the babashka [process](https://github.com/babashka/process)
 
 
 
-## [Recipes](#recipes)
+## Recipes
 
 
 
-### [Running tests](#_running_tests) {#_running_tests}
+### Running tests
 
 
 Babashka bundles `clojure.test`. To run tests you can write a test runner script. Given the following project structure:
@@ -3173,7 +3173,7 @@ Babashka bundles `clojure.test`. To run tests you can write a test runner script
 
 
 
-### [Main file](#main_file) {#main_file}
+### Main file
 
 
 In Python scripts there is a well-known pattern to check if the current file was the file invoked from the command line, or loaded from another file: the `__name__ == "__main__"` pattern. In babashka this pattern can be implemented with:
@@ -3214,7 +3214,7 @@ This can be exceedingly handy for editing complex scripts interactively, while n
 
 
 
-### [Shutdown hook](#_shutdown_hook) {#_shutdown_hook}
+### Shutdown hook
 
 
 Adding a shutdown hook allows you to execute some code before the script exits.
@@ -3235,7 +3235,7 @@ This also works when the script is interrupted with ctrl-c.
 
 
 
-### [Printing returned values](#_printing_returned_values) {#_printing_returned_values}
+### Printing returned values
 
 
 Babashka doesn't print a returned `nil` as lots of scripts end in something side-effecting.
@@ -3257,7 +3257,7 @@ If you really want to print the nil, you can use `(prn ..)` instead.
 
 
 
-#### [HTTP over Unix sockets](#_http_over_unix_sockets) {#_http_over_unix_sockets}
+#### HTTP over Unix sockets
 
 
 This can be useful for talking to Docker:
@@ -3283,7 +3283,7 @@ This can be useful for talking to Docker:
 
 
 
-### [Core.async](#core_async) {#core_async}
+### Core.async
 
 
 In addition to `future`, `pmap`, `promise` and friends, you may use the `clojure.core.async` namespace for asynchronous scripting. The following example shows how to get first available value from two different processes:
@@ -3332,7 +3332,7 @@ Examples like the following may still work, but will take a lot more system reso
 
 
 
-### [Interacting with an nREPL server](#_interacting_with_an_nrepl_server) {#_interacting_with_an_nrepl_server}
+### Interacting with an nREPL server
 
 
 Babashka comes with the [nrepl/bencode](https://github.com/nrepl/bencode) library which allows you to read and write bencode messages to a socket. A simple example which evaluates a Clojure expression on an nREPL server started with `lein repl`:
@@ -3359,7 +3359,7 @@ Babashka comes with the [nrepl/bencode](https://github.com/nrepl/bencode) librar
 
 
 
-### [Running from Cygwin/Git Bash](#_running_from_cygwingit_bash) {#_running_from_cygwingit_bash}
+### Running from Cygwin/Git Bash
 
 
 On Windows, `bb` can be invoked from the bash shell directly:
@@ -3434,7 +3434,7 @@ Make sure to fix your original script to invoke `bbwrap` instead of `bb` directl
 
 
 
-## [Differences with Clojure](#differences-with-clojure)
+## Differences with Clojure
 
 
 
@@ -3462,7 +3462,7 @@ Differences with Clojure:
 
 
 
-## [Resources](#resources)
+## Resources
 
 
 
@@ -3470,10 +3470,10 @@ Check out the list of resources in babashka's [README.md](https://github.com/bab
 
 
 
-### [Books](#_books) {#_books}
+### Books
 
 
-#### [](#_babashka_babooka)[Babashka Babooka](https://www.braveclojure.com/quests/babooka/) {#_babashka_babooka}
+#### [](#_babashka_babooka)[Babashka Babooka](https://www.braveclojure.com/quests/babooka/)
 
 
 If you're a fan of [Clojure for the Brave and True](https://www.braveclojure.com/clojure-for-the-brave-and-true/), you might enjoy [Babashka Babooka](https://www.braveclojure.com/quests/babooka/), a book by the same author, Daniel Higginbotham!
@@ -3484,7 +3484,7 @@ If you're a fan of [Clojure for the Brave and True](https://www.braveclojure.com
 
 
 
-## [Contributing](#contributing)
+## Contributing
 
 
 
@@ -3494,7 +3494,7 @@ Visit Babashka book's [Github repository](https://github.com/babashka/book) and 
 
 
 
-## [License](#license)
+## License
 
 
 
@@ -3502,8 +3502,7 @@ Copyright © 2020-2021 Michiel Borkent
 
 
 
-Licensed under [CC BY-SA
-4.0](https://creativecommons.org/licenses/by-sa/4.0).
+Licensed under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0).
 
 
 
