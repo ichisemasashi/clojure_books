@@ -1207,10 +1207,10 @@ $ bb -m journal.add "recurring foo dream"
 
 
 
-# Tasks 
+# タスク 
 
 
-Another flavor of running command line programs is to call them similarly to `make` and `npm`. In your travels as a programmer, you might have run these at the command line:
+`make`や`npm`のように、コマンドラインからプログラムを呼び出す方法もある。プログラマーとして旅をしていると、コマンドラインでこれらを実行したことがあるかもしれない：
 
 
 
@@ -1224,7 +1224,7 @@ npm run dev
 
 
 
-Babashka allows you to write commands similarly. For our dream journal, we might want to be able to execute the following in a terminal:
+Babashkaでも同様にコマンドを書くことができる。夢日記では、ターミナルで次のようなコマンドを実行できるようにしたい：
 
 
 
@@ -1237,15 +1237,15 @@ bb list
 
 
 
-We're going to build up to that in small steps.
+スモールステップでそれを積み上げていく。
 
 
 
-## A basic task 
+## 基本的なタスク 
 
 
 
-First, let's look at a very basic task definition. Tasks are defined in your `bb.edn` file. Update yours to look like this:
+まず、ごく基本的なタスクの定義を見てみよう。タスクは `bb.edn` ファイルで定義します。以下のようにあなたのものを更新してください：
 
 
 
@@ -1257,11 +1257,11 @@ First, let's look at a very basic task definition. Tasks are defined in your `bb
 
 
 
-Tasks are defined using a map under the `:tasks` keyword. Each key of the map names a task, and it should be a symbol. Each value should be a Clojure expression. In this example, the `welcome` names a task and the associated expression is `(println "welcome to your dream journal")`.
+タスクは `:tasks` キーワードの下にあるマップを使って定義される。そのマップの各キーはタスクの名前であり、シンボルでなければならない。各値はClojure式でなければならない。この例では、`welcome`がタスクの名前であり、関連する式は `(println "welcome to your dream journal")` である。
 
 
 
-When you call `bb welcome`, it looks up the `welcome` key under `:tasks` and evaluates the associated expression. Note that you must explicitly print values if you want them to be sent to `stdout`; this wouldn't print anything:
+この場合、`bb welcome` を呼び出すと、`:tasks` の下にある `welcome` キーが検索され、関連付けられた式が評価される。もし値を `stdout` に送りたい場合は、明示的に出力する必要があることに注意してほしい；これでは何も出力されない：
 
 
 
@@ -1275,11 +1275,11 @@ When you call `bb welcome`, it looks up the `welcome` key under `:tasks` and eva
 
 
 
-## How to require namespaces for tasks 
+## タスクに名前空間をrequireする方法 
 
 
 
-Let's say you wanted to create a task to delete your journal entries.  Here's what that would looke like:
+例えば、日記のエントリーを削除するタスクを作りたいとしましょう。 こんな感じです：
 
 
 
@@ -1292,11 +1292,11 @@ Let's say you wanted to create a task to delete your journal entries.  Here's wh
 
 
 
-If you run `bb clear` it will delete your `entries.edn` file. This works because `shell` is automatically referred in namespaces, just `clojure.core` functions are.
+もし `bb clear` を実行すると、`entries.edn` ファイルが削除される。これは `shell` が自動的に名前空間で参照されるためで、`clojure.core` 関数も同じです。
 
 
 
-If you wanted to delete your file in a cross-platform-friendly way, you could use the `babashka.fs/delete-if-exists` function. To do that, you must require the `babashka.fs` namespace. You might assume that you could update your `bb.edn` to look like this and it would work, but it wouldn't:
+クロスプラットフォームに対応した方法でファイルを削除したい場合は、 `babashka.fs/delete-if-exists` 関数を使用できます。そのためには `babashka.fs` 名前空間をrequireする必要があります。このように`bb.edn`を更新すれば動くと思うかもしれませんが、そんなことはありません：
 
 
 
@@ -1309,7 +1309,7 @@ If you wanted to delete your file in a cross-platform-friendly way, you could us
 
 
 
-Instead, to require namespaces you must do so like this:
+そうではなく、名前空間を require するには、次のようにしなければならない：
 
 
 
@@ -1324,11 +1324,11 @@ Instead, to require namespaces you must do so like this:
 
 
 
-## Use `exec` to parse arguments and call a function 
+## `exec` を使って引数をパースし、関数を呼び出す 
 
 
 
-We still want to be able to call `bb add` and `bb list`. We have what we need to implement `bb list`; we can just update `bb.edn` to look like this:
+まだ `bb add` と `bb list` を呼び出せるようにしたい。`bb list`の実装に必要なものは揃っているので、`bb.edn`を以下のように更新すれば良い：
 
 
 
@@ -1344,11 +1344,11 @@ We still want to be able to call `bb add` and `bb list`. We have what we need to
 
 
 
-In the previous task examples I excluded the `:paths` key because it wasn't needed, but we need to bring it back so that Babashka can find `journal.list` on the classpath. `journal.list/list-entries` takes one argument that gets ignored, so we can just pass in `nil` and it works.
+前のタスクの例では、`:paths`キーは必要なかったので除外したが、Babashkaがクラスパスで`journal.list`を見つけられるようにするために戻す必要がある。`journal.list/list-entries`は無視される引数を1つ取るので、`nil`を渡せば動作する。
 
 
 
-`journal.add/add-entries`, however, takes a Clojure map with an `:entries` key. Thus we need some way of parsing the command line arguments into that map and then passing that to `journal.add/add-entries`. Babashka provides the `exec` function for this. Update your `bb.edn` like so, and everything should work:
+しかし、`journal.add/add-entries`は `:entries` キーを持つClojureマップを受け取る。そのため、コマンドライン引数をパースしてマップに変換し、それを `journal.add/add-entries` に渡す必要がある。Babashkaはこのために `exec` 関数を提供している。`bb.edn`を以下のように更新すれば、すべてうまくいくはずだ：
 
 
 
@@ -1365,7 +1365,7 @@ In the previous task examples I excluded the `:paths` key because it wasn't need
 
 
 
-Now we can call this, and it should work:
+あとはこれを呼び出せばうまくいくはずだ：
 
 
 
@@ -1381,7 +1381,7 @@ dreamt I was done writing a tutorial. bliss
 
 
 
-The key here is the `exec` function. With `(exec 'journal.add/add-entry)`, it's as if you called this on the command line:
+ここで重要なのは `exec` 関数である。`(exec 'journal.add/add-entry)` とすると、あたかもコマンドラインでこれを呼び出したかのようになる：
 
 
 
@@ -1393,58 +1393,58 @@ $ bb -x journal.add/add-entry --entry "dreamt I was done writing a tutorial. bli
 
 
 
-`exec` will parse command line arguments in the same way as `bb -x` does and pass the result to the designated function, which is `journal.add/add-entry` in this example.
+`exec` は `bb -x` と同じようにコマンドライン引数をパースし、その結果を指定された関数に渡す。この例では `journal.add/add-entry` である。
 
 
 
 
-## Task dependencies, parallel tasks, and more 
+## タスクの依存関係、並列タスク、その他 
 
 
 
-Babashka's task system has even more capabilities, which I'm not going to cover in detail but which you can read about in the [Task runner section of the Babashka docs](https://book.babashka.org/#tasks).
+Babashkaのタスクシステムには、さらに多くの機能があります。詳しくは説明しませんが、[Babashkaドキュメントのタスク実行セクション](https://book.babashka.org/#tasks)を参照してください。
 
 
-I do want to highlight two very useful features: *task dependencies* and *parallel task execution*.
-
-
-
-Babashka let's you define task dependencies, meaning that you can define `task-a` to depend on `task-b` such that if you run `bb task-a`, internally `task-b` will be executed if needed. This is useful for creating compilation scripts. If you were building a web app, for example, you might have separate tasks for compiling a backend jar file and frontend javascript file. You could have the tasks `build-backend`, `build-frontend`, and then have a `build` task that depended on the other two. If you were to call `bb build`, Babashka would be able to determine which of the other two tasks needed to be run and only run them when necessary.
-
-
-Parallel task execution will have Babashka running multiple tasks at the same time. In our build example, `bb build` could run `build-backend` and `build-frontend` at the same time, which could be a real time saver.
+ここでは、2つの便利な機能を紹介します： *タスクの依存関係* と *タスクの並列実行* です。
 
 
 
-
-## Summary 
-
+つまり、`task-a` を `task-b` に依存するように定義して、`bb task-a` を実行すると、内部的に `task-b` が必要に応じて実行されるようにすることができる。これは編集スクリプトを作るときに便利だ。例えば、ウェブアプリをビルドする場合、バックエンドのjarファイルとフロントエンドのjavascriptファイルをコンパイルする別々のタスクがあるかもしれない。この場合、`build-backend`タスク、`build-frontend`タスク、そして他の2つのタスクに依存する`build`タスクができる。もし`bb build`を呼び出すと、Babashkaは他の2つのタスクのどれを実行する必要があるかを判断し、必要なときだけ実行することができる。
 
 
--   You define tasks in `bb.edn` under the `:tasks` key
-
--   Task definitions are key-value pairs where the key is a symbol naming the task, and the value is a Clojure expression
-
--   Add a `:requires` key under the `:tasks` key to require namespaces
-
--   `exec` executes functions as if invoked with `bb -x journal.add/add-entry`; it parses command line args before passing to the function
-
--   You can declare task dependencies
-
--   You can run tasks in parallel
+並列タスク実行では、Babashkaは複数のタスクを同時に実行する。今回のビルドの例では、`bb build` は `build-backend` と `build-frontend` を同時に実行することができるため、時間の節約になる。
 
 
 
 
-# Additional Resources 
+## まとめ 
 
 
--   [Bash and Babashka equivalents](https://github.com/babashka/babashka/wiki/Bash-and-Babashka-equivalents) is indispensable for transferring your Bash knowledge to Babashka
 
-# Acknowledgments 
+- タスクは `bb.edn` の `:tasks` キーで定義します。
+
+- タスク定義はキーと値のペアで、キーはタスクの名前を示すシンボルで、値はClojure式です。
+
+- 名前空間を require するために `:tasks` キーのすぐ下に `:requires` キーを追加する。
+
+- `exec` は `bb -x journal.add/add-entry` で呼び出されたように関数を実行する。
+
+- タスクの依存関係を宣言できる
+
+- タスクを並列に実行できる
 
 
-The following people read drafts of this and gave feedback. Thank you!
+
+
+# 追加の資料 
+
+
+- [BashとBabashkaの対応表](https://github.com/babashka/babashka/wiki/Bash-and-Babashka-equivalents) は、Bashの知識をBabashkaに移行するのに不可欠です。
+
+# 謝辞 
+
+
+以下の方々にこの原稿を読んでいただき、フィードバックをいただきました。ありがとうございました！
 
 
 
@@ -1464,27 +1464,17 @@ The following people read drafts of this and gave feedback. Thank you!
 
 -   \@focaskater
 
--   @[[\[email protected\]]{.__cf_email__ cfemail="14797b7a7f716d2554727b6767607b707b7a3a7b6673"}](/cdn-cgi/l/email-protection#91fcfefffaf4e8a0d1f7fee2e2e5fef5feffbffee3f6)
-
 -   Kira McLean
 
 
-# Feedback 
+# フィードバック 
 
 
-If you have feedback, please open an issue at <https://github.com/braveclojure/babooka>. I can't promise I'll respond in a timely manner, or even at all, so I apologize in advice! I'm just not great at responding, it's one of my character flaws, but I appreciate the feedback!
-
-
-
+フィードバックがある場合は、<https://github.com/braveclojure/babooka>にissueを開いてください。タイムリーに、あるいはまったく返信することを約束することはできません！私の性格の欠点のひとつなのですが、フィードバックには感謝しています！
 
 
 
 
-
-[Follow \@nonrecursive](https://twitter.com/nonrecursive)
-
-1.  [Find Clojure jobs](https://jobs.braveclojure.com){target="_blank"}
-2.  [Contribute to beginner-friendly open source projects](http://open-source.braveclojure.com){target="_blank"}
 
 
 
