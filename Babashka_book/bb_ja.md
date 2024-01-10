@@ -54,15 +54,15 @@ $ script/uberjar && script/compile
 
 
 
-See the babashka [build.md](https://github.com/borkdude/babashka/blob/master/doc/build.md) page for details.
+詳細はbabashka [build.md](https://github.com/borkdude/babashka/blob/master/doc/build.md)ページを参照。
 
 
 
 
-### Running babashka
+### babashkaの実行
 
 
-The babashka executable is called `bb`. You can either provide it with a Clojure expression directly:
+babashka実行ファイルは`bb`と呼ばれる。Clojure 式を直接入力することができる：
 
 
 
@@ -75,7 +75,7 @@ $ bb -e '(+ 1 2 3)'
 
 
 
-or run a script:
+またはスクリプトを実行する：
 
 
 
@@ -93,7 +93,7 @@ $ bb -f script.clj
 
 
 
-The `-e` flag is optional when the argument starts with a paren. In that case babashka will treat it automatically as an expression:
+`-e` フラグは、引数が括弧で始まる場合はオプションである。その場合、babashkaは自動的にそれを式として扱う：
 
 
 
@@ -106,7 +106,7 @@ $ bb '(+ 1 2 3)'
 
 
 
-Similarly, the `-f` flag is optional when the argument is a filename:
+同様に、引数がファイル名の場合は `-f` フラグはオプションである：
 
 
 
@@ -119,7 +119,7 @@ $ bb script.clj
 
 
 
-Commonly, scripts have shebangs so you can invoke them with their filename only:
+一般的に、スクリプトはファイル名だけで呼び出せるようにシェバングを持っている：
 
 
 
@@ -136,11 +136,11 @@ Commonly, scripts have shebangs so you can invoke them with their filename only:
 
 
 
-## Usage
+## 使い方
 
 
 
-Typing `bb help` from the command line will print all the available command line options which should give you a sense of the available features in babashka.
+コマンドラインから`bb help`と入力すると、babashkaの利用可能な機能を知ることができる、コマンドラインオプションが表示される。
 
 
 
@@ -225,10 +225,10 @@ Typing `bb help` from the command line will print all the available command line
 
 
 
-### Running a script
+### スクリプトの実行
 
 
-Scripts may be executed from a file using `-f` or `--file`:
+スクリプトは `-f` または `--file` を使ってファイルから実行することができる：
 
 
 
@@ -240,7 +240,7 @@ bb -f download_html.clj
 
 
 
-The file may also be passed directly, without `-f`:
+ファイルは `-f` なしで直接渡すこともできる：
 
 
 
@@ -252,7 +252,7 @@ bb download_html.clj
 
 
 
-Using `bb` with a shebang also works:
+`bb` をシェバングと一緒に使ってもうまくいく：
 
 
 
@@ -293,7 +293,7 @@ Writing file: /tmp/clojure.org.html
 
 
 
-If `/usr/bin/env` doesn't work for you, you can use the following workaround:
+`usr/bin/env`が機能しない場合は、以下の回避策を使うことができる：
 
 
 
@@ -316,10 +316,10 @@ $ cat script.clj
 
 
 
-### Current file path
+### 現在のファイルパス
 
 
-The var `*file*` contains the full path of the file that is currently being executed:
+var `*file*` には、現在実行されているファイルのフルパスが格納される：
 
 
 
@@ -336,10 +336,10 @@ $ bb example.clj
 
 
 
-### Parsing command line arguments
+### コマンドライン引数のパース
 
 
-Command-line arguments can be retrieved using `*command-line-args*`. If you want to parse command line arguments, you can use the built-in [`babashka.cli`](https://github.com/babashka/cli) namespace:
+コマンドライン引数は `*command-line-args*` を使って取得できます。コマンドライン引数をパースしたい場合は、組み込みの [`babashka.cli`](https://github.com/babashka/cli) 名前空間を使用することができます：
 
 
 
@@ -368,19 +368,19 @@ $ bb script.clj --help
 
 
 
-Note that [clojure.tools.cli](https://github.com/clojure/tools.cli) is also built-in to babashka.
+なお、[clojure.tools.cli](https://github.com/clojure/tools.cli)もbabashkaに組み込まれています。
 
 
 
 
-### Classpath
+### クラスパス
 
 
-It is recommended to use `bb.edn` to control what directories and libraries are included on babashka's classpath. See [Project setup](#project-setup)
+babashkaのクラスパスに含まれるディレクトリとライブラリを制御するために、`bb.edn`を使用することを推奨します。”プロジェクトセットアップ"を参照してください。
 
 
 
-If you want a lower level to control babashka's classpath, without the usage of `bb.edn` you can use the `--classpath` option that will override the classpath. Say we have a file `script/my/namespace.clj`:
+もし、`bb.edn`を使用せずに、より低いレベルでbabashkaのクラスパスをコントロールしたい場合、クラスパスをオーバーライドする`--classpath`オプションを使用することができる。ファイル`script/my/namespace.clj`があるとする：
 
 
 
@@ -394,7 +394,7 @@ If you want a lower level to control babashka's classpath, without the usage of 
 
 
 
-Now we can execute this main function with:
+これで、このメイン関数を次のように実行できる：
 
 
 
@@ -407,7 +407,7 @@ Hello from my namespace! 1 2 3
 
 
 
-If you have a larger script with a classic Clojure project layout like
+次のような古典的なClojureプロジェクトのレイアウトを持つ大きなスクリプトがある場合。
 
 
 
@@ -417,9 +417,9 @@ $ tree -L 3
 ├── deps.edn
 ├── README
 ├── src
-│   └── project_namespace
-│       ├── main.clj
-│       └── utilities.clj
+│   └── project_namespace
+│       ├── main.clj
+│       └── utilities.clj
 └── test
     └── project_namespace
         ├── test_main.clj
@@ -429,7 +429,7 @@ $ tree -L 3
 
 
 
-then you can tell babashka to include both the `src` and `test` folders in the classpath and start a socket REPL by running:
+そして、クラスパスに`src`と`test`フォルダの両方を含めるようにbabashkaに指示し、ソケットREPLを起動することができる：
 
 
 
@@ -441,27 +441,27 @@ $ bb --classpath src:test socket-repl 1666
 
 
 
-If there is no `--classpath` argument, the `BABASHKA_CLASSPATH` environment variable will be used. If that variable isn't set either, babashka will use `:deps` and `:paths` from `bb.edn`.
+引数 `--classpath` がない場合、環境変数 `BABASHKA_CLASSPATH` が使用される。この変数も設定されていない場合、babashkaは`bb.edn`の`:deps`と`:paths`を使用する。
 
 
 
-Also see the [babashka.classpath](#babashka_classpath) namespace which allows dynamically adding to the classpath.
+クラスパスに動的に追加できる”babashka.classpath"名前空間も参照してください。
 
 
 
-The namespace [babashka.deps](#babashkadeps) integrates [tools.deps](https://github.com/clojure/tools.deps.alpha) with babashka and allows you to set the classpath using a `deps.edn` map.
+名前空間”babashka.deps"は[tools.deps](https://github.com/clojure/tools.deps.alpha)をbabashkaと統合し、`deps.edn`マップを使用してクラスパスを設定できるようにする。
 
 
 
 
-### Invoking a main function
+### メイン関数の呼び出し
 
 
-A main function can be invoked with `-m` or `--main` like shown above.  When given the argument `foo.bar`, the namespace `foo.bar` will be required and the function `foo.bar/-main` will be called with command line arguments as strings.
+main関数は上記のように `-m` または `--main` で呼び出すことができる。 引数`foo.bar`が与えられると、名前空間`foo.bar`が必要となり、コマンドライン引数を文字列として関数`foo.bar/-main`が呼び出される。
 
 
 
-Since babashka 0.3.1 you may pass a fully qualified symbol to `-m`:
+babashka 0.3.1以降、完全修飾シンボルを `-m` に渡すことができる：
 
 
 
