@@ -474,19 +474,19 @@ $ bb -m clojure.core/prn 1 2 3
 
 
 
-so you can execute any function as a main function, as long as it accepts the number of provided arguments.
+そのため、与えられた引数の数さえ受け取れば、どんな関数でもメイン関数として実行することができる。
 
 
 
-When invoking `bb` with a main function, the expression `(System/getProperty "babashka.main")` will return the name of the main function.
+main関数で`bb`を呼び出す場合、`(System/getProperty "babashka.main")`式はmain関数の名前を返す。
 
 
 
 
-### Preloads
+### プリロード
 
 
-The environment variable `BABASHKA_PRELOADS` allows to define code that will be available in all subsequent usages of babashka.
+環境変数`BABASHKA_PRELOADS`は、その後の全てのbabashkaの使用で利用可能なコードを定義することを可能にする。
 
 
 
