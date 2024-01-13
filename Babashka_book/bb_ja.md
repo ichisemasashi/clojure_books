@@ -500,7 +500,7 @@ export BABASHKA_PRELOADS
 
 
 
-Note that you can concatenate multiple expressions. Now you can use these functions in babashka:
+複数の式を連結できることに注意。これで、これらの関数をbabashkaで使用することができる：
 
 
 
@@ -513,7 +513,7 @@ $ bb '(-> (foo *input*) bar)' <<< 1
 
 
 
-You can also preload an entire file using `load-file`:
+また、`load-file`を使ってファイル全体をプリロードすることもできる：
 
 
 
@@ -525,15 +525,15 @@ export BABASHKA_PRELOADS='(load-file "my_awesome_prelude.clj")'
 
 
 
-Note that `*input*` is not available in preloads.
+なお、`*input*`はプリロードでは使用できない。
 
 
 
 
-### Running a REPL
+### REPLの実行
 
 
-Babashka supports running a REPL, a socket REPL and an nREPL server.
+BabashkaはREPL、ソケットREPL、nREPLサーバーの実行をサポートしています。
 
 
 
