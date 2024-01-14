@@ -540,7 +540,7 @@ BabashkaはREPL、ソケットREPL、nREPLサーバーの実行をサポート�
 #### REPL
 
 
-To start a REPL, type:
+REPLを開始するには、次のようにタイプする：
 
 
 
@@ -552,7 +552,7 @@ $ bb repl
 
 
 
-To get history with up and down arrows, use [rlwrap](https://github.com/hanslub42/rlwrap):
+上下の矢印で履歴を取得するには、[rlwrap](https://github.com/hanslub42/rlwrap)を使う：
 
 
 
@@ -565,10 +565,10 @@ $ rlwrap bb repl
 
 
 
-#### Socket REPL
+#### ソケットREPL
 
 
-To start a socket REPL on port `1666`:
+`1666` 番ポートでソケットREPLを起動する：
 
 
 
@@ -581,7 +581,7 @@ Babashka socket REPL started at localhost:1666
 
 
 
-Now you can connect with your favorite socket REPL client:
+これで、お気に入りのソケットREPLクライアントで接続できるようになった：
 
 
 
@@ -601,7 +601,7 @@ $
 
 
 
-The `--socket-repl` option takes options similar to the `clojure.server.repl` Java property option in Clojure:
+`socket-repl` オプションは、Clojure の `clojure.server.repl` Java プロパティオプションに似たオプションを取る：
 
 
 
@@ -613,27 +613,27 @@ $ bb socket-repl '{:address "0.0.0.0" :accept clojure.core.server/repl :port 166
 
 
 
-Editor plugins and tools known to work with a babashka socket REPL:
+babashka のソケットREPLで動作することが知られているエディタプラグインとツール：
 
 
 
--   Emacs: [inf-clojure](https://github.com/clojure-emacs/inf-clojure):
+- Emacs： [inf-clojure](https://github.com/clojure-emacs/inf-clojure)：
 
-    To connect:
+    接続するには
 
-    `M-x inf-clojure-connect <RET> localhost <RET> 1666`
+    `M-x inf-clojure-connect <RET> localhost <RET> 1666` です。
 
-    Before evaluating from a Clojure buffer:
+    Clojureバッファから評価する前に：
 
-    `M-x inf-clojure-minor-mode`
+    `M-x inf-clojure-minor-mode` を実行する。
 
--   Atom: [Chlorine](https://github.com/mauricioszabo/atom-chlorine)
+- Atom： [ Chlorine](https://github.com/mauricioszabo/atom-chlorine)
 
--   Vim: [vim-iced](https://github.com/liquidz/vim-iced)
+- Vim: [vim-iced](https://github.com/liquidz/vim-iced)
 
--   IntelliJ IDEA: [Cursive](https://cursive-ide.com/)
+- IntelliJ IDEA: [Cursive](https://cursive-ide.com/)
 
-    Note: you will have to use a workaround via [tubular](https://github.com/mfikes/tubular). For more info, look [here](https://cursive-ide.com/userguide/repl.html#repl-types).
+    Note: [tubular](https://github.com/mfikes/tubular)を使って回避する必要があります。詳しくは [ ここ](https://cursive-ide.com/userguide/repl.html#repl-types) を見てください。
 
 
 
@@ -641,7 +641,7 @@ Editor plugins and tools known to work with a babashka socket REPL:
 #### pREPL
 
 
-Launching a prepl can be done as follows:
+Preplの起動は次のように行う：
 
 
 
@@ -653,7 +653,7 @@ $ bb socket-repl '{:address "0.0.0.0" :accept clojure.core.server/io-prepl :port
 
 
 
-or programmatically:
+またはプログラム的に：
 
 
 
@@ -671,7 +671,7 @@ $ bb -e '(clojure.core.server/io-prepl)'
 #### nREPL
 
 
-To start an nREPL server:
+nREPLサーバーを起動する：
 
 
 
@@ -683,7 +683,7 @@ $ bb nrepl-server 1667
 
 
 
-or programmatically:
+またはプログラム的に：
 
 
 
@@ -696,7 +696,7 @@ Started nREPL server at 0.0.0.0:1667
 
 
 
-Then connect with your favorite nREPL client:
+その後、お気に入りのnREPLクライアントで接続します：
 
 
 
@@ -712,23 +712,23 @@ user=>
 
 
 
-Editor plugins and tools known to work with the babashka nREPL server:
+babashka のnREPLサーバで動作することが知られているエディタのプラグインとツール：
 
 
 
--   Emacs: [CIDER](https://docs.cider.mx/cider/platforms/babashka.html)
+- Emacs： [CIDER](https://docs.cider.mx/cider/platforms/babashka.html)
 
--   `lein repl :connect`
+- `lein repl :connect`
 
--   VSCode: [Calva](http://calva.io/)
+- VSCode： [Calva](http://calva.io/)
 
--   Atom: [Chlorine](https://github.com/mauricioszabo/atom-chlorine)
+- Atom： [ Chlorine](https://github.com/mauricioszabo/atom-chlorine)
 
--   (Neo)Vim: [vim-iced](https://github.com/liquidz/vim-iced), [conjure](https://github.com/Olical/conjure), [fireplace](https://github.com/tpope/vim-fireplace)
+- ( Neo)Vim: [vim-iced](https://github.com/liquidz/vim-iced), [conjure](https://github.com/Olical/conjure), [fireplace](https://github.com/tpope/vim-fireplace)
 
 
 
-The babashka nREPL server currently does not write an `.nrepl-port` file at startup. Using the following `nrepl` task, defined in a `bb.edn`, you can accomplish the same:
+現在、babashkaのnREPLサーバーは起動時に`.nrepl-port`ファイルを書きません。`bb.edn`で定義された以下の`nrepl`タスクを使用することで、同じことができる：
 
 
 
@@ -749,14 +749,14 @@ The babashka nREPL server currently does not write an `.nrepl-port` file at star
 
 
 
-The `babashka.nrepl.server` API is exposed since version 0.8.157.
+`babashka.nrepl.server` APIはバージョン0.8.157から公開されている。
 
 
 
-##### Debugging the nREPL server
+##### nREPL サーバのデバッグ
 
 
-To debug the nREPL server from the binary you can run:
+バイナリから nREPL サーバーのデバッグを行うには、以下のコマンドを実行します：
 
 
 
@@ -768,11 +768,11 @@ $ BABASHKA_DEV=true bb nrepl-server 1667
 
 
 
-This will print all the incoming messages.
+これはすべての受信メッセージを表示する。
 
 
 
-To debug the nREPL server from source:
+ソースからnREPLサーバをデバッグするには：
 
 
 
@@ -788,27 +788,27 @@ $ BABASHKA_DEV=true clojure -A:main --nrepl-server 1667
 
 
 
-#### REPL server port
+#### REPL サーバ・ポート
 
 
-For the socket REPL, pREPL, or nREPL, if a randomized port is needed, 0 can be used anywhere a port argument is accepted.
+ソケット REPL、pREPL、または nREPL において、ランダム化されたポートが必要な場合、 port 引数を受け付ける場所であればどこでも 0 を使用できる。
 
 
 
 
-### Input and output flags
+### 入出力フラグ
 
 
-In one-liners the `*input*` value may come in handy. It contains the input read from stdin as EDN by default. If you want to read in text, use the `-i` flag, which binds `*input*` to a lazy seq of lines of text.  If you want to read multiple EDN values, use the `-I` flag. The `-o` option prints the result as lines of text. The `-O` option prints the result as lines of EDN values.
+ワンライナーでは `*input*` の値が便利であろう。デフォルトではEDNとして標準入力から読み込まれた入力が含まれる。テキストを読み込みたい場合は `-i` フラグを使用し、`*input*` をテキスト行の遅延シーケンスに束縛します。 複数のEDN値を読み込みたい場合は、`-I`フラグを使用する。`-o` オプションは結果をテキスト行として表示します。`-O` オプションは結果をEDN値の行として表示します。
 
 
   -- ------------------------------------------------------------------------------------------------------------------------------
-     `*input*` is only available in the `user` namespace, designed for one-liners. For writing scripts, see [Scripts](#_scripts).
+     `*input*` は `user` 名前空間でのみ使用可能で、ワンライナー用に設計されています。スクリプトを書くには、"Scripts"を参照してください。
   -- ------------------------------------------------------------------------------------------------------------------------------
 
 
 
-The following table illustrates the combination of options for commands of the form
+次の表は、以下の形式のコマンドのオプションの組み合わせを示している。
 
 
 
@@ -836,7 +836,7 @@ The following table illustrates the combination of options for commands of the f
 +-------------+-------------+-------------+-------------+-------------+
 
 
-When combined with the `--stream` option, the expression is executed for each value in the input:
+`--stream` オプションと組み合わせると、入力の各値に対して式が実行される：
 
 
 
