@@ -853,15 +853,15 @@ $ echo '{:a 1} {:a 2}' | bb --stream '*input*'
 #### Scripts
 
 
-When writing scripts instead of one-liners on the command line, it is not recommended to use `*input*`. Here is how you can rewrite to standard Clojure code.
+コマンドラインでワンライナーの代わりにスクリプトを書く場合、`*input*`を使うことは推奨されません。標準的なClojureコードに書き換える方法は以下の通りです。
 
 
 
 
-#### EDN input
+#### EDN入力
 
 
-Reading a single EDN value from stdin:
+標準入力から単一のEDN値を読み込む：
 
 
 
@@ -876,7 +876,7 @@ Reading a single EDN value from stdin:
 
 
 
-Reading multiple EDN values from stdin (the `-I` flag):
+標準入力から複数のEDN値を読み込む（`-I`フラグ）：
 
 
 
@@ -894,10 +894,10 @@ Reading multiple EDN values from stdin (the `-I` flag):
 
 
 
-#### Text input
+#### テキスト入力
 
 
-Reading text from stdin can be done with `(slurp *in*)`. To get a lazy seq of lines (the `-i` flag), you can use:
+標準入力からテキストを読み込むには `(slurp *in*)` を使う。遅延シーケンス行(`-i`フラグ)を取得するには、次のようにする：
 
 
 
@@ -913,10 +913,10 @@ Reading text from stdin can be done with `(slurp *in*)`. To get a lazy seq of li
 
 
 
-#### Output
+#### 出力
 
 
-To print to stdout, use `println` for text and `prn` for EDN values.
+標準出力に出力するには、テキストには `println` を、EDNの値には `prn` を使用する。
 
 
 
