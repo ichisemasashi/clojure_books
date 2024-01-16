@@ -925,15 +925,15 @@ $ echo '{:a 1} {:a 2}' | bb --stream '*input*'
 ### Uberscript
 
 
-The `--uberscript` option collects the expressions in `BABASHKA_PRELOADS`, the command line expression or file, the main entrypoint and all required namespaces from the classpath into a single file. This can be convenient for debugging and deployment.
+`--uberscript` オプションは `BABASHKA_PRELOADS` の式、コマンドライン式またはファイル、main エントリポイント、クラスパスから必要な全ての名前空間を一つのファイルにまとめます。これはデバッグやデプロイに便利です。
 
 
 
-Here is an example that uses a function from the [clj-commons/fs](https://github.com/clj-commons/fs) library.
+以下は、[clj-commons/fs](https://github.com/clj-commons/fs) ライブラリからの関数を使用する例です。
 
 
 
-Let's first set the classpath:
+まずクラスパスを設定します：
 
 
 
@@ -945,7 +945,7 @@ $ export BABASHKA_CLASSPATH=$(clojure -Spath -Sdeps '{:deps {clj-commons/fs {:mv
 
 
 
-Write a little script, say `glob.clj`:
+小さなスクリプト、例えば`glob.clj`を書く：
 
 
 
@@ -960,7 +960,7 @@ Write a little script, say `glob.clj`:
 
 
 
-For testing, we'll make a file which we will find using the glob function:
+テストのために、glob関数を使って検索するファイルを作ってみよう：
 
 
 
