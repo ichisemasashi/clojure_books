@@ -972,7 +972,7 @@ $ touch README.md
 
 
 
-Now we can execute the script which uses the library:
+これで、ライブラリを使用するスクリプトを実行できる：
 
 
 
@@ -986,7 +986,7 @@ bb glob.clj '*.md'   0.03s  user 0.01s system 88% cpu 0.047 total
 
 
 
-Producing an uberscript with all required code:
+すべての必要なコードを含むuberscriptを作成する：
 
 
 
