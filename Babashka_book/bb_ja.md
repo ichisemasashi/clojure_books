@@ -998,7 +998,7 @@ $ bb uberscript glob-uberscript.clj glob.clj
 
 
 
-To prove that we don't need the classpath anymore:
+クラスパスがもう必要ないことを証明するために：
 
 
 
@@ -1013,7 +1013,7 @@ bb glob-uberscript.clj '*.md'   0.03s  user 0.02s system 93% cpu 0.049 total
 
 
 
-Caveats:
+注意事項
 
 
 
