@@ -1017,13 +1017,13 @@ bb glob-uberscript.clj '*.md'   0.03s  user 0.02s system 93% cpu 0.049 total
 
 
 
--   *Dynamic requires*. Building uberscripts works by running top-level `ns` and `require` forms. The rest of the code is not evaluated.  Code that relies on dynamic requires may not work in an uberscript.
+- *動的なrequire*。 uberscriptsのビルドはトップレベルの`ns`と`require`フォームを実行することで動作する。残りのコードは評価されません。 動的 requires に依存するコードは uberscript では動作しない可能性があります。
 
--   *Resources*. The usage of `io/resource` assumes a classpath, so when this is used in your uberscript, you still have to set a classpath and bring the resources along.
+- *Resources*. `io/resource`の使用はクラスパスを想定しているため、これをuberscriptで使用する場合は、クラスパスを設定し、リソースを持っていく必要があります。
 
 
 
-If any of the above is problematic for your project, using an [uberjar](#uberjar) is a good alternative.
+上記のいずれかがプロジェクトにとって問題である場合、"uberjar"を使用するのが良い代替方法です。
 
 
 
