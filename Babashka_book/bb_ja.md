@@ -1030,7 +1030,7 @@ bb glob-uberscript.clj '*.md'   0.03s  user 0.02s system 93% cpu 0.049 total
 #### Carve
 
 
-Uberscripts can be optimized by cutting out unused vars with [carve](https://github.com/borkdude/carve).
+Uberscripts は、[carve](https://github.com/borkdude/carve) を使って未使用の var を取り除くことで、最適化することができます。
 
 
 
@@ -1046,7 +1046,7 @@ $ wc -l glob-uberscript.clj
 
 
 
-Note that the uberscript became 72% shorter. This has a beneficial effect on execution time:
+uberscriptが72％短くなったことに注意してほしい。これは実行時間に有益な効果をもたらす：
 
 
 
