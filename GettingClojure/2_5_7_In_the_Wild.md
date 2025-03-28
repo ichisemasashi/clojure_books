@@ -1,7 +1,7 @@
     
-### In the Wild
-    
-To find an example of `clojure.test` in real-world code you need to look no further than the [tests for Clojure itself](https://github.com/clojure/clojure/blob/master/test/clojure/test_clojure/numbers.clj).  Here, for example, is a Zenlike statement of what `+` should do:
+### 現実世界
+ 
+`clojure.test` の実例を現実世界のコードで見つけるには、[Clojure 自体のテスト](https://github.com/clojure/clojure/blob/master/test/clojure/test_clojure/numbers.clj) を見るだけで十分です。 例えば、`+` が何をすべきかについての禅問答のような記述は次の通りです。
     
 ```clojure
 (deftest test-add
@@ -15,7 +15,7 @@ To find an example of `clojure.test` in real-world code you need to look no furt
       (+ -1 +2 -3) -2
       (+ 1 -1) 0 
       (+ -1 1) 0 
-      ;; Much of the test omitted.
+      ;; テストの多くは省略。
       ))           
 ```
 
