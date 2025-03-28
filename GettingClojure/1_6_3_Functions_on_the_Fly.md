@@ -1,27 +1,27 @@
 
-### Functions on the Fly
+### 関数をその場で作成
 
-There’s something else you can do with functional values: you can manufacture new ones, on the fly. In much the same way you can make a new number with `(+ 2 3)` or `(* 5 x)`, you can use `fn` to create new functions. Here, for example, we manufacture a new function with `fn`, one that doubles its argument:
+関数値でできることは他にもある。(+ 2 3)` や `(* 5 x)` で新しい数値を作るのと同じように、`fn` を使って新しい関数を作ることができる。例えば、ここでは `fn` を使って、引数を2倍にする新しい関数を作っている：
 
 ```clojure
 (fn [n] (* 2 n)) 
 ```
 
 
-As you can see from the example, using `fn` is a lot like using `defn`, except that you leave out the name. Like `defn`, `fn` creates a new function, essentially a packaged bit of code. The difference between `fn` and `defn` is that `fn` doesn’t bind its newborn bundle of code to a name; you just get the function value. So what can you do with a function value? Anything you can do with any other value. You can, for example, print it:
+例からわかるように、`fn`を使うことは、名前を省くことを除けば、`defn`を使うこととよく似ている。`defn`と同じように、`fn`は新しい関数を作り、基本的にはパッケージ化されたビットコードになる。`fn`と`defn`の違いは、`fn`は生まれたばかりのコードの束を名前に束縛しないことだ。では、関数の値を使って何ができるのか？他のあらゆる値でできることだ。例えば、それを出力することができる：
 
 
 ```clojure
 (println "A function:" (fn [n] (* 2 n)))
 ``` 
 
-or bind it to a symbol:
+またはシンボルに束縛する：
 
 ```clojure
 (def double-it (fn [n] (* 2 n))) 
 ```
 
-and, most importantly, call it:
+そして最も重要なのは、それを呼ぶことだ：
 
 ```clojure
 (double-it 10)        ; Gives you 20.
@@ -29,7 +29,7 @@ and, most importantly, call it:
 ```
 
 
-Returning to our book example, here is a nameless function that does the same thing as `cheap?`:
+本の例に戻ると、以下は`cheap?`と同じことをする名前のない関数である：
 
 ```clojure
 (fn [book]
@@ -37,7 +37,7 @@ Returning to our book example, here is a nameless function that does the same th
     book))
 ```
 
-Armed with `fn`, we can write functions that produce functions:
+`fn`を使えば、関数を生成する関数を書くことができる：
 
 ```clojure
 (defn cheaper-f [max-price]
@@ -46,7 +46,7 @@ Armed with `fn`, we can write functions that produce functions:
       book)))
 ```
 
-It’s important to understand just how meta we’ve gone here: `cheaper-f` is a function that produces a whole family of bargain-spotting functions, each with its own idea of what constitutes a bargain.
+ここで重要なのは、どれだけメタなことをしたかを理解することだ： `cheaper-f`は、バーゲンを構成するものについての独自の考え方を持つ、バーゲンスポット関数の全ファミリーを生成する関数である。
 
 ```clojure
 ;; Define some helpful functions.
@@ -61,9 +61,9 @@ It’s important to understand just how meta we’ve gone here: `cheaper-f` is a
 ```
 
 
-If this all looks less than spectacular, look again. The thing to note is that a function produced by `fn` picks up and remembers the parameters around when the `fn` was run. So in the last example, the function produced when you call `(cheaper-f 1.00)` will remember that `max-price` is `1.00` while the function produced by `(cheaper-f 5.99)` will remember `max-price` as `5.99`.
+もし、これがあまり壮大でないように見えたら、もう一度見てほしい。注意しなければならないのは、`fn`によって生成された関数は、`fn`が実行されたときのパラメータを覚えているということだ。つまり、最後の例では、`(cheaper-f 1.00)` を呼び出したときに生成される関数は `max-price` が `1.00` であることを記憶し、`(cheaper-f 5.99)` が生成する関数は `max-price` を `5.99` と記憶する。
 
-Going a step further, we can write a function that manufactures `both?`-like functions:
+さらに一歩進んで、`both?`のような関数を作る関数を書くこともできる：
 
 ```clojure
 (defn both-f [predicate-f-1 predicate-f-2]
@@ -72,7 +72,7 @@ Going a step further, we can write a function that manufactures `both?`-like fun
       book)))
 ```
 
-With `both-f` we can then build a whole family of book-discriminating functions:
+`both-f`を使えば、本を分別する関数の一群を作ることができる：
 
 ```clojure
 (def cheap-horror? (both-f cheap? horror?))
@@ -80,7 +80,7 @@ With `both-f` we can then build a whole family of book-discriminating functions:
 (def real-cheap-horror? (both-f real-cheap? horror?))
 ```
 
-And then go up yet another level of meta:
+そして、さらにもう一段階メタのレベルを上げる：
 
 ```clojure
 (def cheap-horror-possession?
@@ -88,4 +88,4 @@ And then go up yet another level of meta:
     (fn [book] (= (:title book) "Possession"))))
 ```
 
-This idea of a function grabbing and remembering the bindings that existed when the function was born is called a "closure". We say that the function "closes" over the scope in which it was defined. More than anything else, the twin ideas of functions as values and "closure" are at the heart of what makes Clojure the programming language it is, and might explain the name as well.
+このように、ある関数が、その関数が生まれたときに存在していた束縛をつかんで記憶しておくという考え方を「クロージャー」と呼ぶ。関数が定義されたスコープを「close（閉じる）」と言います。何よりも、値としての関数と "クロージャ "という2つの考え方が、Clojureをプログラミング言語たらしめている核心であり、名前の由来にもなっています。

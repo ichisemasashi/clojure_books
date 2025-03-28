@@ -1,8 +1,8 @@
 
-### Wrapping Up
+### まとめ
 
-In this chapter we looked at records and protocols. We saw how records are specialized maps. Like a map, a record lets you associate any key with any value. But records have an attitude. They know about a particular set of keys that they want to work with. We also saw how protocols are collections of functions that you can use to build polymorphic operations on your records.
+この章ではレコードとプロトコルについて見てきた。レコードが特殊化されたマップであることを説明した。マップのように、レコードは任意のキーと任意の値を関連付けることができる。しかし、レコードには独自の性質がある。レコードは、自分が扱いたい特定のキーの集合を知っている。また、プロトコルがレコードに対して多相的な操作を行うための関数の集まりであることも説明した。
 
-You’ve now accumulated a lot of Clojure know-how. You can write code that generates functions on the fly and that puts data into collections and pulls it back out. Perhaps it’s time to talk about how you can make sure it’s all working.
+あなたは今、Clojureのノウハウをたくさん蓄積しています。その場で関数を生成したり、データをコレクションに入れたり引き出したりするコードを書くことができます。おそらく、それがすべて動作していることを確認する方法について話す時でしょう。
 
 

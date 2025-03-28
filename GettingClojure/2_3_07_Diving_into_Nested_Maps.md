@@ -1,7 +1,7 @@
   
-### Diving into Nested Maps
+### ネストしたマップへの掘り下げ
 
-In the same way that you can use destructuring to dig into several layers of sequential data structures such as lists or vectors, you can also excavate several layers of maps. For example, given this two-level description of Jane Austen:
+リストやベクターのようなシーケンシャルなデータ構造を何層にも掘り下げるためにデストラクチャリングを使うのと同じように、マップも何層にも掘り下げることができます。例えば、ジェーン・オースティンを2階層で説明するとしよう：
 
 ```clojure
 (def austen {:name "Jane Austen"
@@ -9,7 +9,7 @@ In the same way that you can use destructuring to dig into several layers of seq
              :dates {:born 1775 :died 1817}})
 ```
 
-we can extract the names of her parents with this: 
+これで彼女の両親の名前を取り出すことができる： 
 
 ```clojure
 (let [{{dad :father mom :mother} :parents} austen]
@@ -17,7 +17,7 @@ we can extract the names of her parents with this:
   (println "Jane Austen's mom's name was" mom))
 ```
   
-A good way to look at this kind of two-level map destructuring is from the outside in. At the very outside, we have the basic let structure:
+このような2レベルのマップのデストラクチャリングを見る良い方法は、外側から内側を見ることだ。一番外側には、基本的なlet構造がある：
 
 ```clojure
 (let [<<something-to-bind-to>> austen]
@@ -25,7 +25,7 @@ A good way to look at this kind of two-level map destructuring is from the outsi
   )
 ```
 
-Digging into the next level, we see that we have a map destructuring, one that is going to grab the `:parents` key:
+次のレベルに進むと、マップのデストラクチャリングがあり、`:parents`キーを取得しようとしていることがわかる：
 
 ```clojure
 (let [{<<something-to-bind-parents-to>> :parents} austen]
@@ -33,7 +33,7 @@ Digging into the next level, we see that we have a map destructuring, one that i
   )
 ```
 
-And what are you going to do in the `something-to-bind-parents-to` spot? Yet another destructuring, of course, which takes us back to this:
+そして、`something-to-bind-parents-to`のところはどうするのか？もちろん、ここでまた新たなデストラクションをしなければならないのだが、それはまた別の話である：
 
 ```clojure
 (let [{{dad :father mom :mother} :parents} austen]
@@ -41,7 +41,7 @@ And what are you going to do in the `something-to-bind-parents-to` spot? Yet ano
   )
 ```
 
-Once you have the idea, you can pull as little or as much as you want out of the maps. We could, for example, grab Jane’s name along with her mother’s name and her year of birth:
+いったんアイデアが浮かんだら、あとはマップから好きな分だけ抜き出すことができる。たとえば、ジェーンの名前と母親の名前、それにジェーンの生まれた年を取り出すことができる：
 
 ```clojure
 (let [{name :name
@@ -51,7 +51,7 @@ Once you have the idea, you can pull as little or as much as you want out of the
   (println name "mother's name was" mom))
 ```
 
-Just keep in mind that the order of things in the left side of the destructuring is reversed from what you would expect if you were creating a map. When it comes to destructuring, it’s value then key all the way down.
+ただ、左側のデストラクチャーの順番は、マップを作成する場合とは逆になることを覚えておいてほしい。デストラクチャリングに関しては、値→キーの順でずっと下がっていく。
 
 
 

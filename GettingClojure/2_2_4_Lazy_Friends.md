@@ -1,33 +1,33 @@
 
-### Lazy Friends
+### 怠け者の友達
 
-Interestingly, `take` is itself lazy. It does indeed return the first N items of the sequence you pass to it, but it doesn’t actually grab anything off of the sequence until you ask for it. Thus this:
+興味深いことに、`take`はそれ自体が怠け者である。`take`は確かに渡されたシーケンスの最初のN個のアイテムを返しますが、実際にシーケンスから何かを取得することはありません。このように
 
 ```clojure
 (def many-nums (take 1000000000 (iterate inc 1)))
 ```
 
-doesn’t create a billion-item collection immediately. Instead `take` knows that it should limit itself to the first billion items, but like the lazy sod that it is, `take` waits to be asked before it does anything. So this:
+これは10億アイテムのコレクションをすぐには作らない。その代わり、`take`は最初の10億アイテムに限定するべきだと知っているが、`take`は怠け者のように、何かする前に質問されるのを待つ。つまりこうだ：
 
 ```clojure
 (println (take 20 (take 1000000000 (iterate inc 1))))
 ```
 
-will print the first 20 integers and is only microscopically slower at doing so than the version sans the inner `take`.
+これは最初の20個の整数を表示し、内側の `take` を使わないバージョンよりも微小な遅さしかない。
 
-`take` isn’t alone in being surprisingly lazy. A lot of the sequence functions that we’ve been using are lazy. For example, our old friend `map` is lazy. We can, for example, use `map` to create a lazy sequence of all the even numbers and then just grab the first 20:
+驚くほど怠惰なのは `take` だけではない。これまで使ってきたシーケンス関数の多くが怠惰である。例えば、古くからの友人である `map` は怠け者だ。例えば、`map` を使って偶数の遅延シーケンスを作成し、最初の20個だけを取り出すことができる：
 
 ```clojure
 (def evens (map #(* 2 %) (iterate inc 1)))
 (take 20 evens)
 ```
 
-Also lazy is `interleave`, which you will recall weaves sequences together. Since it’s lazy, we can safely interleave infinite sequences. We might, for instance, want to number our even numbers:
+また、`interleave`も遅延であり、これはシーケンスを一緒に編むことを思い出すだろう。これは怠惰なので、無限の数列を安全に連結することができる。例えば、偶数に番号を付けたいかもしれない：
 
 ```clojure
 ;; Returns (1 2 2 4 3 6 4 8 5 10)
 (take 10 (interleave numbers evens))
 ```
 
-An expression like `(take 10 (interleave numbers evens))` is more like an assembly line ready to start spewing out numbers than an actual list of numbers. Production only kicks off when you start asking for the contents of the resulting sequence.
+`(take 10 (interleave numbers evens))`のような式は、実際の数字のリストというよりも、数字を吐き出す準備の整った組立ラインのようなものだ。生産が開始されるのは、この結果として得られるシーケンスの内容を求め始めてからです。
 

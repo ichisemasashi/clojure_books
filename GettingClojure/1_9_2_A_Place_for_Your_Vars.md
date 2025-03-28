@@ -1,9 +1,9 @@
 
-### A Place for Your Vars
+### Varsの置き場所
 
-In the last chapter we saw how def creates vars—vars that represent the binding between a symbol and a value. What we skipped over in that chapter is how vars are organized. But really it’s very simple. As illustrated in the "figure on page 96", vars live in "namespaces".
+前の章で、def が varsをどのように作成するのか、シンボルと値の間の束縛を表すvarsを どのように作成するのかを見ました。その章では、varsがどのように整理されるかについて説明しました。しかし、実際はとてもシンプルです。"96ページの図 "に示されているように、varsは "名前空間 "に住んでいます。
 
-Conceptually, a Clojure namespace is just a big lookup table of vars, indexed by their symbols. And since you can have as many namespaces in your program as you want, each namespace itself has a unique name. At any given moment there is one special namespace, called the current namespace. So if you do this:
+概念的には、Clojure名前空間は、シンボルによってインデックス付けされたvarsの大きな参照テーブルです。そして、必要なだけプログラム内に名前空間を持つことができるので、各名前空間自体はユニークな名前を持っています。任意の時点で、カレント名前空間と呼ばれる特別な名前空間が1つ存在します。つまり、次のようにすると
 
 ![fig_1_9_2_001](img/1_9_2_001.png)
 
@@ -12,20 +12,20 @@ namespace/examples.clj
 (def discount-rate 0.15)
 ```
 
-it’s the current namespace that gets updated with a var associating `discount-rate` with `0.15`. If you mention `discount-rate` a little later in your code, Clojure will consult the current namespace to come up with `0.15`.
+これはカレント名前空間で、`discount-rate` を `0.15` と関連付ける var で置き換えられています。コードの少し後で `discount-rate` に言及すると、Clojure はカレント名前空間を参照して `0.15` を生成します。
 
-When it boots up, Clojure creates a fresh namespace for you, called `user`, and makes it the current namespace.
+起動するとき、Clojureはあなたのために `user` という新しい名前空間を作成し、それをカレント名前空間にします。
 
-Thus every `def` and `defn` that we have evaluated so far—with the example of our file-based project back in "Hello, Clojure"—has gone straight into the `user` namespace.
+したがって、これまで評価してきたすべての `def` と `defn` は、"Hello, Clojure "で紹介したファイルベースのプロジェクトを例にすると、そのまま `user` 名前空間に入っています。
 
-While `user` is the default namespace, it’s certainly not your only namespace choice. As I say, you can create as many namespaces as you need, and the easiest way to create a new namespace is with `ns`:
+`user`はデフォルトの名前空間ですが、唯一の名前空間ではありません。先ほど言ったように、名前空間は必要な数だけ作ることができ、新しい名前空間を作る最も簡単な方法は `ns` を使うことです：
 
 
 ```clojure
 (ns pricing)
 ``` 
 
-Just feed `ns` the name of your new namespace, no quoting required. Conveniently, `ns` not only creates the new namespace, but also makes it the current namespace. Thus this:
+単に `ns` に新しい名前空間の名前を入力するだけでよく、引用符で囲む必要はない。便利なことに、`ns` は新しい名前空間を作成するだけでなく、それをカレント名前空間にします。このように
 
 ```clojure
 (ns pricing)
@@ -34,39 +34,39 @@ Just feed `ns` the name of your new namespace, no quoting required. Conveniently
   (* (- 1.0 discount-rate) (:price book)))
 ```
 
-creates the `pricing` namespace and adds the `discount-rate` and `discount-price` vars to it.
+`pricing` 名前空間を作成し、`discount-rate` と `discount-price` の var を追加します。
 
-If you supply `ns` with the name of an existing namespace, it will skip the creation and simply switch the current namespace to the existing namespace.
-If, for example, we switch from `pricing` to `user`:
+既存の名前空間の名前を `ns` に指定すると、名前空間の作成を省略して、ただ単に現在の名前空間を既存の名前空間に切り替えます。
+例えば、`pricing` から `user` に切り替えるとする：
 
 ```clojure
 (ns user)
 ```
 
-and then back to `pricing`:
+そして再び `pricing` へと戻る：
 
 ```clojure
 ;; Back to the pricing namespace.
 (ns pricing)
 ```
 
-we discover that `discount-price` is still alive and well:
+`discount-price`はまだ有効なのだ：
 
 ```clojure
 (println (discount-price {:title "Emma" :price 9.99}))
 ```
 
 
-By default, the vars inside of one namespace are completely separate from the vars in another. Thus I can have as many functions or plain values called `discount-price` as I want, as long as I keep them in separate namespaces. That raises the question of how to get at the vars defined in one namespace from a different namespace. For example, what happens if we’re in the `user` namespace, as here:
+デフォルトでは、ある名前空間内のvarsは別の名前空間内のvarsと完全に分離されています。したがって、別々の名前空間にある限り、`discount-price`という関数やプレーンな値をいくつでも持つことができます。そこで、ある名前空間で定義されたvarsを別の名前空間からどのように取得するかという問題が発生します。例えば、`user`名前空間にいる場合はどうなるでしょうか：
 
 ```clojure
 (ns user)
 ;; How do I get at discount-price?
 ```
 
-and we want to call `discount-price?`
+そして、`discount-price?`を呼び出したい。
 
-The simplest solution to the "I need something from another namespace" issue is to use a "fully qualified symbol". A fully qualified symbol is just a long version of a symbol, one that includes the namespace. To write a fully qualified symbol you start with the namespace, follow it with a slash, and follow that with the symbol name. So `discount-price` becomes `pricing/discount-price`:
+「別の名前空間のものが必要だ」という問題に対する最も簡単な解決策は、「完全修飾シンボル」を使うことだ。完全修飾されたシンボルとは、名前空間を含む長い版のシンボルのことです。完全修飾シンボルを書くには、まず名前空間を書き、その後にスラッシュをつけ、その後にシンボル名を書きます。つまり、`discount-price`は`pricing/discount-price`となる：
 
 ```clojure
 (ns user)
@@ -74,7 +74,7 @@ The simplest solution to the "I need something from another namespace" issue is 
 (println (pricing/discount-price {:title "Emma" :price 9.99}))
 ```
 
-Again, namespaces are simple: they’re just a place for your stuff, with their own names. And if you need something from a namespace, all you have to do is qualify the symbol with the namespace name.
+繰り返しになるが、名前空間はシンプルである：名前空間は自分のものを置く場所であり、自分の名前を持つだけである。そして、名前空間から何かが必要な場合は、名前空間名でシンボルを修飾するだけでいい。
 
 
 

@@ -1,19 +1,19 @@
 
-### Lists
+### リスト
 
-Clojure has a second data type that—at least at first blush—seems a lot like the vector: the list. Like a vector, a list is an ordered collection of items. To make a list, you surround your items with round parentheses instead of the square brackets you would use for a vector:
+Clojureには、少なくとも一見したところベクターに似ているように見える2つ目のデータ型があります：リストです。ベクターのように、リストは順序付けられた項目のコレクションです。リストを作るには、ベクターで使う角括弧の代わりに丸括弧で項目を囲みます：
 
 ```clojure
 '(1 2 3)
 ```
 
-If you look closely at the list in that code example, you will see a second syntactic twist: the list is preceded by a single-quote character. We need that quote for a very prosaic reason: lists, with their round parentheses, look just like Clojure code. Syntactically it’s hard to tell the difference between `(1 2 3)` and `(def x 99)`. The quote’s job is to stand there in front of the list and shout, Hey! The thing that comes next is data. Don’t try to execute it!
+このコード例のリストをよく見ると、2つ目の構文的なひねりがあることがわかる：リストの前に単一引用符があるのだ。この引用符が必要なのは、とても平凡な理由からです。丸括弧のついたリストは、Clojureのコードと同じように見えるからです。構文的には、`(1 2 3)`と`(def x 99)`の違いを見分けるのは難しい。引用符の仕事は、リストの前に立って「おい！次に来るのはデータだ」と叫ぶことだ。 決して実行しようとしてはいけない！
 
-Happily, since the single quote applies to the whole of the thing that comes next, you only need one quote no matter how deeply your lists are nested.  The only exception to the quote that list! rule is when you have an empty list: since there is no way that `()` can be mistaken for anything other than an empty list, you can write it sans quote.
+幸いなことに、シングルクォートは次に来るもの全体に適用されるので、リストがどんなに深く入れ子になっていても、クォートは1つしか必要ない。 リストを引用符で囲む！というルールの唯一の例外は、空リストの場合です。
 
-And yes, it’s hard to the tell the difference between a list and those sequence things we discussed earlier, since they both are surrounded by round parentheses. Again, I’ll have more to say about sequences in "Chapter 10, Sequences, on page 111".
+そう、リストもシーケンスも丸括弧で囲まれているので、区別がつきにくいのだ。繰り返しますが、シーケンスについては「第10章 シーケンス」の111ページで詳しく説明します。
 
-Like vectors, lists can hold whatever data you care to throw at them, so that all of the following are perfectly good lists: 
+ベクターと同様、リストはどんなデータでも保持することができるため、以下のようなものはすべてリストとして問題ない： 
 
 ```clojure
 '(1 2 3 "four" 5 "six")
@@ -21,14 +21,14 @@ Like vectors, lists can hold whatever data you care to throw at them, so that al
 '([1 2 ("a" "list" "inside a" "vector")] "inside" "a" "list")
 ``` 
 
-And as with vectors there is also a function that will create a list from the arguments you pass in:
+また、ベクターと同様に、渡した引数からリストを作成する関数もある：
 
 ```clojure
 ;; More or less the same as '(1 2 3 "four" 5 "six")
 (list 1 2 3 "four" 5 "six")
 ```
 
-And you can do many of the same things with a list that you can with a vector:
+リストでもベクターと同じことができる：
 
 ```clojure
 (def poems '("Iliad" "Odyssey" "Now We Are Six"))
@@ -39,6 +39,6 @@ And you can do many of the same things with a list that you can with a vector:
 (nth poems 2) ; "Now We Are Six".
 ```
 
-As you can see, count, first, rest, and nth do exactly what you expect.
+見ての通り、count、first、rest、nthは期待通りの働きをする。
 
 

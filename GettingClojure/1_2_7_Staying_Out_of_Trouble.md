@@ -1,25 +1,25 @@
 
-### Staying Out of Trouble
+### トラブルに巻き込まれないために
 
-The main way to trip up with Clojure’s vectors and lists is to forget just how immutable they are. For example, if you start with this:
+Clojureのベクターとリストでつまずく主な方法は、それらが単に不変であることを忘れてしまうことです。例えば、これで始めるとします：
 
 ```clojure
 (def novels ["Emma" "Coma" "War and Peace"])
 ```
 
-and then add a new book like this:
+そして、このように新しい本を追加する：
 
 ```clojure
 (conj novels "Jaws")
 ```
 
-you have done nothing. Well, not precisely nothing: you started with the three-element `novels` vector. Then you created a new vector with four elements. Then you threw that new vector away, leaving the universe pretty much as you found it. To do something useful you need to grab the new, four-element vector, perhaps by binding it to a new symbol:
+あなたは何もしていない。まあ、正確には何もしていないわけではない。あなたは3つの要素を持つ`novels`ベクターから始めた。それから4つの要素を持つ新しいベクターを作った。そしてその新しいベクターを捨て、宇宙はほとんど元のままになってしまった。何か有用なことをするためには、新しい4つの要素を持つベクターを、おそらく新しいシンボルに束縛することでつかまえる必要がある：
 
 ```clojure
 (def more-novels (conj novels "Jaws"))
 ```
 
-Exactly the same logic applies to most other Clojure data structures, including lists:
+全く同じロジックが、リストを含む他のほとんどのClojureデータ構造に適用されます：
 
 ```clojure
 ;; Create a list.
@@ -29,14 +29,14 @@ Exactly the same logic applies to most other Clojure data structures, including 
 ```
 
 
-A downside of immutable lists and vectors is that it tends to cause disquiet in the hearts of new Clojure programmers, a disquiet centered on performance.  The fretting generally runs like this: What if I have a 50,000-element vector and I need to add a series of values to it? Won’t that require a lot of useless copying as `conj` manufactures one same-except-for-one-element result after another?
+不変なリストとベクターの欠点は、新しいClojureプログラマーの心に不穏な空気を引き起こす傾向があることです。 その不安は一般的に次のようなものです： 50,000要素のベクターがあり、それに一連の値を追加する必要がある場合はどうするのか？それは、`conj`が1つの要素に対して1つの同じ例外を除いた結果を次々に作るので、無駄なコピーがたくさん必要になるのではないか？
 
-In a word, no. Under the hood, vectors store their data in chunks, organized in a shallow tree. Breaking the data up into chunks means that when it comes time to make an almost-the-same copy, Clojure can minimize the amount of copying by reusing most of the chunks as is.
+一言で言えば、ノーだ。ベクターは浅いツリーで構成されたチャンクにデータを格納します。データをチャンクに分割するということは、ほとんど同じコピーを作成するとき、Clojureはチャンクのほとんどをそのまま再利用することで、コピーの量を最小限にできることを意味します。
 
-This scheme is surprisingly efficient: some CPU cycles and memory do go into managing the chunks, but not a lot. Accessing an element of a vector—which involves traversing the tree—is not quite as fast as getting at an element of a simple array, but it’s still fast. And you can make modified copies without much actual copying. And it’s not just vectors: under the hood, all of Clojure’s data structures are carefully designed to support fast creation of almost-the-same copies.
+この仕組みは驚くほど効率的です。チャンクを管理するために多少のCPUサイクルとメモリが使われますが、それほど多くはありません。ベクターの要素にアクセスするにはツリーを走査する必要があり、単純な配列の要素にアクセスするほど速くはないが、それでも速い。また、実際にコピーすることなく、変更されたコピーを作ることができる。ベクターだけではありません。Clojureのすべてのデータ構造は、ほとんど同じコピーを高速に作成できるように注意深く設計されています。
 
-Conversely, the payoff from immutability is huge. In Clojure, once your code gets hold of a data structure, you don’t have to worry that some other bit of code will unexpectedly change it. In Clojure your data structures always have the values that they were born with.
+逆に、不変性からの見返りは大きいです。Clojureでは、あなたのコードがデータ構造を手に入れたら、他のコードがそれを不意に変更することを心配する必要はありません。Clojureでは、データ構造は常に、それらが最初に持つ値を持っています。
 
-There is one other nontechnical danger lurking in Clojure data structures: the terminology. The computer-science term for immutable data structures that support the manufacture of very fast almost-the-same copies is persistent, as in persistent data structures. This is a very different use of the word persistent than most professional programmers are used to. Keep in mind that in Clojure, a persistent data structure is immutable and efficient and is not necessarily destined to be stored in a database or a file or anywhere else.
+Clojureデータ構造には、もう1つ非技術的な危険が隠れています。非常に高速なほとんど同じコピーの製造をサポートする不変のデータ構造のコンピュータ科学用語は、永続的なデータ構造の場合と同様に、永続的です。これは、ほとんどのプロのプログラマが慣れているpersistentという言葉の使い方とは全く異なります。Clojureでは、永続的なデータ構造は不変で効率的であり、必ずしもデータベースやファイルや他の場所に保存される運命にはないことを覚えておいてください。
 
 

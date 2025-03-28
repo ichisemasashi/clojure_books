@@ -1,11 +1,11 @@
 
-### Wrapping Up
+### まとめ
 
-In this chapter we explored lazy sequences, those Zen collections full of elements that are not there until you look. We saw how Clojure is full of functions like `repeat` and `iterate` that create lazy sequences, and functions like `map` and `take` that are capable of processing them. We also looked at how you can use these functions to build up useful sequences, and at how it’s all implemented.
+この章では、実際に要素を見てみないとわからないような要素でいっぱいの禅コレクションである遅延シーケンスについて説明した。Clojureには `repeat` や `iterate` のような遅延シーケンスを作成する関数や、 `map` や `take` のような遅延シーケンスを処理する関数がたくさんあります。また、これらの関数を使用してどのように有用なシーケンスを構築できるのか、そしてどのように実装されているのかを見た。
 
-Along the way we saw how laziness can sometimes come as a bit of a surprise and how to use `doall` and `doseq` to ensure that your sequence is populated "right now".
+また、`doall` や `doseq` を使って、シーケンスが "今すぐ "処理されるようにする方法も紹介しました。
 
-Now that you know a lot about putting data into collections, it’s time to look at reversing the process. So in the next chapter we’re going to turn to a feature that will enable us to pluck just the value we need from a collection, even if that collection is nested inside of another collection. Or two. Or three.
+さて、データをコレクションに格納する方法についてだいぶ理解できたと思います。次の章では、コレクションが別のコレクションの中にネストされていても、コレクションから必要な値だけを取り出すことができる機能を紹介します。2 つまたは 3つ。
 
 
 

@@ -1,33 +1,33 @@
 
-### In the Wild
+###野生の中で
 
-If you’re getting the feeling that sequences are pretty central to Clojure programing, well, yes. You can find sequences littered through the length and breath of real-world Clojure code. To see some real-world sequence action, you might have a look at the source code for the wonderful [Overtone](http://overtone.github.io), which describes itself as a "collaborative programmable music" system. Overtone spends a lot of its code creating, shaping, tuning, and distorting (hopefully) musical sounds, and makes heavy use of sequences and sequence functions in the process. For example, here is a bit of code that is part of generating a sound "envelope", which controls how the loudness of a sound evolves over time:
+シーケンスがClojureプログラミングのかなり中心的なものだと感じているなら、その通りです。実際のClojureコードの長さと息づかいの中にシーケンスを見つけることができます。実際のシーケンスアクションを見るには、素晴らしい[Overtone](http://overtone.github.io)のソースコードを見てください。Overtoneは、そのコードの多くを、楽音の作成、構成、チューニング、変形に費やしており、その過程でシーケンスとシーケンス関数を多用している。例えば、音の大きさが時間とともにどのように変化するかを制御する「envelope（エンベロープ）」を生成するコードの一部である：
     
 ```clojure
 (map #(+ %1 bias) [0 0 level (* level sustain) 0])
 ``` 
 
-Keep in mind that `bias`, `level`, and `sustain` are all bound to floating-point numbers as this expression gets evaluated. Stare at the expression for a minute, and you will see that it’s just a call to `map`, one that uses a function literal to add `bias` to each of the five elements of the vector.
+この式が評価されるとき、`bias`、`level`、`sustain`はすべて浮動小数点数に束縛されることに注意してほしい。この式を少し見てみると、単なる `map` の呼び出しであり、関数リテラルを使ってベクターの5つの要素それぞれに `bias` を追加していることがわかるだろう。
 
-Alternatively, the authors of Overtone could’ve written this expression with a `for`:
+あるいは、Overtoneの作者はこの式を`for`で書くこともできただろう：
 
 ```clojure
 (for [v [0 0 level (* level sustain) 0]] (+ v bias))
 ```
  
-But they didn’t. This is typical of real-world Clojure code, which leans on `map` much more frequently than on `for`.
+しかし、彼らはそうしなかった。これは実際のClojureコードの典型的な例で、`for`よりも`map`の方がはるかに頻繁に使用されます。
 
-You can also find some sequence-based string-building code along the lines of our book-title example in [ClojureScript](https://github.com/clojure/clojurescript).
-ClojureScript takes on the daunting task of translating Clojure programs into the equivalent JavaScript code. Part of that translation involves transforming Clojure vectors and lists into their JavaScript equivalents, complete with brackets and commas. Dig into the ClojureScript code, and you will find this gem: 
+また、[ClojureScript](https://github.com/clojure/clojurescript)には、私たちの本のタイトルの例に沿った、シーケンスベースの文字列構築コードもあります。
+ClojureScriptは、Clojureプログラムを同等のJavaScriptコードに翻訳するという大変な仕事を引き受けます。その翻訳の一部は、Clojureのベクターとリストを、括弧とカンマで完全に等価なJavaScriptに変換することを含みます。ClojureScriptコードを掘り下げると、あなたはこの宝石を見つけることができる： 
 
 ```clojure
 (defn seq->js-array [v]
-(str "[" (apply str (interpose ", " (map pr-str v))) "]"))
+  (str "[" (apply str (interpose ", " (map pr-str v))) "]"))
 ```
 
-Note that `seq->js-array` is not a terribly general function—the call to `pr-str` (which turns its arguments into quoted strings) means that `seq->js-array` can only handle one-level sequences of strings. Fortunately `seq->js-array` can afford to be less than general because it’s only intended to help in configuring the JavaScript environment. Still, the family resemblance to our earlier example—complete with calls to `map` and `interpose`—should be clear.
+`seq->js-array` はあまり一般的な関数ではないことに注意してほしい。（引数を引用符で囲まれた文字列に変換する） `pr-str` を呼び出すことで、`seq->js-array` は1レベルの文字列シーケンスしか扱うことができないからだ。幸いなことに、`seq->js-array`はJavaScriptの環境設定を助けることを目的としているので、一般的でなくても構わない。それでも、先ほどの例（`map`と`interpose`の呼び出しがある）と似ていることは明らかだろう。
 
-One thing to note from both of these real-world examples, as well as our earlier "format the highest-rated books" sample, is how deeply nested the sequence operations tend to get. Here’s the book example again:
+これらの実際の例と、以前に紹介した「最も評価の高い本をフォーマットする」サンプルの両方から注意すべき点は、シーケンス操作がいかに深くネストされる傾向があるかということです。本の例をもう一度見てみよう：
 
 ```clojure
 (defn format-top-titles [books]
@@ -38,11 +38,11 @@ One thing to note from both of these real-world examples, as well as our earlier
       (map :title (take 3 (reverse (sort-by :rating books)))))))
 ```
 
-It’s a lovely example of functional code, but it does take some effort to read.
+関数的コードの素敵な例だが、読むには少し努力が必要だ。
 
-You need to work from the inside out. First we sort by `:ratings`. Then we reverse the sorted sequence and so on until we get to using `(apply str ...)` to turn the resulting sequence into a single string.
+内側から外側に取り組む必要がある。まず、`:ratings`でソートする。次に、ソートされたシーケンスを逆順にし、`(apply str ...)` を使って結果のシーケンスを1つの文字列にする。
 
-Happily, Clojure provides some convenient syntactical sugar for these occasions. In this case the sugar takes the form of a very pointy arrow: `->>`.  Essentially `->>` lets you write a nested expression like the one we just saw in a more human "do this, then that, then the other thing" order. Here’s how we would recast `format-top-titles` with `->>`:
+幸いなことに、Clojureはこのような場合に便利なシュガー構文を用意している。この場合のシュガーは、 `->>` という非常にとがった矢印の形をしています。 基本的に `->>` を使うと、先ほど見たような入れ子になった式を、より人間的な「これをやって、それからあれをやって、それから別のことをやる」という順序で書くことができます。例えば、`format-top-titles`を`->>`で置き換えるとこうなる：
 
 ```clojure
 (defn format-top-titles [books]
@@ -56,8 +56,8 @@ Happily, Clojure provides some convenient syntactical sugar for these occasions.
     (apply str)))
 ```
 
-This new version of `format-top-titles` starts with `books` and sorts the books by their ratings. Then it takes the resulting sequence and reverses it. Next it grabs the first three elements from the reversed sequence—these are the top-rated books—and pulls out their titles and formats a string using those titles. Note that `->>` is clever in that it knows how to deal with plain symbols like `reverse` as well as incomplete function calls like `(take 3)`. Even better, there is no performance penalty for using `->>`: behind the scenes, Clojure just turns a `->>` expression into the equivalent set of nested function calls.
+この新バージョンの`format-top-titles`は、`books`から始まり、評価順にソートする。次に、その結果のシーケンスを逆順にする。次に、逆順のシーケンスから最初の3つの要素-これがトップレートの本である-を取り出し、それらのタイトルを使って文字列をフォーマットする。なお、`->>`は、`(take 3)` のような不完全な関数呼び出しだけでなく、`reverse` のようなプレーンな記号の扱い方も知っているという点で賢い。裏では、Clojureは `->>` 式をネストされた関数呼び出しのセットと等価にするだけです。
 
-There is also `->` (note the single `>`), which is very similar to `->>`. The difference is in where the current result gets placed at each step of the computation.  Use `->>`, and the result ends up at the end of the argument list. Use `->`, and the result gets slipped in at the front. It really just depends on what the functions you’re using expect.
+また、 `->` (単一の `>` に注意) もあり、これは `->>` と非常に似ている。違いは、計算の各ステップで現在の結果をどこに置くかである。 つまり、 `->>` を使用すると、結果は引数リストの最後に置かれる。また、`->`を使えば、結果は先頭に置かれる。これは本当に、使用している関数が何を期待しているかによります。
 
 

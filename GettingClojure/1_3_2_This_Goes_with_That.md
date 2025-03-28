@@ -1,16 +1,16 @@
 
-### This Goes with That
+### これはあれに合う
            
-Virtually all modern programming languages include some kind of data structure that lets you associate arbitrary keys with equally arbitrary values, and Clojure is no exception. Appropriately enough, Clojure calls its arbitrary mapping data structure a map. In keeping with Clojure’s barebones philosophy, the map literal syntax only requires a pair of curly braces and some key/value pairs. For instance, this:
+事実上すべてのモダンなプログラミング言語には、任意のキーと同様に任意の値を関連付けることができる何らかのデータ構造が含まれており、Clojureも例外ではない。十分に適切なことに、Clojureはその任意のマッピング・データ構造をマップと呼びます。Clojureの素朴な哲学に従って、マップ・リテラルの構文は、一対の波括弧といくつかのキー/値のペアを必要とするだけです。例えばこうだ：
 
 map/examples.clj
 ```clojure
 {"title" "Oliver Twist" "author" "Dickens" "published" 1838}
 ```
 
-creates a map that associates the string `"title"` with `"Oliver Twist"`, `"author"` with `"Dickens"`, and `"published"` with `1838`.
+これは、文字列 `"title"` を `"Oliver Twist"` に、`"author"` を `"Dickens"` に、`"published"` を `1838` に関連付けるマップを作成する。
 
-You can also cook up a new map with the hash-map function:
+hash-map関数で新しいマップを作ることもできる：
 
 ```clojure
 (hash-map "title" "Oliver Twist"
@@ -20,12 +20,12 @@ You can also cook up a new map with the hash-map function:
 
 > [!NOTE]
 > 
-> **Why Not Just map?**
+> **なぜmapではないのか？**
 > 
-> Yes, the name of the function that manufactures new maps is `hash-map`, not `map`. There is a `map` function, which we’ll meet presently, but it does something different.
+> そう、新しいマップを作る関数の名前は `map` ではなく `hash-map` だ。今後紹介する `map` 関数もあるが、これは違うことをしている。
 
 
-Once you have a map, there are a surprising number of ways to look up a value.  The most obvious is to call the `get` function. For example, if we have this:
+一旦マップができれば、値を調べる方法は驚くほどたくさんある。 最も簡単なのは `get` 関数を呼び出すことである。例えば、次のようにする：
 
 ```clojure
 (def book {"title" "Oliver Twist"
@@ -33,18 +33,18 @@ Once you have a map, there are a surprising number of ways to look up a value.  
            "published" 1838})
 ```
 
-then we can get the date our book was published with this:
+これを使えば、本の出版日を知ることができる：
 
 ```clojure
 (get book "published") ; Returns 1838.
 ```
 
-An alternative—and more common—way to pull a value out of a map is to call the map itself like a function, supplying the key as an argument, so this:
+マップから値を取り出す、より一般的な別の方法は、マップ自体を関数のように呼び出し、引数としてキーを与えることである：
 
 ```clojure
 (book "published")
 ```
 
-will also give you back `1838`, while `(book "title")` will return `"Oliver Twist"`. If you happen to reach for a key that’s not there, as in `(book "copyright")`, you will get a `nil`.
+これは、`1838`を返します。また、`(book "title")`は`"Oliver Twist"`を返します。もし`(book "copyright")`のように、そこにないキーに手を伸ばしたら、`nil`が返される。
 
 

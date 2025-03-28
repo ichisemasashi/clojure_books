@@ -1,7 +1,7 @@
 
-### Wrapping Up
+### まとめ
 
-In this chapter we took a look at how flexible a Clojure function can be. We’ve seen how you can define functions that take a variable number of arguments and at how you can hang a bit of documentation on your function. We also looked at multimethods, which enable you to define functions that execute different code depending on the arguments they are passed. We’ve seen how to write functions that take advantage of tail recursion and we’ve had a tour of pre and post conditions, which enable you to validate the data entering and leaving your functions.
+この章では、Clojure関数の柔軟性について見てきました。可変個の引数を取る関数を定義する方法と、関数にちょっとしたドキュメントをぶら下げる方法を見てきました。また、渡された引数に応じて異なるコードを実行する関数を定義できるマルチメソッドについても見てきました。また、末尾再帰を利用した関数の書き方や、関数に入ったり出たりするデータを検証するための事前条件や事後条件についても見てきました。
 
-Now that we’ve taken a good look at what a Clojure function is capable of, it’s time to address a bigger question: "Why are functions so central to Clojure programming that we call Clojure a functional language?"
+Clojure関数ができることをよく見てきたので、次はもっと大きな問題に取り組みましょう： 「なぜ関数がClojureプログラミングの中心で、Clojureを関数型言語と呼ぶのでしょうか？
 

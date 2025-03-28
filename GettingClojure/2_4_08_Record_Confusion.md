@@ -1,19 +1,19 @@
 
-### Record Confusion
+### レコードの混乱
 
-If you’re coming to Clojure from an object-oriented language, then this record and protocol talk probably rings a very familiar bell. Record types and their instances do look a lot like the classes and objects that you find in object-oriented languages. And protocols clearly resemble the abstract types or interfaces that you also find in the object-oriented world. None of this is by chance. Records are Clojure’s approach to building a structured, composite data type with predefined fields. Similarly, protocols are Clojure’s riff on type-based polymorphism—the idea that you can have a single operation implemented in different ways by different types.
+あなたがオブジェクト指向言語からClojureに来ているなら、このレコードとプロトコルの話は、おそらく非常になじみのある鐘を鳴らします。レコード型とそのインスタンスは、オブジェクト指向言語で見られるクラスとオブジェクトによく似ています。そしてプロトコルは、オブジェクト指向の世界で見られる抽象的な型やインターフェースに明らかに似ている。どれも偶然ではない。レコードは、定義済みのフィールドを持つ構造化された複合データ型を構築するためのClojureのアプローチです。同様に、プロトコルは、型ベースのポリモーフィズム（異なる型によって異なる方法で実装された単一の操作を持つことができるという考え方）をClojureがアレンジしたものです。
 
-But record types and values part company with object-oriented classes and objects in important ways. Clojure record values are exactly as immutable as Clojure’s vectors and maps. Records are also innocent of implementation inheritance. There are no super record types. And, as we saw in the last section, records and protocols are independent of each other in time and space.
+しかし、レコードの型と値は、重要な点で、オブジェクト指向のクラスとオブジェクトと別です。Clojureのレコード値は、Clojureのベクタや マップとまったく同じように不変です。レコードはまた、実装継承の罪がない。スーパーレコード型はありません。そして、最後のセクションで見たように、レコードとプロトコルは時間的にも空間的にも互いに独立している。
 
-At any given moment you can decide to implement some protocol—including one you have just constructed—on any record type.
+任意の瞬間に、あるプロトコルを実装することを決めることができます（構築したばかりのプロトコルを含む）。
 
-Perhaps the biggest practical difference between Clojure’s records and protocols and the objects and classes that you find in an object-oriented language is that many significant Clojure programs get along just fine without them.
+おそらく、Clojureのレコードとプロトコルと、オブジェクト指向言語で見つかるオブジェクトとクラスの間の最大の実用的な違いは、多くの重要なClojureプログラムが、それらなしでうまくやっていけるということです。
 
-That leads us to the best approach to using records and protocols: start without them. Start with plain old maps and functions and see how things go. If, as you go along, your code starts to drift toward the unreadable, and records help, then put in some records. If you are having performance problems and it seems like records, with their speedy field access, would make things better, then try some records. And if you find that you need some polymorphism, and perhaps need to leave the door open for some polymorphic extensions in the future, then reach for the protocols. But start simple: you may just find that maps and functions are enough.
+それは、レコードとプロトコルを使うための最良のアプローチにつながります。古いマップと関数から始めて、どうなるか見てください。続けていくうちに、あなたのコードが読めない方向に流れ始め、レコードが助けになるのであれば、レコードを入れましょう。もしパフォーマンスに問題があり、フィールドへのアクセスが速いレコードを使えば状況が改善されるようであれば、レコードを試してみよう。そして、もしポリモーフィズムが必要で、将来的にポリモーフィズムによる拡張のための扉を開けておく必要があると感じたら、プロトコルに手を伸ばしてみてほしい。しかし、まずはシンプルに始めることだ。マップと関数だけで十分だと気づくかもしれない。
 
-Protocols raise a different question, one that can be summed up with "Don’t we have this polymorphic thing covered with multimethods"? Recall that multimethods (which we covered in "Chapter 5, More Capable Functions, on page 49") let you create completely arbitrary polymorphic functions.
+プロトコルは別の問題を提起する。それは、「この多相的なものはマルチメソッドでカバーできるのではないか？マルチメソッド（「第5章、より多機能な関数（49ページ）」で取り上げた）を使えば、完全に任意の多相関数を作ることができることを思い出してほしい。
 
 
-While there is a lot of overlap between protocols and multimethods, there is also a fair bit of daylight. Each multimethod defines a single, stand-alone operation. Protocols can include a whole bundle of related operations. Multimethods support a completely arbitrary dispatch mechanism. Protocols dispatch based on a type mechanism. If you don’t need all of the generality of a multimethod you are better off using a protocol.
+プロトコルとマルチメソッドには重なる部分も多いが、同じような部分もある。各マルチメソッドは単一の独立した操作を定義します。プロトコルは、関連する操作のバンドル全体を含むことができる。マルチメソッドは、完全に任意のディスパッチ・メカニズムをサポートする。プロトコルは型メカニズムに基づいてディスパッチする。マルチメソッドの汎用性をすべて必要としないのであれば、プロトコルを使ったほうがよい。
 
 

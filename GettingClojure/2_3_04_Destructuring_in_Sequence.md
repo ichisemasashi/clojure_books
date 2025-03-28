@@ -1,13 +1,13 @@
 
-### Destructuring in Sequence
+### シーケンスのデストラクチャリング
 
-Although so far we have limited ourselves to destructuring vectors, all of the tricks we’ve seen so far will work with any of Clojure’s sequential data types.  Thus if we switch our names from a vector to a list:
+これまでのところ、ベクターのデストラクチャリングに限定してきましたが、これまで見てきたテクニックはすべて、Clojureのシーケンシャルなデータ型のどれでも動作します。 したがって、名前をベクターからリストに切り替えると、次のようになります：
 
 ```clojure
 (def artist-list '(:monet :austen :beethoven :dickinson))
 ```
 
-the destructuring stays exactly the same:
+デストラクチャリングはまったく変わらない：
 
 ```clojure
 (let [[painter novelist composer] artist-list]
@@ -16,9 +16,9 @@ the destructuring stays exactly the same:
   (println "The composer is" composer))
 ```
 
-Note especially that even when we’re destructuring a list, we continue to use square brackets around our template. The left side of the binding equation remains `[painter novelist composer]`. In this context you can think of those square brackets as standing in for the delimiters around any sequential data type.
+特に、リストをデストラクチャする場合でも、テンプレートを角括弧で囲み続けることに注意してほしい。束縛式の左辺は `[painter novelist composer]` のままです。この文脈では、角括弧はシーケンシャルなデータ型の区切り記号の代わりをしていると考えることができます。
 
-And I do mean any sequential data type. Aside from lists and vectors, you can destructure any Clojure value that can be turned into a sequence. Strings, for example, destructure into their individual characters:
+つまり、あらゆるシーケンシャルなデータ型ということだ。リストや ベクター以外にも、シーケンスに変換できるClojureの値であれば、何でもデストラクチャ化できます。例えば文字列は、個々の文字にデストラクチャされます：
 
 ```clojure
 (let [[c1 c2 c3 c4] "Jane"]
@@ -29,7 +29,7 @@ And I do mean any sequential data type. Aside from lists and vectors, you can de
   (println c4))
 ```
 
-Run the preceding code and you will see this:
+前のコードを実行するとこうなる：
 
 ```
 How do you spell Jane?
@@ -39,5 +39,5 @@ n
 e
 ```
 
-The rule is, if you can turn it into a sequence, you can destructure it.
+もし、それをシーケンスに変えることができるのであれば、それを再構築することができる、というのがルールだ。
 

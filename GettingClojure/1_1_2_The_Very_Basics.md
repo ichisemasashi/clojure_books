@@ -1,9 +1,9 @@
 
-### The Very Basics
+### 基本中の基本
 
-To get started you need to install some development tools. There’s a wide selection of Clojure development environments and build tools available—everything from [the `clj` tool](https://clojure.org/guides/deps_and_cli) that comes packaged with Clojure starting with version 1.9 to [the IntelliJ-based](https://www.jetbrains.com/idea) [Cursive](https://cursive-ide.com) to [Emacs](https://www.gnu.org/software/emacs) and [Cider](https://github.com/clojure-emacs/cider) and [boot](https://github.com/boot-clj/boot). But in this book we’re mostly going to stick to the popular Clojure development tool Leiningen. So if you haven’t already, head over to the [Leiningen](https://leiningen.org) website and follow the installation instructions for your operating system.  While you’re there, you might also note that it’s pronounced LINE-ing-en.
+始めるには開発ツールをインストールする必要があります。バージョン1.9からClojureに同梱されている[`clj`ツール](https://clojure.org/guides/deps_and_cli)から、[IntelliJベース](https://www.jetbrains.com/idea) [Cursive](https://cursive-ide.com)、[Emacs](https://www.gnu.org/software/emacs)、[Cider](https://github.com/clojure-emacs/cider)、[boot](https://github.com/boot-clj/boot)まで、Clojure開発環境とビルドツールの幅広い選択肢があります。しかし、この本では、人気のあるClojure開発ツールLeiningenにほとんどこだわるつもりです。もしまだなら、[Leiningen](https://leiningen.org)のウェブサイトへ行き、あなたのオペレーティングシステム用のインストール手順に従ってください。 そこにいる間に、LINE-ing-enと発音することにも気づくかもしれない。
 
-By tradition, the first program you write when learning a programming language simply prints a greeting. Here’s the Clojure version:
+伝統的に、プログラミング言語を学ぶときに最初に書くプログラムは、単に挨拶を表示します。これがClojureバージョンだ：
 
 hello/examples.clj
 ```clojure
@@ -11,37 +11,37 @@ hello/examples.clj
 ; Say hi.
 ```
 
-To keep things simple, we’ll take our first stab at Hello, World in the Clojure REPL, a handy utility that lets you type in code and see it evaluated right here, right now. The command to start a REPL with Leiningen is as follows:
+物事をシンプルに保つために、Clojure REPLでHello, Worldに初挑戦することにしよう。Clojure REPLは、コードを入力し、それが今ここで評価されるのを見ることができる便利なユーティリティだ。LeiningenでREPLを起動するコマンドは以下の通り：
 
 ```bash
 $ lein repl
 ```
 
-And once you have the REPL running you can type in this code:
+REPLを起動したら、このコードを入力することができる：
 
 ```
 user=> (println "Hello, world!")
 ; Say hi.
 ```
 
-And see the familiar greeting:
+そして、お馴染みの挨拶を目にする：
 
 ```
 Hello, world!
 nil
 ```
 
-Don’t fret about the `nil`; that’s just the value returned by `println` after it does its thing, which the REPL helpfully printed for us.
+`nil` のことは気にしないでほしい。これは `println` が実行した後に返される値で、REPLが親切にも表示してくれたものだ。
 
 > [!NOTE]
 > **REPL Who?**
 >
-> The REPL is one of the few programs whose name is its algorithm.  All the REPL does is read some code—the code you type in—evaluate the code, print the result, and then loop back to read some more code: Read. Evaluate. Print. Loop.
+> REPLは、その名前がアルゴリズムである数少ないプログラムの一つである。 REPLがすることは、あなたが入力したコードを読み、そのコードを評価し、結果を表示し、ループバックしてさらにコードを読むだけです： Read. Evaluate. Print. Loop.
 
 
-One of the things that has made Hello, World such a popular first program is just how much we can learn from that single line of code. Looking at our Clojure Hello, World, we can work out that in Clojure strings come "wrapped in double quotes".
+Hello,Worldが最初のプログラムとしてこれほど人気があるのは、その1行のコードからどれだけのことを学べるかということだ。ClojureのHello, Worldを見ると、Clojureの文字列は「二重引用符でくくられる」ことがわかる。
 
-We can also see that comments start with a semicolon and run to the end of the line. Typically Clojure programmers will use a single semicolon when they add a comment to the end of a line with some code—as we did in the example—but will double up on the semicolons if the comment is all alone on its own line:
+コメントはセミコロンで始まり、行末まで続くこともわかる。通常、Clojureプログラマは、私たちが例でやったように、あるコードで行末にコメントを追加するとき、1つのセミコロンを使いますが、コメントがそれ自身の行に単独である場合は、セミコロンを2重にします：
 
 hello/examples.clj
 ```clojure
@@ -50,7 +50,7 @@ hello/examples.clj
 ; Say hi
 ```
 
-More subtly, we can deduce that Clojure treats simple, unadorned names like `println` as identifying things that get looked up. Thus our little program only worked because `println` is the name of a predefined function, one that comes to us courtesy of Clojure itself. As you might expect, Clojure predefines a whole range of other handy functions. There is, for example, `str`, which takes any number of values, converts them to strings, and concatenates the whole thing together:
+もっと微妙なことに、Clojureは`println`のようなシンプルで飾り気のない名前を、参照されるものを識別するものとして扱うと推測できる。したがって、私たちの小さなプログラムは、`println`が定義済みの関数の名前であり、Clojure自身のおかげで私たちにもたらされたものであるため、動作しただけである。ご想像の通り、Clojureは他にも便利な関数をたくさん定義済みだ。例えば、`str`があり、任意の数の値を受け取り、文字列に変換し、全体を連結する：
 
 
 ```clojure
@@ -59,7 +59,7 @@ More subtly, we can deduce that Clojure treats simple, unadorned names like `pri
 (str 3 " " 2 " " 1 " Blast off!") ; Fly me to the Moon!
 ```
 
-There is also `count`, which will tell you how long your string is:
+文字列の長さを教えてくれる`count`もある：
 
 ```clojure
 (count "Hello, world") ; Returns 12.
@@ -67,45 +67,45 @@ There is also `count`, which will tell you how long your string is:
 (count "")             ; Returns 0.
 ```
 
-Clojure also comes with a number of predefined constants. For example, we have the Boolean siblings `true` and `false`:
+Clojureには定義済みの定数も多数用意されている。例えば、 `true` と `false` というブール値の兄弟がある：
 
 ```clojure
 (println true)  ; Prints true...
 (println false) ; ...and prints false.
 ```
 
-There is also `nil`, which is Clojure’s version of the “nobody’s home” value, known in some languages as `null` or `None`:
+また、 `nil` もあります。これは、Clojure の "nobody's home" 値のバージョンで、いくつかの言語では `null` または `None` として知られています：
 
 ```clojure
 (println "Nobody's home:" nil) ; Prints Nobody's home: nil
 ```
 
-Note that `println` will print just about anything you throw at it, so that if we run this:
+なお、`println`はどんなものでも表示するため、これを実行すると次のようになる：
 
 
 ```clojure
 (println "We can print many things:" true false nil)
 ```
 
-we’ll see
+結果はこのとおり。
 
 ```
 We can print many things: true false nil
 ```
 
-You’ve probably noticed something odd about the parentheses in a Clojure function call: they are on the outside. It’s
+Clojure関数呼び出しの括弧について、奇妙なことにお気づきでしょう：括弧は外側にあります。それは
 
 ```clojure
 (println "Hello, world!")
 ```
 
-not
+以下のようではない。
 
 ```
 println("Hello, world!")
 ```
 
-If you’re coming to Clojure from a more traditional programming language, those parentheses will look out of place. There is a method to the Clojure syntax madness, which we’ll return to in Read and Eval. For now let’s just note that the Clojure syntax for making something happen—such as calling a function— is to wrap the something in round parentheses, and move on.
+より伝統的なプログラミング言語からClojureに来ている場合、これらの括弧は場違いに見えるでしょう。Clojure構文の狂気には方法があります。今のところ、関数を呼び出すなど、何かを起こすためのClojure構文は、丸括弧で何かを囲んで、次に進むということだけ覚えておこう。
 
 
 

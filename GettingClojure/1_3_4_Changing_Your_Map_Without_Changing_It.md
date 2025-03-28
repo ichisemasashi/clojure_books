@@ -1,13 +1,13 @@
 
-### Changing Your Map Without Changing It
+###マップを変えずに変更する
 
-The rule for modifying maps is pretty simple: you can’t. In exactly the same way that lists and vectors are immutable, maps are stubbornly resistant to change. But like lists and vectors, you can create a new map that is a modified copy of an existing map. One way you can make a modified copy is to add a key to a value, which you can do with assoc:
+マップを変更する際のルールはとてもシンプルだ：変更できない。リストやベクターが不変であるのとまったく同じように、マップも変更に頑固に抵抗します。しかし、リストやベクターと同じように、既存のマップのコピーを変更した新しいマップを作ることはできます。`assoc` を使えば、値にキーを追加することができます：
 
 ```clojure
 (assoc book :page-count 362)
 ```
 
-Which will give you this:
+そうすれば、こうなる：
 
 ```clojure
 {:page-count 362
@@ -16,39 +16,39 @@ Which will give you this:
  :published 1838}
 ```
 
-Using `assoc` is easy. You supply the original map, along with a key and a value, and you will get back a new map, just like the old one but with the key set to the new value. You can also feed more than one key/value pair into `assoc`, so if we wanted to change the title at the same time we add a page count, we could write this:
+`assoc`を使うのは簡単だ。元のマップと、キーと値を与えると、古いマップと同じように、キーが新しい値に設定された新しいマップが返ってくる。`assoc`には複数のキーと値のペアを入力することもできるので、ページ数を追加すると同時にタイトルを変更したい場合は、このように書くことができる：
 
 ```clojure
 (assoc book :page-count 362 :title "War & Peace")
 ```
 
-which would give us a historically incorrect 362-page Russian novel by Dickens.
+とすると、歴史的に正しくないディケンズの362ページのロシア小説になる。
 
-The `assoc` function’s natural partner in crime is `dissoc`. Where `assoc` adds a new key or changes the value associated with an existing key, `dissoc` removes a key and its associated value. Using `dissoc` is also straightforward: give it a map and a key and you will get back a new map, just like the old one, sans the key. Thus if you wanted to remove the publication date from Oliver Twist, you could do this:
+関数 `assoc` の自然なパートナーは `dissoc` である。`assoc` が新しいキーを追加したり、既存のキーに関連付けられた値を変更したりするのに対して、 `dissoc` はキーとそれに関連付けられた値を削除する。`dissoc` の使い方も簡単で、マップとキーを与えると、古いマップと同じように、キーを除いた新しいマップが返されます。つまり、オリバー・ツイストから出版日を削除したい場合は、このようにすることができる：
 
 ```clojure
 (dissoc book :published)
 ```
 
-You can also throw multiple keys at `dissoc`, so that this:
+複数のキーを `dissoc` に渡すこともできる：
 
 ```clojure
 (dissoc book :title :author :published)
 ```
 
-will leave you with a completely empty map. Keep in mind that `dissoc` will quietly ignore any keys that aren’t actually in the map, so that this:
+完全に空のマップが残ります。`dissoc`はマップに実際に存在しないキーを黙って無視することを覚えておいてほしい：
 
 ```clojure
 (dissoc book :paperback :illustrator :favorite-zoo-animal)
 ```
 
-will return `book` untouched.
+これは `book` をそのまま返す。
 
 > [!NOTE]
 >
-> **Associative Vectors**
+> **連想ベクター**
 >
-> Vectors and maps have a lot in common. They both associate keys with values, the difference being that with vectors the keys are limited to integers while in maps the keys can be more or less anything.
-> That is, in fact, how Clojure looks at vectors—which means that many of the functions that work with maps will also work with vectors. For example, `assoc` and `dissoc` work fine on vectors. Thus `(assoc [:title :by :published] 1 :author)` will give you `[:title :author :published]`.
+> ベクターとマップには多くの共通点がある。どちらもキーと値を関連付けますが、ベクターではキーが整数に限定されるのに対し、マップではキーは多かれ少なかれ何でも良いという違いがあります。
+> つまり、マップを扱う関数の多くはベクターも扱えるということです。例えば、 `assoc` と `dissoc` はベクターで問題なく動作する。したがって、`(assoc [:title :by :published] 1 :author)` は `[:title :author :published]` を返します。
 
 

@@ -1,7 +1,7 @@
 
-### Do and When
+### do と when
 
-One wrinkle with Clojure’s `if` is that you are limited to one expression for the truthy leg and one for the falsy leg. But what happens if you want to do several things when the condition is truthy? Or several when the condition is falsy? The key word here is do because that is what Clojure calls its "group" a "bunch of expressions into a single expression" construct. Thus, this:
+Clojureの`if`の1つの欠点は、真の足と偽の足に対して1つの式に制限されていることです。しかし、条件が真のときに複数のことを行いたい場合はどうなるでしょうか？あるいは、条件が偽であるときにいくつかのことをしたい場合はどうなるのだろう？ここでのキーワードはdoで、これはClojureが "group "と呼ぶ "式の束を1つの式にする "構文だからだ。したがって、こうなる：
 
 ```clojure
 (do
@@ -11,7 +11,7 @@ One wrinkle with Clojure’s `if` is that you are limited to one expression for 
   44)
 ```
 
-is a single expression that returns `44`. Armed with `do`, we can flesh out a simple `if` with multipart true and false legs:
+これは`44`を返す一つの式である。do`で武装すれば、単純な`if`に真の足と偽の足をつけることができる：
 
 ```clojure
 (defn shipping-charge [preferred-customer order-amount]
@@ -24,7 +24,7 @@ is a single expression that returns `44`. Armed with `do`, we can flesh out a si
       (* order-amount 0.10))))
 ```
 
-Clojure also sports a variant of `if` called `when`, which doesn’t have an else (or falsy) leg but which supports multiple statements without needing the `do`:
+Clojureはまた、`when`と呼ばれる`if`の変種も持っている。これはelse（またはfalsy）レッグを持たないが、`do`を必要とせずに複数のステートメントをサポートする：
 
 
 ```clojure
@@ -33,6 +33,6 @@ Clojure also sports a variant of `if` called `when`, which doesn’t have an els
   (println "Welcome back to Blotts Books!"))
 ```
 
-As you might expect, `when` returns `nil` when the condition is not truthy.
+予想通り、`when`は条件が真で ないときには`nil`を返す。
 
 

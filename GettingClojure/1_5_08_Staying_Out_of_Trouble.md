@@ -1,7 +1,7 @@
 
-### Staying Out of Trouble
+### トラブルに巻き込まれないために
     
-One of the surprising things about Clojure functions is that you can mix and match the variadic `&` into a multi-arity function "if you are careful". Here’s us being careful:
+Clojure関数の驚くべき点の1つは、"気をつければ " variadic `&` を混ぜて複数アリティの関数にできることです。ここで私たちが気をつけているのは
     
 ```clojure
 (defn one-two-or-more
@@ -10,7 +10,7 @@ One of the surprising things about Clojure functions is that you can mix and mat
   ([a b & more] (println "More than two:" a b more)))
 ```
 
-We just need to keep in mind that Clojure is sharp enough not to let us define a multi-arity function with overlapping arguments. For example, if we had written that last function as
+Clojureは鋭いので、重複する引数を持つ複数アリティの関数を定義させないことを覚えておく必要がある。例えば、最後の関数を
 
 ```clojure 
 ;; Oh no!
@@ -20,9 +20,9 @@ We just need to keep in mind that Clojure is sharp enough not to let us define a
   ([& more] (println "More than two:" more)))
 ```
   
-then we wouldn’t get past the Clojure compiler. The problem is that it’s unclear which arity should get evaluated when you call the function with two parameters.
+であれば、Clojureコンパイラを通過できない。この問題は、2つのパラメータを持つ関数を呼び出したときに、どのアリティが評価されるべきかが不明確なことです。
 
-You should also be careful not to confuse a "more than one expression in the body" function, like this:
+また、このような「ボディに複数の式」関数を混同しないように注意する必要があります：
 
 
 ```clojure
@@ -34,7 +34,7 @@ You should also be careful not to confuse a "more than one expression in the bod
   (/ (+ a b) 2.0)))
 ```
 
-with a multi-arity function:
+これをマルチアリティファンクションとするには：
 
 ```clojure
 (defn chatty-multi-average
@@ -46,23 +46,23 @@ with a multi-arity function:
     (/ (+ a b c) 3.0)))
 ```
 
-The key is to look for the parameters, which will tell you which flavor of function you have.
+重要なのはパラメータを探すことで、それによってどの種類の関数なのかがわかります。
 
 
-Finally, keep in mind when you’re defining variadic functions that `&` is just an ordinary one-character symbol that happens to have a special meaning in the context of defining function arguments. That means this:
+最後に、variadic関数を定義するときに覚えておいてほしいのは、`&` は普通の1文字の記号で、関数の引数を定義する文脈では特別な意味を持つということです。つまり、次のような意味です：
 
 ```clojure
 (defn print-any-args [& args]
   (println "My arguments are:" args))
 ```
 
-is a function that will take any number of arguments, while this:
+は任意の数の引数を取る関数であり：
 
 ```clojure
 (defn print-any-args [&args]
   (println "My arguments are:" args))
 ```
 
-will not compile. Why? Look again and note the lack of whitespace between the `&` and the `args`, which means we’re trying to define a function with a single argument called `&args`. Our function then tries to use the unbound symbol `args` and blam!—we have a compiler error. What we meant to write was an `&`, then some space, then the catchall argument: `[& args]`.
+はコンパイルできない。なぜか？もう一度見て、`&`と`args`の間に空白がないことに注目してください。つまり、`&args`という一つの引数で関数を定義しようとしているのです。この関数は束縛されていないシンボル`args`を使おうとして、コンパイラーエラーになる。私たちが書きたかったのは、`&`、空白、そして捕捉引数：`[& args]`である。
 
 

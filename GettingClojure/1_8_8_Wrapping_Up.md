@@ -1,7 +1,7 @@
 
-### Wrapping Up
+### まとめ
 
-In this chapter we took a hard look at the mechanisms behind `def`. They’re remarkably transparent: `def` creates a var (a Clojure value) which is an association between another Clojure value (a symbol) and a third value. We also looked at dynamic vars—vars that let you swap in a new value while you evaluate an expression or six.
+この章では `def` の背後にあるメカニズムについて詳しく見てきました。それらは驚くほど明快です: `def`は別のClojure値(シンボル)と第3の値との関連であるvar(Clojure値)を作成します。また動的なvars-式や 6 を評価する間に新しい値を入れ替えることができるvarも見ました。
 
-Armed with an understanding of `def` and vars, we’re now ready to look at namespaces, the mechanism Clojure uses to organize vars into related buckets.
+`def`とvarsを理解した上で、Clojureが使うvarsを関連するバケツに整理するメカニズムである名前空間を見る準備ができました。
 

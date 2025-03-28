@@ -1,22 +1,22 @@
 
-### Staying Out of Trouble
+### トラブルに巻き込まれないために
 
-The irony of picking up a new programming language is that while the goal is to write perfect code, a key skill is to learn how to deal with the myriad of mistakes you’re going to make along the way. To that end, let’s make some mistakes and look at Clojure’s reaction to them.
+新しいプログラミング言語を習得することの皮肉は、完璧なコードを書くことが目標である一方で、重要なスキルは、途中で犯すことになる無数のミスに対処する方法を学ぶことです。そのために、いくつかの間違いを犯し、それに対するClojureの反応を見てみましょう。
 
-For example, what happens if we make the classic divide by zero blunder?
+例えば、古典的なゼロ除算の失敗をしたらどうなるでしょうか？
 
 ```clojure
 (/ 100 0)
 ```
 
-What you will see when you divide by zero depends on the environment in which you are executing your Clojure code. You might see a brief
+ゼロで割ったときに何が表示されるかは、Clojureコードを実行している環境によって異なります。例えば
 
 ```
 ArithmeticException Divide by zero
 clojure.lang.Numbers.divide (Numbers.java:156)
 ```
 
-Or you might see this much more extensive message:
+あるいは、もっと広範なメッセージが表示されるかもしれない：
 
 ```
 java.lang.ArithmeticException: Divide by zero
@@ -36,15 +36,15 @@ java.util.concurrent.ThreadPoolExecutor$Worker.run
 Thread.java:745 java.lang.Thread.run
 ```
 
-Yes, it can be a bit overwhelming, but it is well intentioned: the idea of this huge stack trace is to give you the fullest explanation of what went wrong and especially where it all went bad. But don’t be intimidated. Just focus on the first line of this field of computing debris, which is where the most important bit of information is hiding:
+そう、ちょっと圧倒されるかもしれないが、それは善意によるものだ。この巨大なスタック・トレースのアイデアは、何がうまくいかなかったのか、特にどこでうまくいかなくなったのかを、最大限に説明することだ。しかし、怖気づく必要はない。このコンピューティングの残骸のフィールドの最初の行に集中すればいい。そこに最も重要な情報が隠れているのだ：
 
 ```
 java.lang.ArithmeticException: Divide by zero
 ```
 
-You also shouldn’t be intimidated by the `java` part of that exception. Clojure—at least the version we’re working with here—is built on top of Java, and now and then, especially when the exceptions go flying, you will see the Java leaking through. Don’t panic: knowing Java is not a prerequisite for being a Clojure programmer.
+また、その例外の `java` の部分に怯える必要はありません。Clojureは-少なくともここで扱っているバージョンは-Javaの上に構築されており、時折、特に例外が飛び交うとき、 Javaから漏れるのが見えるでしょう。慌てないでください：Javaを知っていることは、Clojureプログラマであるための前提条件ではありません。
 
-Moving on, let’s see what happens if you misspell a symbol, perhaps typing `catty-average` instead of `chatty-average`:
+次に、記号のスペルを間違えた場合、おそらく `chatty-average` ではなく `catty-average` とタイプした場合にどうなるか見てみよう：
 
 ```
 CompilerException java.lang.RuntimeException:
@@ -52,42 +52,42 @@ Unable to resolve symbol: catty-average in this context,
 compiling:(NO_SOURCE_PATH:0:0)
 ```
 
-Or you might get its 80-line big brother. Either way, you just need to fix the name of the function.  Clojure beginners also tend to have a hard time with the parentheses. The easiest parentheses problem to diagnose is adding one too many to the end.
+あるいは、80行のビッグブラザーを手に入れるかもしれない。いずれにせよ、関数名を修正するだけです。 Clojure初心者はまた、括弧で苦労する傾向があります。最も簡単に診断できる括弧の問題は、末尾に1つ追加しすぎることです。
 
-If you do something like this:
+次のようにすると
 
 ```clojure
 (+ (* 2 2) 10))
 ```
 
-you will get a straightforward message back:
+というストレートなメッセージが返ってくる：
 
 ```
 RuntimeException Unmatched delimiter: )
 clojure.lang.Util.runtimeException (Util.java:221)
 ```
 
-On the other hand, if you happen to forget a closing parenthesis like this:
+一方、次のような閉じ括弧を忘れた場合はどうだろう：
 
 ```clojure
 (+ (* 2 2) 10
 ```
 
-and you are using Clojure interactively via the REPL, then, well, nothing. The REPL will wait patiently for you to complete the thought by supplying that final parenthesis. So the rule of thumb is that if you’re sitting in the REPL and nothing is happening, consider that you need to add a closing parenthesis.
-Or perhaps six closing parentheses.
+REPLを介して対話的にClojureを使用している場合は、何もありません。REPLは、あなたが最後の括弧を供給して思考を完了するのを辛抱強く待ちます。ですから、経験則では、REPLに座っていて何も起こらない場合は、閉じ括弧を追加する必要があると考えてください。
+あるいは6つの閉じ括弧が必要かもしれない。
 
-One other thing to remember as you stick your toe into Clojure coding is that Clojure functions are themselves values. So, in exactly the same way that you might type `first-name` into the REPL and get back `"Russ"`, you can also get the value of a function by typing in the function name sans parentheses. Do this:
+Clojureコーディングに足を突っ込むときに覚えておくべきもう1つのことは、Clojure関数はそれ自体が値であるということです。つまり、REPLに`first-name`と入力して`"Russ"`と返されるのとまったく同じように、括弧なしで関数名を入力することで、関数の値を取得することもできます。次のようにしてください：
 
 ```
 chatty-average
 ```
 
-and you will see the value of the function, which gets printed something like this:
+すると、関数の値が表示される：
 
 ```
 #object[user$chatty_average 0x39fcbef6 "user$chatty_average@39fcbef6"]
 ```
 
-There is actually a fairly deep reason for this behavior (which we’ll talk about in "Chapter 6, Functional Things, on page 63"), but it does tend to confuse beginners when they forget a parenthesis. The bottom line is that if you see unexpected values that look like `#object[user$chatty_average...` coming out of your program you probably missed an opening parenthesis somewhere. If you do get frustrated with all the parentheses, just be patient. Yes, Clojure’s syntax is a little odd. But it’s also simple: before you know it, all those parentheses will seem like old friends and you will wonder how you ever got along without them.
+実はこの動作にはかなり深い理由があるのですが（これについては「第6章 関数的なもの（63ページ）」で説明します）、初心者が括弧を忘れると混乱しがちです。要するに、もしプログラム中に`#object[user$chatty_average...`のような予期しない値が現れたら、おそらくどこかで括弧を書き損じたのでしょう。括弧の多さにイライラしても、我慢してください。そう、Clojureの構文はちょっと変わっている。しかし、単純でもあります。いつの間にか、すべての括弧が古い友人のように思えるようになり、括弧なしでどうやってうまくやってきたのかと不思議に思うことでしょう。
 
 

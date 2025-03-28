@@ -1,11 +1,11 @@
 
-### The Trouble with Maps
+### マップの問題点
 
-The great thing about Clojure maps—those lovely `{:key "value"}` creatures—is that they are very flexible. You can use a map to associate just about any key with essentially any value. It’s this "I can deal with anything" flexibility that makes maps so useful and ubiquitous in Clojure programs.
+Clojureのマップの素晴らしいところは、`{:key "value"}`という素敵な構造で、非常に柔軟性があるということです。マップを使って、どんなキーでも、どんな値でも関連付けることができます。この "何でも扱える "柔軟性が、Clojureプログラムでマップをとても便利でどこにでもあるものにしている。
 
-But this flexibility of maps does not come for free. Part of the cost of flexibility can be measured in CPU seconds at runtime. Maps are wonderfully speedy, but the "deal with anything flexibility" does come with a runtime penalty. Since maps need to deal with arbitrary keys, they are a bit slower than a data structure designed to deal with just these keys. Mostly the speed penalty doesn’t matter, but sometimes—for example, when you’re trying to process huge amounts of data—it matters a lot.
+しかし、マップのこの柔軟性はタダではありません。柔軟性のコストの一部は、実行時のCPU秒数で測ることができる。マップは素晴らしくスピーディーですが、"何でも扱える柔軟性 "には実行時のペナルティが伴います。マップは任意のキーを扱う必要があるため、これらのキーだけを扱うように設計されたデータ構造よりも少し遅くなる。たいていの場合、このスピード・ペナルティは問題にはならないが、例えば膨大な量のデータを処理しようとする場合など、時には大きな問題になる。
 
-A second—and more commonly felt—drawback of maps is their cost in terms of code coherence and documentation. Since you can put anything into any map, the only way to discern the intent of maps like these:
+マップの2つ目の欠点は、コードの一貫性と文書化の面でコストがかかることだ。どんなマップにも何でも入れることができるため、このようなマップの意図を見分ける唯一の方法はない：
 
 record/examples.clj
 ```clojure
@@ -15,7 +15,7 @@ record/examples.clj
       )
 ```
 
-is to see if you have a fictional character or a Jeopardy!-winning supercomputer:
+架空の人物か、ジョパディ！で優勝したスーパーコンピューターかを見るためだ：
 
 ```clojure
 ;; A fictional character.

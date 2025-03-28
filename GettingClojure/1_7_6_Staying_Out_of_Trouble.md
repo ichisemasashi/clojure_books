@@ -1,9 +1,9 @@
 
-### Staying Out of Trouble
+### トラブルに巻き込まれないために
 
-As simple as it seems, there are a few things to keep in mind about `let`. The first is that the names defined in a `let` are exactly that: defined inside the `let`.  Technically, `let` relies on "lexical scope". In plain English this means the bindings created by let only exist inside the code that makes up the `let` body.
+単純に見えるかもしれませんが、`let`についてはいくつか注意すべき点があります。まず一つ目は、`let`の中で定義された名前は、まさに`let`の中で定義された名前であるということです。 技術的には、`let`は「レキシカルスコープ」に依存しています。わかりやすく言うと、letで作成されたバインディングは `let` 本体を構成するコードの中にしか存在しないということです。
 
-You can’t, for example, do this:
+例えば、こんなことはできません：
 
 ```clojure
 ;; We can use title inside of the let.
@@ -15,9 +15,9 @@ You can’t, for example, do this:
   (println "The title is" title)) ; Boom!
 ```
 
-Since `title` is only defined inside of the `let`, this shouldn’t come as a surprise.  After all, we started this trip by asking for local bindings, and so local bindings are what we got.
+`title`は`let`の中でしか定義されないので、これは驚くべきことではない。 結局のところ、私たちはローカルバインディングを求めることからこの旅を始めたので、ローカルバインディングは私たちが得たものなのだ。
 
-Second, keep in mind that if you nest `let` expressions, then a binding in a `let` can mask a binding in an outer `let`. For example, this code:
+次に、もし `let` 式を入れ子にした場合、 `let` 内のバインディングが外側の `let` 内のバインディングを隠してしまう可能性があることを覚えておいてください。例えば、次のようなコードだ：
 
 ```clojure 
 (let [title "Pride and Prejudice"]
@@ -25,7 +25,7 @@ Second, keep in mind that if you nest `let` expressions, then a binding in a `le
     (println title))) ; Sense & Sensibility.
 ``` 
 
-will print `Sense and Sensibility`. You can also override a binding inside of the "same" `let`, so that this: 
+結果は `Sense and Sensibility` と表示されます。また、"同じ" `let` 内の束縛を上書きすることもできます： 
 
 
 ```clojure
@@ -34,7 +34,7 @@ will print `Sense and Sensibility`. You can also override a binding inside of th
   (println title)) ; Brains!
 ```
 
-will leave us with a romantic horror mashup.
+これはロマンチック・ホラーのマッシュアップを残すだろう。
 
 
 

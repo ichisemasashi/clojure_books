@@ -1,22 +1,22 @@
 
-### Destructuring Function Arguments
+### 関数引数のデストラクチャリング
 
-Not only does destructuring work with all the sequential types (and, as we’ll see in a minute, with maps), but it’s also not limited to `let`. Most notably, you can use destructuring to drill into the arguments passed to a function. Using destructuring with your function arguments is nearly identical to using it in a `let`, except that you don’t supply the value—that comes from the call to the function. Here, for example, is a function that’s looking for a two-element vector:
+デストラクチャリングは、すべてのシーケンス型（そして、後で説明するように、マップ）で機能するだけでなく、`let`に限定されるものでもありません。特に、関数に渡される引数にデストラクチャリングを使用することができます。関数の引数でデストラクチャリングを使うのは、 `let` でデストラクチャリングを使うのとほぼ同じです。例えば、2つの要素を持つベクターを探す関数です：
 
 ```clojure
 (defn artist-description [[novelist poet]]
   (str "The novelist is " novelist " and the poet is " poet))
 ```
 
-As I say, the value to be destructured is supplied when you call the function, so that this:
+つまり、この関数を呼び出すときに、分解される値を指定するのである：
 
 ```clojure
 (artist-description [:austen :dickinson])
 ```
 
-will return `"The novelist is :austen and the poet is :dickinson"`.
+これは `"The novelist is :austen and the poet is :dickinson"` を返します。
 
-You can even mix and match normal and destructured arguments. Here, for example, is a function that has a garden-variety argument along with a destructured one:
+通常の引数とデストラクチャする引数を混ぜて使うこともできる。例えば、これは通常の引数とデストラクチャする引数を持つ関数です：
 
 ```clojure
 (defn artist-description [shout [novelist poet]]
@@ -25,6 +25,6 @@ You can even mix and match normal and destructured arguments. Here, for example,
     (if shout (.toUpperCase msg) msg)))
 ```
 
-This latest version of `artist-description` returns an uppercase version of the message if the nondestructured parameter shout is truthy.
+この`artist-description`の最新バージョンは、デストラクチャしないパラメータのshoutがtruthyの場合、大文字のメッセージを返す。
 
 

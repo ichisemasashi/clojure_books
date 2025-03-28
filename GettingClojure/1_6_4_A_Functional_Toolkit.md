@@ -1,35 +1,35 @@
 
-### A Functional Toolkit
+### 関数型ツールキット
 
-Since so much of Clojure programming revolves around creating, combining, and using functions, it’s unsurprising that the language provides a fair number of functions aimed at easing the job.
+Clojureプログラミングの多くは、関数の作成、組み合わせ、および使用を中心に展開されるので、この言語がその作業を容易にすることを目的とした関数をかなり多く提供しているのは当然です。
 
-Take, for example, the `apply` function. It tackles the surprisingly common situation where you have a function and the arguments that you want to call that function with "in a collection". In other words, instead of having this: 
+例えば、`apply`関数。この関数は、関数とその関数を呼び出したい引数が「コレクションの中にある」という、驚くほど一般的な状況に対処します。つまり、このようにする代わりに 
 
 ```clojure
 (+ 1 2 3 4) ; Gives you 10.
 ```
 
-what if you had the function (`+` in this case) and the arguments, like this:
+関数（この場合は`+`）と引数があったとしたら、次のようになる：
 
 ```clojure
 (def the-function +)
 (def args [1 2 3 4])
 ```
 
-Enter `apply`. You supply a function and a collection of arguments, and `apply` will call that function with the arguments, returning the result. Armed with `apply` we can get the job done like this:
+`apply`の登場だ。関数と引数のコレクションを与えると、`apply`が引数を使ってその関数を呼び出し、結果を返す。このように `apply` を使えば、次のような処理を行うことができる：
  
 ```clojure
 (apply the-function args) ; (the-function args0 args1 args2 ...)
 ```
 
-The `apply` function is particularly useful for converting from one kind of value to another. Thus, if you have a vector like this:
+`apply`関数は、ある種類の値から別の種類の値への変換に特に便利です。したがって、次のようなベクターがあるとします：
 
 ```clojure
 (def v ["The number " 2 " best selling " "book."])
 ```
 
 
-you can use the combination of `apply` and `str` to turn it into a string:
+`apply` と `str` の組み合わせを使って文字列にすることができる：
 
 ```clojure
 ;; More or less the same as:
@@ -37,7 +37,7 @@ you can use the combination of `apply` and `str` to turn it into a string:
 (apply str v)
 ```
 
-or `apply` and `list` to turn it into a list:
+または、`apply`と`list`でリストにする：
 
 ```clojure
 ;; More or less the same as:
@@ -45,26 +45,26 @@ or `apply` and `list` to turn it into a list:
 (apply list v)
 ```
 
-and then back into a vector:
+そして、ベクターに戻す：
 
 
 ```clojure
 (apply vector (apply list v))
 ```
 
-Another incredibly useful function is `partial`. It’s called `partial` because it partially fills in the arguments for an existing function, producing a new function of fewer arguments in the process. For example, Clojure includes a function called `inc` that adds one to the number you pass in, so that `(inc 1)` gives you `2` and `(inc 41)` is `42`. It’s easy enough to cook up your own version of `inc`:
+もう一つの非常に便利な関数が `partial` である。これは、既存の関数の引数を部分的に埋めて、その過程でより少ない引数の新しい関数を生成するので、`partial`と呼ばれている。例えば、Clojureには `inc` という関数があり、渡された数値に1を足すことで、 `(inc 1)` は `2` になり、 `(inc 41)` は `42` になる。独自の `inc` を作るのは簡単だ：
 
 ```clojure
 (defn my-inc [n] (+ 1 n))
 ```
 
-But consider that `my-inc` is simply filling in the first argument of `+` with `1`.  Which is exactly the kind of thing that `partial` does:
+しかし、`my-inc`は単に`+`の第一引数を`1`で補っているだけだと考えてほしい。 これはまさに `partial` が行っていることだ：
 
 ```clojure
 (def my-inc (partial + 1))
 ```
 
-Returning to our book example, we can use `partial` to rework and simplify our cheapness-discriminating functions:
+本の例に戻ると、`partial`を使って、安さを判別する関数を作り直し、単純化することができる：
 
 ```clojure
 (defn cheaper-than [max-price book]
@@ -76,10 +76,10 @@ Returning to our book example, we can use `partial` to rework and simplify our c
 (def marginally-cheap? (partial cheaper-than 5.99))
 ```
 
-Each call to `partial` there is giving us back a new function that—when called—calls `cheaper-than` with one of the prices as the first argument.
+`partial`を呼び出すたびに新しい関数が返され、その関数が呼び出されると、価格のいずれかを第一引数として`cheaper-than`が呼び出される。
 
 
-Another handy function-producing function that comes packaged with Clojure is `complement`. With `complement` every day is opposite day. `complement` wraps the function that you supply with a call to `not`, producing a new function that is, well, the complement of the original. For example, earlier we wrote `adventure?`, which could tell adventure books from those of other genres:
+Clojureに同梱されているもう一つの便利な関数生成関数は `complement` である。`complement`を使えば、毎日が反対の日になる。`complement`は`not`を呼び出すことで関数をラップし、元の関数を補完する新しい関数を生成する。例えば、先ほど私たちは`adventure?`と書いた：
 
 ```clojure
 (defn adventure? [book]
@@ -87,29 +87,29 @@ Another handy function-producing function that comes packaged with Clojure is `c
     book))
 ```
 
-But what if we needed a function that looked for nonadventure books?  Clearly we could write it by hand:
+しかし、冒険以外の本を探す関数が必要だとしたらどうだろう？ 手で書けばいいのは明らかだ：
 
 ```clojure
 (defn not-adventure? [book] (not (adventure? book)))
 ```
 
 
-But we did say we were trying to get out of the hand-coding business, so instead we turn to `complement`:
+しかし、我々はハンドコーディングのビジネスから脱却しようとしていると言った：
 
 ```clojure
 (def not-adventure? (complement adventure?))
 ```
 
-As I say, `complement` produces a function that returns the truthy negation of the function that you pass to `complement`.
+言っておくが、`complement`は、`complement`に渡した関数の真偽の否定を返す関数を生成する。
 
-One more example of a function-generating function is `every-pred`. It combines predicate functions into a single function that "ands" them all together. With `every-pred` we can dispense with our home-grown `both-f`:
+関数生成関数のもう一つの例は `every-pred` である。これは述語関数を1つの関数にまとめ、それらをまとめて「アンド」するものである。every-pred`を使えば、自作の `both-f` を使う必要がなくなる：
 
 ```clojure
 (def cheap-horror? (every-pred cheap? horror?))
 ```
 
 
-Even better, `every-pred` will take any number of arguments, so that this:
+さらに良いことに、`every-pred`は任意の数の引数を取るので、こうなる：
 
 ```clojure
 (def cheap-horror-possession?
@@ -119,7 +119,7 @@ Even better, `every-pred` will take any number of arguments, so that this:
     (fn [book] (= (:title book) "Possession"))))
 ```
 
-will do exactly what you want it to do.
+これは、あなたが望むとおりのことをしてくれる。
 
 
 

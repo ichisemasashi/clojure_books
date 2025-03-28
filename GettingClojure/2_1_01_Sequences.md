@@ -3,11 +3,11 @@
 
 ## CHAPTER 10 Sequences
 
-There’s a pleasant mystery about Clojure that most newly arrived programmers notice sooner or later. On one hand the language has this rich variety of collection types, everything from the map to the set to the vector and the list, each one good at some operations and less so at others. And Clojure programmers use the range of collection types with reasonably wild abandon.
+Clojureには、新しく来たプログラマーのほとんどが遅かれ早かれ気づく、心地よい謎がある。マップからセット、ベクター、リストに至るまで、それぞれがいくつかの操作に優れている一方で、そうでないものもある。そして、Clojureプログラマは、コレクション型の範囲をそれなりにワイルドに使いこなす。
 
-Now for the mystery: There is very little "Oh, this is a vector but this is a map" special pleading in real-world Clojure code. Certainly you can find code here and there that is concerned with specific collection types, but you can also find vast stretches of Clojure code that seem to simply ignore the differences between the collection types.
+さて、ミステリーだ： 実際のClojureコードでは、"ああ、これはベクターですが、こっちはマップです "という特別な弁明はほとんどありません。確かに、特定のコレクション型に関係するコードをあちこちで見つけることができますが、コレクション型の違いを単に無視しているように見えるClojureコードの広大な広がりも見つけることができます。
 
-So in this chapter we’ll have a hard look at sequences, the feature of Clojure that makes this all possible. We’ll see how Clojure has a sort of programmatic gravitational field that tends to pull collections into sequences. We’ll also discover how Clojure supplies you with a huge toolkit of functions that lets you do interesting things with sequences. We’ll round out the chapter by looking at some examples of sequences in action and at some ways you can get into sequential trouble.
+そこで、この章では、このすべてを可能にするClojureの機能であるシーケンスに厳しい目を向けます。Clojureが、コレクションをシーケンスに引き込む傾向のある、プログラム的な重力場のようなものを持っていることを見ていきます。また、Clojureが、シーケンスで面白いことができるようにする関数の巨大なツールキットをどのように提供するかを発見します。シーケンスの動作例と、シーケンスのトラブルに巻き込まれた場合の方法をいくつか見て、この章を締めくくります。
 
 
 

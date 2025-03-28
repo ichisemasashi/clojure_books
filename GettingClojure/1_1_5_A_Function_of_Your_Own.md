@@ -1,59 +1,59 @@
 
-### A Function of Your Own
+### 独自の関数
 
-Let’s return to our "Hello, World" example and see if we can turn our one-liner into something more worthy of the name program. We can do this by wrapping it with the fundamental unit of Clojure code, the function:
+例 "Hello, World "に戻り、このワンライナーをプログラムという名前にふさわしいものに変えられるか見てみましょう。これは、Clojureコードの基本単位である関数で包むことで実現できます：
 
 ```clojure
 (defn hello-world [] (println "Hello, world!"))
 ```
 
-Once you have `hello-world` defined you can call it just like any other Clojure function, so that if you run 
+いったん `hello-world` を定義すれば、他の Clojure 関数と同じように呼び出すことができます。
 
 ```clojure
 (hello-world)
 ```
 
-You will see `Hello, world!` printed.
+すると、`Hello, world!`と表示される。
 
-As with the original, you can learn a lot from this new version of "Hello, World".  For example, you can see that the function definition kicks off with `defn` instead of `def` and is wrapped in its own set of parentheses on the outside. Inside the `defn` we have the function parameters, set off with square brackets, `[]`. Since our `hello-world` function doesn’t have any parameters, there is nothing inside of its brackets.
+オリジナルと同様に、この新しいバージョンの "Hello, World "から多くのことを学ぶことができる。 例えば、関数の定義は`def`の代わりに`defn`で始まり、外側は括弧で囲まれています。`defn`の中には関数のパラメータがあり、角括弧`[]`で囲まれている。この `hello-world` 関数にはパラメータがないので、括弧の中には何もない。
 
-While we wrote the original version of Hello, World entirely on one line, we could have spread the defn over a couple of lines: 
+元のバージョンのHello, Worldは完全に1行で書いたが、defnを2、3行に分けることもできる：  
 
 ```clojure 
 (defn hello-world []
-(println "Hello, world!"))
+  (println "Hello, world!"))
 ```
 
-It’s all the same to the compiler because Clojure mostly ignores whitespace.
+Clojureはほとんど空白を無視するので、コンパイラにとってはすべて同じです。
 
-Clojure programmers do, however, have opinions about whitespace. By convention, you can either write a short function on a single line or spread it out over a couple of lines as we did in the last example. Longer functions should take up as many lines as they need. Clojure programmers also have a strong opinion about indentation, one that we followed in the example: each level of indentation is done with two spaces. There are exceptions to the two-space rule, mostly around lining up function arguments and the like. But for the moment we’ll stick to two spaces. And note it’s always spaces, no tabs allowed.
+しかし、Clojureプログラマは空白について意見を持っています。規約では、短い関数を1行で 書くことも、前の例でやったように2、3行に分散して書くこともできます。長い関数は必要なだけ行を使うべきです。Clojureプログラマは、インデントについても強い意見を持っており、私たちが例に従ったものです：インデントの各レベルは、2つのスペースで行われます。各レベルのインデントは2つのスペースで行われます。しかし、今のところはスペース2つにこだわろう。また、常にスペースであり、タブは許されないことに注意してください。
 
 > [!NOTE]
-> Sans Tabs?
+> タブは使わない？
 >
-> Why no tabs? Because one of the great mysteries of programming is the exchange rate between tabs and spaces. Is it four spaces to a tab? Eight? Three? It’s safer to stick to spaces.
+> なぜタブがないのか？プログラミングの大きな謎のひとつは、タブとスペースの交換レートだからだ。タブ1つに対してスペースは4つ？8つ？3つ？スペースにこだわる方が安全だ。
 
-Writing a function with a parameter or two is also straightforward: just put the parameter names in the brackets and then use them inside the function body. Here’s a greeting function that takes a single parameter:
+パラメータを1つか2つ持つ関数を書くのも簡単です。パラメータ名を括弧の中に入れて、関数本体の中で使うだけです。以下は、パラメータを1つ受け取る挨拶関数です：
 
 ```clojure
 (defn say-welcome [what]
   (println "Welcome to" what))
 ```
 
-The `say-welcome` function takes one parameter, called `what`, and prints an appropriate greeting. Calling your new function is like calling the `println` function, so that if you do this:
+この関数 `say-welcome` は `what` という1つのパラメータを受け取り、適切な挨拶を表示します。新しい関数を呼び出すことは `println` 関数を呼び出すことと同じなので、このようにすると
 
 ```clojure
 (say-welcome "Clojure")
 ```
 
-you should see a friendly greeting:
+フレンドリーな挨拶があるはずだ：
 
 ```
 Welcome to Clojure
 ```
 
 
-Happily, we can rely on `println` to supply the spaces around the values that it prints so that we see "Welcome to Clojure" and not "Welcome toClojure." Now that we have the basic function-building mechanics down, let’s see if we can create a function that does something useful:
+幸いなことに、`println`が出力する値の周囲にスペースを与えてくれるので、"Welcome toClojure" ではなく "Welcome to Clojure" と表示される。さて、基本的な関数構築の仕組みがわかったので、何か役に立つ関数を作れるか見てみよう：
 
 ```clojure
 ;; Define the average function.
@@ -64,9 +64,9 @@ Happily, we can rely on `println` to supply the spaces around the values that it
 ```
 
 
-The `average` function takes a couple of numbers and returns their arithmetic mean. There are three things to note about the `average` function. The first is the comma between the two parameters: it’s not there. In contrast to many programming languages, Clojure never requires you to sprinkle commas in when you’re writing a sequence of items such as the parameter list of a function. A bit of whitespace between the items is plenty. But if you really miss the commas, you can put them in: Clojure treats commas as whitespace.  Clojure programmers mostly dispense with commas.
+関数 `average` は二つの数値を受け取り、それらの算術平均を返す。関数 `average` について注意すべき点が3つある。1つ目は、2つのパラメータの間にカンマがないことです。多くのプログラミング言語とは対照的に、Clojureでは関数のパラメータリストのような一連の項目を書くときにカンマを入れる必要はありません。要素の間にはちょっとした空白があれば十分です。しかし、どうしてもカンマが必要な場合は、カンマを入れることができます： Clojureはカンマを空白として扱います。 Clojureプログラマは、ほとんどカンマを使わない。
 
-The second thing to note about `average` is that there is no explicit `return` statement. Clojure functions just return whatever they compute. More precisely, they return the last thing computed by the function. We need the qualifier because you can have more than one expression inside of your function body.  Here, for example, is a variation on `average` that has a four-expression body:
+次に `average` について注意すべきことは、明示的な `return` 文がないことである。Clojureの関数は、計算されたものを何でも返します。より正確には、関数が最後に計算したものを返します。関数本体の中に複数の式を書くことができるので、修飾子が必要です。 例えば、4つの式を持つ `average` のバリエーションです：
 
 ```clojure
 (defn chatty-average [a b]
@@ -76,13 +76,13 @@ The second thing to note about `average` is that there is no explicit `return` s
   (/ (+ a b) 2.0))
 ```
 
-You can probably guess what happens when you evaluate `chatty-average`:
+おそらく、`chatty-average`を評価するとどうなるかは想像がつくだろう：
 
 ```clojure
 (chatty-average 10 20)
 ```
 
-Each expression inside the body gets evaluated in turn, so that you would see this:
+本体内の各式は順番に評価され、次のようになる：
 
 ```
 chatty-average function called
@@ -90,8 +90,8 @@ chatty-average function called
 ** second argument: 20
 ```
 
-Since the last expression supplies the return value, the function returns 15.0.
+最後の式が戻り値なので、この関数は15.0を返す。
 
-The final thing to note about `average` is that there are no type declarations, nothing stating explicitly that `a` and `b` must now and forever be numbers. Nor is there anything declaring what the function returns. In the great "static versus dynamic typing" trade-off, Clojure has chosen the flexibility and terseness of dynamic typing.
+最後に`average`について注意すべき点は、型宣言がなく、`a`と`b`が今も昔も数字でなければならないと明示するものがないことである。また、関数が何を返すかを宣言するものもない。偉大な "静的型付け対動的型付け "のトレードオフにおいて、Clojureは動的型付けの柔軟性と簡潔性を選択した。
 
 

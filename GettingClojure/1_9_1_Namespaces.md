@@ -1,8 +1,8 @@
 
 ## CHAPTER 9 Namespaces
 
-One of the best things about programming is that you are never done. Solve one problem, and chances are that three other issues tag along with your solution. You can find a great example of this in naming things in programs.  It’s hard to imagine anything more important to a clear and concise program than well-chosen names. But create enough names, and now you have a new problem: how do you tell the difference between the `book` var in your book-store application, the `book` function that records revenue for the accounting department, and the function that registers a police arrest? In short, how do you manage the names?
+プログラミングの醍醐味のひとつは、終わりがないことだ。ひとつの問題を解決すれば、他の3つの問題があなたの解決策と一緒に出てくる可能性がある。その好例が、プログラム中の名前の付け方にある。 明確で簡潔なプログラムにとって、よく吟味された名前ほど重要なものはない。しかし、十分な数の名前を作ると、今度は新たな問題が発生します。書店アプリケーションの `book` var、経理部の収益を記録する `book` 関数、警察の逮捕を登録する `book` 関数の違いをどうやって見分けるのでしょうか？要するに、どうやって名前を管理するのでしょうか？
 
-In this chapter we’re going to look at Clojure’s answer to that question, the "namespace". We’ll see how you can wall off groups of related vars in their own namespaces and how you can share vars between namespaces. Along the way we’ll also see how Clojure programs ensure that the code they need is actually loaded, and we’ll uncover some related tricks for ensuring that your code isn’t cluttered with overly long names.
+この章では、その疑問に対するClojureの答えである "名前空間 "を見ていきます。関連するvarのグループを独自の名前空間でどのように壁で囲むことができるのか、また、名前空間間でどのようにvarを共有できるのかを見ていきます。また、Clojureプログラムが必要なコードが実際にロードされることをどのように確認するか、そして、あなたのコードが長すぎる名前で乱雑にならないようにするための関連するトリックを紹介します。
 
 

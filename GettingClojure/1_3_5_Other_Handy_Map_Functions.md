@@ -1,42 +1,42 @@
 
-### Other Handy Map Functions
+### その他の便利なマップ用関数
 
-If you need to get hold of all the keys in a map—well, you can guess the function name:
+マップ内のすべてのキーを取得する必要がある場合、関数名は想像がつくだろう：
 
 ```clojure
 (keys book)
 ```
 
-Evaluate that expression and you will end up with a collection of the keys of your map, something like this:
+この式を評価すると、次のようなマップのキーのコレクションができあがる：
 
 ```clojure
 (:title :author :published)
 ```
 
-Or it might be `(:published :title :author)` or `(:author :published :title)`; the maps that you create with the literal `{}` or the `hash-map` function make no promises about the order of their keys.
+あるいは `(:published :title :author)` や `(:author :published :title)` になるかもしれません。リテラル `{}` や `hash-map` 関数で作成するマップは、キーの順番を約束するものではありません。
 
 > [!NOTE]
 >
-> **Sorted Maps**
+> **ソートされたマップ**
 > 
-> There is a second flavor of map that keeps its keys sorted. You can make one of these sorted maps with the aptly named function `sorted-map`.
+> ソートされたマップは、関数 `sorted-map` を使って作ることができる。ソートされたマップは `sorted-map` という関数で作ることができる。
 
 
-In much the same way that you can get all the keys from a map with `keys`, you can get all the values out of the map with the `vals` function, so that this:
+`keys`でマップからすべてのキーを取得できるのと同じように、`vals`関数でマップからすべての値を取得できる：
 
 ```clojure
 (vals book)
 ```
 
-will give you all of the values in the map. Again, the order of values returned from `vals` is arbitrary, but it’s guaranteed to match the order of the keys returned by the `keys` function.
+これでマップ内のすべての値が返される。繰り返しますが、 `vals` から返される値の順序は任意ですが、 `keys` 関数によって返されるキーの順序と一致することが保証されています。
 
-One final note on map literals: earlier I made a big deal out of how Clojure doesn’t require all of those annoying commas between items in lists and vectors and, as you can see from the preceding example, the elements of a map. Except that sometimes commas can be helpful:
+マップリテラルに関する最後の注意点: 先ほど、Clojureがリストやベクター、そして先ほどの例からわかるようにマップの要素の間に煩わしいカンマを必要としないことを大げさに説明した。カンマが役に立つことがあることを除いて：
 
 ```clojure
 {:title "Oliver Twist", :author "Dickens", :published 1838}
 ```
 
-Since Clojure treats commas as whitespace, this last example is perfectly valid code. Clojure programmers seem a bit torn on the question of commas in maps. They are widely but not universally used. So here is an area where the convention seems to be use them if they help.
+Clojureはカンマを空白として扱うので、この最後の例は完全に有効なコードです。Clojureプログラマは、マップ内のカンマの問題で少し揉めているようです。カンマは広く使われていますが、普遍的に使われているわけではありません。ですから、ここでは、もし役に立つならカンマを使うという慣例があるようです。
 
 
 

@@ -1,36 +1,36 @@
 
-### In the Wild
+### 野生の中で
 
-And now we have the answer to the opening question of this chapter: the thing that makes Clojure a functional programming language is that you do basic things by writing functions and you do more sophisticated things by treating the functions as values—values that you can pass around and call and combine.
+そして、今、私たちはこの章の冒頭の質問に対する答えを持っています: Clojureを関数型プログラミング言語にするものは、関数を書くことによって基本的なことを行い、関数を値として扱うことによってより洗練されたことを行うことです、その値は渡したり、呼び出したり、組み合わせたりすることができます。
 
-Possibly the best demonstration of the "functions are values" idea can be found inside the machinery of defn itself. `defn` is just a thin layer over `def` and `fn`. So when you define a new function with `defn`, perhaps this:
+"関数は値である"という考えを最もよく表しているのは、おそらくdefnそのものの中にある。`defn`は`def`と`fn`の上の薄いレイヤーに過ぎない。`defn`で新しい関数を定義すると、おそらくこのようになる：
 
 ```clojure
 (defn say-welcome [what]
   (println "Welcome to" what "!"))
 ```   
       
-what gets evaluated is something like this:
+評価されるのは次のようなものだ：
 
 ```clojure
 (def say-welcome
   (fn [what] (println "Welcome to" what "!")))
 ```
 
-As the name suggests, `defn` is `def` plus `fn`.
+その名の通り、`defn`は`def`に`fn`を足したものだ。
 
-If you are not used to the idea, functional values can seem a bit special and magical, the kind of technique you would use only in extreme circumstances.  Not so; in Clojure they are just part of the everyday programming landscape.
+この考え方に慣れていないと、関数型値は少し特殊で魔法のようで、極端な状況でのみ使うようなテクニックに思えるかもしれません。 そうではありません。Clojureでは、関数値は日常的なプログラミングの一部です。
 
-Take, for example, the mundane `update` function. As the name suggests, you use `update` to modify values, specifically the values inside of a map.
+例えば、平凡な `update` 関数を考えてみましょう。その名前が示すように、`update` を使って値、特にマップ内の値を変更します。
 
 > [!NOTE]
 > 
-> **You Can’t Modify That Map**
+> **マップは変更できません**。
 > 
-> To be precise, `update` produces a new map that’s a lot like the input map, only different. But I’m getting as tired of writing that as you are of reading it.
+> 正確には、`update`は入力マップによく似た、ちょっと違うだけの新しいマップを生成する。しかし、あなたがそれを読むのに疲れているように、私もそれを書くのに疲れてきている。
 
 
-So if we wanted to record that we’ve sold another copy of a book, we might write this:
+だから、ある本がもう一冊売れたことを記録したい場合、こう書くかもしれない：
 
 ```clojure
 ;; Start with 1,000 copies sold.
@@ -39,10 +39,10 @@ So if we wanted to record that we’ve sold another copy of a book, we might wri
 (def new-book (update book :copies inc))
 ```
 
-As you can see, `update` takes three parameters: the map, the key whose value you want to update, and "a function" to do the updating. Your function will get called with the old value of the key (in this case `1000`) and the map you get back will be just like the old map, except that the key will have the result of evaluating the function.
+見てわかるように、`update`は3つのパラメータを取る：マップと、値を更新したいキーと、更新を行う "関数"だ。関数はキーの古い値（この場合は `1000`）で呼び出され、返されるマップは古いマップとほぼ同じになるのだが、キーには関数を評価した結果が格納される。
 
 
-If you happen to have nested maps, you can reach for the slightly less mundane `update-in` function, which works like `update` but will also let you drill down through several layers of maps using a pathlike vector of keys:
+もしマップが入れ子になっている場合は、少し地味な `update-in` 関数を使うことができる。この関数は `update` と似たような働きをするが、キーのベクターを利用してマップを何階層も掘り下げることができる：
 
 ```clojure
 (def by-author
@@ -51,9 +51,9 @@ If you happen to have nested maps, you can reach for the slightly less mundane `
 (def new-by-author (update-in by-author [:book :copies] inc))
 ```
 
-But to see how much you can do with functional values, look no further than [Ring](https://github.com/ring-clojure/ring), the popular Clojure library that helps you build web applications.
+しかし、関数値でどれだけのことができるかを知るには、Webアプリケーションを構築するのに役立つ人気のClojureライブラリである[Ring](https://github.com/ring-clojure/ring)ほどふさわしいものはありません。
 
-To build a web application with Ring you first need to utter the proper incantation to load Ring (we’ll talk about `require` in "Chapter 9, Namespaces, on page 95"):
+Ringを使ってWebアプリケーションを構築するには、まずRingを読み込むために適切な呪文を唱える必要があります（`require`については "第9章 名前空間 (95ページ) "で説明します）：
 
 
 ```clojure
@@ -61,7 +61,7 @@ To build a web application with Ring you first need to utter the proper incantat
   (:require [ring.adapter.jetty :as jetty]))
 ```
 
-Then you create a function that takes in an HTTP request—in the form of a map—and returns a response, also in the form of a map, like this:
+そして、次のように、HTTPリクエストをマップの形で受け取り、同じくマップの形でレスポンスを返す関数を作る：
 
 ```clojure
 (defn handler [request]
@@ -70,16 +70,16 @@ Then you create a function that takes in an HTTP request—in the form of a map�
    :body "Hello from your web application!"})
 ```
 
-Having written your function, you now need to tell Ring that "this" is the function Ring should look to when a web request comes in. You can do that by passing the `handler` function to Ring’s `run-jetty` function, which kicks off a simple web server called Jetty:
+関数を書いたら、今度は "this" が Web リクエストが来たときに Ring が参照すべき関数であることを Ring に伝える必要があります。Ringの `run-jetty` 関数に `handler` 関数を渡すことで、Jettyというシンプルなウェブサーバを起動させることができます：
 
 ```clojure
 (defn -main []
   (jetty/run-jetty handler {:port 8080}))
 ```
 
-And now your handler function will get called for requests on port 8080.
+これで、あなたのハンドラ関数は8080番ポートからのリクエストに対して呼び出されるようになる。
 
-Aside from plain handlers, Ring applications also commonly use "middleware".  Middleware are functions that take a handler function as a parameter and return a new handler function. Ring programmers use middleware to layer additional features onto their handlers. For example, we might define a middleware function that logs the response:
+リング・アプリケーションでは、単なるハンドラー以外に、一般的に「ミドルウェア」を使用する。 ミドルウェアとは、ハンドラ関数をパラメータとして受け取り、新しいハンドラ関数を返す関数のことです。Ringのプログラマは、ミドルウェアを使ってハンドラに追加機能をレイヤーします。例えば、レスポンスをログに記録するミドルウェア関数を定義します：
 
 ```clojure
 (defn log-value
@@ -94,7 +94,7 @@ Aside from plain handlers, Ring applications also commonly use "middleware".  Mi
     (log-value msg (handler request))))
 ```
 
-and a second handler to specify the content type:
+そして、コンテンツ・タイプを指定する2番目のハンドラです：
 
 ```clojure
 (defn wrap-content-type
@@ -107,16 +107,16 @@ and a second handler to specify the content type:
       content-type)))
 ```
 
-As I say, middleware functions take in a handler—a function—and return another handler. The new handler typically runs the old handler while adding its own goodness along the way. Our first middleware function, `wrap-logging`, runs the handler function passed to it, prints the response, and then returns the response. The second middleware function does something more interesting: it adds a header (for the content type) to the response.
+ミドルウェア関数はハンドラー（関数）を受け取り、別のハンドラーを返す。新しいハンドラは通常、古いハンドラを実行し、途中で独自の機能を追加します。最初のミドルウェア関数 `wrap-logging` は、渡されたハンドラ関数を実行し、レスポンスを表示し、そのレスポンスを返します。2番目のミドルウェア関数はもっと面白いことをします：レスポンスに（コンテントタイプの）ヘッダーを追加します。
 
 > [!NOTE]
 >
-> **Assoc-in?**
+>**Assoc-inとは?**
 >
-> You may have noticed that the content-type handler in the example uses a function called `assoc-in`. This function is a lot like `assoc` in that it adds a new key/value association to a map. The difference is that you pass `assoc-in` a vector of keys and it will go spelunking down through multiple levels of maps for you. To put it another way, in the same way that `update-in` is the multistory version of `update`, `assoc-in` is the multistory version of `assoc`.
+> この例のcontent-typeハンドラでは、`assoc-in`という関数が使われていることにお気づきだろうか。この関数は、マップに新しいキーと値の関連付けを追加するという点では `assoc` とよく似ている。違うのは、`assoc-in`にキーのベクターを渡すと、何階層ものマップを探検してくれることだ。別の言い方をすれば、`update-in` が `update` のマルチストーリーバージョンであるのと同じように、`assoc-in` は `assoc` のマルチストーリーバージョンである。
 
 
-Traditionally Ring applications call the final, fully wrapped handler the `app`, short for application. So this is how we set up our final `app` and kick off Ring:
+伝統的にRingアプリケーションは、完全にラップされた最後のハンドラを application を略して `app` と呼んでいます。つまり、これが最後の `app` をセットアップし、Ring を立ち上げる方法だ：
 
 ```clojure
 (defn handler [request]
@@ -129,7 +129,7 @@ Traditionally Ring applications call the final, fully wrapped handler the `app`,
 ```
 
 
-You can get a feeling for the power of the "functions as values" view of the world by noting that in the preceding example we’re logging the final response—that is, the response after `wrap-content-type` has had its say. But with a little rearranging we can log the response before the content type gets added:
+先の例では、最終的なレスポンス、つまり`wrap-content-type`が処理を終えた後のレスポンスを記録していることに注目すれば、「値を関数とする」世界観の威力を感じることができるだろう。しかし、少しアレンジすれば、content-typeが追加される前のレスポンスを記録することができる：
 
 ```clojure
 (def app
@@ -138,7 +138,7 @@ You can get a feeling for the power of the "functions as values" view of the wor
     "text/html"))
 ```
 
-or we can log both:
+あるいは両方を記録することもできる：
 
 
 ```clojure
@@ -150,7 +150,7 @@ or we can log both:
       "text/html")))
 ```
 
-This last bit of code is a great example of the power of functional programming.  It assembles four separate functions, three of them dynamically generated, into a working whole that is greater than the sum of its parts.
+この最後のコードは、関数型プログラミングのパワーを示す好例である。 これは、4つの別々の関数（そのうちの3つは動的に生成される）を、部分の和よりも大きな全体として動作するように組み立てている。
 
 
 

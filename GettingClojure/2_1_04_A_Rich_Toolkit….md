@@ -1,51 +1,51 @@
 
-### A Rich Toolkit …
+### 豊富なツールキット
 
-If all we were talking about was 'first' and 'rest', this whole sequence kerfuffle wouldn’t amount to much. The real power of sequences lies in the mountain of useful library functions that—like our 'my-count' function—take any kind of collection, convert it to a sequence, and then do something interesting with the sequence. For example, if you have a seqable collection but it’s in the wrong order, you can sort it with 'sort':
+もし私たちが話しているのが'first'と'rest'だけだったら、このシーケンスの騒動はあまり意味がないだろう。シーケンスの本当の力は、私たちの'my-count'関数のように、あらゆる種類のコレクションを受け取り、それをシーケンスに変換し、そのシーケンスで何か面白いことをする便利なライブラリ関数の山にあります。例えば、seqableコレクションを持っているが順番が間違っている場合、'sort'でソートすることができる：
 
 ```clojure
 (def titles ["Jaws" "Emma" "2001" "Dracula"])
 (sort titles) ; Sequence: ("2001" "Dracula" "Emma" "Jaws")
 ```
 
-Like `count`, `sort` converts the collection you pass in into a sequence, sorts it, and returns the resulting sequence.
+`count` と同様に、 `sort` は渡されたコレクションをシーケンスに変換してソートし、結果のシーケンスを返す。
 
 > [!NOTE]
 > 
-> **Seqa What?**
+> **Seqa何とか**
 > 
-> Yes, "seqable" is a word, at least if you are a Clojurist. A seqable is something that the `seq` function can turn into a sequence.
+> 少なくともClojuristであれば、"seqable "は単語です。seqable は `seq` 関数がシーケンスに変換できるものです。
 
 
-The `reverse` function works the same way, except that it reverses instead of sorts:
+`reverse`関数は、ソートの代わりに反転させることを除けば、同じように機能する：
 
 ```clojure
 ;; A Sequence: ("Dracula" "2001" "Emma" "Jaws")
 (reverse titles)
 ```
 
-And since sequences are also (trivially) seqable you can feed the output of `sort` into `reverse` to get your titles sorted in the other direction:
+また、シーケンスも（些細なことだが）seqableなので、`sort`の出力を`reverse`に送り、タイトルを逆方向にソートすることができる：
 
 ```clojure
 ;; A Sequence: ("Jaws" "Emma" "Dracula" "2001")
 (reverse (sort titles)) ;
 ```
 
-There is also `partition`, which chops up a big sequence into a sequence of smaller sequences, enabling you to take a flat vector:
+また、`partition`もあり、これは大きなシーケンスを小さなシーケンスのシーケンスに切り刻むもので、フラットなベクターを取ることができる：
 
 ```clojure
 (def titles-and-authors ["Jaws" "Benchley" "2001" "Clarke"])
 (partition 2 titles-and-authors)
 ```
 
-and turn it into something more structured:
+それをより構造化されたものに変えていく：
 
 ```clojure
 (("Jaws" "Benchley") ("2001" "Clarke"))
 ```
 
 
-There is also `interleave`, which weaves two sequences together into one:
+また、2つのシーケンスを1つにまとめる`interleave`もある：
 
 ```clojure
 ;; A vector of titles and a list of authors.
@@ -56,7 +56,7 @@ There is also `interleave`, which weaves two sequences together into one:
 (interleave titles authors)
 ```
 
-Not to mention `interpose`, which sprinkles a separator value between the elements of a sequence:
+`interpose`は言うまでもなく、シーケンスの要素間にセパレーターの要素を入れる：
 
 ```clojure
 ;; Gives us ("Lions" "and" "Tigers" "and" "Bears")
@@ -65,7 +65,7 @@ Not to mention `interpose`, which sprinkles a separator value between the elemen
 (interpose "and" scary-animals)
 ```
 
-Functions like `sort`, `reverse`, `partition`, `interleave`, and `interpose` all share the same basic processing skeleton. They start by turning their collection arguments into sequences with `seq`. They then do their thing using only `first`, `rest`, and `cons`, or using functions that rely on the magic foursome. Finally they return the result as—you guessed it—a sequence.
+`sort`、`reverse`、`partition`、`interleave`、`interpose` などの関数は、すべて同じ基本的な処理構造を共有している。これらの関数は、まず `seq` でコレクションの引数をシーケンスに変換します。その後、 `first`、`rest`、`cons` のみを使用するか、マジック4人組に依存する関数を使用して処理を行う。最後に、結果をシーケンスとして返す。
 
 
 

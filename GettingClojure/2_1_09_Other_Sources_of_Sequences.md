@@ -1,7 +1,7 @@
 
-### Other Sources of Sequences
+### その他のシーケンス源
 
-Given all the leverage you can get out of sequences, it’s not surprising that you can turn lots of things besides maps, vectors, and lists into sequences.  The `line-seq` function, for example, will turn the contents of a text file into a sequence. So if we had all our authors’ names in a file called `authors.txt`, we could write a function to determine if an author is listed:
+シーケンスを活用することができることを考えると、マップ、ベクター、リスト以外にも多くのものをシーケンスに変えることができるのは驚くことではありません。 例えば、`line-seq`関数はテキストファイルの内容をシーケンスに変換します。例えば、`authors.txt`というファイルにすべての著者の名前があるとすると、著者がそのリストに載っているかどうかを判断する関数を書くことができる：
 
 ```clojure
 (require '[clojure.java.io :as io])
@@ -11,9 +11,9 @@ Given all the leverage you can get out of sequences, it’s not surprising that 
     (some (partial = author) (line-seq r))))
 ```
 
-Let’s put aside the require and `with-open` (it opens and closes a file) expressions for the moment and focus on the last line. In that last line we use `line-seq` to turn the contents of the `authors.txt` file into a sequence of strings, one string per line, and then use `some` to go looking for our author. 
+`requireと`with-open`（ファイルを開いたり閉じたりする）式はひとまず置いておいて、最後の行に注目してみよう。最後の行で`line-seq`を使って`authors.txt`ファイルの内容を一連の文字列に変えて、1行に1つの文字列にしてから、`some`を使って著者名の検索を行っている。
 
-Or perhaps instead of a file you have a string and you want to pull out all of the bits of the string that match a particular regular expression. Look no further than Clojure’s built-in regular-expression literals—which are written as a string prefixed by a `#`. The simplest thing you can do with a regular expression is ask if it matches some string:
+あるいは、ファイルの代わりに文字列があり、特定の正規表現にマッチする文字列をすべて抜き出したいかもしれない。Clojureの組み込みの正規表現リテラルは、文字列の前に`#`を付けて記述します。正規表現でできる最も簡単なことは、ある文字列にマッチするかどうかを尋ねることです：
 
 ```clojure
 ;; A regular expression that matches Pride and Prejudice followed by anything.
@@ -26,12 +26,12 @@ Or perhaps instead of a file you have a string and you want to pull out all of t
 ```
 
 
-But you can also use `re-seq` to generate a sequence of strings that match a given regular expression. So armed with the regular expression `#"\w+"`, which matches a single word, you can do this:
+しかし、`re-seq`を使って、与えられた正規表現にマッチする文字列のシーケンスを生成することもできる。つまり、一つの単語にマッチする正規表現 `#" \w+"` があれば、次のようにすることができる：
 
 ```clojure
 (re-seq #"\w+" title)
 ```
 
-You’ll end up with the sequence `("Pride" "and" "Prejudice" "and" "Zombies")`.
+あなたは`("Pride" "and" "Prejudice" "and" "Zombies")`というシーケンスに行き着く。
 
 

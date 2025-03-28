@@ -1,7 +1,7 @@
 
-### In the Wild
+### 野生の中で
 
-Maps are the Swiss Army knives of Clojure programming: any time you need to bundle together some related data items into a unified whole, one of your first thoughts should be, "Hey, I’ll use a map". You can see this thinking at work in the `clojure.java.jdbc` library, which provides an easy-to-use Clojure interface to a wide variety of relational databases. The functions supplied by `clojure.java.jdbc` need several pieces of configuration information to find your database, which you supply with a map:
+マップはClojureプログラミングのスイスアーミーナイフです: 関連するデータアイテムを束ねて統一された全体にする必要があるときはいつでも、最初に考えることの1つは、"おい、マップを使おう "であるべきです。この考え方は `clojure.java.jdbc` ライブラリで見ることができます。`clojure.java.jdbc` が提供する関数は、データベースを見つけるためにいくつかの設定情報を必要とします：
 
 ```clojure
 (require 'clojure.java.jdbc)
@@ -9,7 +9,7 @@ Maps are the Swiss Army knives of Clojure programming: any time you need to bund
 (clojure.java.jdbc/query db ["select * from books"])
 ```
 
-In the example, the map bound to `db` contains the database connection information. Don’t worry about the `require` expression—it simply ensures that the `clojure.java.jdbc` library is loaded. I’ll have much more to say about this in Namespaces. For now focus on how using a map for this kind of configuration data means you’re free to vary the contents depending on circumstances.  Thus, if you want to connect to a different kind of database, you just cook up a different map:
+この例では、`db` にバインドされたマップにデータベース接続情報が含まれています。`require`式は気にしないでください。`clojure.java.jdbc`ライブラリがロードされることを保証するだけです。これについてはNamespacesで詳しく説明します。今は、この種の設定データにマップを使用することで、状況に応じて自由に内容を変更できることに注目してください。 したがって、別の種類のデータベースに接続したい場合は、別のマップを作成すればいいのです：
 
 ```clojure
 (def db {:dbtype "MySQL"
@@ -18,25 +18,25 @@ In the example, the map bound to `db` contains the database connection informati
          :password "noneofyourbeeswax"})
 ```
 
-Along with the connection information, `clojure.java.jdbc` also returns query results in maps. So, if you had a simple-minded table called `books` in your database, you would see something like this come back from the query function:
+接続情報だけでなく、`clojure.java.jdbc`はクエリの結果もマップとして返します。つまり、データベースに`books`という単純なテーブルがあったとすると、クエリ関数からこのようなものが返ってくることになります：
 
 ```clojure
 ({:id 10, :title "Oliver Twist", :author "Dickens"}
  {:id 20, :title "Emma", :author "Austen"})
 ```
 
-In this way `clojure.java.jdbc` is a typical bit of Clojure software: maps go in and maps come out.
+このように`clojure.java.jdbc`は典型的なClojureソフトウェアである。
 
-Sets are not nearly as common as maps in real-world Clojure code, but neither are they rare. For example, `clojure.java.jdbc` also contains this expression:
+セットは実際のClojureコードではマップほど一般的ではありませんが、珍しいものでもありません。例えば、`clojure.java.jdbc`にもこの式があります：
 
 ```clojure
 (#{"derby" "h2" "hsqldb" "sqlite"} subprotocol)
 ```
 
-It may look odd, but it’s not complicated: this is a set—in this case a set literal—used as a function, which will return the value only if `subprotocol` is one of the elements in the set. Otherwise it will return `nil`. In essence this is a test to see if the value bound to `subprotocol` is the name of a database that we recognize.
+奇妙に見えるかもしれないが、複雑ではない。これはセット（この場合はセットリテラル）を関数として使用したもので、`subprotocol`がセットの要素の1つである場合にのみ値を返す。そうでなければ `nil` を返す。要するに、これは `subprotocol` に束縛された値が、我々が認識しているデータベースの名前であるかどうかをテストするものである。
 
 
-But the clear popularity winner is the keyword: it’s hard to write any significant Clojure code without sprinkling in some keywords. For example, if you browse through the source of the Clojure build tool and Leiningen competitor [boot](https://github.com/boot-clj/boot), you will come across this:
+しかし、明確な人気の勝者はキーワードです: いくつかのキーワードを散りばめずに重要なClojureコードを書くのは難しいです。例えば、ClojureのビルドツールのLeiningenの競合[boot](https://github.com/boot-clj/boot)のソースをブラウズすると、このようなものに出くわします：
 
 ```clojure
 (defn resolve-dependencies
@@ -51,6 +51,6 @@ But the clear popularity winner is the keyword: it’s hard to write any signifi
            {:dep x :jar (dep->path x)}))))))
 ```
 
-For those who are counting, that’s 11 keywords in 10 lines of code. Keywords are everywhere in Clojure code.
+数えている人のために言っておくと、10行のコードに11個のキーワードが入っていることになる。Clojureのコードにはキーワードが至る所にある。
 
 

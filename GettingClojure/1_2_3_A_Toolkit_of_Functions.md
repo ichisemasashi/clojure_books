@@ -1,7 +1,7 @@
 
-### A Toolkit of Functions
+### 関数のツールキット
 
-Along with the literal syntax there is also a function that manufactures vectors, called, appropriately enough, `vector`. The `vector` function takes any number of any kind of argument and wraps a vector around those arguments:
+リテラル構文とともに、ベクターを作る関数もあります。関数 `vector` は任意の数の任意の種類の引数を取り、それらの引数をベクターで囲みます：
 
 ```clojure
 ;; The same as [true 3 "four" 5]
@@ -10,82 +10,82 @@ Along with the literal syntax there is also a function that manufactures vectors
 (vector)
 ```
 
-However you conjure it up, once you have a vector you’ll want to do stuff with it. Fortunately, Clojure provides all sorts of useful functions to go with your vectors. For example, if you’re interested in how many items are hiding inside your vector you can use our old friend `count`:
+ベクターができたら、それを使っていろいろなことをしたくなるでしょう。幸いなことに、Clojureはベクターと一緒に使える便利な関数をいろいろと提供しています。例えば、ベクターの中にいくつのアイテムが隠れているかに興味がある場合、古くからの友人である `count` を使うことができます：
 
 ```clojure
 (def novels ["Emma" "Coma" "War and Peace"])
 (count novels) ; Returns 3.
 ```
 
-You can get at the first item of your vector with the `first` function:
+関数 `first` を使えば、ベクターの最初の項目を得ることができる：
 
 ```clojure 
 (first novels)
 ``` 
 
-Run the preceding code and you will get `"Emma"` back for your trouble.
+先のコードを実行すると、`"Emma"`が返ってくる。
 
-The `rest` function is a sort of negative doppelgänger of `first`; `rest` will give you back everything but the first item, so that this:
+関数 `rest` は `first` の否定的なドッペルゲンガーのようなもので、`rest` は最初のアイテム以外のすべてを返す：
 
 ```clojure 
 (rest novels)
 ```
 
-will return a collection that starts with `"Coma"` and ends with `"War and Peace"`.  You may notice something odd about the results that come back from `rest`: the collection returned from `rest` prints with round parentheses instead of the square brackets that you are probably expecting. Instead of `(rest novels)` returning this:
+は `"Coma"` から始まり `"War and Peace"` で終わるコレクションを返す。 `rest` から返されるコレクションは、おそらくあなたが期待しているような角括弧ではなく、丸括弧で表示されます。代わりに、`(rest novels)` がこれを返す：
 
 ```clojure
 ["Coma" "War and Peace"]
 ```
 
-you will in fact see this:
+実際にはこれを見ることになる：
 
 ```clojure
 ("Coma" "War and Peace")
 ```
 
-The short explanation of this mystery is that instead of returning a vector, `rest` actually returns a sort of generic collection, called a sequence. You can find the longer answer in "Chapter 10, Sequences, on page 111". Note that you can drop as many items off the front of your vector as you have patience for by nesting calls to `rest`, so that this:
+この謎を簡単に説明すると、`rest`はベクターを返すのではなく、実際にはシーケンスと呼ばれる一般的なコレクションの一種を返すということだ。もっと長い答えは「第10章 シーケンス（111ページ）」にある。`rest`をネストして呼び出すことで、ベクターの先頭からいくつでもアイテムを削除できることにご注目ください：
 
 ```clojure
 (rest (rest novels))
 ```
 
-will give you a collection containing all but the first two elements, or just `("War and Peace")`. Note that calling `rest` on a one-element vector, like this:
+こうすると、最初の2つの要素を除いたコレクション、つまり `("War and Peace")`だけが得られる。このように、1要素のベクターに対して `rest` を呼び出す場合には注意が必要である：
 
 ```clojure
 (rest ["Ready Player One"]) ; Returns an empty collection.
 ```
 
-will give you back an empty collection, as will calling `rest` on an empty vector:
+空のベクターで `rest` を呼び出すと、空のコレクションが返されます：
 
 
 ```clojure
 (rest []) ; Also an empty collection.
 ```
 
-With a bit of effort you can use a combination of `rest` and `first` to get at any element in your vector. Need the third item? No problem; all you need is two calls to `rest` and one to `first`:
+少し努力すれば、`rest`と`first`の組み合わせを使ってベクター内のどの要素にもアクセスできる。3つ目の項目が必要ですか？必要なのは `rest` を2回、`first` を1回呼び出すだけだ：
 
 ```clojure
 (def year-books ["1491" "April 1865", "1984", "2001"])
 (def third-book (first (rest (rest year-books)))) ; "1984".
 ```
 
-This is doable but not very convenient, and happily there is an easier way: you can turn to `nth`, which takes a vector and a (zero-based) index:
+これは可能だが、あまり便利ではない。嬉しいことに、もっと簡単な方法がある：ベクターと（ゼロベースの）インデックスを取る `nth` を使うのだ：
 
 ```clojure
 (nth year-books 2) ; Returns "1984".
 ```
 
-Alternatively, you can call the vector like a function, supplying the index as an argument:
+あるいは、関数のようにインデックスを引数としてベクターを呼び出すこともできる：
 
 ```clojure
 (year-books 2) ; Also returns "1984".
 ```
 
-Keep in mind none of these operations change the original vector in any way.  While `first` and `nth` both return a value from the vector, that value stays firmly in place in the original vector. Similarly, `rest` returns a new (shorter) vector without changing the original. This is our first glimpse of something very fundamental to Clojure: with a few exceptions, Clojure is built on a mountain of immutability.  Generally, once you create a Clojure data structure such as a vector, there is no way to modify it. The closest you can come is to use a function like `rest` to make a new data structure, one that is a only a little different from the original.
+これらの操作はいずれも、元のベクターを一切変更しないことを覚えておいてほしい。 まず `first` と `nth` はどちらもベクターから値を返しますが、その値は元のベクターの中にしっかりと残ります。同様に、`rest`は元のベクトルを変更することなく、新しい（短い）ベクトルを返す。いくつかの例外を除いて、Clojureは不変性の山の上に構築されています。 一般的に、ベクターのようなClojureデータ構造を作成したら、それを変更する方法はありません。最も近いのは、`rest`のような関数を使って新しいデータ構造を作ることです。
 
 > [!NOTE]
-> **Immutable Exceptions?**
+> **不変性の例外?**
 >
-> There are some exceptions to the Clojure everything is immutable rule. For example, consider that something must change when we say (def n 99). To find out what, see "Def, Symbols, and Vars".
+> Clojureのすべてが不変であるというルールには、いくつかの例外があります。例えば、(def n 99)と言ったときに何かが変更されなければならないと考えてください。何が変わるかは、"Def,シンボル,Vars "を参照してください。
 
 

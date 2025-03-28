@@ -1,23 +1,23 @@
 
-### Staying Out of Trouble
+### トラブルに巻き込まれないために
 
-Like most programming tools, destructuring works best when mixed with a healthy dose of common sense. The real value of destructuring is that it makes those deep dives into data structures easier to code and easier to read. There is something about the "look for the value here" approach of destructuring that clicks with the human brain. Or it clicks to a point: digging too far into a complex data structure with a single destructuring expression is one sure way to make your code confusing.
+ほとんどのプログラミング・ツールがそうであるように、デストラクチャリングは、健全な量の常識と混在しているときに最もうまく機能する。デストラクチャリングの真価は、データ構造への深い潜入をコーディングしやすくし、読みやすくしてくれることだ。デストラクチャリングの「ここに価値を見いだす」というアプローチには、人間の脳を刺激する何かがある。複雑なデータ構造を1つのデストラクチャリング式で深く掘り下げるのは、コードを混乱させる確実な方法の1つだ。
 
-For example, if you had a vector of reader information, like this:
+例えば、読者情報のベクタがあったとする：
 
 ```clojure
 [{:name "Charlie", :fav-book {:title "Carrie", :author ["Stephen" "King"]}}
  {:name "Jennifer", :fav-book {:title "Emma", :author ["Jane" "Austen"]}}]
 ```
 
-and you wanted the full name of the author of the second reader’s favorite book—say that three times fast—you might write this:
+2番目の読者の好きな本の著者のフルネームが知りたかったら、3回早口でこう言うかもしれない、と：
 
 ```clojure
 (defn format-a-name [[_ {{[fname lname] :author} :fav-book}]]
   (str fname " " lname))
 ``` 
 
-Most programmers would have to stare at this gem for a few minutes in order to understand it. A better approach might be to go at this problem in a couple of stages, like this:
+ほとんどのプログラマーは、この問題を理解するために数分間この作品を見つめなければならないだろう。より良いアプローチは、この問題をいくつかの段階に分けて、次のように進めていくことだろう：
 
 ```clojure
 (defn format-a-name [[_ second-reader]]
@@ -25,10 +25,10 @@ Most programmers would have to stare at this gem for a few minutes in order to u
     (str (first author) " " (second author))))
 ```
    
-There’s nothing like some intention-revealing names to, well, reveal your intentions.
+意図を明らかにする名前ほど、自分の意図を明らかにするものはない。
    
    
-The other thing to keep in mind about destructuring is that it’s purely a creature of local bindings. While you can use destructuring with function parameters and with `let`, you can’t use destructuring directly in a def. So this:
+デストラクチャリングについて覚えておくべきもうひとつのことは、デストラクチャリングは純粋にローカルな束縛のためのものだということだ。関数のパラメーターや`let`でデストラクチャリングを使うことはできますが、def で直接デストラクチャリングを使うことはできません：
 
 ```clojure
 ;; No!!
@@ -36,13 +36,13 @@ The other thing to keep in mind about destructuring is that it’s purely a crea
 (def author-name [{n :name} author])
 ```
 
-will not compile. But don’t despair. This will:
+はコンパイルできない。しかし、絶望することはない。これならできる：
 
 ```clojure
 (def author-name
   (let [{n :name} author] n))
 ```
 
-A little let goes a long way.
+ちょっとしたことが大きな力になる。
 
 

@@ -1,9 +1,9 @@
 
-### Wrapping Up
+### まとめ
 
-In this chapter we looked at destructuring. Clojure is full of deep, interesting ideas, things like programming with immutable data structures and lazy sequences. Destructuring isn’t one of them. Destructuring makes up for its lack of deep philosophical implications by being a practical, clever alternative to picking through your data one API call at a time. Instead of all that `first`-ing and `nth`-ing your way through a data structure, destructuring lets you build a sort of treasure map of the data that you want. Start in the first slot of this sequence, then turn right at this keyword and go 20 paces down that vector. 
+この章では、デストラクチャリングについて見てきました。Clojureには、イミュータブルなデータ構造や遅延シーケンスによるプログラミングなど、深くて面白いアイデアがたくさんあります。デストラクチャリングはそのうちの1つではありません。デストラクチャリングは、一度に1つのAPIコールを使ってデータを検索する実用的で賢い代替手段であることで、深い哲学的な意味合いの欠如を補います。デストラクチャリングでは、データ構造を通して「`first`-ing」や「`nth`-ing」をする代わりに、欲しいデータの宝の地図のようなものを作ることができる。このシーケンスの最初のスロットから始めて、このキーワードで右に曲がり、そのベクトルを20歩進む。
 
-Next, and continuing with the "dealing with your data" theme, we’re going to turn to records, which are like maps that have been specialized to a particular purpose.
+次に、「データを扱う」というテーマを続けながら、レコードに目を向ける。レコードは、特定の目的に特化した地図のようなものだ。
 
 
 

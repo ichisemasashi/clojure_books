@@ -1,8 +1,8 @@
 
-### Wrapping Up
+### まとめ
 
-In this chapter we looked at the Swiss Army knife of Clojure data structures, the map. We saw that Clojure maps let you associate arbitrary keys with equally arbitrary values. Along the way we discovered that Clojure keywords make great map keys. We also looked at several ways you can look up a value in your map, and at how you can create new maps with additional—or fewer—keys. We also had a look at the map’s close cousin, the set. We saw how you can test set membership in much the same way that you look up values in a map. Then we looked at the real-world use of maps, sets, and keywords in the `clojure.java.jdbc` library. We also saw why you want to keep in mind that while keywords have a lot in common with strings, they are indeed different.  Finally we looked at the philosophical slipperiness of having a `nil` value in your map or set.
+この章では、Clojureデータ構造のスイスアーミーナイフであるマップについて見てきました。Clojure のマップでは、任意のキーと任意の値を関連付けることができます。その過程で、Clojureのキーワードが素晴らしいマップのキーになることを発見しました。また、マップ内の値を検索するいくつかの方法と、追加または削減されたキーで新しいマップを作成する方法を見ました。マップのいとこであるセットも見てみました。マップの値を調べるのと同じように、セットのメンバーシップをテストする方法について説明しました。その後、`clojure.java.jdbc`ライブラリのマップ、セット、キーワードの実際の使用方法を見ました。また、キーワードは文字列と共通点が多いものの、実際には異なるものであることに留意したい理由についても説明しました。 最後に、マップやセットに `nil` 値を持つことの哲学的な滑りやすさについて見ました。
 
-Having completed our look at maps and sets, we’re done with the basic Clojure data structures. So now it’s time to turn our attention back to code—specifically to writing conditional logic in Clojure.
+マップとセットについての考察が終わったので、基本的なClojureデータ構造についての考察は終わりです。それでは、コード、特にClojureで条件ロジックを書くことに目を向ける時が来ました。
 
 

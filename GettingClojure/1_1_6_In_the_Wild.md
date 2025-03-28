@@ -1,19 +1,19 @@
 
-### In the Wild
+### 野生の中で
 
-While the REPL-based "Hello, World" is wonderful for getting a feel for writing Clojure, it doesn’t quite capture the whole spirit of the "Hello, World" exercise.  Along with giving you a feel for the language, "Hello, World" is supposed to get you to work out the details of going from source code stored in a file to a running program. Happily, we’re exactly one command away from getting a real Clojure project set up on disk. All we need is `lein new app` followed by the name of the application. So if we were creating a book store–related application for Blotts Books (Ms. Flourish has retired) we might say this:
+REPLベースの "Hello, World "は、Clojureを書く感覚を得るには素晴らしいものですが、"Hello, World "の練習の精神全体を完全に捉えるものではありません。 言語の感触を得るのと一緒に、"Hello, World "は、ファイルに保存されたソースコードから実行中のプログラムまでの詳細を解決するようになっています。幸運なことに、私たちはディスク上にセットアップされた本物のClojureプロジェクトを手に入れるまで、まさに1つのコマンドで済んでいる。必要なのは、`lein new app`の後にアプリケーション名を続けるだけだ。つまり、Blotts Books（Flourishさんは引退しました）のブックストア関連のアプリケーションを作成する場合、次のようになります：
 
 ```bash
 $ lein new app blottsbooks
 ```
 
-Feed that command into your operating system’s command line, and Leiningen will respond with this:
+このコマンドをオペレーティング・システムのコマンドラインに入力すると、Leiningenは次のように応答する：
 
 ```bash
 Generating a project called blottsbooks...
 ```
   
-And you will have a newly minted—albeit skeletal—Clojure project in a directory called `blottsbooks`. Look around inside of the new `blottsbooks` directory and you will find a collection of files—`CHANGELOG.md` and `README.md` among them—as well as a number of subdirectories, with `src` and `test` chief among them:
+そして、新しく `blottsbooks` というディレクトリに、新しい（スケルトンではありますが） Clojure プロジェクトが作成されます。新しい `blottsbooks` ディレクトリの中を見回すと、`CHANGELOG.md` や `README.md` などのファイルや、`src` や `test` などのサブディレクトリがあります：
 
 ```bash
 $ cd blottsbooks
@@ -21,7 +21,7 @@ $ ls
 README.md doc/ project.clj resources/ src/ test/ ...
 ```
 
-For our purposes we’re mostly interested in the file `src/blottsbooks/core.clj`, which contains the Clojure source code for our project. It’ll look like this: 
+今回の目的では、プロジェクトのClojureソースコードを含むファイル`src/blottsbooks/core.clj`に興味があります。それは次のようになります： 
 
 hello/blottsbooks-1/src/blottsbooks/core.clj
 ```clojure
@@ -34,11 +34,11 @@ hello/blottsbooks-1/src/blottsbooks/core.clj
   (println "Hello, World!"))
 ```
 
-Note that the file starts off with an `ns` (short for namespace) expression, which sets up a new namespace and requests—with the `:gen-class`—that the namespace be compiled. We’ll have a lot more to say about namespaces in "Chapter 9, Namespaces, on page 95", but for the moment let’s move on.
+このファイルは `ns`（namespace の略）式で始まり、新しい名前空間を設定し、`:gen-class` で名前空間のコンパイルを要求していることに注意してください。名前空間については "第9章 名前空間（95ページ）"で詳しく説明しますが、とりあえず先に進みましょう。
 
-The second expression in `core.clj` obviously defines a function, but this `defn` clearly has some optional accessories that we haven’t encountered. There is, for example, a mysterious string just before the parameters, and then there is an ampersand in the parameter list. We could stop here and talk about supplying a handy description of your function or about functions that take a variable number of arguments, but let’s leave that to "Chapter 5, More Capable Functions, on page 49", and instead focus on the thing that makes this function special: its name. The main function in a Clojure program, the one that gets run to kick off the program, is always called `-main`.
+`core.clj`の2番目の式は明らかに関数を定義しているが、この`defn`には明らかに我々が遭遇していないオプションのアクセサリがある。例えば、パラメータの直前に謎の文字列があり、パラメータリストにはアンパサンドがある。ここで止めて、関数の便利な説明を提供することや、可変個の引数を取る関数について話すこともできますが、それは「第5章、より有能な関数、49ページ」に任せて、代わりにこの関数を特別なものにしているもの、つまりその名前に焦点を当てましょう。Clojureプログラムのメイン関数、プログラムを開始するために実行される関数は、常に`-main`と呼ばれます。
 
-To see this in action, we can replace the `-main` with our book store greeting code. Here is our modified core.clj in its entirety:
+これを実際に見るために、`-main`をブックストアの挨拶コードに置き換えてみましょう。ここに修正したcore.cljの全体があります：
 
 hello/blottsbooks-2/src/blottsbooks/core.clj
 ```clojure
@@ -52,28 +52,28 @@ hello/blottsbooks-2/src/blottsbooks/core.clj
   (say-welcome "Blotts Books"))
 ```
 
-We can get our Clojure application to run like this:
+Clojureアプリケーションはこのように実行できる：
 
 ```bash
 $ lein run
 ```
 
-Do that, and you should see
+そうすれば、こうなる。
 
 ```
 Welcome to Blotts Books !
 ```
 
-Aside from the technical thrill of seeing the code run, we can learn something subtle from our little Clojure application. Did you notice how we defined `say-welcome` before we used it in `-main`? This underlines a basic Clojure rule: you need to define your functions before you use them. This means Clojure code tends to read from the bottom up, with the lower-level functions defined first.
+コードが実行されるのを見る技術的な興奮はさておき、私たちはこの小さなClojureアプリケーションから微妙なことを学ぶことができる。`-main` で使う前に `say-welcome` を定義したことに気づいただろうか？これは基本的なClojureのルールを強調している。つまり、Clojureのコードは、低レベルの関数を最初に定義して、下から上に読み進めるという性質があります。
 
 > [!NOTE]
-> Declaration First?
+> 宣言が先か？
 >
-> There is a way to get around the you gotta define it before you use it rule: you can use `declare`, as in `(declare say-welcome)`, to do a sort of predefinition of a function.
-> Mostly Clojurists stick to defining their functions before they use them, and reserve `declare` for sticky situations like mutually recursive functions.
+>`(declare say-welcome)` のように `declare` を使うことで、関数の事前定義を行うことができます。
+> ほとんどのClojuristは、使う前に関数を定義することにこだわり、`declare`は相互に再帰的な関数のような厄介な状況のために取っておく。
 
 
-Finally, be aware that both `def` and `defn` draw from the same well of names.  This means that
+最後に、`def`も`defn`も同じ名前の泉から出ていることに注意しよう。 つまり
 
 ```clojure
 (def author "Dickens")
@@ -82,7 +82,6 @@ Finally, be aware that both `def` and `defn` draw from the same well of names.  
   (println "Hey," name "is writing a book!"))
 ```
 
-will leave you with a function called `author`. Reverse the order of the `def` and
-`defn`, and author will be a string. The rule is that the last `def` or `defn` in wins.
+を実行すると、`author`という関数ができる。`def`と `defn`の順番を逆にすると、authorは文字列になる。規則としては、最後の `def` または `defn` が勝つ。
 
 

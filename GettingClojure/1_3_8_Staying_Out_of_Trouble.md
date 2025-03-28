@@ -1,7 +1,7 @@
 
-### Staying Out of Trouble
+### トラブルに巻き込まれないために
 
-Like everything else in programming maps, sets and keywords have their pitfalls. The good news about keywords is that they’re so simple it’s hard to go wrong with them. Mainly you just have to keep in mind that keywords are not strings. The keyword `:title` is not, for example, the same as the string `"title"`.  Thus with a keyword-based map like this:
+マップ・プログラミングにおける他のすべてのものと同様に、セットとキーワードにも落とし穴がある。キーワードの良い点は、非常に単純なので、間違った使い方をするのが難しいということだ。主に、キーワードは文字列ではないということを覚えておく必要がある。例えば、キーワード`:title`は文字列`"title"`とは違う。 したがって、このようなキーワードベースのマップでは
 
 ```clojure
 (def book 
@@ -10,19 +10,19 @@ Like everything else in programming maps, sets and keywords have their pitfalls.
    :published 1838})
 ```
 
-doing this:
+こうすると
            
 ```clojure
 (book "title") 
 ```
 
-will return you exactly nothing (well, a `nil`), whereas doing this:
+実行すると、まったく何も返さない（まあ、`nil`だが）のに対し、こうする：
 
 ```clojure
 (assoc book "title" "Pride and Prejudice")
 ```
 
-will return a four-entry map: 
+4エントリーのマップを返す：
 
 ```clojure
 {:title "Oliver Twist"
@@ -31,23 +31,23 @@ will return a four-entry map:
  "title" "Pride and Prejudice"}
 ```
 
-There are also some map-specific pitfalls to watch out for. For example, while it’s true that maps and sets both return `nil` if you go searching for a nonexistent key like this:
+また、マップ特有の落とし穴もある。例えば、このように存在しないキーを検索すると、マップもセットも`nil`を返すのは事実である：
 
 ```clojure
 (book :some-key-that-is-clearly-not-there) ; Gives you nil.
 ```
 
-be careful depending on this behavior to deduce whether a key is present.
+キーが存在するかどうかを推測するために、この動作に依存するのは要注意である。
 
-After all, someone may have written this:
+結局のところ、誰かがこれを書いたのかもしれないのだから：
 
 ```clojure
 (def anonymous-book {:title "The Arabian Nights" :author nil})
 ```
 
-The `anonymous-book` map is still a two-entry map, even if one of the values is `nil`.
+`anonymous-book`マップは、片方の値が`nil`であっても、2エントリーのマップであることに変わりはない。
 
-If you need to know if some key exists in a map, reach for `contains?`:
+あるキーがマップに存在するかどうかを知りたい場合は、`contains?`を使う：
 
 ```clojure
 (contains? anonymous-book :title) ; True!
@@ -55,7 +55,7 @@ If you need to know if some key exists in a map, reach for `contains?`:
 (contains? anonymous-book :favorite-color) ; False!
 ```
 
-Exactly the same logic—and solution—applies to sets. If you’re worried that you may have a set with `nil` as a member, use `contains?` to check for membership:
+これとまったく同じロジックと解決法がセットにも適用される。`nil`をメンバに持つセットがあるのではないかと心配な場合は、`contains?`を使ってメンバかどうかをチェックする：
 
 ```clojure
 ;; Our books may be anonymous.
@@ -67,7 +67,7 @@ Exactly the same logic—and solution—applies to sets. If you’re worried tha
 ```
 
 
-Another feature—and it really is a feature—of maps that sometimes trips up the new Clojure programmer is that the language is happy to treat maps like ordinary sequences of values, such as lists or vectors. We’ll talk more about this in Sequences, but for now remember that functions like `first`, `rest`, and `count` see maps as collections of two-element vectors:
+新しいClojureプログラマが時々つまずくマップのもう1つの特徴(これは本当に特徴です)は、言語がマップをリストやベクターのような普通の値のシーケンスのように扱うことに満足していることです。これについてはシーケンスで詳しく説明しますが、今は `first`、`rest`、`count` などの関数がマップを2要素のベクトルのコレクションとして見ていることを覚えておいてください：
 
 ```clojure
 (def book {:title "Hard Times"
@@ -79,8 +79,8 @@ Another feature—and it really is a feature—of maps that sometimes trips up t
 (count book) ; Will definitely return 3.
 ```
 
-Also be aware that since Clojure makes no promises about the order of maps, exactly which key/value pair you get from `first` is anybody’s guess. One thing you can rely on is that for any given map the results of `first` and `rest` will be consistent.
+また、Clojureはマップの順序について約束しないので、 `first` から得られるキーと値のペアがどれであるかは誰にも分からないことに注意してください。1つ頼れることは、任意のマップに対して、 `first` と `rest` の結果は一貫しているということです。
 
-Finally, keep in mind that in expressions like `(:author book)` or `(:sci-fi genres)`, the keywords `:author` and `:sci-fi` aren’t just pretending to be functions. They are functions—functions that look themselves up in a map or a set. It is very common, if a bit confusing to beginners, to see a keyword like `:title` in a context where a function is clearly called for. In those situations you can bet that there is either a map or a set involved.
+最後に、`(:author book)`や`(:sci-fi genres)`のような表現では、`:author`や`:sci-fi`というキーワードは単に関数のふりをしているのではないということを覚えておいてほしい。これらは関数であり、マップやセットで自分自身を検索する関数なのだ。明らかに関数が必要とされている文脈で`:title`のようなキーワードを目にすることは、初心者にとっては少し混乱するかもしれないが、非常によくあることだ。そのような状況では、マップかセットのどちらかが関係していると思って間違いない。
 
 

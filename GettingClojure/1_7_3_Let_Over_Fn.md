@@ -1,14 +1,14 @@
         
 ### Let Over Fn
           
-While the ideas behind let aren’t terribly challenging—it binds names to values in a purely local and temporary way—`let` does have some hidden superpowers, which only become visible when you combine it with `fn`. To get a glimpse of these hidden powers, imagine our book discounts are customer-dependent.  Somewhere we have a map of the user’s name to the discount that user gets:
+letの背後にあるアイデアはそれほど難しいものではないが（純粋にローカルで一時的な方法で名前と値を結びつける）、`let`には隠された超大国があり、それは`fn`と組み合わせて初めて見えてくる。この隠された力を垣間見るために、私たちの本の割引が顧客依存であると想像してみよう。 どこかにユーザー名とそのユーザーが受ける割引のマップがあるものとする：
 
 ```clojure
 (def user-discounts
   {"Nicholas" 0.10 "Jonathan" 0.07 "Felicia" 0.05})
 ```
 
-We could certainly add some parameters to `compute-discount-amount` to deal with this:
+これに対処するために、`compute-discount-amount`にいくつかのパラメーターを追加することは可能だ：
 
 ```clojure
 (defn compute-discount-amount [amount user-name user-discounts min-charge] 
@@ -20,7 +20,7 @@ We could certainly add some parameters to `compute-discount-amount` to deal with
       min-charge)))
 ```
 
-The trouble with this approach is that we now have to carry the "user names and discounts" table around every time we want to compute a price. If all that extra lifting turns out to be a problem, a better strategy might be to create a higher-level function, one that produces variants of the `compute-discount-amount` function tailored to a particular customer:
+この方法の問題点は、価格を計算するたびに "ユーザー名と割引額 "のテーブルを持ち運ばなければならないことである。このような余分な作業が問題になるのであれば、より高レベルの関数を作成し、特定の顧客に合わせた`compute-discount-amount`関数の変種を生成するのが良い方法かもしれません：
 
 
 ```clojure
@@ -38,11 +38,11 @@ The trouble with this approach is that we now have to carry the "user names and 
 (compute-felicia-price 20.0)
 ```
 
-There are quite a few moving parts in `mk-discount-price-f`, but it’s just a combination of features we’ve already seen. The first thing `mk-discount-price-f` does, in that initial `let`, is look up the discount percentage for the user. With the percentage rate in hand, `mk-discount-price-f` then constructs an anonymous function with an fn whose body is nearly identical to `compute-discount-amount`.
+`mk-discount-price-f`には非常に多くの部品がありますが、それはすでに見てきた機能の組み合わせにすぎません。最初の `let` で `mk-discount-price-f` が行うことは、ユーザーの割引率を調べることである。割引率を取得すると、 `mk-discount-price-f` は `compute-discount-amount` とほぼ同じ内容の fn を持つ無名関数を作成する。
 
-The interesting thing about `mk-discount-price-f` is how `discount-percent` gets bound in the initial `let`, "outside" of the `fn` and then used "inside" the `fn`. That means that while `discount-percent` is only visible inside the body of the `let`, it can live on long after the call to `mk-discount-price-f` has completed, buried inside of the anonymous function.
+`mk-discount-price-f`の面白いところは、`discount-percent`が最初の`let`で束縛され `fn` の「外側」で使用され、その後 `fn` の「内側」で使用されることである。つまり、`discount-percent` は `let` の内部でしか見ることができませんが、`mk-discount-price-f` の呼び出しが完了した後も、匿名関数の内部で生き続けることができます。
 
 
-This "compute it in a let, use it in an fn" is such a great way to build anonymous functions that are both efficient and clear. It’s efficient because you can use the outside `let` to compute everything you need to construct the anonymous function. And it’s clear because inside of the anonymous function you can use descriptive names for those precomputed values.
+この「letの中で計算し、fnの中で使用する」という方法は、効率的で明快な無名関数を構築するための優れた方法です。`let`を使えば、無名関数を構築するために必要なすべての計算を行うことができるので効率的だ。また、無名関数の内部では、事前に計算された値に説明的な名前を使うことができるので、明快です。
 
 

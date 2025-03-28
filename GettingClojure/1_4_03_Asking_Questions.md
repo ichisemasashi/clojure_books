@@ -1,9 +1,9 @@
 
-### Asking Questions
+### 質問をする
 
-Being able to branch on an explicit true or `false` is only half of what makes `if` the programming workhorse that it is. The other half is being able to ask the questions that evaluate to a Boolean. Probably the most common question we ask in programs is "Does this thing equal this other thing?" Happily, the Clojure equality-testing function has a very obvious name.
+明示的に真か偽で分岐できることは、`if`がプログラミングの主力であることの半分でしかない。残りの半分は、ブール値に評価される質問をできることです。私たちがプログラムで尋ねる最も一般的な質問は、おそらく "このことはこの他のことと等しいですか？" です。幸いなことに、Clojureの等式テスト関数は非常にわかりやすい名前を持っています。
 
-It’s just a single equals sign:
+単に1つの等号です：
 
 ```clojure
 (= 1 1)                         ; True!
@@ -12,9 +12,9 @@ It’s just a single equals sign:
 (= "Emma" "Emma")               ; Yes!
 ```
 
-Like `+` and `*`, the `=` function looks like an operator but is really just a function.
+また、 `+` や `*` と同様に、 `=` 関数も演算子のように見えますが、実際には単なる関数です。
 
-And like `+` and `*`, the `=` function will take any number of arguments:
+そして、 `+` や `*` と同じように、 `=` 関数も任意の数の引数を取ることができる：
 
 ```clojure
 (= (+ 2 2) 4 (/ 40 10) (* 2 2) (- 5 1)) ; True!
@@ -23,12 +23,12 @@ And like `+` and `*`, the `=` function will take any number of arguments:
 
 > [!NOTE]
 > 
-> **Equality**
+>**Equality**
 >  
-> Note that the `=` function is built on the idea of structural equality: roughly, two values are equal according to `=` if they have the same value. Under the hood, `=` is identical to the Java `equals` method.
+>`=` 関数は構造的に等しいという考え方に基づいて作られていることに注意してください：大雑把に言うと、2つの値が同じ値であれば `=`によって等しいことになります。つまり、2つの値が同じ値であれば、 `=`によって等しくなります。内部では、 `=` はJavaの `equals` メソッドと同じです。
 
 
-You can check if two things are not equal:
+二つのものが等しくないかどうかを調べることができる：
 
 
 ```clojure
@@ -36,7 +36,7 @@ You can check if two things are not equal:
 (not= "Anna Karenina" "Anna Karenina") ; No!
 ```
 
-As you might expect, Clojure has a wide range of other Boolean-returning functions—or predicates—besides `=`. You can, for example, find out which of two numbers is bigger with `>` and `<`:
+ご想像の通り、Clojureには `=` 以外にも様々なブール値を返す関数（述語）があります。例えば、`>`と`<`で2つの数字のどちらが大きいかを調べることができます：
 
 ```clojure
 (if (> a b)
@@ -45,9 +45,9 @@ As you might expect, Clojure has a wide range of other Boolean-returning functio
   (println "b is smaller than c"))
 ```
 
-If you have trouble mentally parsing the `>` and `<` expressions, start by thinking about the infix version: `(a > b)` or `(b < c)` and then move the operator to the front, giving you `(> a b)` and `(< b c)`. Accompanying `<` and `>` are `<=` and `>=`, which do exactly what you expect.
+もし `>` と `<`式を頭の中で整理するのが難しい場合は、まず `(a > b)` または `(b < c)` のようなinfixバージョンを考え、次に演算子を前に移動させると `(> a b)` と `(< b c)` ができる。また、`<`と`>`に付随するものとして、`<=`と`>=`があり、これらは期待通りの働きをする。
 
-There is also a variety of "is this a that?" functions:
+また、様々な "これはあれですか？"関数もある：
 
 ```clojure
 (number? 1984)             ; Yes!
@@ -61,10 +61,10 @@ There is also a variety of "is this a that?" functions:
 (vector? [1984])           ; Yes!
 ```
 
-These will tell you if a value is a number, a string, a keyword, a map, or a vector.
+これらは、値が数値なのか、文字列なのか、キーワードなのか、マップなのか、ベクターなのかを教えてくれる。
 
 
-Clojure also features the usual cast of characters for doing more complicated Boolean logic. There is, for example, the `not` function, so that `(not true)` is `false` and `(not false)` is, unsurprisingly, `true`. There are also `and` and `or` for assembling larger Boolean expressions:
+Clojureには、より複雑なブール論理を行うための通常の記号も用意されている。例えば `not` 関数があり、`(not true)` は `false` で、`(not false)` は意外にも `true` となる。また、より大きなブール式を組み立てるための `and` や `or` もある：
 
 ```clojure
 ;; Charge extra if it's an express order or oversized
@@ -73,6 +73,6 @@ Clojure also features the usual cast of characters for doing more complicated Bo
   (and (not preferred-customer) (or express oversized)))
 ```
 
-It’s important to note that `and` and `or` do short-circuit evaluation: they evaluate just enough of their arguments to come up with a result. Thus in the last example, if we’re dealing with a preferred customer the function won’t even consider whether the order is being shipped express or is oversized.
+ここで重要なのは、`and` と `or` は評価をショートカットすることである：彼らは結果を出すために十分な引数のみを評価するのである。したがって、最後の例では、優先顧客(preferred-customer)を扱っている場合、この関数は注文が特急(express)で発送されるのか、それとも特大サイズ(oversized)なのかさえ考慮しません。
 
 

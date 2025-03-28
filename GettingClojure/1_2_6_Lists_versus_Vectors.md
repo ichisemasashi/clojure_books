@@ -1,47 +1,47 @@
 
-### Lists versus Vectors
+### リストとベクター
 
-So if vectors and lists are both ordered, sequential data structures, why have both? The reason Clojure includes both vectors and lists is that while they are similar on the outside, internally these two data structures are very different. As shown in the next figure, you can think of a vector as similar to an array, a big chunk of continuous memory. Just put the first item in the first slot of your block of memory, the second item in the second, and so on.
+ベクターとリストがどちらも順序付けされたシーケンシャルなデータ構造であるなら、なぜその2つがあるのでしょうか?Clojureがベクターとリストの両方を含む理由は、見た目は似ていますが、内部的にはこの2つのデータ構造は大きく異なるからです。次の図に示すように、ベクターは配列に似ていて、連続したメモリの大きな塊だと考えることができます。最初の項目をメモリ・ブロックの最初のスロットに、2番目の項目を2番目のスロットに、といった具合です。
 
 ![fig_vectore](img/1_2_6_001.png)
 
-Lists, by contrast, are implemented as linked lists—hence the name. As illustrated in the "figure on page 22", you can think of a list as a series of two-slot objects.
+これとは対照的に、リストは連結リストとして実装される。「22ページの図」にあるように、リストは一連の2個の空き領域オブジェクトと考えることができる。
 
 ![fig_list](img/1_2_6_002.png)
 
-One slot contains a reference to some data item while the second slot points at the next object in the list.
+1 番目の空き領域はあるデータ項目への参照を含み、2 番目の空き領域はリストの次のオブジェクトを指す。
 
-These two ways of organizing a single-file line of items have very different strengths. For example, getting to the 654th item of a vector is quick—behind the scenes Clojure does a little address arithmetic and there is the 654th item. In contrast, getting to the 654th item on a list involves running down the chain of all the previous items one at a time.
+アイテムの単一ファイル列を整理するこれらの2つの方法は、非常に異なる強みがあります。例えば、ベクターの654番目のアイテムに到達するのは速いです-舞台裏でClojureはちょっとしたアドレス演算を行い、654番目のアイテムがそこにあります。対照的に、リストの654番目のアイテムに到達するには、すべての前のアイテムの連鎖を一度に1つずつ下っていく必要があります。
 
 > [!NOTE]
 >
-> **How Many Slots?**
+> **スロットの数は？**
 >
-> Those two-slot list objects actually have three slots. The third slot is a count of the number of items in the list. This enables the `count` function do its thing without having to run down the whole list saying, One item, two items, three items …. We can get away with caching the count because lists are immutable.
+> 2スロットのリスト・オブジェクトには、実際には3つのスロットがあります。3つ目のスロットはリスト内のアイテムの数を表すものです。これにより、アイテムが1つ、2つ、3つ......とリスト全体を実行しなくても、`count`関数が実行できるようになる。リストは不変なので、カウントをキャッシュしても問題はない。
 
-However, the advantage does not lay entirely with the vectors. It’s much easier—and quicker—to tack a new item to the front of a list than a vector: with a list you just allocate a new two-slot thingie, then point the one slot at your item and the other slot at the original list. Since vectors rely on more or less continuous chunks of memory, adding a new item to the front is a lot more involved and might require allocating more memory and copying items from here to there. On the other hand, adding a new item to the end of a vector can be quick if there happens to be room at the end of the block of memory.
+しかし、その利点はベクターだけにあるわけではない。ベクターよりもリストの前に新しい項目を追加する方がずっと簡単で、しかも速い。リストでは、新しい2つのスロットを確保し、1つのスロットを項目に、もう1つのスロットを元のリストに向けるだけだ。ベクターは多かれ少なかれ連続したメモリの塊に依存しているため、新しいアイテムを先頭に追加するには、より多くのメモリを割り当て、アイテムをあちこちにコピーする必要があるかもしれません。一方で、ベクターの末尾に新しい項目を追加する場合は、メモリ・ブロックの末尾に空きがあればすぐに行えます。
 
-The implementation difference between lists and vectors bubbles to the surface very clearly with the `conj` function. Recall that `conj` takes a collection and an item and returns a new collection with all of the stuff from the original, plus the new item. Significantly, `conj` is aware of the differing strengths of vectors and lists and acts accordingly: it efficiently tacks the new item to the front of lists but to the end of vectors, so that
+リストとベクターの実装の違いは `conj` 関数ではっきりと表面化する。`conj`はコレクションとアイテムを受け取り、元のコレクションに新しいアイテムを加えたものを返す。重要なのは、`conj` はベクターとリストの強みが異なることを認識していて、それに従って動作することです。
 
 ```clojure
 (def poems '("Iliad" "Odyssey" "Now We Are Six"))
 (conj poems "Jabberwocky")
 ```
 
-will give you
+それは以下のような結果となる。
 
 ```clojure
 ("Jabberwocky" "Iliad" "Odyssey" "Now We Are Six")
 ```
 
-On the other hand, adding a new item to a vector with `conj` puts the item at the end, so that
+一方、 `conj` を使ってベクターに新しいアイテムを追加すると、そのアイテムは最後に置かれます。
 
 ```clojure
 (def vector-poems ["Iliad" "Odyssey" "Now We Are Six"])
 (conj vector-poems "Jabberwocky")
 ```
 
-will return
+これが返される。
 
 ```clojure
 ["Iliad" "Odyssey" "Now We Are Six" "Jabberwocky"]

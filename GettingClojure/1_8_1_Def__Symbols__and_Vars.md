@@ -1,6 +1,6 @@
 
 ## CHAPTER 8 Def, Symbols, and Vars
 
-So far in our Clojure adventures we’ve been using `def` to associate names with values without thinking about what exactly we were doing. There is more to `def` than meets the eye. So in this chapter we’re going to take a long look at the machinery behind `def`. We’ll start with a quick review of the syntax and intent of def before we move to an exploration of the remarkably transparent mechanisms lurking just behind the scenes. And along the way we’ll discover two new Clojure data types, the symbol and the var. Finally we’ll come back to the difference between the bindings created by `def` and `let` and look at some interesting real-world uses of `def`. Let’s get started.
+これまでClojureの冒険では、名前と値を関連付けるために`def`を使ってきた。`def`には見た目以上のものがある。そこで、この章では `def` の背後にある仕組みをじっくりと見ていくことにする。defのシンタックスと意図の簡単な復習から始めて、舞台裏に潜む驚くほど透明なメカニズムの探求に移る。最後に、`def`と`let`によって作成されるバインディングの違いに戻り、`def`の興味深い実際の使用例を見ていきます。それでは始めよう。
 
 

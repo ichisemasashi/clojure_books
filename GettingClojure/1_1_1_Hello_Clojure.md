@@ -2,9 +2,9 @@
 
 ## CHAPTER 1 Hello, Clojure
 
-This is where the fun starts: In this chapter I’m going to take you through the basic elements of Clojure, at the just enough knowledge to be dangerous level. By the time you get to the end of this chapter you’ll be familiar with Clojure’s very simple syntax and you’ll know about many of the basic Clojure data types. Most importantly, you will be able to create and use the fundamental unit of Clojure code, the function. A couple of things to keep in mind as you read:
+ここからが楽しいところです： この章では、Clojureの基本的な要素を、危険なレベルになるのに十分な知識で説明します。この章が終わる頃には、Clojureの非常にシンプルな構文に慣れ、基本的なClojureデータ型の多くについて知っているでしょう。最も重要なことは、Clojureコードの基本単位である関数を作成して使用できるようになることです。読むときに覚えておいてほしいことがいくつかあります：
 
-First, I can’t actually teach you Clojure. All I can do is to serve as your guide, to take you around, show you the sights, point out the cool bits, and warn you about the occasional pothole. It’s up to you, armed with patience and a keyboard, to do the real work of exploring the land of Clojure.
+まず、私は実際にClojureを教えることはできません。私ができることは、ガイドとしてあなたを案内し、観光スポットを案内し、クールな部分を指摘し、時折落とし穴について警告することだけです。Clojureの土地を探検する本当の仕事をするのは、忍耐とキーボードで武装したあなた次第です。
 
-Second, know that Clojure is worth the effort. Clojure enables you to write clean, compact code that does what you want it to do. In fact, as we go along you’ll discover that the Clojure way of programming provides enormous power wrapped up in lovely, elegant code. Let’s get started.
+第二に、Clojureは努力する価値があるということを知ってください。Clojureは、あなたが望むことをするクリーンでコンパクトなコードを書くことを可能にします。実際、Clojureのプログラミング方法が、美しくエレガントなコードに包まれた巨大なパワーを提供することが、この先に進むにつれて分かってくるでしょう。さっそく始めましょう。
 

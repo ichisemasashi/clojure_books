@@ -1,17 +1,17 @@
 
 ### Reduce
 
-Sometimes you don’t need to transform each item of a collection the way that `map` or `for` does. Sometimes what you need is to combine all the elements of a collection into a single value. For this we have `reduce`. Like `map`, `reduce` takes a function and a sequence and calls the function for each item in the sequence.
+`map`や`for`のようにコレクションのそれぞれの項目を変換する必要がないこともある。コレクションのすべての要素を1つの値にまとめる必要があることもある。そのために `reduce` がある。`map` と同様に、 `reduce` は関数とシーケンスを受け取り、シーケンス内の各要素に対して関数を呼び出す。
 
-Unlike `map`, `reduce` passes two arguments to the function—along with the element from the collection, your function gets called with the current result. Each time `reduce` calls your function, it updates the current result with the return value from that call. When `reduce` runs out of elements, it returns the last result.
+`map` とは異なり、 `reduce` は関数に2つの引数を渡す。コレクションの要素と、現在の結果と共に関数が呼び出される。`reduce` があなたの関数を呼び出すたびに、その呼び出しの戻り値で現在の結果を更新する。`reduce`が要素を使い果たしたら、最後の結果を返す。
     
-Although there are a lot of variations on how you can use `reduce`, the easiest to grasp is where you pass in three things: a two-argument function, an initial value, and the collection. Do this, and `reduce` will kick things off by calling the function with the initial value and the first item in the collection and then roll from there. To make this a little more real, let’s imagine we wanted to sum up all the numbers in this vector:
+`reduce`の使い方には様々なバリエーションがあるが、最も理解しやすいのは、2つの引数を持つ関数、初期値、コレクションの3つを渡す方法である。これを実行すると、 `reduce` は初期値とコレクション内の最初のアイテムを使って関数を呼び出し、そこから処理を開始する。これをもう少し具体的にするために、このベクター内のすべての数値を合計したいと想像してみよう：
 
 ```clojure
 (def numbers [10 20 30 40 50])
 ``` 
 
-We’ve already seen that you could do this with `apply`, but you can also get it done with `reduce`:
+`apply`でこれができることはすでに見たが、`reduce`でもできる：
 
 ```clojure
 (defn add2 [a b] 
@@ -20,26 +20,26 @@ We’ve already seen that you could do this with `apply`, but you can also get i
 (reduce add2 0 numbers)
 ```
 
-Run the preceding code, and you will get the sum.
+先のコードを実行すると、合計が得られる。
 
 
-You get that sum because `reduce` called the `add2` function, first with your starting value (0) and the first element of the `numbers` (10). It got the result (again 10), and then called the function again with the new result (10) and the second element (20), and so on down the line, eventually returning the last result.
+合計が得られるのは `reduce` が `add2` 関数を呼び出したからで、まず開始値（0）と `numbers` の最初の要素（10）を指定した。その結果（再び10）が得られ、新しい結果（10）と2番目の要素（20）で再び関数を呼び出し、そして最終的に最後の結果を返します。
 
-We can simplify this last example quite a bit. Take the `add2` function: all it does is add its arguments together. Well, we already have a function that does that. It goes by the name of `+`:
+この最後の例をもう少し単純化することができる。`add2`関数を考えてみよう。さて、それを行う関数はすでにある。それは `+` という名前だ：
 
 ```clojure
 (reduce + 0 numbers)
 ```
 
-We don’t even need the initial value. If you omit the initial value from the call to `reduce`, `reduce` will use the first element of the collection as the initial value, which—since we’re just adding up numbers—works fine:
+初期値も必要ない。`reduce`の呼び出しから初期値を省略すると、`reduce`はコレクションの最初の要素を初期値として使用し、これは単なる数字の足し算なのでうまくいく：
 
 ```clojure
 (reduce + numbers)
 ```
 
-There is something elegant and wonderful about the brevity of code like this.
+このような簡潔なコードにはエレガントで素晴らしいものがある。
 
-Don’t get the idea that `reduce` is only for adding numbers. Think of `reduce` as the basic tool for combining—or reducing—the items of a sequence into a single value. For example, you can use `reduce` to find the highest-priced book in your collection:
+`reduce`は数値を足すためだけのものだと思わないでほしい。`reduce`はシーケンスのアイテムを組み合わせて一つの値にするための基本的なツールだと考えてほしい。例えば、 `reduce` を使って、コレクションの中で一番高い値段の本を見つけることができる：
 
 ```clojure
 (defn hi-price [hi book]

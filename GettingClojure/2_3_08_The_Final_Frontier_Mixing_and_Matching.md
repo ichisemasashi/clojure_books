@@ -1,9 +1,9 @@
 
-### The Final Frontier: Mixing and Matching
+### 最後のフロンティア：ミックスとマッチング
 
-So far we have seen how to destructure sequential things like vectors and lists. We’ve also seen how to destructure our way into maps. What we haven’t done yet is destructure a mixture of the two, perhaps a map in a vector or a vector in a map. Fortunately, it’s just more of the same: to destructure a mix of sequences and maps, you mix the destructuring syntax in exactly the way that you would guess.
+これまで、ベクターやリストのようなシーケンシャルなものをデストラクチャする方法を見てきた。また、マップをデストラクチャする方法も見てきた。まだやっていないのは、この2つの混合物、おそらくベクターの中のマップか、マップの中のベクターのようなものをデストラクチャすることだ。シーケンスとマップを混ぜてデストラクチャリングするには、デストラクチャリング構文を想像通りの方法で混ぜてください。
 
-Take this vectors-inside-of-a-map conglomeration:
+このベクターとマップの中のベクターが混ざったものを見てみよう：
 
 ```clojure
 (def author {:name "Jane Austen"
@@ -11,7 +11,7 @@ Take this vectors-inside-of-a-map conglomeration:
                      {:title "Emma" :published 1815}]})
 ```
 
-We can get hold of Jane’s name and the information about Emma with a simple
+ジェーンの名前とエマに関する情報は、以下の簡単な操作で入手できる。
 
 ```clojure
 (let [{name :name [_ book] :books} author]
@@ -19,14 +19,14 @@ We can get hold of Jane’s name and the information about Emma with a simple
   (println "One of the author's books is" book))
 ```
 
-Alternatively, if we had a couple of maps inside of a vector, perhaps like this:
+あるいは、ベクターの中にいくつかのマップがあった場合、おそらく次のようになるだろう：
 
 ```clojure
 (def authors [{:name "Jane Austen" :born 1775}
               {:name "Charles Dickens" :born 1812}])
 ```
 
-we could easily dig down into the dates of birth:
+生年月日を調べるのは簡単だ：
 
 ```clojure
 (let [[{dob-1 :born} {dob-2 :born}] authors]

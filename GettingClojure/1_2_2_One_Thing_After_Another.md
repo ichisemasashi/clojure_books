@@ -1,55 +1,55 @@
 
-### One Thing After Another
+### 次から次へと
 
-The vector is one of Clojure’s most widely used—and useful—data structures.  It’s just an ordered collection of items. Here, for example, is a vector of four numbers:
+ベクターはClojureで最も広く使われ、便利なデータ構造の1つです。 これは単にアイテムの順序付きコレクションです。例えば、ここに4つの数字のベクターがあります：
 
 vector/examples.clj
 ```clojure
 [1 2 3 4]
 ```
 
-Syntactically, our little four-element vector could not be simpler: it’s just four values surrounded by a pair of square brackets, sans commas. While our first vector contained only numbers, there is no requirement that all the items in a vector be of the same type. You can, for example, mix in strings:
+構文的には、この小さな4要素ベクターはこれ以上ないほどシンプルだ。カンマを除いた4つの値を角括弧で囲むだけである。最初のベクターは数字だけだったが、ベクター内のすべての項目が同じ型である必要はない。例えば、文字列を混ぜることもできる：
 
 ```clojure
 [1 "two" 3 "four"]
 ```
 
-Or Booleans:
+あるいはブール値：
 
 ```clojure
 [true 3 "four" 5]
 ```
 
-You can even nest vectors within vectors:
+ベクターの中にベクターを入れ子にすることもできる：
 
 ```clojure
 [1 [true 3 "four" 5] 6]
 ```
 
-And then do it again:
+そして、もう一度やる：
 
 ```clojure
 [0 [1 [true 3 "four" 5] 6] 7]
 ```
 
-Or Booleans:
+あるいはブール値：
 
 ```clojure
 [true 3 "four" 5]
 ```
 
-You can even nest vectors within vectors:
+ベクターの中にベクターを入れ子にすることも可能だ：
 
 ```clojure
 [1 [true 3 "four" 5] 6]
 ```
 
-And then do it again:
+そして、もう一度やる：
 
 ```clojure
 [0 [1 [true 3 "four" 5] 6] 7]
 ```
 
-You can, in fact, embed any Clojure value in a vector.
+実際、どんなClojure値でもベクトルに埋め込むことができる。
 
 

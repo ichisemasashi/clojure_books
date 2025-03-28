@@ -1,7 +1,7 @@
 
-### Wrapping Up
+### まとめ
 
-In this chapter we looked at decision-making in Clojure. We saw how Clojure sports a straightforward family of logical expressions: everything from the generic `if` and `when` to the multiway `cond` and `case`. We also explored the sometimes-less-voluntary changes in the flow of your program with `try`, `catch`, and `throw`. But mostly we looked at Clojure’s take on Boolean logic, which counts `false` and `nil` as falsy and everything else as truthy.
+この章では、Clojureでの意思決定について見てきました。一般的な `if` や `when` から多方向の `cond` や `case` までです。また、`try`、`catch`、`throw`を使ったプログラムのフローの時にはあまり自発的ではない変更についても探った。しかし、ほとんどの場合、Clojureのブール論理について見てみたが、これは `false` と `nil` を偽とカウントし、それ以外を真とカウントする。
 
-Now that you’ve tamed the if and plumbed the depths of truth, it’s time to revisit functions and discover that there is much more to them than we’ve seen so far.
+さて、ifを手なずけて真理の深淵を探ったところで、関数を再検討して、これまで見てきたよりもはるかに多くのものがあることを発見しましょう。
 

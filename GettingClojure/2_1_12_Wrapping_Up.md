@@ -1,8 +1,8 @@
 
-### Wrapping Up
+### まとめ
 
-In this chapter we looked at sequences, the Clojure abstraction that erases the differences between the various Clojure collection types and allows us treat them all like "one darned thing after another". We also thought a bit about how sequences are implemented and we looked at the rich toolkit of functions that lets you do useful things with your sequences. Finally, we looked at some situations when it’s best not to forget that a vector is a vector and a map is a map.
+この章では、様々なClojureコレクション型の違いを消し、それらをすべて "次から次へと出てくる "ように扱うことを可能にするClojureの抽象化であるシーケンスについて見てきました。また、シーケンスがどのように実装されるかについて少し考え、シーケンスで便利なことをできるようにする関数の豊富なツールキットについて見ました。最後に、ベクターはベクターであり、マップはマップであることを忘れてはいけない場面について考えました。
 
-In the next chapter we’ll explore lazy sequences, which combine the ideas of functional programming with the sequence abstraction to come up with something powerful and extraordinary.
+次の章では、関数型プログラミングのアイデアとシーケンスの抽象化を組み合わせることで、強力で驚異的なものを生み出す遅延シーケンスについて説明します。
 
 

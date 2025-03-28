@@ -1,7 +1,7 @@
       
-### In the Wild
+### 野生の中で
       
-Real-life Clojure functions are full of let expressions. In fact, `let` is one of the most commonly used Clojure features, up there with `defn` and `def`. If, for example, you look at the Ring source code you will find the `parse-params` function. Here’s a slightly simplified version of it:
+実際のClojure関数はlet式でいっぱいです。実際、 `let` は `defn` や `def` と並んで最もよく使われる Clojure の機能の1つです。例えば、Ringのソースコードを見ると、 `parse-params` 関数があります。以下はその少し簡略化したものです：
 
 ```clojure
 (defn parse-params [params encoding] 
@@ -9,9 +9,9 @@ Real-life Clojure functions are full of let expressions. In fact, `let` is one o
     (if (map? params) params {})))
 ```
 
-Without diving into the belts and pulleys of Ring, we can deduce that `parse-params` decodes some raw parameter data into a value that is either a map or something else, presumably `nil`. Once it has the result of that decoding bound to `params—courtesy` of `let`—it proceeds to return the decoded value if it is indeed a map, or an empty map if it’s not. 
+Ringの各パーツについて詳しく説明するまでもないが、 `parse-params` は生のパラメータデータをデコードして、マップかそれ以外の値（おそらく `nil`）に変換する。デコードの結果を `let` の `params-courtesy` に渡すと、デコードされた値が本当にマップであればその値を返し、マップでなければ空のマップを返す。
 
-If you dig around in Ring some more you’ll discover the `assoc-query-params` function, which uses `parse-params`. Here is a slightly simplified version of that function, which has a vanilla let embedded in an `if-let`:
+Ringをもう少し調べてみると、`parse-params`を使用する `assoc-query-params` 関数を発見できるだろう。その関数を少し簡略化したものがこちらで、`if-let`の中にバニラletが埋め込まれています：
 
 ```clojure
 (defn assoc-query-params
@@ -25,9 +25,9 @@ If you dig around in Ring some more you’ll discover the `assoc-query-params` f
       {:query-params {}, :params {}})))
 ```
 
-Pull the query string out of the request and call it `query-string` and, if you actually got something, proceed to parse the parameters and call the result in `params` and then … well, you get the picture.
+リクエストからクエリー文字列を取り出し、それを `query-string` と呼び、実際に何かを取得したら、パラメーターをパースして `params` で結果を呼び出します。
 
-For a truly imposing example of a `let`, we need to look no further than this, from [Incanter](http://incanter.org) :]
+本当に見事な`let`の例としては、[Incanter](http://incanter.org)にあるこれ以外にはないだろう。
 
 
 ```clojure
@@ -49,6 +49,6 @@ For a truly imposing example of a `let`, we need to look no further than this, f
 )
 ```
 
-The preceding code, which is used in drawing histograms, binds no less then a dozen names. Glossing over the details—which thankfully need not concern us here—we can see that `opts`, which is defined right out of the gate, is used nine times later on in the `let`. Look a little more closely, and you can see that the value of opts comes out of an `if` expression, while the value of `y-lab` is computed with an `if` embedded in an `or`. Behold the power of an expression-based language.
+ヒストグラムの描画に使用される先のコードでは、12個以上の名前がバインドされている。詳細はここでは省くが、冒頭で定義された`opts`が後の`let`で9回使われていることがわかる。`y-lab`の値は`or`に埋め込まれた`if`で計算されている。式ベースの言語の威力を見よ。
 
-The other thing to behold is how much computing gets done inside the square brackets of this `let`. There are `if`s and `or`s and a number other function calls going off in there. The lesson here is that if you have an intricate set of step-by-step values to compute, consider doing it inside the square brackets of `let`, giving each intermediate result an informative name. Your future self will thank you.
+もう一つは、この `let` の角括弧の中でどれだけの計算が行われているかということだ。`if`や`or`、その他多くの関数呼び出しがこの中で行われているのだ。ここでの教訓は、もし複雑なステップを踏んで計算する値があるのなら、`let`の角括弧の中で計算することを考え、それぞれの中間結果に有益な名前をつけることだ。未来の自分はあなたに感謝するだろう。

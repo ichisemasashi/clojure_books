@@ -1,7 +1,7 @@
 
-### Pry Open Your Data
+### データをこじ開ける
 
-To see how we can use destructuring to peel back the layers of our data structures, we’ll start by disassembling something simple and work from there. Take this not-very-intimidating vector:
+デストラクチャリングを使ってどのようにデータ構造のレイヤーを剥がすことができるかを見るために、まずは簡単なものを分解して、そこから作業してみよう。このあまり難しくないベクターを見てみよう：
 
 destructuring/examples.clj
 
@@ -9,9 +9,9 @@ destructuring/examples.clj
 (def artists [:monet :austen])
 ```
 
-and imagine you wanted to separate out the two keywords. There are a lot of ways to do that separation, but given that we’re only dealing with a two-element vector, we might go for the `first` function and its convenient sibling, `second`.
+この2つのキーワードを分離したいとします。分離する方法はたくさんあるが、ここでは2要素のベクターしか扱わないので、`first`関数とその便利な兄弟である`second`を使うことにしよう。
 
-So running this:
+そこでこれを実行する：
   
 ```clojure 
 (let [painter (first artists)
@@ -20,9 +20,9 @@ So running this:
            "and the novelist is" novelist))
 ```
 
-will give you the right values in `painter` and `novelist`.
+これで `painter` と `novelist` に正しい値が入る。
 
-Destructuring provides an alternative to this kind of hand disassembly. Here’s the destructuring version of the same `let`:
+デストラクチャリングは、このような手作業による逆アセンブルに代わる方法を提供する。以下に同じ `let` のデストラクチャリングバージョンを示します：
 
 ```clojure
 (let [[painter novelist] artists]
@@ -31,15 +31,15 @@ Destructuring provides an alternative to this kind of hand disassembly. Here’s
 ```
   
 
-Notice how the left side of the `let` binding equation, instead of being a simple symbol, is now a vector of symbols: `[painter novelist]`. That left-side vector acts as a sort of template for the `artists` vector. Essentially we’re saying, "Match up—and bind—the symbols in the first vector with the corresponding values in the second vector". Thus the symbol `painter` gets bound to `:monet` and `novelist` gets bound to `:austen`. The nice thing about destructuring is how well it scales.
+`let`の束縛式の左辺が、単純なシンボルではなく、シンボルのベクターになっていることに注目してほしい：`[painter novelist]`。この左辺のベクターは`artists`のベクターのテンプレートのような働きをする。要するに、私たちは「最初のベクターにあるシンボルをそれに対応する次のベクターにある値に一致させ、束縛しなさい」と言っているのだ。したがって、`painter`というシンボルは`:monet`にバインドされ、`novelist`は`:austen`に束縛される。デストラクチャリングのいいところは、うまくスケールできることだ。
 
-If we had more values in our vector, perhaps like this:
+もしベクターにもっと多くの値があったとしたら、おそらくこのようになるだろう：
 
 ```clojure
 (def artists [:monet :austen :beethoven :dickinson])
 ```
 
-we could just add more names to the names vector:
+ベクターにどんどん要素を追加していけばいい：
 
 ```clojure
 (let [[painter novelist composer poet] artists]
@@ -49,7 +49,7 @@ we could just add more names to the names vector:
   (println "The poet is" poet))
 ```
 
-and get our symbols bound.
+そして、シンボルを束縛する。
 
 
 

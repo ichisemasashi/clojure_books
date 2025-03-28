@@ -1,26 +1,26 @@
 
-### Staying Out of Trouble
+### トラブルに巻き込まれないために
 
-Perhaps the biggest danger vars pose to the new Clojure programmer grows out of the fact that vars look a lot like the familiar variables that we find in traditional programming languages. And the name "var" doesn’t help.
+おそらく、新しいClojureプログラマにvarsがもたらす最大の危険は、varsが伝統的なプログラミング言語で見かけるおなじみの変数とよく似ているという事実から生じています。そして、"var "という名前は助けになりません。
 
-Don’t try to use vars as variables. In particular, don’t rely on changing the value of a var to model the changing state of the outside world. Clojure has other, more appropriate tools for modeling the changing state of the world, tools that we’ll look at in "Chapter 18, State, on page 215".
+varsを変数として使おうとしてはいけません。特に、外界の状態の変化をモデル化するためにvarの値を変更することに依存しないでください。Clojureには、変化する世界の状態をモデル化するための、より適切な他のツールがあります。
 
-Do use vars to weave the parts of your program together with intention-revealing names. For the most part you want to `def` your values, `defn` your functions, and then "leave them alone". Yes, you can bind a symbol to a value with `def` and then go right back in and bind that same symbol to a different value with a second `def`. And yes, `binding` also exists. But you should not be doing any of that terribly often.
+varsを使用して、意図を明らかにするような名前で、プログラムの部分をまとめましょう。ほとんどの場合、値を「`def`」し、関数を「`defn`」して、あとは「ほったらかし」にしたいものです。そう、あるシンボルをある値に`def`でバインドし、すぐに戻って同じシンボルを別の値に`def`でバインドすることができる。そして、`binding`も存在する。しかし、そのようなことを頻繁にする必要はないだろう。
 
-One last thing to keep in mind is that `let` does not create vars. Thus, if you do this:
+最後に覚えておいてほしいのは、`let`はvarを作らないということだ。したがって、このようにすれば
 
 ```clojure
 ;; Don't do this!
 (let [let-bound 42] #'let-bound)
 ```
 
-you will see something like this:
+を見ると、このように表示される：
 
 ```
 CompilerException java.lang.RuntimeException:
    Unable to resolve var: let-bound...
 ```
 
-That’s because there are no vars behind `let` bindings. Instead the bindings produced by `let` are more like the variables are in other programming languages, implemented by some behind-the-scenes magic performed by the Clojure compiler.
+それは`let`による束縛の裏にはvarsが存在しないからです。その代わりに `let` によって生成される束縛は、他のプログラミング言語における変数のようなもので、Clojureコンパイラによって実行される舞台裏の魔法によって実装されます。
 
 

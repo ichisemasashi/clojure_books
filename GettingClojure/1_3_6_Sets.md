@@ -1,64 +1,64 @@
 
-### Sets
+### セット
 
-Along with maps, Clojure also sports a built-in set data type. The literal syntax for a set borrows the braces from maps but adds a `#` to the front:
+マップと並んで、Clojureには組み込みのセット・データ型もあります。セットのリテラル構文は、マップから波括弧を借用しますが、先頭に `#` を追加します：
 
 ```clojure
 (def genres #{:sci-fi :romance :mystery})
 (def authors #{"Dickens" "Austen" "King"})
 ```
 
-Like their mathematical namesakes, Clojure sets are all about membership: a value either is or is not a member of a set. Since a value can only be in a set once, if you repeat a value in a set literal, you’ll get an error. Thus, this:
+数学の名前と同じように、Clojureのセットはメンバーシップに関するものです。値がセットのメンバーであるか、そうでないかです。値がセットに入るのは一度だけなので、セット・リテラルで値を繰り返すとエラーになります。したがって、このようになります：
 
 ```clojure
 #{"Dickens" "Austen" "Dickens"}
 ```
 
-is one "Dickens" too many:
+は " Dickens " が多すぎる：
 
 ```
 IllegalArgumentException Duplicate key: Dickens...
 ```
 
-Like maps, sets have their own ideas about the order of their elements. The set that you wrote as `#{:sci-fi :romance :mystery}` is liable to come back to you as `#{:sci-fi :mystery :romance}`.
+マップと同じように、セットにも要素の順序に関する独自の考え方がある。あなたが`#{:sci-fi :romance :mystery}` と書いたセットは、`#{:sci-fi :mystery :romance}` と戻ってくる可能性がある。
 
-Since sets are all about membership, the main thing you can do with them is discover if this or that value is in the set. You can check set membership with the `contains?` function, which will return either `true` or `false`:
+セットはメンバーシップに関するものなので、セットでできる主なことは、この値がセットに入っているかどうかを調べることです。関数 `contains?` はセットのメンバーシップをチェックすることができ、`true` か `false` のどちらかを返します：
 
 ```clojure
 (contains? authors "Austen") ; => true
 (contains? genres "Austen") ; => false
 ```
 
-Or you can use the set like a function, in which case it will return either the value or `nil`:
+セットを関数のように使うこともでき、その場合は値か`nil`のどちらかを返す：
 
 ```clojure
 (authors "Austen") ; => "Austen"
 (genres :historical) ; => nil
 ```
 
-If you happen to be looking for a keyword in your set, you can switch things around and use the keyword as a function:
+セットの中でたまたまキーワードを探している場合は、物事を切り替えてキーワードを関数として使うことができる：
 
 ```clojure
 (:sci-fi genres) ; => :sci-fi
 (:historical genres) ; => nil
 ```
 
-You can create a larger set from an existing set with our old friend `conj`:
+古くからの友人である `conj` を使えば、既存のセットからより大きなセットを作ることができる：
 
 ```clojure
 ;; A four element set.
 (def more-authors (conj authors "Clarke"))
 ```
 
-It’s not an error to `conj` a value into a set a second time:
+ある値を2回目にセットへ `conj` するのはエラーではない：
 
 ```clojure
 (conj more-authors "Clarke")
 ```
 
-But it is a bit of a waste, since a value can be in a set only once.
+しかし、1つの値がセットに入るのは1回だけなので、ちょっともったいない。
 
-Finally, you can remove elements with `disj`:
+最後に、`disj`で要素を削除することができる：
 
 
 ```clojure
@@ -66,6 +66,6 @@ Finally, you can remove elements with `disj`:
 (disj more-authors "King")
 ```
 
-In this context, the word remove means make a second, smaller set.
+この文脈では、削除という言葉は、2つ目の小さなセットを作ることを意味する。
 
 

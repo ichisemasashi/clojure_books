@@ -1,29 +1,29 @@
 
-### More Interesting Laziness
+### もっと面白い怠惰
 
-While the sequences returned from `repeat` are impressive at scale, they are also relentlessly boring—just the same value over and over. We can get more interesting sequences with `cycle`. The `cycle` function takes a collection and returns a lazy sequence of the items in the collection repeated over and over.
+`repeat`から返されるシーケンスはスケールが大きければ印象的だが、同じ値の繰り返しでつまらない。`cycle`を使えば、もっと面白いシーケンスを得ることができる。`cycle`関数はコレクションを受け取り、コレクション内のアイテムを何度も繰り返して遅延シーケンスを返す。
 
-So this:
+つまり、こうなる：
 
 ```clojure
 (take 7 (cycle [1 2 3]))
 ```
 
-will give you `(1 2 3 1 2 3 1)`.
+を使うと、`(1 2 3 1 2 3 1)`が得られる。
 
-We can generate still more interesting sequences with `iterate`. To use `iterate` you pass it a function and a starting value:
+`iterate` を使えば、さらに面白いシーケンスを生成することができる。`iterate` を使うには、関数と開始値を渡す：
 
 ```clojure
 (def numbers (iterate inc 1))
 ```
 
-The `iterate` function returns a sequence whose first element is the value you passed in, in our example the `1`, so that this:
+`iterate` 関数は、渡された値（この例では `1`）を最初の要素とするシーケンスを返します：
 
 ```clojure
 (first numbers)
 ```
 
-returns `1`. The plot thickens with the second item, which is the value returned by applying the function to the first value. In the example this would be `(inc 1)`, so the second item is `2`. And the third value is the function applied to the second value, so `3`. And off we go:
+これは`1`を返す。このプロットは2番目の項目で厚くなり、これは最初の値に関数を適用して返される値である。この例では`(inc 1)`となるので、2番目の項目は`2`となる。そして3番目の値は2番目の値に関数を適用したもので、`3`となる。ということになる：
 
 ```clojure
 (nth numbers 0) ; Returns 1
@@ -33,8 +33,8 @@ returns `1`. The plot thickens with the second item, which is the value returned
 (take 5 numbers) ; Returns (1 2 3 4 5)
 ```
 
-In principle, `numbers` contains all the positive integers starting with `1`.
+原則として、 `numbers` は `1` から始まるすべての正の整数を含む。
 
-Keep in mind that what we got back from `iterate` is not some value or object that is somehow changing as it goes from `1` to `2` and so on. Instead what we get is a solidly immutable sequence whose first element is `1` and whose second element is `2` and then `3` and so on.
+`iterate` から返されるのは、 `1` から `2` へと変化していく値やオブジェクトではないことに注意してほしい。その代わりに得られるのは、最初の要素が `1` で、2番目の要素が `2` で、その次が `3` で...というように不変なシーケンスである。
 
 

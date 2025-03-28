@@ -1,7 +1,7 @@
 
-### Laziness in Practice
+### 怠惰の実践
 
-To really get our arms around lazy sequences, let’s try a more interesting example. Suppose we needed some more or less randomly generated book maps for testing. We could sit down and manually cook up some nonsense books like this:
+遅延シーケンスを本当に理解するために、もっと面白い例を試してみよう。テスト用に、多少なりともランダムに生成された本のマップが必要だとしよう。私たちは座って、手作業でこのようなナンセンスな本を作ることができる：
 
 ```clojure
 (def test-books
@@ -14,14 +14,14 @@ To really get our arms around lazy sequences, let’s try a more interesting exa
    {:author "Chuck Austen", :title "Wheel of Time, Book 7"}])
 ```
 
-This will work, but armed with lazy sequences we can generate as many nonsense titles as we could ever want. To see how, let’s start by building some titles. We could combine a base title with some numbers to get a very finite sequence of titles: 
+しかし、遅延シーケンスを使えば、いくらでもナンセンスなタイトルを作ることができる。その方法を知るために、まずタイトルを作ってみよう。ベースとなるタイトルをいくつかの数字と組み合わせることで、有限の一連のタイトルを得ることができる： 
 
 ```clojure
 (def numbers [1 2 3])
 (def trilogy (map #(str "Wheel of Time, Book " % ) numbers))
 ```
 
-to end up with this:
+結局はこうなる：
 
 ```clojure
 ("Wheel of Time, Book 1"
@@ -29,45 +29,45 @@ to end up with this:
  "Wheel of Time, Book 3")
 ```
 
-But since we have easy access to as many numbers as we can handle, and we know that `map` is lazy, it’s a short step to an unlimited sequence of sequels:
+しかし、私たちは扱える限りの数に簡単にアクセスできるし、`map`が怠惰であることも知っている：
 
 ```clojure
 (def numbers (iterate inc 1))
 (def titles (map #(str "Wheel of Time, Book " % ) numbers))
 ```
 
-We might also need authors for our generated books. Let’s take a different tack here and generate a number of unique authors from a limited set of first names and last names. It’s easy enough to build a modest vector of canned first names:
+生成された本の著者も必要かもしれない。ここでは別の方法をとって、限られた姓と名のセットからたくさんのユニークな著者を生成してみよう。定型の姓名のささやかなベクターを作るのは簡単だ：
 
 ```clojure
 (def first-names ["Bob" "Jane" "Chuck" "Leo"])
 ```
 
-But what we really need (you’ll see why in a second) is the names repeated over and over:
+しかし、私たちが本当に必要としているのは（理由はすぐにわかるだろう）、何度も何度も繰り返される名前なのだ：
 
 ```clojure
 (cycle first-names)
 ```
 
-We also need some last names:
+苗字も必要だ：
 
 ```clojure
 (def last-names ["Jordan" "Austen" "Dickens" "Tolstoy" "Poe"])
 ```
 
-And we need a repeating sequence of those names:
+そして、その名前を繰り返す必要がある：
 
 ```clojure
 (cycle last-names)
 ```
 
-We also need a function to combine a first name with a last name to give us a full name:
+また、姓と名を組み合わせてフルネームにする関数も必要だ：
 
 ```clojure
 (defn combine-names [fname lname]
   (str fname " " lname))
 ```
 
-We can now use `map` to combine our names together to get a lazily infinite list of first- and last-name combinations:
+これで `map` を使って名前を組み合わせれば、姓と名の組み合わせの無限リストを簡単に得ることができる：
 
 ```clojure
 (def authors
@@ -76,7 +76,7 @@ We can now use `map` to combine our names together to get a lazily infinite list
     (cycle last-names)))
 ```
 
-Finally we can pull our authors and titles together into a lazy sequence of book maps:
+最後に、私たちは著者とタイトルを本のマップの怠惰なシーケンスにまとめることができます：
 
 ```clojure
 (defn make-book [title author]
@@ -84,11 +84,11 @@ Finally we can pull our authors and titles together into a lazy sequence of book
 (def test-books (map make-book titles authors))
 ```
 
-We end up with `test-books` bound to a lazy sequence that starts out like the manually generated one at the beginning of this section but then goes on forever, providing us with as many "Wheel of Time" sequels as we can stand.
+私たちは結局、このセクションの冒頭で手動で生成されたようなものから始まり、永遠に続き、私たちが耐えられるだけ多くの『時の輪』の続編を提供する、遅延シーケンスに束縛された`test-books`を持つことになる。
 
-It’s wonderful to think that every time we look at a book, perhaps by doing `(first test-books)`, we trigger a cascade of computing that generates a number, then a title, then a fresh first name and last name, and then a full name, and finally a book map. And yet on the outside `test-books` looks like a garden-variety sequence.
+本を見るたびに、おそらく`(first test-books)`を実行することで、数字が生成され、タイトルが生成され、新しい名前と姓が生成され、フルネームが生成され、最後に本のマップが生成される。しかし、外見上は`test-books`はありふれたシーケンスのように見える。
 
 
-This underlines something important about lazy sequences: they are the ultimate "pay only for what you use" programming technique. By setting up the `test-books` sequence we have provided our system with a way to generate a huge amount of data. But—and the "but" here is key—we only pay the CPU and memory price for the data that we actually use. It’s only when we grab something from the sequence that the data gets generated.
+これは遅延シーケンスについて重要なことを強調している。遅延シーケンスは究極の「使う分だけ支払う」プログラミングテクニックなのだ。`test-books`シーケンスをセットアップすることで、私たちは膨大な量のデータを生成する方法をシステムに提供した。しかし、ここでの「しかし」が重要なのだが、私たちは実際に使用するデータに対してのみCPUとメモリーの料金を支払うのである。データが生成されるのは、シーケンスから何かを取り出したときだけなのだ。
 
 

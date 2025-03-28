@@ -1,6 +1,6 @@
 
 ## CHAPTER 3 Maps, Keywords, and Sets
 
-As we saw in the last chapter, when a Clojure programmer wants to store some values one after the other, single file, they tend to reach for a vector or perhaps a list. But one thing after the other is not the only way to organize the data in your programs. Sometimes you want to take a hodgepodge of values, give each one a name, and roll them all into a single value. Perhaps you have the author’s name and the title and the date of publication and you want to pull them all together into a single bookish thing. In this chapter we’re going to look at maps, the Clojure data structure that allows you to do exactly that. Along the way we’ll run into another Clojure data structure, the set, as well as a new primitive type, the keyword. Let’s get started.
+前章で見たように、Clojureプログラマがいくつかの値を次々に、単一のファイルに格納したい場合、ベクターか、おそらくリストに手を伸ばす傾向があります。しかし、次々と値を格納することだけが、プログラムのデータを整理する唯一の方法ではありません。時には、ごちゃまぜになった値を、それぞれに名前をつけて、ひとつの値にまとめたいこともあるだろう。例えば、著者名、タイトル、出版年月日があり、それらをまとめて1冊の本というようなものにしたい場合があるでしょう。この章では、まさにそれを可能にするClojureのデータ構造であるマップを見ていきます。その過程で、もう1つのClojureデータ構造であるセットと、新しいプリミティブ型であるキーワードに出会います。さっそく始めましょう。
 
 

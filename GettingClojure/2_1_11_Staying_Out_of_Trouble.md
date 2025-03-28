@@ -1,7 +1,7 @@
 
-### Staying Out of Trouble
+### トラブルに巻き込まれないために
 
-The good news is that Clojure comes equipped with a large assortment of functions to do interesting things with sequences—so many that we can only scratch the surface in this chapter. There’s everything from `butlast` (give me all but the last element) to `zipmap` (build a map from two sequences). The bad news is that until you’re familiar with what’s available you’ll tend to reinvent the wheel. In particular, if you find yourself processing a sequence one item at a time, perhaps with `loop` and `recur`, like this:
+良いニュースは、Clojureにはシーケンスで面白いことをするための関数がたくさん用意されていることです。`butlast`（最後の要素以外をすべて渡す）から `zipmap`（2つのシーケンスからマップを作る）まである。悪いニュースとしては、利用可能なものに慣れるまでは、車輪を再発明することになりがちだということだ。特に、シーケンスを一度に1つずつ処理するような場合には、次のように `loop` と `recur` を使用することになるだろう：
 
 ```clojure
 (defn total-sales [books] 
@@ -13,13 +13,13 @@ The good news is that Clojure comes equipped with a large assortment of function
              (+ total (:sales (first books)))))))
 ``` 
 
-consider that there is probably an easier way:
+もっと簡単な方法があるはずだ：
 
 ```clojure 
 (defn total-sales [books] (apply + (map :sales books)))
 ```
 
-The other thing to keep in mind is that when you turn a specialized collection into a sequence you end up with a generic listlike thing that no longer has any of its specialized talents. Most notably, if you turn a map into a sequence it loses that rapid "key to value" superpower that makes maps so useful:
+もうひとつ注意しなければならないのは、特化されたコレクションをシーケンスに変えると、特化された能力をもはや持たない一般的なリストのようなものになってしまうということだ。最も顕著なのは、マップをシーケンスに変えた場合、マップをとても便利にしている「キーから値へ」という迅速なスーパーパワーを失ってしまうことだ：
 
 ```clojure
 (def maze-runner {:title "The Maze Runner" :author "Dashner"})
@@ -29,13 +29,13 @@ The other thing to keep in mind is that when you turn a specialized collection i
 (:author (seq maze-runner))
 ```
 
-And it’s not just explicit calls to `seq` you need to watch for, but also all those library functions that quietly return seqs, like this:
+注意しなければならないのは、明示的な`seq`呼び出しだけでなく、このように静かにseqを返すライブラリ関数もすべてだ：
 
 ```clojure
 (:author (rest maze-runner)) ; Also nil: rest returns a seq.
 ```
 
-Happily, there are functions that "do not" return sequences, most notably `conj`.  Recall that, like `cons`, `conj` is in the business of adding new items to collections:
+嬉しいことに、シーケンスを "返さない "関数もある。 `cons`と同様に、`conj`はコレクションに新しいアイテムを追加する関数である：
 
 ```clojure
 ;; A *vector* ending with "Jaws".
@@ -44,7 +44,7 @@ Happily, there are functions that "do not" return sequences, most notably `conj`
 (conj '("Emma" "1984" "The Maze Runner") "Jaws")
 ```
 
-The difference is that `conj` pays attention to the type of collection you pass in and, critically, `conj` will give you back the same flavor of collection that you pass it. That’s why `conj` can do the "new element goes at the front of lists but the back of vectors" thing. It has special-case code for each collection type. By contrast, the cons function just calls `seq` on your collection and proceeds to slap the new item on the front of the resulting sequence:
+その違いは、`conj`は渡されたコレクションの種類に注意を払い、決定的に重要なのは、`conj`は渡されたコレクションと同じ種類のコレクションを返すということだ。そのため、`conj`は "新しい要素はリストの先頭に置くが、ベクターは後ろに置く "ということが可能なのである。conjはコレクションタイプごとに特殊なケースを持つプログラムです。対照的に、cons関数は単にコレクションに対して`seq`を呼び出し、結果のシーケンスの先頭に新しいアイテムを配置します：
 
 ```clojure
 ;; A *seq* starting with "Jaws".
@@ -53,6 +53,6 @@ The difference is that `conj` pays attention to the type of collection you pass 
 (cons "Jaws" '("Emma" "1984" "The Maze Runner"))
 ```
 
-None of this means sequences are bad or that you should always fight the natural drift toward them. On the contrary, having a universal abstraction that allows you to work with vectors and sets and lists without constantly worrying about which you have is incredibly useful. But you do need to be mindful of when you have the actual thing and when you have the sequence.
+だからといって、シーケンスが悪いとか、シーケンスへの自然な流れに抗うべきだという意味ではない。それどころか、ベクターやセットやリストを、どれを持っているかを常に気にすることなく扱えるようにする普遍的な抽象化を持つことは、信じられないほど便利である。しかし、いつ実際のものを持っているのか、いつシーケンスを持っているのかに気を配る必要はある。
 
 

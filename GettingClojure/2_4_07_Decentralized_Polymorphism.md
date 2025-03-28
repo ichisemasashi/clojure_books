@@ -1,14 +1,14 @@
 
-### Decentralized Polymorphism
+### 分散型のポリモーフィズム
 
-One interesting—and useful—aspect of protocols is that you can define and implement them after the fact. Imagine, for example, that you are working on a Clojure application and six months ago one of your colleagues implemented the `Employee`, `FictionalCharacter`, and `SuperComputer` records. And now, for reasons that need not concern us, you have just been handed the job of producing a positive marketing slogan for instances of each of these record types. So you start by defining a new protocol:
+プロトコルの1つの興味深くて便利な側面は、後から定義して実装できることです。例えば、あなたがClojureアプリケーションに取り組んでいて、6ヶ月前に同僚の1人が `Employee`、`FictionalCharacter`、`SuperComputer` レコードを実装したとします。そして今、私たちが気にする必要のない理由で、あなたはこれらのレコードタイプのそれぞれのインスタンスに対して肯定的なマーケティングスローガンを作成する仕事を渡されたところです。そこで、新しいプロトコルを定義することから始める：
 
 ```clojure
 (defprotocol Marketable
   (make-slogan [this]))
 ```
 
-And then you go back and modify the `Employee`, `FictionalCharacter`, and `SuperComputer defrecords` so that they support the new protocol. Well, you could do that, but you don’t have to. Armed with Clojure’s `extend-protocol`, you can implement the new protocol for existing types independently of those type definitions:
+そして、`Employee`、`FictionalCharacter`、`SuperComputer defrecords`に戻って、新しいプロトコルをサポートするように修正する。まあ、そうすることもできるが、そうする必要はない。Clojureの `extend-protocol` を使えば、それらの型定義とは別に、既存の型に新しいプロトコルを実装することができます：
 
 ```clojure
 (extend-protocol Marketable
@@ -20,7 +20,7 @@ And then you go back and modify the `Employee`, `FictionalCharacter`, and `Super
     (make-slogan [sc] (str "This computer has " (:no-cpus sc) " CPUs!")))
 ```
 
-Notice how `extend-protocol` is a sort of inside-out `defrecord`. It starts with a single protocol and then enumerates the implementations of that protocol. Armed with `extend-protocol` you can call `make-slogan` on employees, fictional characters, and supercomputers. In fact, you can even extend your protocol to embrace data types that aren’t records:
+`extend-protocol`が一種の裏返しの`defrecord`であることに注目してほしい。それは一つのプロトコルから始まり、そのプロトコルの実装を列挙する。`extend-protocol`を使えば、従業員や架空のキャラクター、スーパーコンピュータに対して `make-slogan` を呼び出すことができる。実際、プロトコルを拡張してレコード以外のデータ型を受け入れることもできる：
 
 ```clojure
 (extend-protocol Marketable
@@ -30,6 +30,6 @@ Notice how `extend-protocol` is a sort of inside-out `defrecord`. It starts with
     (make-slogan [b] (str b " is one of the two surviving Booleans!")))
 ```
 
-This means that protocols and records are as mutually flexible as they can be. You can cook up new protocols as you need them and use `extend-protocol` to implement your new protocol on any existing type, without touching the original definition of that type.
+つまり、プロトコルとレコードは同じくらい相互に柔軟であるということだ。必要なときに新しいプロトコルを作ることができ、`extend-protocol`を使えば、その型の元の定義に触れることなく、既存の型に新しいプロトコルを実装することができる。
 
 

@@ -1,24 +1,24 @@
                  
-### In the Wild
+### 野生の中で
   
-When it comes to Clojure namespaces, there is one giant walking the land: `clojure.core`. The `clojure.core` namespace is where all of those fundamental, predefined functions—things like `println` and `str` and `count`—live. So why is it that we can just write `println` and `count` and not `clojure.core/println` and `clojure.core/count`? We rarely need the `clojure.core/` because just after it creates a new namespace, `ns` does the equivalent of this:
+Clojureの名前空間といえば、1つだけ巨大なものがある: `clojure.core`だ。 clojure.core`名前空間は、基本的で定義済みの関数、例えば `println` や `str` や `count` が存在する場所だ。では、なぜ `println` や `count` と書くだけで、 `clojure.core/println` や `clojure.core/count` と書かないのだろうか？clojure.core/`が必要になることはほとんどありません。新しい名前空間を作成した直後に、`ns`がこれと同等のことを行うからです：
 
 ```clojure
 (require '[clojure.core :refer :all]) 
 ```
 
-The `:all` option is an even more dramatic version of the `:refer` that we saw earlier.
-It pulls in "all" the bindings from the other namespace. That’s great for booting up a language environment, but perhaps not something you should use in everyday code.
+この`:all`オプションは、先ほどの`:refer`をさらに大げさにしたものだ。
+他の名前空間から「すべての」束縛を取り込みます。言語環境を起動させるのには便利ですが、日常的なコードではあまり使わない方がいいかもしれません。
 
-If you are curious about what goodies come wrapped in `clojure.core`, you could read the documentation (in fact, you should read the documentation), but given what we’ve covered in this chapter, you can also use `ns-map` to reveal all the wonders hiding in `clojure.core`:
+もし、`clojure.core`にどのような良いものが含まれているのか興味があるのであれば、ドキュメントを読むこともできますが（実際、ドキュメントを読むべきです）、この章で説明したことを考慮すると、`ns-map`を使用して、`clojure.core`に隠れているすべての不思議を明らかにすることもできます：
 
 ```clojure
 (ns-map 'clojure.core)
 ```
 
-Not only that, but you can also deduce that the `clojure.core` namespace lives in a file called `clojure/core.clj`. In fact, if you look at the Clojure source code, that is exactly [what you will find](https://github.com/clojure/clojure/blob/master/src/clj/clojure/core.clj).
+それだけでなく、`clojure.core`名前空間が`clojure/core.clj`というファイルに存在することも推測できます。実際、Clojureのソースコードを見ると、まさに[それが見つかる](https://github.com/clojure/clojure/blob/master/src/clj/clojure/core.clj)。
 
-This source file is full of all sorts of wonders, including the definition of `not`, here shown in a lightly edited form:
+このソースファイルは、`not`の定義を含む、あらゆる種類の驚異に満ちている：
 
 ```clojure
 (ns clojure.core) 
@@ -28,7 +28,7 @@ This source file is full of all sorts of wonders, including the definition of `n
   [x] (if x false true))
 ```
 
-It also holds the definition of `not=`:
+また、`not=`の定義も保持している：
 
 ```clojure
 (defn not=
@@ -39,11 +39,11 @@ It also holds the definition of `not=`:
     (not (apply = x y more))))
 ```
 
-A great way to explore your new programming language is to do exactly that: explore your new programming language, from the inside.
+新しいプログラミング言語を探求する素晴らしい方法は、新しいプログラミング言語を内側から探求することです。
 
-Of course, there is more to Clojure than just the bits that come built into the language. The Clojure world is a living, breathing technical ecosystem full of people writing and releasing code. Happily, getting to other people’s code from a Leiningen project only requires one additional step: you need to add a dependency in the Leiningen-generated `project.clj` file.
+もちろん、Clojureには言語に組み込まれた要素以上のものがあります。Clojureの世界は、コードを書いてリリースする人々でいっぱいの、生きて呼吸する技術的なエコシステムです。うれしいことに、Leiningenプロジェクトから他の人のコードにアクセスするには、1つのステップを追加するだけでよい：Leiningenが生成した`project.clj`ファイルに依存関係を追加するだけでよい。
 
-For example, if we wanted to use the Korma SQL library in our book-store application, we would just add it and its current version number—which we can get from the Korma project page—to the `:dependencies` value:
+例えば、Korma SQLライブラリをブックストア・アプリケーションで使いたい場合、そのライブラリと現在のバージョン番号（Kormaプロジェクトのページから取得できる）を`:dependencies`の値に追加するだけだ：
 
 namespace/blottsbooks-2/project.clj
 ```clojure
@@ -59,7 +59,7 @@ namespace/blottsbooks-2/project.clj
   :profiles {:uberjar {:aot :all}})
 ```
 
-and restart our REPL:
+そしてREPLを再起動する：
 
 ```bash
 $ lein repl
@@ -67,13 +67,13 @@ nREPL server started on port 54569 on host 127.0.0.1 - nrepl://127.0.0.1:54569
 ...
 ```
 
-then `require` in the Korma namespace:
+で、Korma名前空間を`require`する：
 
 ```clojure
 blottsbooks.core=> (require '[korma.db :as db])
 nil
 ```
 
-We’re in business.
+我々は今、営業中だ。
 
 

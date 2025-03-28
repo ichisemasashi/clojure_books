@@ -1,12 +1,14 @@
 
-### Records Are Maps
+### レコードはマップである
 
-No matter how you create your record instances, once you have them in hand you can treat them just like maps with keyword keys:
+レコードのインスタンスをどのように作成しても、いったんレコードが手元にあれば、キーワードのキーを持つマップと同じように扱うことができる：
 
 ```clojure
 (:name elizabeth)    ; => "Elizabeth Bennet"
 (:appears-in watson) ; => "Sign of the Four"
 ```
+
+レコードとマップの類似性は、見た目(あるいはキーワード？) 、マップを扱う関数はレコードも扱うことができる：
 
 The resemblance between records and maps is much more than skin- (or keyword?) deep: Any function that works with a map will also work with a record:
 
@@ -15,17 +17,17 @@ The resemblance between records and maps is much more than skin- (or keyword?) d
 (keys watson)     ; => (:name :appears-in :author)
 ```
 
-You can also use `assoc` to modify the values in your record:
+また`assoc`を使ってレコードの値を変更することもできる：
 
 ```clojure
 (def specific-watson (assoc watson :appears-in "Sign of the Four"))
 ```
 
-You can even `assoc` brand-new, not-in-the-record-type keys into your record instances:
+また、レコードのインスタンスに、レコードにないタイプの新しいキーを`assoc`することもできる：
 
 ```clojure
 (def more-about-watson (assoc watson :address "221B Baker Street"))
 ```
 
-You will get back a new `FictionalCharacter` instance that has the three predefined fields along with the new `:address` entry. Note that any extra values you `assoc` into your records are exactly that: extra. They get carried around like any other map fields, but they don’t affect the record type in any way and they don’t get the magic speed boost of the built-in fields.
+すると、3つの定義済みフィールドと新しい `:address` エントリを持つ新しい `FictionalCharacter` インスタンスが返されます。レコードに `assoc` した余分な値は、まさに余分な値であることに注意してください。それらは他のマップフィールドと同じように扱われますが、レコードの型には何の影響も与えませんし、組み込みフィールドのような魔法のようなスピードアップもありません。
 

@@ -1,11 +1,11 @@
 
-### Loading Namespaces
+### 名前空間の読み込み
 
-While namespaces are conceptually simple, especially if you’re working in the REPL, things do get a bit more complicated when you want to use namespaces that are stored in `.clj` files—either files you have written or those authored by others. The rub is that you need to ensure that Clojure knows to read the `.clj` file and compile it into a namespace that you can use. In short, you need to make sure the namespace you want to use is "loaded" before you try to use it.
+名前空間は概念的には単純で、特に REPL で作業している場合は簡単ですが、`.clj` ファイルに格納されている名前空間を使用したい場合、物事は少し複雑になります。それは、Clojureが `.clj` ファイルを読み込むことを知っていて、使用できる名前空間にコンパイルできることを確認する必要があることです。要するに、使いたい名前空間が "load "されていることを確認してから使う必要があります。
 
-For example, your Clojure installation comes equipped with a ready-made namespace called `clojure.data`. The `clojure.data` namespace—and the period is part of the name—contains a handy function called `diff`, which will compare two data structures, perhaps vectors, and tell you which values are only in the first, which are only in the second, and which are in both.
+例えば、Clojureのインストールには`clojure.data`という既製の名前空間が装備されています。`clojure.data`名前空間（ピリオドは名前の一部です）には `diff` という便利な関数があり、2つのデータ構造（おそらくベクター）を比較して、どの値が1つ目にのみあり、どの値が2つ目にのみあり、どの値が両方にあるかを教えてくれます。
 
-So if you had some vectors of book titles:
+つまり、本のタイトルのベクターがいくつかあったとする：
 
 ```clojure
 user=> (def literature ["Emma" "Oliver Twist" "Possession"])
@@ -14,7 +14,7 @@ user=> (def horror ["It" "Carry" "Possession"])
 #'user/horror
 ```
 
-and you wanted to compare them, you might try to use `clojure.data/diff`. Sadly, you’ll be disappointed:
+で、それらを比較したい場合、`clojure.data/diff`を使えばいいかもしれません。悲しいことに、がっかりするでしょう：
 
 ```clojure
 user=> (clojure.data/diff literature horror)
@@ -22,10 +22,10 @@ ClassNotFoundException clojure.data
   java.net.URLClassLoader.findClass (URLClassLoader.java:381)
 ```
 
-The problem is that while `clojure.data` comes packaged with your Clojure installation, it isn’t loaded by default. To use `clojure.data`—and this is true of most of the namespaces you’ll use in your Clojure career—you need to tell Clojure to read and compile the code behind the namespace.
+問題は、`clojure.data`はClojureのインストールに同梱されていますが、デフォルトではロードされないことです。clojure.data`を使用するには(これはClojureのキャリアで使用するほとんどの名前空間に当てはまります)、名前空間の背後にあるコードを読み込んでコンパイルするようにClojureに指示する必要があります。
 
 
-Fortunately, that’s not difficult. All you need is `require`:
+幸いなことに、それは難しいことではありません。必要なのは `require` だけです：
 
 ```clojure
 user=> (require 'clojure.data)
@@ -33,8 +33,8 @@ user=> (clojure.data/diff literature horror)
 [["Emma" "Oliver Twist"] ["It" "Carrie"] [nil nil "Possession"]]
 ```
 
-As you can see from the example, `require` takes the name of the namespace, which you will need to quote, and loads the code behind that namespace.
+例からわかるように、`require` は名前空間の名前を取り（引用符で囲む必要がある）、その名前空間の背後にあるコードをロードする。
 
-And once you’ve done the `require`, you can start using the contents of the namespace.
+そして、一度 `require` したら、名前空間の内容を使い始めることができる。
 
 

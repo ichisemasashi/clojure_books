@@ -1,9 +1,9 @@
     
-### Staying Out of Trouble
+### トラブルに巻き込まれないために
 
-Going from the simple-minded idea of functions as something you write and call manually to the "functions as values" idea has some interesting implications.
+"関数は手動で書いて呼び出すもの "という単純な考え方から、"関数は値 "という考え方に変わることは、いくつかの興味深い意味を持つ。
 
-Chief among these is that you don’t always know the exact context in which your function will be called. Since functions are values, they can get passed around and evaluated any number of times:
+その最たるものが、関数が呼び出される正確なコンテキストを常に知っているとは限らないということだ。関数は値なので、何度でも渡され、評価される可能性がある：
 
 ```clojure
 (defn execute-that-function-three-times [your-function]
@@ -12,7 +12,7 @@ Chief among these is that you don’t always know the exact context in which you
   (your-function))
 ```
 
-Or they might get called sometime later. For example, we might use `Thread/sleep` to wait 372 milliseconds before calling your function:
+あるいは、後で呼び出されるかもしれない。例えば、関数を呼び出す前に372ミリ秒待つために `Thread/sleep` を使うかもしれない：
 
 ```clojure
 (defn execute-that-function-later [your-function]
@@ -20,14 +20,14 @@ Or they might get called sometime later. For example, we might use `Thread/sleep
   (your-function))
 ```
 
-Or it might never get called:
+あるいは、決して呼ばれないかもしれない：
 
 ```clojure
 (defn execute-that-function-never [your-function]
   (+ 2 2))
 ```
 
-Or it might get called in some odd combination:
+あるいは、奇妙な組み合わせで呼ばれるかもしれない：
 
 
 ```clojure
@@ -36,12 +36,12 @@ Or it might get called in some odd combination:
     #(execute-that-function-later your-function)))
 ```
 
-Given all this, the functional programmer’s Prime Directive is simple: try to write functions that "don’t care" about the context in which they are called. In practice this means you should avoid writing functions that rely on or generate side effects. In functional programming, the best functions are the ones that look only at their arguments and produce only their return value. They don’t read, create, or delete files; they don’t roll the current time or date into their answer; and they certainly don’t consult the user for input. They just look at their arguments and come up with a result. We even have an appropriately positive term for functions that follow these rules. We call them "pure functions".
+これらのことを考えると、関数型プログラマーの基本方針は単純で、呼び出されるコンテキストを「気にしない」関数を書くことだ。つまり実際には、副作用に依存したり、副作用を発生させたりする関数を書かないようにするということです。関数型プログラミングでは、引数だけを見て戻り値だけを返す関数が最も優れている。それらはファイルを読み込んだり、作成したり、削除したりしませんし、現在の時刻や日付を答えに巻き込んだりしません。引数を見て結果を出すだけだ。このようなルールに従った関数を、私たちは好意的な言葉で表現しています。私たちはそれを「純粋関数」と呼んでいる。
 
-The good news is that pure functions are not hard to write. In fact, take out the `printf`s that we’ve sprinkled here and there, and all the functions we’ve written in this chapter are indeed pure. From `adventure?` to `cheap-horror?`, we’ve managed—without even trying—to write functions that look only at their arguments to come up with a return value. The goal of writing pure functions also explains the immutability of Clojure’s data structures: by disallowing inplace modification of vectors and maps and all the rest, Clojure outlaws a whole class of side effects.
+良いニュースは、純粋関数を書くのは難しくないということだ。実際、あちこちに散りばめてある `printf` を取り除けば、この章で書いた関数はすべて純粋関数です。`adventure?` から `cheap-horror?` に至るまで、私たちは引数だけを見て返り値を出す関数を、努力することなく書くことができました。純粋関数を書くというゴールは、Clojureのデータ構造の不変性を説明するものでもあります。ベクターやマップなどのあらゆるものの置き換えによる変更を禁止することで、Clojureは副作用の一群を禁止しているのです。
 
-Note that the directive is to "try" to write pure functions. Much of the value that we programmers generate comes out in side effects—we read or write or delete the file, we update the database, or we increment the hit count on a web page. The only thing wrong with side effects is that functions that depend on them aren’t the easy-to-assemble building blocks that pure functions are.
+この指示は、純粋関数を書くことを "試みる "ことであることに注意してください。プログラマが生成する価値の多くは、ファイルの読み書きや削除、データベースの更新、ウェブページのヒットカウントのインクリメントなど、副作用として現れます。副作用の唯一の問題点は、副作用に依存する関数は、純粋関数のように簡単に組み立てられるものではないということだ。
 
-So we try to write pure functions when we can. Because life is a lot easier without side effects.
+だから私たちは、できる限り純粋関数を書くようにしている。なぜなら、副作用がないほうが人生はずっと楽だからだ。
 
 

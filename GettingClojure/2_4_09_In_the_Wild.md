@@ -1,9 +1,9 @@
 
-### In the Wild
+### 野生の中で
                      
-The best way to get a feeling for records and protocols is to see them in action in real code.
+レコードとプロトコルの感覚をつかむ最良の方法は、実際のコードで動作しているのを見ることだ。
                        
-For that let’s return to the Clostache templating library, which you will recall takes most of the pain out of the "substitute this value in the HTML" task that virtually all web applications need to perform. To make Clostache work you need a template string and a map of values:
+Clostacheは、事実上すべてのウェブ・アプリケーションが実行する必要がある「HTMLでこの値を代入する」タスクの苦痛のほとんどを取り除いてくれる。Clostacheを動作させるには、テンプレート文字列と値のマップが必要です：
 
 ```clojure
 (require 'clostache.parser) 
@@ -11,31 +11,31 @@ For that let’s return to the Clostache templating library, which you will reca
 (def values {:title "War and Peace" :author "Tolstoy"})
 ```
 
-And you can use the Clostache `render` function to populate the template with your values:
+そして、Clostache の `render` 関数を使用して、テンプレートに値を入力することができます：
 
 ```clojure
 ;; Gives you "The book War and Peace is by Tolstoy"
 (clostache.parser/render template values)
 ```   
       
-One of the more powerful features of Clostache is the ability to conditionally include or omit parts of the output with sections. Here’s a template with a section:
+Clostacheのより強力な機能の一つは、セクションを使って条件付きで出力の一部を含めたり省略したりできることです。以下はセクションを持つテンプレートです：
 
 ```clojure
 (def data {:author "Tolstoy" :show-author true})
 (def section-templ "{{#show-author}} by {{author}} {{/show-author}}")
 ```
 
-Here the `{{#show-author}}` and `{{/show-author}}` define a section. The text in the section will only be rendered if the section value—`show-author` in this case—is truthy.
+ここで、`{#show-author}}`と`{/show-author}}`はセクションを定義します。セクションのテキストは、セクションの値 - この場合は ``show-author`` が真である場合にのみレンダリングされます。
 
-If you dig into the Clostache source code you will discover that sections are represented by record values:
+Clostacheのソースコードを調べると、セクションがレコード値で表現されていることがわかります：
 
 ```clojure
 (defrecord Section [name body start end inverted])
 ```
 
-The key fields in `Section` are `name`, which is the name of the controlling value—`show-author` in the example—and `body`, which is the text of the section.
+`Section`のキーとなるフィールドは `name` で、これはコントロールする値（例では `show-author`）の名前であり、`body` はセクションのテキストである。
 
-Look a little further, and you will see `Section` values in action:
+もう少し見てみると、`Section`の値が実際に使われているのがわかるだろう：
 
 ```clojure
 (defn- render-section
@@ -50,11 +50,11 @@ Look a little further, and you will see `Section` values in action:
     )))
 ```
 
-Notice how `render-section` treats the `section` value—which is an instance of `Section`—like a garden-variety map with `:name`, `:body`, and `:inverted` keys. This is record use at its most basic. Clostache harbors no protocols, no polymorphism, not even a second record type. It’s just the Section record type there to make the code a little clearer.
+`render-section`が `Section` のインスタンスである `section` の値を、 `:name`、`:body`、`:inverted` のキーを持つ普通のマップのように扱っていることに注目してほしい。これは最も基本的なレコード使用法である。Clostacheはプロトコルもポリモーフィズムも2番目のレコード型さえも持たない。セクションのレコード型は、コードを少しわかりやすくするためにあるだけです。
 
-You can find a great example of a protocol in [Stuart Sierra’s Component library](https://github.com/stuartsierra/component).  Component takes on the task of helping you build real-world applications—applications that frequently need to do things when they start up (perhaps connect to a database or initialize some data) and other things when they shut down (maybe close that database connection).
+[Stuart SierraのComponentライブラリ](https://github.com/stuartsierra/component)にプロトコルの素晴らしい例があります。 Componentは、実世界のアプリケーションを構築する手助けをします。アプリケーションは、起動時（データベースへの接続やデータの初期化など）やシャットダウン時（データベース接続のクローズなど）に頻繁に何かをする必要があります。
 
-The Component library is built around a protocol called `Lifecycle`. Here it is in all its starkly simple glory:
+Componentライブラリは`Lifecycle`と呼ばれるプロトコルを中心に構築されている。以下に、非常にシンプルなプロトコルを紹介する：
 
 ```clojure
 (defprotocol Lifecycle
@@ -68,9 +68,9 @@ The Component library is built around a protocol called `Lifecycle`. Here it is 
     component."))
 ```
 
-With just two methods, `start` and `stop`, `Lifecycle` may seem trivial, but it provides the glue that you can use to build basic components, composite components made up of other little components, and so on.
+`start`と`stop`の2つのメソッドだけで、`Lifecycle`は些細なものに見えるかもしれないが、基本的なコンポーネントや他の小さなコンポーネントを組み合わせた複合コンポーネントなどを構築するための接着剤を提供する。
 
-Occasionally you may need to create a one-off implementation of a protocol.  Perhaps you are using—or testing—a function that takes a protocol implementation and you just don’t have an appropriate record at hand. For example, perhaps you’re trying to test your Component system and you need an implementation of `Lifecycle`. For these occasions Clojure provides us with `reify`, which takes a protocol name and some method implementations and creates a one-off implementation of that protocol:
+時には、プロトコルのその場限りの実装を作る必要があるかもしれない。 プロトコルの実装を必要とする関数を使ったりテストしたりしているときに、適切なレコードが手元にないことがあります。例えば、Componentシステムをテストしようとしていて、 `Lifecycle`の実装が必要かもしれません。このような場合、Clojureは `reify` を提供してくれます。これは、プロトコル名といくつかのメソッド実装を受け取り、そのプロトコルのその場限りの実装を作成します：
 
 ```clojure
 (def test-component (reify Lifecycle
@@ -83,7 +83,7 @@ Occasionally you may need to create a one-off implementation of a protocol.  Per
 ```
 
 
-Run the preceding code, and you will end up with value in `test-component` that implements `Lifecycle`. Even better—especially for testing purposes—is that `reify` doesn’t require you to implement the whole protocol:
+先ほどのコードを実行すると、 `test-component` に `Lifecycle` を実装した値が格納されます。さらに良いのは（特にテスト目的では）、`reify`はプロトコル全体を実装する必要がないということだ：
 
 ```clojure
 ;; A partial implementation of Lifecycle. We can call start, but
@@ -95,6 +95,6 @@ Run the preceding code, and you will end up with value in `test-component` that 
       this)))
 ```
 
-As defined in the preceding code, `dont-stop` will be an instance of `Lifecycle`, but one that will throw an exception if you try to call the stop method.
+先のコードで定義したように、`dont-stop`は`Lifecycle`のインスタンスになるが、stopメソッドを呼び出そうとすると例外を投げるインスタンスになる。
 
 

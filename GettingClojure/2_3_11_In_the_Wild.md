@@ -1,7 +1,7 @@
 
-### In the Wild
+### 野生の中で
 
-Examples of destructuring are easy to find if you look around in the Clojure ecosystem. For example, [Korma](https://github.com/korma/Korma/blob/master/src/korma/db.clj), the database library, contains this function, which helps set up connections to MySQL databases:
+Clojureエコシステムを見回せば、構造化の例は簡単に見つかる。例えば、データベースライブラリの[Korma](https://github.com/korma/Korma/blob/master/src/korma/db.clj)にはこの関数があり、MySQLデータベースへの接続をセットアップするのに一役買っています：
 
 ```clojure
 (defn mysql
@@ -17,9 +17,9 @@ Examples of destructuring are easy to find if you look around in the Clojure eco
   )
 ```
 
-Again we have the typical "function with a docstring" setup, but this function is using some interesting destructuring to dig into the map that it’s expecting as an argument. Things begin innocently enough. At the front we have some `:keys`-based destructuring to get at values such as the host and port. And at the end of the destructuring we have a familiar `:as`, which gives the function access to the entire map that is passed in.
+ここでも典型的な "docstringを持つ関数 "がセットアップされているが、この関数は興味深いデストラクチャリングを使って、引数として期待されているマップを掘り下げている。最初は何の変哲もない。先頭には、ホストやポートなどの値を取得するための `:keys` ベースのデストラクチャリングがある。そして、デストラクチャの最後にはおなじみの `:as` があり、関数は渡されたマップ全体にアクセスできる。
 
-But in between the `:keys` and the `:as`, we have something we haven’t seen before: `:or`. The `:or` feature helps you deal with the situation where you look for some value in your destructuring and it’s not there. Take another look at the preceding code and ask yourself, what if the caller doesn’t pass in a value for `:host?` Or `:port?` The answer is that `host` and `port` would end up set to `nil`. Or they would without the `:or`. The `:or` lets you specify default values in the form of a map. So if you leave out `:host` in the map that you pass to the `mysql` function, you will get the default value of `"localhost"`. Similarly, leave out the port and you will get 3306.
+しかし、`:keys`と`:as`の間には、これまで見たことのない `:or` というものがある。この `:or` 機能を使うと、デストラクチャリングで値を探したがなかった場合に対処することができる。もし呼び出し元が `:host` や `:port` に値を渡さなかったらどうなるだろうか？ 答えは `host` と `port` には `nil` がセットされることになる。あるいは、 `:or` がなくてもそうなる。`:or` を使うと、デフォルト値をマップ形式で指定することができる。そのため、`mysql`関数に渡すマップの `:host` を省略すると、デフォルト値の `"localhost"` になる。同様に、ポートを省略すると 3306 になる。
 
 
 

@@ -1,7 +1,7 @@
 
-### Dealing with Multiple Conditions 
+### 複数の条件を扱う 
  
-Technically, no matter how complicated the decision you need to make, the plain old `if` is all you ever need. Choosing between three alternatives? Just nest a couple of `if`s. Say, for example, our shipping charges were free to preferred customers and otherwise $5 for orders under $50, $10 for orders between $50 and $100, and 10% of the purchase price for bigger orders, we could write something like this: 
+技術的には、どんなに複雑な決定をする必要があっても、古くからある「if」があれば十分です。3 つの選択肢から選ぶ場合は？いくつかの `if` を入れ子にすればいい。例えば、送料が優先顧客(preferred-customer)には無料、それ以外の50ドル未満の注文には5ドル、50ドル以上100ドル未満の注文には10ドル、それ以上の注文には購入金額の10％だったとすると、次のように書くことができる： 
 
 ```clojure
 (defn shipping-charge [preferred-customer order-amount]
@@ -14,9 +14,9 @@ Technically, no matter how complicated the decision you need to make, the plain 
         (* 0.1 order-amount)))))
 ```
 
-Have another alternative? Then just nest another `if`—and at some point drive yourself crazy. While your CPU may be fine with deeply nested if expressions, the mushy computer between your ears probably prefers to look at this sort of situation as a series of alternatives: "Is it this? No? Well, is it that? …"
+他にも選択肢がある場合？それなら別の`if`をネストすればいい。あなたのCPUは深くネストされたif式でも平気かもしれないが、あなたの耳の間にあるムズムズしたコンピューターは、おそらくこの種の状況を一連の選択肢として見ることを好むだろう： "これか？違うか？じゃあ、それは？..."
 
-Fortunately Clojure has an expression for just such occasions: `cond`. Here’s a partial implementation of our shipping-cost function using `cond`:
+幸いなことに、Clojureにはそのような場合のための表現がある： `cond`である。以下は `cond` を使ったshipping-charge関数の部分的な実装です：
 
 ```clojure
 (defn shipping-charge [preferred-customer order-amount]
@@ -27,11 +27,11 @@ Fortunately Clojure has an expression for just such occasions: `cond`. Here’s 
 ``` 
 
 
-As you can see in the example, `cond` takes pairs of expressions, each pair made up of a predicate expression and a value expression. In the example, the predicates are `preferred-customer`, `(< order-amount 50)`, and `(< order-amount 100)`. When it’s evaluated, `cond` evaluates each predicate in order. If the predicate is falsy—that is, either `nil` or `false`—`cond` goes on to the next pair. If the predicate is truthy, then `cond` will evaluate the value expression and return that, leaving the remaining pairs unevaluated.
+この例を見ればわかるように、`cond`は述語式と値式のペアを取ります。この例では、述語は `preferred-customer`、`(< order-amount 50)`、`(< order-amount 100)`です。評価されるとき、 `cond` はそれぞれの述語を順番に評価します。述語が偽の場合、つまり `nil` または `false` の場合、 `cond` は次のペアに進みます。述語が真であれば、 `cond` は値式を評価してそれを返し、残りのペアは評価されない。
 
-One problem with our `cond`-based `shipping-charge` function is that it doesn’t handle orders of $100 or more properly. If you evaluated `(shipping-charge 200)` you would get a `nil` back for your trouble, since that’s what `cond` returns if none of the predicates come back truthy.
+しかし、この `cond` ベースの `shipping-charge` 関数の1つの問題は、100ドル以上の注文を適切に処理できないことです。もし、`(shipping-charge 200)` を評価した場合、`nil` が返されるでしょう。
 
-We have a couple of options for fixing `shipping-charge`. We could certainly add a predicate to explicitly cover the "$100 or more" case:
+`shipping-charge`を修正するためにいくつかのオプションがある。"100ドル以上"のケースを明示的にカバーする述語を追加することができます：
 
 ```clojure
 (defn shipping-charge [preferred-customer order-amount]
@@ -42,7 +42,7 @@ We have a couple of options for fixing `shipping-charge`. We could certainly add
     (>= order-amount 100.0) (* 0.1 order-amount)))
 ```
 
-Alternatively, we could add in a catch-all `:else` clause:
+あるいは、すべてをカバーする `:else` 節を追加することができる：
 
 
 ```
@@ -54,9 +54,9 @@ Alternatively, we could add in a catch-all `:else` clause:
     :else (* 0.1 order-amount)))
 ```
 
-Note that the `:else` clause is not special new `cond` syntax. It’s just another predicate/expression pair. Think about it: `if` none of the other predicates are truthy, `cond` will arrive at the last predicate/expression pair, decide that since `:else` is neither `false` nor `nil` it must be truthy, and return 10% of the order amount. In principle we could have used any truthy value instead of `:else`.  `:default`, `true`, and `"whatever"` would all work. We use `:else` because that’s the Clojure convention for the everything else clause of a `cond`.
+なお、`:else`節は特別な新しい`cond`構文ではない。単なる述語と式のペアである。考えてみてほしい：もし他の述語がどれもtruthyでない場合、`cond`は最後の述語と式のペアに到達し、`:else`は`false`でも`nil`でもないのでtruthyに違いないと判断し、注文金額の10%を返す。原理的には、`:else`の代わりにどんな真理値でも使うことができた。 `:default`, `true`, `"whatever"`のどれでも使えるだろう。我々は `:else` を使っているが、これは `cond` の everything else 節に対する Clojure の慣例だからである。
 
-Along the lines of `cond` we have the somewhat less powerful but still useful `case`, which lets your code turn this way or that based on a single value. Here is how we might use `case` to come up with a welcome message:
+`cond`と同じように、やや強力ではないが便利な `case` がある。ここでは `case` を使ってウェルカムメッセージを考えてみよう：
 
 ```clojure
 (defn customer-greeting [status]
@@ -66,8 +66,8 @@ Along the lines of `cond` we have the somewhat less powerful but still useful `c
                "Welcome to Blotts Books"))
 ```
 
-The idea is that your value—`status` in the example—should match one of the constants in the case statement—`:gold` or `:preferred` in the example. If it does match, then the whole `case` evaluates to the expression paired with the constant. If nothing matches, then the expression evaluates to the last, unpaired expression—in this case `"Welcome to Blotts Books"`.
+この考え方は、あなたの値（例では ``status` ）が case 文の定数（例では ``:gold`` または `:preferred` ）にマッチしなければならないというものである。もしマッチすれば、`case`全体が定数と対になった式で評価されます。もし何もマッチしなければ、その式は最後の、ペアになっていない式、この例では `"Welcome to Blotts Books"`として評価されます。
 
-A couple of things to keep in mind about `case`: First, the last catch-all expression is optional, but if you do leave it out the `case` will generate an error if none of the constants match. Second, the constants need to be just that: constant. The constants in case expressions are one of the few places where an expression does not get evaluated.
+`case`について覚えておくべきことがいくつかある： まず第一に、最後のキャッチオール式は省略可能ですが、もし省略した場合、`case`はどの定数もマッチしない場合にエラーを生成します。第二に、定数はあくまでも定数である必要があります。case式の定数は、式が評価されない数少ない場所の1つです。
 
 

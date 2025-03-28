@@ -1,7 +1,7 @@
     
-### In the Wild
+###野生の中で
 
-As you might expect, it’s easy to find very familiar-looking examples of `if`, `when`, `cond`, and `case`. Here, for instance, are a few lines pulled from Leiningen:
+ご想像の通り、`if`、`when`、`cond`、`case`の非常に見慣れた例を見つけるのは簡単だ。例えば、Leiningenから抜粋した数行である：
 
 ```clojure 
 (when (real-directory? f)
@@ -9,9 +9,9 @@ As you might expect, it’s easy to find very familiar-looking examples of `if`,
     (delete-file-recursively child silently)))
 ```
 
-We may not follow the details, but the general idea of this code is not hard to work out: when `f` is a real directory—that is, not a file or a symbolic link—then delete it and all of its contents.
+詳細はわからないかもしれないが、このコードの一般的な考え方は難しくない：`f`がファイルでもシンボリックリンクでもない本当のディレクトリである場合、そのディレクトリとすべてのコンテンツを削除する。
   
-Here’s another snippet, also from Leiningen:
+同じくLeiningenからのスニペットである：
 
 ```clojure
 (if (.isDirectory entry)
@@ -20,29 +20,29 @@ Here’s another snippet, also from Leiningen:
       (io/copy (.getInputStream jar entry) f)))
 ```
 
-If entry is a directory, then do this; otherwise do something else.
+entryがディレクトリの場合はこの処理を行い、そうでない場合は別の処理を行う。
 
 > [!NOTE]
 > 
-> **Dot What?**
+>**ドット(.)は何？**
 > 
-> The reason for the funny un-Clojurelike function names such as `.isDirectory` and `.mkdirs` is that this code is calling into lower-level Java libraries. More on this in "Chapter 16, Interoperating with Java, on page 189".
+> .isDirectory`や`.mkdirs`といったおかしなClojureらしくない関数名の理由は、このコードが低レベルのJavaライブラリを呼び出しているからです。これについては「第16章 Javaとの相互運用（189ページ）」を参照してください。
 
 
 
-Surprisingly, the if (or when) this, then do that use case of `if` is not all that common in Clojure. What you find instead is `if`, `when`, and `cond` used to compute a value. Take this bit of code, again lifted from Leiningen:
+意外なことに、Clojureでは `if` の「if (または when) this, then do that」というユースケースはそれほど一般的ではありません。代わりに見られるのは、値を計算するために使われる `if`、`when`、`cond` である。Leiningenから引用したコードを見てみよう：
 
 ```clojure
 (if (vector? task) task [task])
 ```
 
-The interesting thing about this expression is that it doesn’t do anything.  Instead it evaluates to a value, specifically the original `task`, or `task` wrapped in a vector. Thus we might bind the result to a symbol:
+この式の面白いところは、何もしないことだ。 その代わりに、元の `task` やベクターでラップされた `task` などの値が評価される。したがって、結果をシンボルにバインドすることもできる：
 
 ```clojure
 (def task-vector (if (vector? task) task [task]))
 ```
 
-or maybe embed it in a function:
+あるいは関数の中に埋め込む：
 
 
 ```clojure
@@ -50,9 +50,9 @@ or maybe embed it in a function:
   (if (vector? task) task [task]))
 ```
 
-When used this way—which it commonly is—Clojure’s if is a lot like the ternary expressions that you find in Java or C++: If this is truthy I want this value; otherwise I want this other value.
+この方法で使用されるとき（一般的に使用されるとき）、ClojureのifはJavaやC++で見られる3項式に似ている：これが真の場合、この値が欲しい、そうでない場合、この別の値が欲しい。
 
-You can find a great example of `cond` in the open source library [Korma](https://github.com/korma/Korma).  Korma (tagline: "Tasty SQL for Clojure"; you’ve got to give them points for wit) tries to help Clojure programmers deal with vagaries of SQL and contains the following bit of code:
+オープンソースライブラリ[Korma](https://github.com/korma/Korma)に`cond`の素晴らしい例があります。 Korma(キャッチフレーズ: "Tasty SQL for Clojure";ウィットに点数を与えなければなりません)は、ClojureプログラマがSQLの気まぐれに対処するのを助けようとしており、次のようなコードを含んでいます：
 
 ```clojure
 (defn str-value [v]
@@ -64,9 +64,9 @@ You can find a great example of `cond` in the open source library [Korma](https:
     :else (parameterize v)))
 ```
 
-The job of `str-value` is to take a Clojure value and turn it into a string that is acceptable to SQL. The function goes about its duties by asking what kind of value it has: Is it a map? Well, then hand it off to `map-val`. Is it a keyword?  Then off to `field-str`, and so on.
+`str-value`の仕事は、Clojureの値を受け取り、SQLで受け入れられる文字列に変換することである。この関数は、どのような値を持っているかを尋ねることによって、その職務を遂行する： それはマップですか？それなら、`map-val`に渡してください。キーワードか？ それなら`field-str`に渡す、という具合だ。
 
-Notice that Korma uses a `cond` and not a `case` since this is not a test for specific values but for whole classes of values. On the other hand, elsewhere in Korma we find this case expression:
+Kormaでは`cond`を使用しており、`case`を使用していないことに注意してほしい。これは特定の値のテストではなく、値のクラス全体のテストだからだ。一方、Kormaの他の場所では、このようなcase表現が見られる：
 
 ```clojure
 (case (:type query)
@@ -75,5 +75,5 @@ Notice that Korma uses a `cond` and not a `case` since this is not a test for sp
   query)
 ```
 
-Here we’re testing against a pair of known values: If the query type is `:insert`, then return this. If the type is `:update`, return something else. Otherwise just return the query unchanged.
+ここでは、既知の値のペアに対してテストを行っている： クエリのタイプが `:insert` であれば、これを返す。クエリのタイプが `:update` であれば、別のものを返す。そうでない場合は、クエリをそのまま返します。
 

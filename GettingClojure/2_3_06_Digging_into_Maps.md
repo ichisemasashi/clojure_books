@@ -1,13 +1,13 @@
 
-### Digging into Maps
+### マップを掘り下げる
 
-There’s even more good news with destructuring: it also works with maps.  The idea behind destructuring a map is the same as with the sequential types.  You provide a template for the data structure—a template that includes the symbols that you want to bind to various values in the map. To see how map destructuring works, consider that when you build a map, you supply a bunch of keys and values:
+デストラクチャリングにはさらに良いニュースがある。 マップのデストラクチャリングの考え方は、シーケンシャル型と同じです。 データ構造のテンプレートを提供するのです。テンプレートには、マップの中のさまざまな値に束縛したいシンボルが含まれています。マップのデストラクチャリングがどのように機能するかを理解するために、マップを作るときにキーと値の組み合わせを提供することを考えてみよう：
 
 ```clojure
 (def artist-map {:painter :monet :novelist :austen})
 ```
 
-Here we’re saying Associate `:monet` with `:painter` and `:austen` with `:novelist`. That is, this key with that value. In the template that you provide in a map destructuring, you do something very similar. You provide a series of symbols and keys. Like this:
+ここでは、`:monet`を`:painter`に、`:austen`を`:novelist`に関連付けると言っている。つまり、このキーとその値を関連付けるということだ。マップのデストラクチャで提供するテンプレートでは、非常に似たことを行う。一連のシンボルとキーを指定します。こんな感じだ：
 
 ```clojure
 (let [{painter :painter writer :novelist} artist-map]
@@ -15,16 +15,16 @@ Here we’re saying Associate `:monet` with `:painter` and `:austen` with `:nove
   (println "The novelist is" writer))
 ```
 
-This symbol with this key:
+このシンボルには、このキーが対応する：
 
 ```
 The painter is :monet
 The novelist is :austen
 ```
 
-In this last example we’re binding the value associated with the key `:painter` to `painter`, and the value associated with `:novelist` to writer.
+この最後の例では、キー `:painter` に関連する値を `painter` に、`:novelist` に関連する値を writer にバインドしている。
 
-The important thing to note about map destructuring is that in the left side of the destructuring equation the keys come second; the symbol `painter` is followed by the key `:painter`. Also keep in mind that since map destructuring is all about the keys, the order of the symbol/key pairs is not important. Thus we could have written our last example as follows:
+マップのデストラクチャリングで重要なことは、デストラクチャリング式の左側ではキーが2番目に来るということです；シンボル `painter` の後にキー `:painter` が続きます。また、マップのデストラクチャリングはキーの話なので、シンボルとキーのペアの順番は重要ではないということを覚えておいてほしい。したがって、最後の例を次のように書くこともできる：
 
 
 ```clojure
@@ -33,7 +33,7 @@ The important thing to note about map destructuring is that in the left side of 
   (println "The novelist is" writer))
 ```
 
-without changing the result.
+結果は変わらない。
 
 
 

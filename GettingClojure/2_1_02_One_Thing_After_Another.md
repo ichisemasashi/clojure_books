@@ -1,9 +1,9 @@
 
-### One Thing After Another
+### 次から次へと
 
-Let’s start our exploration of sequences by asking a simple question: how does the "count" function work? Specifically, how does this one function manage to count the elements in a vector, the items in a list, the characters in a string, and the entries in a map? After all, we know that behind the scenes lists and vectors and maps and strings are all very different data structures, and if you want to count the elements of each one, somewhere there needs to be code to deal with the structural differences.
+簡単な質問からシーケンスの探求を始めよう："count "関数はどのように動作するのだろうか？具体的には、この関数ひとつでベクターの要素、リストの項目、文字列の文字、マップの項目をどうやって数えることができるのだろうか？結局のところ、舞台裏ではリストやベクター、マップや文字列はすべてまったく異なるデータ構造であり、それぞれの要素をカウントしたいのであれば、どこかに構造の違いに対処するコードが必要なのだ。
 
-One possible design for this would be to write in special-case code for each collection type, maybe by using a multimethod. So if we were building our own count, we might write this:
+そのために考えられる設計のひとつは、コレクション・タイプごとに特殊なケース・コードを記述することだ。つまり、独自のカウントを構築する場合、次のように書くことができる：
 
 sequences/examples.clj
 ```clojure 
@@ -22,40 +22,40 @@ sequences/examples.clj
 ;; And so on...
 ```
 
-Alternatively, we can imagine that `my-count` has access to a number of generic wrappers, one per collection type. There would be a wrapper for lists, and one for vectors, and so on. Internally each kind of wrapper would know how to deal with its own collection type, but from the outside the different wrapper types would present the same, generic interface. The `count` function could then start by encasing the collection in the correct flavor of wrapper and then work with the uniform interface of the wrapper from there.
+別の方法として、`my-count`がコレクションタイプごとに1つずつ、いくつかの汎用ラッパーにアクセスできると想像することもできる。リスト用のラッパー、ベクター用のラッパーなどだ。内部的には、それぞれのラッパーは自分のコレクションタイプをどのように扱うかを知っているが、外部からは異なるラッパータイプが同じ汎用的なインターフェイスを提示することになる。関数 `count` はコレクションを適切なラッパーで包むことから始め、そこからラッパーの統一されたインターフェースで動作することができる。
 
 
-And now for the big reveal: "Clojure opts for the wrapper method". Clojure calls its generic collection wrappers "sequences". Under the hood there are as many flavors of sequences as there are collection types, but to the outside world all sequences provide a very uniform interface: no matter if it’s a vector or a map or a list or a set behind a sequence, one sequence looks exactly like another.
+そして、いよいよ大公開だ： "Clojureはラッパー・メソッドを採用する"。Clojureは、ジェネリック・コレクション・ラッパーを "シーケンス "と呼ぶ。その内部では、コレクション・タイプの数だけシーケンスのフレーバーがありますが、外部の世界では、すべてのシーケンスは非常に均一なインターフェイスを提供します：シーケンスの後ろにベクターやマップやリストやセットがあっても、1つのシーケンスは他のシーケンスとまったく同じように見えます。
 
 > [!NOTE]
 >
-> **Sequence Adapter**
+> **シーケンス・アダプター**
 >
-> If you have an object-oriented programming background, then the wrapper design of sequences might look familiar: hidden behind those sequences is the adapter pattern.
+> オブジェクト指向プログラミングの経験があれば、シーケンスのラッパーデザインに見覚えがあるかもしれない：これらのシーケンスの背後に隠れているのは、アダプタパターンである。
 
 
-There’s even a function for wrapping your collection in a sequence: that function is called `seq`. Here’s a sequence made from a vector:
+コレクションをシーケンスでラップする関数もある：その関数は `seq` と呼ばれる。以下はベクターから作られたシーケンスである：
 
 ```clojure
 (def title-seq (seq ["Emma" "Oliver Twist" "Robinson Crusoe"]))
 ```
 
-Run this code, and you will get back the sequence view of your vector. So, if you print `title-seq` you will see this:
+このコードを実行すると、そのベクターのシーケンスを表示することができます。つまり、`title-seq`と表示すると、このようになる：
 
 ```clojure
 ("Emma" "Oliver Twist" "Robinson Crusoe")
 ```
 
-Don’t be fooled by its round-parentheses disguise. `title-seq` is not a list; it’s a sequence, or "seq" for short.
+丸括弧の見せかけに騙されてはいけない。`title-seq`はリストではなく、シーケンス、略して「seq」である。
 
 
-You can also get a seq from a list:
+リストからseqを得ることもできる：
 
 ```clojure
 (seq '("Emma" "Oliver Twist" "Robinson Crusoe"))
 ```
 
-A little more interesting is that you can call `seq` on a map: do this, and you will end up with a sequence of key/value pairs. Thus this:
+もう少し面白いのは、マップに対して `seq` を呼び出すことができることだ：これを実行すると、キーと値のペアのシーケンスができあがる。このように
 
 ```clojure
 (seq {:title "Emma", :author "Austen", :published 1815})
@@ -67,18 +67,18 @@ will give you
 ([:title "Emma"] [:author "Austen"] [:published 1815])
 ```
 
-Well, more or less. Since Clojure makes no guarantees on the order of the keys in a map, it’s possible that the elements of the map sequence might come out in a different order.
+ほとんど同じです。Clojureはマップのキーの順番を保証しないので、マップのシーケンスの要素が違う順番で出てくる可能性がある。
 
-You can even call seq on a sequence, like this:
+次のように、シーケンスに対してseqを呼び出すこともできます：
 
 ```clojure
 ;; Calling seq on a sequence is a noop.
 (seq (seq ["Red Queen" "The Nightingale" "Uprooted"]))
 ```
 
-and get exactly the same sequence back.
+で、全く同じシーケンスを返す。
 
-A slightly more surprising thing about `seq` is that it will return a `nil` when handed an empty collection:
+`seq`のもう少し驚くべき点は、空のコレクションを渡されたときに `nil` を返すことである：
 
 
 ```clojure
@@ -87,7 +87,7 @@ A slightly more surprising thing about `seq` is that it will return a `nil` when
 (seq {})  ; Nil again.
 ```
 
-This "empty sequence becomes a nil" behavior is handy because it means we can use `(seq collection)` as a truthy value to detect empty collections.
+この「空のシーケンスがnilになる」動作は、空のコレクションを検出するための真理値として`(seq collection)`を使えるという意味で便利である。
 
 
 

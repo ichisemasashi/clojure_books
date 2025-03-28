@@ -1,7 +1,7 @@
         
-### Deeply Recursive
+### 深い再帰
 
-Along with letting you do interesting things with your function arguments, Clojure also provides specialized support for writing recursive functions. A recursive function is, of course, a function that calls itself. For example, suppose we had this collection of book maps:
+Clojureは、関数の引数で面白いことができるのと同時に、再帰関数を書くための特別なサポートも提供しています。再帰関数とはもちろん、自分自身を呼び出す関数のことです。例えば、ブックマップのコレクションがあったとします：
  
 ```clojure
 (def books
@@ -10,7 +10,7 @@ Along with letting you do interesting things with your function arguments, Cloju
    {:title "2001" :copies-sold 4000000}])
 ```
 
-and we wanted to know the total number of books sold. We could write a recursive function to run through all the elements of the vector:
+そして、売れた本の総数を知りたい。ベクターの全要素を走査する再帰関数を書くことができる：
 
 ```clojure
 (defn sum-copies
@@ -23,19 +23,19 @@ and we wanted to know the total number of books sold. We could write a recursive
         (+ total (:copies-sold (first books)))))))
 ```
 
-Notice that `sum-copies` uses the "filling in the defaults" trick we discussed earlier.
+`sum-copies`は先ほど説明した「デフォルトを埋める」トリックを使っていることに注目してほしい。
 
-The second arity—the one that does all the work—takes two arguments: the vector and the current total. The first arity kicks things off by supplying a zero for the count so that you can call `sum-copies` with just the vector. Other than that, the operation of `sum-copies` is simple: it starts by using the Clojure-supplied `empty?` function to check if the vector is empty. If it is, then `sum-copies` returns `total` and we’re done. Otherwise `sum-copies` recursively calls itself with all but the first book and a new total.
+2番目のアリティ（すべての処理を行うアリティ）は2つの引数を取る：ベクターと現在の合計値である。最初のアリティでは、ベクターだけで `sum-copies` を呼び出すことができるように、カウントにゼロを与えることでうまくいく。それ以外の `sum-copies` の操作は単純で、Clojure が提供する `empty?` 関数を使用して、ベクターが空かどうかをチェックすることから始まる。空であれば `sum-copies` は `total` を返して終了である。そうでなければ `sum-copies` は最初の本を除いたすべての本と新しい合計で自分自身を再帰的に呼び出す。
 
-Unfortunately there is serious problem with `sum-copies`. Every time `sum-copies` recursively calls itself, it eats up some stack space. That means `sum-copies` will work for a modestly sized collection of books, but make the books vector a little too long and you will run out of stack space:
+残念ながら `sum-copies` には重大な欠陥がある。毎回`sum-copies`は自分自身を再帰的に呼び出すので、スタックの容量を食ってしまう。つまり、`sum-copies`はそこそこの大きさの本のコレクションでは動作するが、本のベクターを少し長くするとスタックの容量が足りなくなる：
 
 ```
 StackOverflowError clojure.walk/walk (walk.clj:44)
 ```
 
-On my machine, "too long" is around 4,000 books. Not small, but well within the realm of the possible.
+私のマシンでは、"長すぎる "のは4000冊程度だ。決して少なくないが、十分に可能な範囲だ。
 
-This is where the specialized support for recursive functions comes in. Notice how making the recursive call to `sum-copies` is pretty much the last thing the function does? And how the only data flowing from one invocation of the function to the next flows through the function parameters? Given this, there’s no reason to accumulate all those stack frames. We can take advantage of "tail call optimization" by replacing the recursive call to `sum-to-n` with `recur`:
+ここで、再帰関数に特化したサポートが登場する。`sum-copies`を再帰的に呼び出すことが、この関数が行うことのほとんど最後であることにお気づきだろうか。そして、関数の呼び出しから次の呼び出しに流れる唯一のデータが、関数のパラメータを通して流れていることにお気づきだろうか？これを考えると、スタックフレームをすべて蓄積する理由はない。`sum-to-n`の再帰呼び出しを`recur`に置き換えることで、「末尾呼び出しの最適化」を利用することができる：
 
 ```clojure
 (defn sum-copies
@@ -48,9 +48,9 @@ This is where the specialized support for recursive functions comes in. Notice h
         (+ total (:copies-sold (first books)))))))
 ```
 
-It appears that `recur` is making the same recursive call that we had in the first version of `sum-copies`. But `recur` knows how to take advantage of being the last expression in a function to avoid accumulating all those stack frames. And that means that this second version of `sum-copies` will work no matter how many books you’re dealing with.
+どうやら`recur`は、最初のバージョンの`sum-copies`と同じ再帰呼び出しをしているようだ。しかし、`recur`は関数の末尾の式であることを利用して、スタックフレームを溜め込まない方法を知っている。つまり、この2番目のバージョンの`sum-copies`は、扱う本の数に関係なく動作するということだ。
 
-One apparent downside of `recur` is that we need to build a new function—or, in the example, a new function arity—to use it, something that will get old quickly. Fortunately we can dispense with the function with `loop`. Here’s our `sum-copies` one more time, this time recast as a loop expression:
+`recur`の欠点として明らかなのは、それを使うために新しい関数、例で言えば新しい関数アリティを作る必要があることだ。幸いなことに、`loop`を使えば関数を使わずにすむ。ここでもう一度、`sum-copies`をループ式として再構成してみよう：
 
 ```clojure
 (defn sum-copies [books]
@@ -63,19 +63,19 @@ One apparent downside of `recur` is that we need to build a new function—or, i
 ```
 
 
-The way to understand `loop` is to think of it as a blend of a phantom function and a call to that function. In our example, the "function" has two parameters, `books` and `total`, which initially get bound to the original book collection and `0`.
+`loop` を理解する方法は、幻の関数とその関数の呼び出しの組み合わせと考えることである。この例では、「関数」は `books` と `total` という2つのパラメーターを持ち、最初はオリジナルのブックコレクションと `0` にバインドされる。
 
-With `books` and `total` bound, we evaluate the body, in this case the `if` expression.
-The trick is that `loop` works with `recur`. When it hits a `recur` inside the body of a `loop`, Clojure will reset the values bound to the symbols to values passed into `recur` and then recursively reevaluate the `loop` body.
+`books`と`total`がバインドされた状態で、本体（この場合は`if`式）を評価する。
+トリックは `loop` が `recur` と連動することである。`loop` 本体の中で `recur` にぶつかると、Clojure はシンボルにバインドされている値を `recur` に渡された値にリセットし、`loop` 本体を再帰的に再評価する。
 
-There are a couple of things to keep in mind about `recur`. The first is that `recur`, either with or without `loop`, is the Clojure way of writing a completely general-purpose loop. Think about it: `recur` lets you execute the same block of code over and over, each time with slightly different data, and break out just when you are ready. That is a loop. The second thing is that `recur` is a reasonably low-level tool. Chances are there is a better—and easier—way to get your task done. If, for example, you need to add up all those book sales, you would probably say something like this:
+`recur` には2つほど注意すべき点がある。一つ目は、 `recur` は `loop` を使っても使わなくても、完全に汎用的なループを書くための Clojure の手段であるということだ。考えてみてほしい: `recur` を使うと、同じコードブロックを何度も実行することができる。これがループだ。もうひとつは、`recur`は低レベルのツールだということだ。もっと簡単でいい方法があるはずだ。例えば、本の売上をすべて集計する必要がある場合、おそらく次のように言うだろう：
 
 
 ```clojure
 (defn sum-copies [books] (apply + (map :copies-sold books)))
 ```
 
-Well, that’s what you’ll say after you read a bit further. As we’ll see in the next few chapters, the `map` bit converts the collection of books into a collection of numbers—the copies sold—while the `apply +` sums up the copies. Details aside, the beauty of this last rendition of `sum-copies` is that it enables us to rise above the item-by-item processing of `loop` and `recur` and instead deal with the collection as a whole. While `loop` and `recur` are great tools to have as a last resort, there is usually a better way to solve most programming problems.
+まあ、それはもう少し読み進めたらわかることだ。次の数章で説明するように、`map`の部分は本のコレクションを売れた部数という数字のコレクションに変換し、`apply +`の部分は部数を合計する。詳細はさておき、この最後の`sum-copies`の素晴らしいところは、`loop`と`recur`のアイテムごとの処理から抜け出して、コレクション全体を処理できることである。`loop`や`recur`は最後の手段として持っておくには素晴らしいツールだが、たいていのプログラミングの問題を解決するには、もっと良い方法がある。
 
 
 

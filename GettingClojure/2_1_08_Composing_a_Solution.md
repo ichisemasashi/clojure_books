@@ -1,39 +1,39 @@
 
-### Composing a Solution
+### ソリューションを構成する
 
-You can get a huge amount of programming mileage out of sequences and the panoply of functions that Clojure provides to process them. For example, imagine that you were working on a sales application for your book business and, starting with the books vector we saw earlier, you needed to format a string proclaiming the three top-rated books, something like this:
+シーケンスと、それを処理するためにClojureが提供する多数の関数から、膨大な量のプログラミング・マイレージを得ることができます。例えば、あなたが書籍ビジネスの販売アプリケーションに取り組んでいて、先に見た書籍ベクターから始めて、次のような3つのトップ評価の書籍を宣伝する文字列を整形する必要があったとします：
 
 ```clojure
 "Emma // Dracula // Deep Six"
 ```
 
-Step one is to find the top three books, by rating. We could start by sorting the books by their rating:
+ステップ1では、評価順に上位3冊を見つける。まず、評価順に並べ替えることから始めよう：
 
 ```clojure
 (sort-by :rating books)
 ```
 
-That will give us the books from lowest to highest rating, but the other way around is more useful:
+そうすれば、評価の低いものから高いものへと本を並べることができるだろうが、他の方法の方が便利だ：
 
 ```clojure
 (reverse (sort-by :rating books))
 ```
     
-Then we can then pull out the three highest-rated books, with `take`, a function that produces a sequence consisting of the first N items of another sequence.
-In this case it’s the first three items:
+次に、別のシーケンスの最初のN個のアイテムからなるシーケンスを生成する関数である`take`を使って、最も評価の高い3冊の本を取り出すことができる。
+この場合は最初の3項目である：
 
 ```clojure
 (take 3 (reverse (sort-by :rating books)))
 ```
 
-But we don’t really need the whole book map, just the title. Looks like a job for map:
+でも、本のマップはすべて必要なわけではなく、タイトルだけでいいんです。マップのための仕事のようだ：
 
 
 ```clojure
 (map :title (take 3 (reverse (sort-by :rating books))))
 ```
 
-We now have a sequence that looks like `("Emma" "1984" "Jaws")`. From here it’s just a matter of assembling the string. We can put the slashes into our sequence with `interpose`:
+これで、`("Emma" "1984" "Jaws")` のようなシーケンスができた。ここからは文字列を組み立てるだけだ。スラッシュは `interpose` を使ってシーケンスに挿入することができる：
 
 ```clojure
 (interpose
@@ -41,13 +41,13 @@ We now have a sequence that looks like `("Emma" "1984" "Jaws")`. From here it’
   (map :title (take 3 (reverse (sort-by :rating books)))))
 ```
 
-Which gives us a five-string sequence:
+これで5弦のシークエンスができた：
 
 ```clojure
 ("Emma" " // " "1984" " // " "Jaws")
 ```
 
-And then we just need to assemble the whole thing into a single string and wrap the code in a convenient function:
+そして、全体を1つの文字列にまとめ、便利な関数でコードをラップすればいい：
 
 ```clojure
 (defn format-top-titles [books]
@@ -58,6 +58,6 @@ And then we just need to assemble the whole thing into a single string and wrap 
       (map :title (take 3 (reverse (sort-by :rating books)))))))
 ```
 
-You can get a lot of computing out of a few sequence functions.
+数個のシーケンス関数で多くの計算を行うことができる。
 
 

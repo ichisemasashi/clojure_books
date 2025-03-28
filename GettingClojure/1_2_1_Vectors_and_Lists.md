@@ -1,6 +1,6 @@
 
 ## CHAPTER 2 Vectors and Lists
 
-Now that you have a few basic Clojure concepts under your intellectual belt, it’s time to think bigger. Life is full of complicated things, things that can’t be represented by a single number or a lone string. So in this chapter we’re going to look at a couple of the collections that Clojure has to offer, namely vectors and lists. We’ll see just how easy it is to create these two sequential data structures and explore some of the functions that Clojure supplies for doing interesting things with them. Finally, we’ll look at some real-world code to discover that a little Clojure knowledge goes a long way.
+さて、Clojureの基本的な概念をいくつか理解したところで、次はもっと大きなことを考えましょう。人生は複雑なもの、単一の数値や単一の文字列では表現できないものでいっぱいです。そこでこの章では、Clojureが提供するコレクションのいくつか、つまりベクターとリストを見ていきます。この2つのシーケンシャルなデータ構造を作成するのがいかに簡単かを見て、Clojureが提供する関数のいくつかを使って面白いことをやってみましょう。最後に、ちょっとしたClojureの知識が長い道のりに役立つことを発見するために、いくつかの実際のコードを見ていきます。
 
 

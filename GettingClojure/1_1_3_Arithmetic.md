@@ -1,13 +1,13 @@
 
-### Arithmetic
+### 算術
 
-Another thing that usually comes early in learning a programming language is figuring out how to do basic arithmetic. Clojure’s approach to doing math is refreshingly—and perhaps a little disconcertingly—simple. To see what this means, let’s add a couple of numbers together:
+プログラミング言語を学習する上で、通常早い段階でやってくるもう1つのことは、基本的な算術のやり方を理解することです。Clojureの算数へのアプローチは、爽やかで、そしておそらく少し不愉快なほどシンプルです。これがどういう意味かを知るために、いくつかの数字を足してみましょう：
 
 ```
 (+ 1900 84)
 ```
 
-Run the expression in that example through the REPL and you will get back `1984`. You do multiplication, subtraction, and division in the same way:
+この例の式をREPLで実行すると、`1984`が返ってくる。掛け算、引き算、割り算も同じように行う：
 
 ```clojure
 (* 16 124) ; Gives you 1984.
@@ -15,43 +15,43 @@ Run the expression in that example through the REPL and you will get back `1984`
 (/ 25792 13) ; 1984 yet again!
 ```
 
-As you might expect, you can assemble these basic math operations into arbitrarily complex expressions. Thus you can get the average of `1984` and `2010` with this:
+ご想像の通り、これらの基本的な数学演算を組み合わせて、任意に複雑な式を作ることができる。こうして、「1984年」と「2010年」の平均を求めることができる：
 
 ```clojure
 (/ (+ 1984 2010) 2)
 ```
 
-Arithmetic in Clojure can be a bit disorienting at first, a disorientation that can be summed up by the question Why is the + first? or perhaps What happened to my nice infix operators? The answer is that Clojure is trading some convenience, in the form of the familiar infix operators, for simplicity. By treating the arithmetic operators like ordinary functions, Clojure manages to keep the syntax of the language uniform. In Clojure, no matter what you are doing, you do it by saying
+Clojureの算術演算は、最初は少し戸惑うかもしれません。その戸惑いは、「なぜ+が最初なのか」あるいは「私の素敵なinfix演算子はどうなったのか」という質問に集約されます。その答えは、Clojureは単純さのために、おなじみのinfix演算子の形で、いくつかの利便性を取引しているということです。算術演算子を普通の関数のように扱うことで、Clojureは言語の構文を統一することに成功しています。Clojureでは、何をするにしても、次のように言います。
 
 ```clojure
 (verb argument argument argument...)
 ```
 
-This means that in the same way we print the string `"hello"` with `(println "hello")`, we add two numbers with `(+ 1982 2)` and we divide them with `(/ 25792 13)`. It’s always the thing we want to do, followed by any arguments, all wrapped in round parentheses.
+つまり、文字列 `"hello"` を `(println "hello")` で表示するのと同じように、2つの数字を `(+ 1982 2)` で足し、`(/ 25792 13)` で割る。常にやりたいこと、その後に引数が続き、すべて丸括弧で囲まれている。
 
-Conveniently, the basic math operators/functions take a variable number of arguments. Thus we can add up a bunch of numbers with this:
+便利なことに、基本的な数学の演算子/関数は可変個の引数を取る。したがって、このようにすれば、たくさんの数字を足し算することができる：
 
 ```clojure
 (+ 1000 500 500 1) ; Evaluates to 2001.
 ```
 
-or do a running subtraction with this:
+あるいは、これで引き算をする：
 
 ```clojure
 (- 2000 10 4 2) ; Evaluates to 1984;
 ```
 
-There is one other twist lurking in the math functions, specifically in the `/` (division) function. Many programming languages, when asked to divide one integer by another, will give you back a truncated integer result. For example, in Ruby or Java when you divide 8 by 3 you get 2. Not so in Clojure, where `(/ 8 3)` will give you `8/3`, which is a ratio, one of Clojure’s built-in data types.
+数学関数、特に`/`（除算）関数には、もうひとつひねりがある。多くのプログラミング言語では、ある整数を別の整数で割るように求められると、整数を切り捨てた結果を返してくる。例えば、RubyやJavaでは、8を3で割ると2が返されます。Clojureではそうではなく、`(/ 8 3)`は `8/3` を返します。
 
-To get the familiar integer truncating behavior, you need to use the quot—short for quotient—function. So one way to get `2` is to write `(quot 8 3)`.
+おなじみの整数の切り捨て動作を得るには、quot(quotientの略)関数を使う必要がある。つまり、`2`を取得する1つの方法は、`(quot 8 3)`と書くことです。
 
-By default, Clojure turns unadorned numeric literals like `8` and `3` and `4976` into integers. If you are interested in numbers with decimal points, Clojure also offers the familiar floating-point notation. Here’s our averaging expression again, this time using floating-point numbers:
+デフォルトでは、Clojureは `8` や `3` や `4976` のような飾り気のない数値リテラルを整数に変換します。小数点を含む数値に興味があるなら、Clojureはおなじみの浮動小数点記法も提供します。ここで再び、浮動小数点数を使った平均化式を示します：
 
 ```clojure
 (/ (+ 1984.0 2010.0) 2.0)
 ```
 
 
-Clojure also provides a sensible set of numeric promotions, so that if you add an integer to a floating-point number, perhaps `(+ 1984 2010.0)`, you will get back a floating-point number—in this case `3994.0`—for your trouble.
+Clojureはまた数値の実用的な拡張機能を提供しており、浮動小数点数に整数を足すと、例えば`(+ 1984 2010.0)`のように、浮動小数点数（この場合は`3994.0`）を返します。
 
 

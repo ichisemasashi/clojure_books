@@ -1,16 +1,16 @@
 
-### Staying Out of Trouble
+### トラブルを避ける
                  
-So which is better, traditional unit tests or generative tests? The answer is simple: yes. Both traditional tests and their generative cousins have strengths and weaknesses. And both have a place in making sure your code is doing what it is supposed to be doing.
+では、従来のユニットテストと生成テストのどちらが優れているのでしょうか？ 答えは簡単です。 はい。 従来のテストと生成テストには、それぞれ長所と短所があります。 そして、どちらもコードが想定通りに動作していることを確認する上で役立ちます。
 
-Traditional unit tests do have one huge advantage: they are shatteringly obvious. Does it work when I do this? Yes. Does it work when I do that? Yes.  OK, then we’re good. So, if we were trying to test this simple function:
+従来のユニットテストには、明白な大きな利点があります。 これを実行すると機能するだろうか？ はい。 あれを実行すると機能するだろうか？ はい。 よし、これで大丈夫だ。 では、この単純な機能をテストしようとしているとします。
 
 test/trouble_one.clj
 ```clojure
 (defn f [a b] (/ a b))
 ```
 
-we might write this test:
+このテストをこのように書くことができる。
 
 ```clojure
 (deftest test-f
@@ -19,9 +19,9 @@ we might write this test:
   (is (= 1 (f 10 10))))
 ```
 
-And we know that for these specific instances, it works. The drawback of this kind of hand-crafted unit testing is that it is tightly constrained by our patience and imagination. I’m certainly not going to write tests for more than a few dozen integers before I call it a day.
+そして、このような特定のケースでは、それが機能することはわかっています。このような手作業によるユニットテストの欠点は、我々の忍耐と想像力に強く制約されることです。私は、1日の仕事を終える前に、数十以上の数の整数のテストを書くつもりはありません。
 
-Generative testing, on the other hand, opens up vast stretches of test cases.  We could, for example, write this:
+一方、生成テストは、膨大なテストケースをカバーします。例えば、次のように書くことができます。
 
 ```clojure 
 (ctest/defspec more-complex-spec 10000
@@ -30,7 +30,7 @@ Generative testing, on the other hand, opens up vast stretches of test cases.  W
     (is (= (* b (f a b)) a))))
 ```
 
-And we’d pretty rapidly discover that `f` does not work when `b` is zero. The danger with generative testing is that all those generated test cases will lull us into believing that we’ve covered all the possibilities. Do the math, and you will discover that even millions of test cases make up approximately zero percent of the possible pairs of integers. Change the function a bit:
+そして、`b` がゼロのときは `f` が機能しないことがすぐにわかるでしょう。生成テストの危険性は、生成されたテストケースがすべて、すべての可能性をカバーしていると私たちを信じ込ませてしまうことです。計算してみると、何百万ものテストケースでも、可能な整数の組み合わせの割合はほぼゼロであることがわかるでしょう。関数を少し変更してみましょう：
 
 ```clojure
 (defn more-complex-f [a b] (/ a (+ b 863947)))
@@ -41,20 +41,20 @@ And we’d pretty rapidly discover that `f` does not work when `b` is zero. The 
     (= (* (more-complex-f a b) (- b 863947)) a)))
 ```
 
-Now the chances are excellent that the generative test will miss the division by zero. As I say, the best solution is usually a small number of traditional unit tests combined with the greater reach of generative testing:
+生成テストでは、除算をゼロと見逃す可能性が極めて高いでしょう。私が申し上げたいのは、通常、最善の解決策は、少数の従来のユニットテストと、より広範囲をカバーする生成テストを組み合わせることです。
 
 test/trouble_two.clj
 ```clojure
-;; Prevent the division by zero.
+;; ゼロによる割り算を防ぎます。
 (defn more-complex-f [a b]
   (let [denominator (- b 863947)]
     (if (zero? denominator)
       :no-result
       (/ a denominator))))
-;; But we still want to be sure we detect it correctly.
+;; しかし、私たちは、それが正しく検出されていることを確認したいのです。
 (deftest test-critical-value
   (is (= :no-result (more-complex-f 1 863947))))
-;; And the function works in other cases.
+;; そして、その機能は他のケースでも有効です。
 (def non-critical-gen (gen/such-that (partial not= 863947) gen/pos-int))
 
 (ctest/defspec test-other-values 10000
@@ -63,9 +63,9 @@ test/trouble_two.clj
     (= (* (more-complex-f a b) (- b 863947)) a)))
 ```
 
-Finally, keep in mind that even one test is much better than no tests at all.
+最後に、テストをまったく実施しないよりは、たとえ1つでもテストを実施する方がはるかに良いということを念頭に置いてください。
 
-Let’s return one more time to our original inventory test:
+もう一度、最初の在庫テストに戻ってみましょう。
 
 ```clojure
 (require '[inventory.core :as i])
@@ -74,15 +74,15 @@ Let’s return one more time to our original inventory test:
   (is (not (nil? (i/find-by-title "Emma" books)))))
 ```
 
-This test may not seem impressive, but get it to run, and you have demonstrated the following:
+このテストはあまり印象的ではないかもしれませんが、実行してみると、以下のことが示されます。
 
-* There is a namespace called `inventory.core`.
-* There are no gross syntax errors in `inventory.core`.
-* The `inventory.core` namespace contains a function called `find-by-title`.
-* You can call `find-by-title` with two parameters.
-* Calling `find-by-title` with reasonable parameters doesn’t throw an exception.
-* The `find-by-title` function does not always return `nil`.
+* `inventory.core` という名前空間が存在する。
+* `inventory.core` に重大な構文エラーがない。
+* `inventory.core` という名前空間には `find-by-title` という関数が存在する。
+* `find-by-title` を2つのパラメータで呼び出すことができる。
+* `find-by-title` を妥当なパラメータで呼び出しても例外は発生しません。
+* `find-by-title` 関数は常に `nil` を返すわけではありません。
 
-This is not sworn testimony that `find-by-title` does exactly what you want, but it is also not nothing. A little bit of testing goes a long way.
+これは、`find-by-title` がまさにあなたが望むことを行うという厳粛な証言ではありませんが、何も無いというわけでもありません。少しのテストでも大きな効果があります。
 
 

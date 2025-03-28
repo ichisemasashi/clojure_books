@@ -1,27 +1,27 @@
 
-### Multimethods 
+### マルチメソッド 
           
-Multi-arity and variadic functions are great for those situations where you want to build functions that are less picky about the number of arguments they will accept. Sometimes what you want is to be able to vary your function’s behavior based on some other aspect of the values that get passed to it. 
+マルチアリティ関数や variadic 関数は、引数の数にあまりこだわらない関数を作りたい場合に便利です。関数に渡される値の別の側面に基づいて、関数の動作を変化させたい場合があります。
 
-For example, imagine that our system was getting book data from various sources, in different formats. Some books still look like the maps we’ve been using:
+例えば、私たちのシステムが様々なソースから様々なフォーマットで書籍データを取得していたとします。いくつかの書籍は、これまで使ってきたマップのように見えます：
   
 ```clojure
 {:title "War and Peace" :author "Tolstoy"}
 ```
 
-While others come in maps with different keys:
+一方、異なるキーのマップもある：
 
 ```clojure
 {:book "Emma" :by "Austen"}
 ``` 
 
-And still others are encoded in vectors:
+また、ベクターで表現されるものもある：
 
 ```clojure
 ["1984" "Orwell"]
 ```
 
-Clearly we could handle all of this by writing a function to convert the odd-ball formats into our standard map, complete with `:title` and `author` keys:
+このような変則的なフォーマットを、`:title`と`author`のキーを持つ標準的なマップに変換する関数を書けば、これらすべてを処理できるのは明らかだ：
 
 
 ```clojure
@@ -34,11 +34,11 @@ Clearly we could handle all of this by writing a function to convert the odd-bal
       {:title (:book book) :author (:by book)})))
 ```
 
-There’s nothing wrong with this kind of "just do it" approach, but what if we suddenly had to deal with a whole blizzard of book formats, everything from lists to XML and JSON encoded strings. Our simple `normalize-book` function is likely to get very ugly very rapidly.
+このような "ただやる "アプローチには何の問題もないのだが、もし突然、リストからXMLやJSONエンコードされた文字列まで、ありとあらゆる書籍フォーマットを扱わなければならなくなったらどうだろう。私たちの単純な`normalize-book`関数は、非常に醜いものになる可能性が高い。
 
-One way to deal with this kind of situation is to build a multimethod. Like functions with multiple arities, multimethods let you have a single function with multiple implementations. But unlike multi-arity functions, which pick the implementation based on the number of arguments, multimethods allow you to pick the implementation based on any—and I do mean any—characteristic of its arguments.
+このような状況に対処する一つの方法は、マルチメソッドを構築することである。複数のアリティを持つ関数と同じように、マルチメソッドでは、1つの関数に複数の実装を持たせることができます。しかし、複数のアリティを持つ関数が引数の数に基づいて実装を選択するのとは異なり、マルチメソッドでは引数の任意の（つまりあらゆる）特徴に基づいて実装を選択することができます。
 
-Writing a multimethod is an exercise in splitting the problem apart. First we need a function to do the splitting by categorizing the different sets of arguments. In our example this would be a function that can distinguish the different formats of book data:
+マルチメソッドを書くことは、問題を分割する練習になります。まず、引数の種類を分類する関数が必要だ。この例では、書籍データの異なる形式を区別できる関数がこれにあたる：
 
 
 ```clojure
@@ -49,16 +49,16 @@ Writing a multimethod is an exercise in splitting the problem apart. First we ne
     (contains? book :book) :alternative-map))
 ```
 
-Pass a book value to `dispatch-book-format`, and it will tell you which format you have—`:vector-book`, `:standard-map`, or `:alternative-map`.
+`dispatch-book-format`に本の値を渡すと、`:vector-book`、`:standard-map`、`:alternative-map`のどのフォーマットかを教えてくれる。
 
-Next, we declare a multimethod that uses our function to categorize its arguments:
+次に、関数を使用して引数を分類するマルチメソッドを宣言する：
 
 ```clojure
 (defmulti normalize-book dispatch-book-format)
 ```
 
 
-That code example defines a new multimethod—essentially a function—that picks its implementation based on what it gets back from its "dispatch function", in this case `dispatch-book-format`. All that is left is to define the implementations, one for each possible value returned from the dispatch function. We do this with defmethod:
+このコード例では、「ディスパッチ関数」（この場合は`dispatch-book-format`）から返される値に基づいて実装を選択する新しいマルチメソッド（基本的には関数）を定義している。あとは、ディスパッチ関数から返される可能性のある値ごとに実装を定義するだけです。これをdefmethodで行う：
 
 ```clojure
 (defmethod normalize-book :vector-book [book]
@@ -69,7 +69,7 @@ That code example defines a new multimethod—essentially a function—that pick
   {:title (:book book) :author (:by book)})
 ```
 
-We end up with a single argument function called `normalize-book` that will first run its argument through `dispatch-book-format` and, based on the result, pick an implementation:
+`normalize-book`という単一の引数を持つ関数で、まずその引数を`dispatch-book-format`に通し、その結果に基づいてどの実装を選ぶかを決める：
 
 ```clojure
 ;; Just returns the same (standard) book map.
@@ -80,16 +80,16 @@ We end up with a single argument function called `normalize-book` that will firs
 (normalize-book ["1984" "Orwell"])
 ```
 
-And thus we can bring harmony to our books.
+こうして、私たちは本に調和をもたらすことができる。
 
 > [!NOTE]
 >
 > **Multi Who?**
 >
-> The careful reader will have noticed that `normalize-book` doesn’t contain any code to handle bad input. The good news is that if the dispatch function produces a value for which there is no corresponding `defmethod`, Clojure will generate an exception, which is probably what you want. Alternatively, you can supply a method for the value `:default` that will cover the "everything else" case.
+> 注意深い読者は、`normalize-book`が不正な入力を処理するコードを含んでいないことに気づいただろう。良いニュースは、ディスパッチ関数が対応する `defmethod`にない値を生成した場合、Clojureは例外を生成します。あるいは、`:default`という値のメソッドを提供することで、"他のすべて "のケースをカバーすることができます。
 
 
-The cool thing about multimethods is that in writing the dispatch function you can choose any criteria that you want. For example, in the United States the copyright period is different depending on when a book was published.  If our book maps include a `:published` key, then we could write a multimethod that decides what to do based on the year of publication:
+マルチメソッドのいいところは、ディスパッチ関数を書くときに、好きな基準を選べることだ。例えば、アメリカでは、本がいつ出版されたかによって著作権期間が異なります。 もしブックマップに `:published` キーが含まれていれば、出版年に基づいて何をすべきかを決定するマルチメソッドを書くことができる：
 
 ```clojure
 (defn dispatch-published [book]
@@ -109,18 +109,18 @@ The cool thing about multimethods is that in writing the dispatch function you c
   )
 ```
 
-In a sense multimethods are a generalization of the kind of type-based polymorphism that you find in most object-oriented programming languages.
-Multimethods are more general in the sense that you get to decide which criteria to use to pick the implementation. You can always change the guts of `dispatch-book-format` to pick your implementation a different way. Or create a different multimethod that categorizes its arguments in some other way.
+ある意味、マルチメソッドは、ほとんどのオブジェクト指向プログラミング言語に見られる、型ベースのポリモーフィズムを一般化したものだ。
+どの基準で実装を選ぶかを決めることができるという意味で、マルチメソッドはより一般的です。`dispatch-book-format`の中身を変更すれば、いつでも別の方法で実装を選ぶことができます。あるいは、引数を別の方法で分類する別のマルチメソッドを作ることもできる。
 
 
-Even better, there’s no requirement that all the bits of a single multimethod be defined in the same file or at the same time. If, for example, our books contained a `:genre` key, like this:
+さらに良いことに、1つのマルチメソッドのすべての要素が同じファイルで同時に定義されている必要はない。たとえば、私たちのブックに `:genre` キーが含まれていたとします：
 
 ```clojure
 (def books [{:title "Pride and Prejudice" :author "Austen" :genre :romance}
             {:title "World War Z" :author "Brooks" :genre :zombie}])
 ```
 
-we could certainly create a multimethod based on the genre:
+ジャンルに応じたマルチメソッドを作ることができるのは言うまでもない：
 
 ```clojure
 ;; Remember you can use keys like :genre like functions on maps.
@@ -132,7 +132,7 @@ we could certainly create a multimethod based on the genre:
   (str "The heart consuming new zombie adventure by " (:author book)))
 ```
 
-But what if much later someone comes up with a new genre?
+しかし、ずっと後になって誰かが新しいジャンルを考え出したらどうだろう？
 
 ```clojure
 (def ppz {:title "Pride and Prejudice and Zombies"
@@ -140,7 +140,7 @@ But what if much later someone comes up with a new genre?
           :genre :zombie-romance})
 ```
 
-No problem! Just define a new method:
+問題ない！新しいメソッドを定義するだけです：
 
 
 ```clojure
@@ -148,6 +148,6 @@ No problem! Just define a new method:
   (str "The heart warming and consuming new romance by " (:author book)))
 ```
 
-As I say, this sort of multimethod addition does not have to appear in the same file or be written by the same programmer as the originals. And this means multimethods provide a great extension point for your code.
+言っておくが、このようなマルチメソッドの追加は、オリジナルのものと同じファイルに書いたり、同じプログラマーが書いたりする必要はない。つまり、マルチメソッドはあなたのコードに素晴らしい拡張ポイントを提供してくれるのだ。
 
 

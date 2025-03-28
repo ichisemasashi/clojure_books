@@ -1,7 +1,7 @@
 
-### Testing Namespaces and Projects
+### ネームスペースとプロジェクトのテスト
 
-So far we have run our tests one at a time, but this gets old fast. Happily, `clojure.test` provides the `run-tests` function, which makes it easy to run all of the tests in a namespace:
+これまでのところ、テストを 1 つずつ実行してきましたが、これはすぐに古くなります。幸いなことに、`clojure.test` は `run-tests` 関数を提供しており、名前空間内のすべてのテストを簡単に実行できます：
 
 test/inventory/dev/run_tests.clj
 ```clojure
@@ -11,9 +11,9 @@ test/inventory/dev/run_tests.clj
 (test/run-tests 'inventory.core-test)
 ```
 
-Call `run-tests` without any arguments, and it will run all the tests in the current namespace. Pass it either a namespace value or a namespace name (as a symbol), and it will run all the tests in that namespace. 
+引数なしで `run-tests` を呼び出すと、現在の名前空間のすべてのテストを実行します。名前空間の値か名前空間名を (シンボルとして) 渡すと、その名前空間内のすべてのテストを実行します。
 
-Better still, Leiningen provides a task to run all the tests in all the namespaces in your project from the command line:
+さらによいことに、Leiningen はコマンドラインからプロジェクト内のすべての名前空間のテストを実行するタスクを提供しています：
 
 ```bash
 $ lein test
@@ -23,6 +23,6 @@ Ran 1 tests containing 1 assertions.
 {:test 1, :pass 1, :fail 0, :error 0, :type :summary}
 ```
 
-It even supplies a nice summary of the test results.
+さらに、テスト結果の要約も表示される。
 
 

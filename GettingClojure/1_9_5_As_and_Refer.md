@@ -1,15 +1,15 @@
 
-### As and Refer
+### AsとRefer
 
-The downside of using fully qualified names like `blottsbooks.pricing/discount-price` is that they can get long, and long names tend to clutter up your code and make it less readable. Fortunately, Clojure provides a couple of shortcuts to minimize the clutter.
+`blottsbooks.pricing/discount-price` のような完全修飾名を使うことの欠点は、長くなることで、長い名前はコードを乱雑にし、読みにくくする傾向があります。幸いなことに、Clojureは乱雑さを最小限にするためのショートカットをいくつか提供しています。
 
-One way you can make your code less noisy is to create an alias for the namespace, like this:
+コードをよりノイズの少ないものにする方法の1つは、次のように名前空間のエイリアスを作成することです：
 
 ```clojure 
 (require '[blottsbooks.pricing :as pricing])
 ```
 
-or like this:
+あるいはこうだ：
 
 ```clojure
 (ns blottsbooks.core
@@ -17,11 +17,11 @@ or like this:
   (:gen-class))
 ```
 
-Note that we’re now feeding `require` a three-element vector instead of just the name of the namespace. As shown in the "figure on page 101", the extended version of `require` not only pulls in the `blottsbooks.pricing` namespace but also gives it an alias of plain old `pricing`.
+`require`に名前空間名だけでなく、3要素のベクターを与えていることに注意してください。101ページの図のように、`require`の拡張バージョンは`blottsbooks.pricing`名前空間を取り込むだけでなく、古き良き`pricing`のエイリアスを与えています。
 
 ![fig_1_9_5_001](img/1_9_5_001.png)
 
-Given this, we can now refer to `blottsbooks.pricing/discount-price` as `pricing/discount-price`:
+このようにすると、`blottsbooks.pricing/discount-price`を`pricing/discount-price`と参照することができる：
 
 ```clojure
 (defn -main []
@@ -30,34 +30,34 @@ Given this, we can now refer to `blottsbooks.pricing/discount-price` as `pricing
 ```
 
 
-The alias that you supply with `:as` is completely arbitrary. We could have said `[blottsbooks.pricing :as p]` and then called `p/discount-price`. Also keep in mind that the alias created by `:as` is local to the namespace where you evaluated the `require`.
+`:as`で指定するエイリアスは完全に任意です。`[blottsbooks.pricing :as p]`として、`p/discount-price`を呼び出すこともできます。また、`:as` で作成されるエイリアスは `require` を評価した名前空間に対してローカルであることに注意してください。
 
-If you want to use the `pricing` alias in a second namespace, you’re going to need a second `require.../:as`. Finally, aliases don’t mask ordinary bindings, so if you did have that `pricing` alias in your namespace you could also have a `pricing` function without a problem.
+もし `pricing` というエイリアスを2つ目の名前空間で使いたい場合は、2つ目の `require.../:as` が必要になります。最後に、エイリアスは通常の束縛をマスクしないので、もし自分の名前空間に `pricing` エイリアスがあったとしても、問題なく `pricing` 関数を定義することができます。
 
-The `require.../:as` combination should be your first choice when those fully qualified names are getting in the way. In extreme situations you can take things one step further, with `:refer`:
+require.../:as`の組み合わせは、完全修飾名が邪魔になる場合の最初の選択肢になるはずです。極端な場合には、さらに一歩進んで `:refer` を使うこともできる：
 
 ```clojure
 (require '[blottsbooks.pricing :refer [discount-price]])
 ```
 
-As shown in the following figure, when you use `:refer` you are essentially pulling the vars from the other namespace into the current namespace.
+以下の図に示すように、`:refer`を使用すると、基本的に他の名前空間からカレント名前空間にvarsを引き込むことになる。
 
 ![fig_1_9_5_002](img/1_9_5_002.png)
 
-That means you don’t have to worry about using fully qualified names or aliases:
+つまり、完全修飾名やエイリアスの使用を心配する必要はない：
 
 ```clojure
 ;; Now that I've done the :refer...
 (discount-price {:title "Emma" :price 9.99})
 ```
 
-While `:refer` might seem like a great way to get to the most concise code possible, there is a danger lurking in all that convenience: what if we already have a `discount-price` function defined? In that case `:refer` will overwrite it. As perilous as this is for application functions, consider that you can also accidentally overwrite standard, Clojure-supplied functions with `:refer`. Who’s up for debugging some code where `first` or `list` has been redefined? Since namespaces exist precisely to prevent these kinds of clashes, you should use `:refer` very sparsely, if at all.
+`:refer`は最も簡潔なコードになる素晴らしい方法のように思えるかもしれないが、その便利さには危険が潜んでいる。すでに`discount-price`関数が定義されていたらどうだろう？そのような場合、`:refer`はそれを上書きしてしまう。これはアプリケーション関数にとって危険なことなので、Clojureが提供する標準的な関数も誤って `:refer` で上書きしてしまう可能性があることを考えてみてください。誰が `first` や `list` が再定義されたコードをデバッグする気になりますか？名前空間はまさにこのような衝突を防ぐために存在するので、`:refer`は使うとしてもごくまれにすべきです。
 
 > [!NOTE]
 >
-> **REPL Prompts**
+>**REPLプロンプト**。
 >
-> Now that we’ve looked at namespaces, we can finally resolve the Great REPL Prompt Mystery. REPLs generally include the name of the current namespace in their prompts. If you start a REPL with Leiningen outside of a project directory, your initial namespace will be `user`, and that’s what you will see in your prompt. On the other hand, if you start a REPL from inside of a Clojure project directory, Leiningen will default to the `core` namespace of that project.
+>さて、名前空間について見てきたところで、ついに偉大なるREPLプロンプトの謎を解くことができます。REPL は一般的にカレント・ネームスペースの名前をプロンプトに含めます。プロジェクトディレクトリの外で Leiningen を使って REPL を開始した場合、最初の名前空間は `user` となり、プロンプトにもそれが表示されます。一方、Clojure プロジェクトディレクトリの中から REPL を起動した場合、 Leiningen はそのプロジェクトの `core` 名前空間をデフォルトにします。
 
 
 

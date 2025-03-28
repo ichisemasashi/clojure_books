@@ -4,25 +4,25 @@ Build Your Functional Skills One Idea at a Time
 Russ Olsen
 
 
-## Early Praise for Getting Clojure: Build Your Functional Skills One Idea at a Time
+## 初期の称賛 for Getting Clojure: Build Your Functional Skills One Idea at a Time
 
-At long last, Russ Olsen brings his engaging and encouraging style to the Clojure landscape. I wish Getting Clojure had been available when I was learning the language. If you’re looking for a smooth transition into Clojure, this is it.
+ついに、Russ Olsenが彼の魅力的で励みになるスタイルをClojureの世界に持ち込んだ。Getting Clojureが、私がこの言語を学んでいたときにあったらよかったのに。Clojureへのスムーズな移行を探しているなら、これがそれだ。
 ➤ Ben Vandgrift
 Chief Architect, Oryx Systems Inc.
 
-The book was a joy to read and is highly recommended due to its comprehensive scope and brilliant writing. It also showcases the spirit of the Clojure community: a deeply knowledgeable but also informal, exploratory, no-nonsense approach to thinking about software.
+この本は読むのが楽しく、その包括的な範囲と見事な文章のために強く勧められる。この本はまた、Clojureコミュニティの精神を示している。それは、深い知識を持ちながらも、非公式で、探索的で、ソフトウェアについて考えるためのナンセンスなアプローチでもある。
 ➤ Tibor Simic
 Software Developer, Inge-mark 
  
-My favorite sections in the book: "In the Wild"—code that is live and used today.  Seeing real code immensely propelled my understanding of the materials, far be- yond any contrived examples. I wish I had this book five years ago!
+この本の中で私が一番好きなセクション： この本の中で一番好きなセクションは、"In the Wild "だ。 実際のコードを見ることで、作為的な例をはるかに凌駕して、教材への理解が大いに深まった。5年前にこの本があればよかったと思う！
 ➤ Nola Stowe
 Software Engineer, Condé Nast
 
-Let Russ Olsen’s destructuring of Clojure map mind-twisting concepts into a promise of your bright future as a capable functional coder.
+Russ OlsenによるClojureの再構築は、頭を捻るような概念を、有能な関数型コーダーとしての輝かしい未来に約束します。
 ➤ Stefan Turalski
 Software Developer, BNP Paribas
 
-The perfect initiation into the world of Clojure. 
+Clojureの世界への完璧な入門書。
 ➤ Scott Downie
 VP Support and Services, Illumio 
 

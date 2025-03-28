@@ -1,7 +1,7 @@
 
-### Staying Out of Trouble
+### トラブルに巻き込まれないために
   
-Possibly the easiest mistake you can make with a record is to attempt to get a value into a field and to miss. While this code may look plausible, it’s nonsense:
+レコードで犯しやすいミスといえば、フィールドに値を入力しようとして失敗することだろう。このコードはもっともらしく見えるかもしれないが、ナンセンスだ：
 
 ```clojure
 (map->FictionalCharacter {:full-name "Elizabeth Bennet"
@@ -9,15 +9,15 @@ Possibly the easiest mistake you can make with a record is to attempt to get a v
                           :written-by "Austen"})
 ```
 
-The trouble is that fields in `FictionalCharacter` are called `name`, `appears-in`, and `author`, not `full-name`, `book`, and `written-by`. The expression in the preceding code will give you a six-field record, with the three built-in fields set to `nil`, complemented by three additional fields—remember, records are also maps— set to the values we see in the code.
+問題は、`FictionalCharacter`のフィールドは`name`、`appears-in`、`author`という名前であり、`full-name`、`book`、`written-by`という名前ではないということだ。前のコードの式は6フィールドのレコードになり、3つの組み込みフィールドが`nil`に設定され、3つの追加フィールドが補完される。
  
-You can come to the same unfortunate end with botched uses of `assoc`:
+また、`assoc`の使い方を間違えると、同じような不幸な結末を迎えることになる：
 
 ```clojure
 (assoc elizabeth :book "Pride & Prejudice")
 ```
 
-Another thing to keep in mind is that protocols take up more room in your namespace than is immediately apparent. As we’ve seen, evaluating `(defprotocol Person...)` binds the symbol `Person` to the protocol definition. That’s implied in the `def` part of `defprotocol`. The thing that can bite you is that when you define a protocol you are also defining functions, one for each method in your protocol. This means you need to be careful with the names you pick for your method. If, for example, instead of using `full-name` in our `Person` protocol we had gone with name like this:
+もう1つ注意しなければならないのは、プロトコルは見た目以上に名前空間を占有するということです。これまで見てきたように、`(defprotocol Person...)`を評価すると、シンボル `Person` がプロトコル定義に束縛される。これは `defprotocol` の `def` の部分で暗示されている。プロトコルを定義するとき、プロトコルのメソッドごとに関数を定義することになります。つまり、メソッドの名前には注意が必要です。例えば、私たちの `Person` プロトコルで `full-name` を使う代わりに、次のような名前にしていたとする：
 
 ```clojure 
 (defprotocol CollidingPerson 
@@ -27,15 +27,15 @@ Another thing to keep in mind is that protocols take up more room in your namesp
 ```
 
 
-we would have seen the following warning from Clojure:
+Clojureから次のような警告が表示されるはずだ：
 
 ```
 Warning: protocol #'user/CollidingPerson is overwriting function name
 ```
 
-The problem is that `defprotocol` is trying to define a function called `name` but `name` is already a built-in function that comes with Clojure. This is not necessarily fatal, as long as you know which `name` you’re using at any given moment.
+問題は、`defprotocol`が`name`という関数を定義しようとしているが、`name`はすでにClojureに付属している組み込み関数であるということだ。どの瞬間にどの `name` を使っているかを知っている限り、これは必ずしも致命的な問題ではない。
 
-In the same vein, you should watch out for dueling protocols:
+同じように、競合するプロトコルにも気をつける必要がある：
 
 ```clojure
 (defprotocol Person
@@ -47,16 +47,16 @@ In the same vein, you should watch out for dueling protocols:
   (description [this]))
 ```
 
-Again you will see a warning as `description` from `Product` overrides the `Person` `description`:
+この場合も、`Product` の `description` が `Person` の `description` を上書きするため、警告が表示されます：
 
 ```
 Warning: protocol #'user/Product is overwriting method
 description of protocol Person
 ```
 
-The solution to these kinds of protocol-versus-protocol name conflicts is simple: when in doubt, put each protocol in its own namespace.
+このようなプロトコル対プロトコルの名前の衝突を解決する方法は簡単で、迷ったらそれぞれのプロトコルを独自の名前空間に置くことである。
 
 
-Finally, you should be aware that records have a more generic cousin in types.  In the same way that you define a new record type with `defrecord`, you define new types (or perhaps a type type?) with `deftype`. The difference is that while records come with a fair bit of built-in behavior—think of all those maplike talents that records just have—types are more of a blank slate. When you define a type it’s up to you to define all of the behavior of instances of your new type. This is more work, but it also means you have full control. Types are one of those language features that you may never use, but they are there if the need ever arises.
+最後に、レコードにはより一般的な型があることに注意する必要がある。 `defrecord`で新しいレコード型を定義するのと同じように、 `deftype`で新しい型(あるいは型タイプ？)を定義できる。レコードがマップのような機能を持っているのに対して、型はより白紙の状態である。型を定義するとき、新しい型のインスタンスのすべての振る舞いを定義するのはあなた自身です。その分作業は増えるが、完全にコントロールできるということでもある。型は言語機能のひとつであり、使うことはないかもしれないが、必要に迫られたときには利用できる。
 
 

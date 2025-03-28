@@ -1,16 +1,16 @@
   
-### A Namespace of Your Own
+### 独自の名前空間
 
-Now that you’ve seen how to create new namespaces in the REPL and how to get namespaces loaded with `require`, we’re ready to take the final step: defining a namespace of our own in a real `.clj` file in a directory project.
-Let’s start by creating a new Clojure application. Recall from "Hello, Clojure" that we can use Leiningen to create a new Clojure project like this:
+REPL で新しい名前空間を作成する方法と `require` で名前空間を取り込む方法を見たので、最後のステップに進みましょう： ディレクトリプロジェクトの実際の `.clj` ファイルで独自の名前空間を定義します。
+新しいClojureアプリケーションを作成することから始めましょう。"Hello, Clojure "で、Leiningenを使用して新しいClojureプロジェクトをこのように作成できたことを思い出してください：
 
 ```bash
 $ lein new app blottsbooks 
 ```
  
-Run those commands, and you will end up with a fully functional, if skeletal, Clojure project. For our purposes, the key bit of the project is a single source file that you’ll find at `src/blottsbooks/core.clj`.
+これらのコマンドを実行すると、骨格はあるにせよ、完全に機能するClojureプロジェクトが完成します。このプロジェクトで重要なのは、`src/blottsbooks/core.clj`にある1つのソースファイルです。
 
-Inside of that file you’ll find the following:
+このファイルの中には次のようなものがあります：
 
 hello/blottsbooks-1/src/blottsbooks/core.clj
 ```clojure 
@@ -23,19 +23,19 @@ hello/blottsbooks-1/src/blottsbooks/core.clj
   (println "Hello, World!"))
 ```
 
-So far this is the same ground we covered back in "Hello, Clojure", but now the `ns` at the top of the file should make a bit more sense: we’re setting up a new namespace called `blottsbooks.core`.
+ここまでは "Hello, Clojure "で説明したのと同じですが、ファイルの先頭にある`ns`はもう少し意味があるはずです：`blottsbooks.core`という新しい名前空間を設定しているのです。
 
 
-There are a couple of things to watch as you build file-based namespaces. The first and most important is the correspondence between the namespace name —`blottsbooks.core` in the example—and the name of the file—`blottsbooks/core.clj`. This correspondence is neither an accident nor optional. In order for tools like `require` to work, Clojure assumes that it can do a simple transformation of a namespace name and come up with the name of the file harboring the code for the namespace. This transformation is about as simple as it comes: take the namespace name, convert any periods to directory-separating slashes, slap a `.clj` on the end, and voilà: `blottsbooks.core` is found in `blottsbooks/core.clj`.
+ファイルベースで名前空間を構築する際に注意すべき点がいくつかあります。まず一番重要なのは、名前空間名（例では`blottsbooks.core`）とファイル名（`blottsbooks/core.clj`）の対応です。この対応は偶然でも省略可能でもありません。`require`のようなツールが機能するために、Clojureは名前空間名の単純な変換を行い、名前空間のコードを保持するファイル名を導き出すことができると仮定しています。名前空間名を取り、ピリオドをディレクトリ区切りのスラッシュに変換し、末尾に `.clj` を付けると、ほら: `blottsbooks.core` は `blottsbooks/core.clj` にあります。
 
 
 > [!NOTE]
 >
 > **Class Paths**
 >
-> Along with the namespace-to-file-name transformation, Clojure also relies on the Java class path—essentially a list of places that the JVM looks for code—to help it locate namespaces. This is how Clojure knows to look in the `src` directory, and how it manages to locate the built-in Clojure library code. More on this in "Interoperating with Java".
+> 名前空間からファイル名への変換とともに、ClojureはJavaクラスパス-基本的にJVMがコードを探す場所のリスト-にも依存して、名前空間を見つけるのを助けます。これは、Clojureが`src`ディレクトリを探す方法を知っていて、どうやって組み込みのClojureライブラリのコードを見つけるかを管理する方法です。これについては "Javaとの相互運用 "で詳しく説明します。
 
-Thus if we wanted to add a second namespace to our `blottsbooks` project (a namespace to hold our pricing code), we might create a file called `src/blottsbooks/pricing.clj`. Given that file name, the namespace name must be `blottsbooks.pricing`:
+したがって、もし私たちが`blottsbooks`プロジェクトに2つ目の名前空間（プライシングコードを保持する名前空間）を追加したかったら、`src/blottsbooks/pricing.clj`というファイルを作成すればよいことになります。このファイル名から、名前空間名は `blottsbooks.pricing` となります：
 
 namespace/blottsbooks-1/src/blottsbooks/pricing.clj
 ```clojure
@@ -49,9 +49,9 @@ namespace/blottsbooks-1/src/blottsbooks/pricing.clj
 ```
 
 
-If you happen to have any dashes in your namespace name—perhaps it’s called `blotts-books.current-pricing`—then the dashes get converted to underscores in the file name: `blotts_books/current_pricing.clj`.
+もし、名前空間名にダッシュがある場合（例えば、`blotts-books.current-pricing`）は、ファイル名`blotts_books/current_pricing.clj`の中でダッシュがアンダースコアに変換されます。
 
-The other thing you should keep in mind as you create files full of namespaces is that it is possible to fold `require` expressions into the `ns` expression. So if we wanted to use the `discount-price` function from `blottsbooks.pricing` in `blottsbooks.core`, we could do it like this:
+名前空間でつながったファイルを作成するときに注意しなければならないのは、`ns`式の中に`require`式を折り込むことができるということです。つまり、`blottsbooks.pricing`の `discount-price` 関数を `blottsbooks.core` で使いたい場合は、次のようにします：
 
 namespace/blottsbooks-1/src/blottsbooks/core.clj
 ```clojure
@@ -65,8 +65,8 @@ namespace/blottsbooks-1/src/blottsbooks/core.clj
       {:title "Emma" :price 9.99})))
 ```
 
-Generally Clojure programmers prefer to use the stand-alone `require` when they’re working in the REPL—it’s just convenient to be able to `require` in namespaces as you go—and the `ns` version when writing source files. You should too, but you should also be aware that the syntax of the two forms of `require` is maddeningly different. In the stand-alone version it’s `require`, a symbol.
+一般的にClojureプログラマは、REPLで作業しているときはスタンドアロンの `require` を好んで使い(ネームスペースで `require` できるのは便利です)、ソースファイルを書いているときは `ns` バージョンを使います。この2つの `require` のシンタックスは驚くほど違うので注意が必要だ。スタンドアロン版では`require`というシンボルだ。
 
-In the `ns` version it’s `:require`, a keyword. In the stand-alone version you must quote the argument. In the `ns` version you must not quote the argument.
+`ns`バージョンでは `:require` で、キーワードです。スタンドアロン版では引数を引用符で囲む必要がある。`ns`バージョンでは引数を引用符で囲む必要はない。
 
 

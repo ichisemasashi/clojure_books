@@ -1,15 +1,15 @@
 
 ## CHAPTER 12 Destructuring
 
-One of the secrets of Clojure’s power is that it gives you basic tools—things like functions and vectors and maps—that let you do the simple things simply. 
+Clojureのパワーの秘密の1つは、関数やベクター、マップといった基本的なツールを提供することで、単純なことをシンプルに行えるようにすることだ。
 
-But Clojure also provides facilities to compose those tools into more capable conglomerates that can take on the bigger jobs. On the code side, we have higher-order functions and vars and namespaces. On the data side, we have a set of simple data structures that you layer. If your problem requires it, there’s nothing stopping you from putting that vector inside of a map inside of a set inside of another map.
+しかし、Clojureは、これらのツールを、より大きな仕事を引き受けることができる、より有能な集合体に構成する機能も提供します。コード・サイドには、高階関数やvarsや名前空間がある。データ側では、単純なデータ構造の集合があり、それを階層化していく。ベクターをマップの中に入れ、そのマップをセットの中に入れ、そのセットを別のマップの中に入れることもできる。
 
-The downside of all this convenient data packaging is that peeling off the wrapping can be tedious. If you do have that vector inside of a map inside of a set, you could spend a lot of time—and programming energy—cutting through the wrapping to get at the actual data.
+この便利なデータ・パッケージの欠点は、ラッピングを剥がすのが面倒なことだ。もしベクターがマップの中にあってそれがセットの中にある場合、実際のデータを得るためにラップを切り開くのに多くの時間とプログラミングのエネルギーを費やすことになります。
 
-So in this chapter we’ll look at destructuring, a tool that you can use to cut through the data structure packaging. We’ll see how destructuring works and how it’s seamlessly integrated into key parts of Clojure. We’ll also look at how you can use destructuring to make your code cleaner and clearer, and at how to avoid letting destructuring defeat its own purpose by obscuring your code.
+そこでこの章では、データ構造の包装を切るために使えるツール、デストラクチャリングについて見ていきます。デストラクチャリングがどのように機能し、Clojureの主要な部分にどのようにシームレスに統合されているかを見ていきます。また、あなたのコードをよりすっきりと明瞭にするために、どのようにデストラクチャリングを使うことができるか、そして、あなたのコードを不明瞭にすることによって、デストラクチャリングがそれ自身の目的を果たさないようにする方法についても見ていきます。
 
-Let’s get started.
+始めましょう。
 
 
 

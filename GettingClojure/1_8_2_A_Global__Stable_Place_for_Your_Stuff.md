@@ -1,15 +1,15 @@
 
 
-### A Global, Stable Place for Your Stuff
+### データのグローバルで安定した場所
 
-As we discovered all the way back in Chapter 1, `def` is about as simple as programming-language features come. You just hand it a symbol and a value:
+第1章で学んだように、`def`はプログラミング言語の機能と同じくらいシンプルだ。シンボルと値を渡すだけだ：
 
 def/examples.clj
 ```clojure
 (def title "Emma")
 ```
 
-And it binds the symbol to the value. We’ve also seen that in contrast to the very local and temporary `let`, you use `def` for longer-lasting, more stable name-to-value bindings. Let’s start with the "stable" part: the rule is that a binding created with `def` will hang around until either you change it or the program terminates. This makes def perfect for constants:
+そして、シンボルと値を束縛する。また、ローカルで一時的な `let` とは対照的に、長続きする、より安定した名前と値のバインディングには `def` を使うことも見てきた。「安定」の部分から始めましょう：ルールは、`def`で作成された束縛は、あなたがそれを変更するか、プログラムが終了するかのどちらかまで、いつまでも残るということです。このため、defは定数に最適です：
 
 ```clojure
 ;; Everyone's favorite universal constant.
@@ -20,7 +20,7 @@ And it binds the symbol to the value. We’ve also seen that in contrast to the 
 (def COMPANY-NAME "Blotts Books")
 ```
 
-The stable lifespan of `def` bindings also makes it a great tool for pulling the parts of your program together into a functioning whole. Thus we have `defn`, which is, as the name suggests, a functional mash-up of `def` and `fn`, so that this:
+`def` の束縛は非常に長持ちするので、プログラムの各パーツを機能的な全体としてまとめるのに最適なツールである。`defn`はその名の通り、`def`と`fn`を機能的に組み合わせたものである：
 
 ```clojure
 (defn book-description [book]
@@ -29,7 +29,7 @@ The stable lifespan of `def` bindings also makes it a great tool for pulling the
        (:author book)))
 ```
 
-is just a more convenient way of writing the following:
+というのは、次のように書くより便利な方法だ：
 
 ```clojure
 (def book-description
@@ -39,22 +39,22 @@ is just a more convenient way of writing the following:
          (:author book))))
 ```
 
-The other advantage that `def` offers is that the bindings it creates are widely visible. Once defined, like this:
+`def`が提供するもうひとつの利点は、作成された束縛が広く可視化されることである。一度定義すれば、このように
 
 ```clojure
 ;; Length of a standard book ID.
 (def ISBN-LENGTH 13)
 ;; Before 2007 ISBNs were 10 characters long.
 (def OLD-ISBN-LENGTH 10)
-````
+```
 
-you can use the bindings that come out of `def` in other `def`s:
+`def `で生成された束縛を他の`def`で使うことができる：
 
 ```clojure
 (def isbn-lengths [OLD-ISBN-LENGTH ISBN-LENGTH])
 ```
 
-and inside of functions:
+および関数の内部で使用される：
 
 ```clojure
 (defn valid-isbn [isbn]
@@ -62,5 +62,5 @@ and inside of functions:
       (= (count isbn) ISBN-LENGTH)))
 ```
 
-The rule is that once you’ve bound a symbol to a value with `def` it’s just there, part of the environment.
+ルールとしては、一旦`def`でシンボルを値に束縛したら、それはただそこにあるだけで、環境の一部である。
 

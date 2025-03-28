@@ -1,17 +1,17 @@
 
-### In the Wild
+### 野生の中で
 
-Since garden-variety vars are the mortar that binds Clojure code together, they are everywhere in real-world code. In fact, def figures into some of the first code that runs when [Clojure boots up](https://github.com/clojure/clojure/blob/master/src/clj/clojure/core.clj).
-Here are slightly simplified versions of a couple of defs that get run very early on:
+一般的なvarsはClojureコードを結合するモルタルなので、実際のコードではどこにでもあります。実際、defは[Clojureが起動する](https://github.com/clojure/clojure/blob/master/src/clj/clojure/core.clj)ときに最初に実行されるコードのいくつかに含まれています。
+以下は、非常に早い段階で実行されるいくつかのdefの少し単純化されたバージョンです：
 
 ```clojure
 (def second (fn second [x] (first (next x))))
 (def ffirst (fn ffirst [x] (first (first x))))
 ```
    
-These are just two handy functions: `second`, which pulls the second item off of a collection, and `ffirst`, which takes the first item from a collection—which itself should be a collection—and pulls the first item off of it. You might wonder why this code goes to the trouble of using `def` and `fn` instead of the sleeker `defn`. The answer is simple: these two functions get defined before `defn`.
+これらは2つの便利な関数である： `second`はコレクションから2番目のアイテムを取り出し、`first`はコレクションから1番目のアイテムを取り出す。なぜこのコードでは、よりスマートな `defn` ではなく、わざわざ `def` と `fn` を使っているのか不思議に思うかもしれない。答えは簡単で、この2つの関数は `defn` の前に定義されているからだ。
 
-Dynamic vars are less common, but still out there. For example, if you’re dealing with large collections in the REPL you may not want to see them printed in their full glory. Fortunately, Clojure provides a dynamic var called `*print-length*`, which limits how much of a collection gets printed. As you might imagine, somewhere in the [depths of Clojure itself](https://github.com/clojure/clojure/blob/master/src/clj/clojure/core_print.clj), `*print-length*` is set up as a dynamic var. Here it is in all its well-documented glory:
+動的なvarsはあまり一般的ではないが、まだ存在する。例えば、REPLで大きなコレクションを扱っている場合、それらを完全な形で表示したくないかもしれません。幸いにも、Clojureは`*print-length*`という動的なvarを提供します、これはコレクションが表示される量を制限します。想像がつくかもしれませんが、[Clojure本体の奥底](https://github.com/clojure/clojure/blob/master/src/clj/clojure/core_print.clj)のどこかに、`*print-length*`が動的varとして設定されています。ここでは、そのすべてのドキュメントを示します：
 
 
 
@@ -28,34 +28,34 @@ Dynamic vars are less common, but still out there. For example, if you’re deal
   *print-length* nil)
 ```
 
-A bit later, just before actually executing your program, Clojure sets up a binding for `*print-length*`, conceptually like this:
+少し後、実際にプログラムを実行する直前に、Clojureは`*print-length*`の束縛を設定している：
 
 ```clojure
 (binding [*print-length* nil]
   (run-your-code))
 ```
 
-That brings us to `set!`, which changes the value of a dynamic var from "inside" the binding. So if you have this vector:
+これにより `set!` が登場し、バインディングの「内側」から動的なvarの値を変更することができます。このベクターがあるとして、
 
 ```clojure
 user=> (def books ["Emma" "2001" "Jaws" "Oliver Twist"])
 ```
 
 
-and you `set!` `*print-length*` to `2`:
+そして、`*print-length*` を `2` に `set!`する：
 
 ```clojure
 user=> (set! *print-length* 2)
 ```
 
-you will only see the first couple of items of your vector:
+すると、ベクターの最初の2項目だけが表示されます：
 
 ```clojure
 user=> books
 ["Emma" "2001" ...]
 ```
 
-There are a couple of other dynamic vars that can improve your REPL experience. For example, `*1`—and yes, it only has the left earmuff—is always bound to the last result you got from the REPL:
+他にも REPL での体験を向上させる動的な変数がいくつかある。例えば、`*1`（そう、これは左のイヤーマフしか持っていない）は常にREPLから得た最後の結果を束縛します。
 
 ```clojure
 user=> (+ 2 2)
@@ -64,7 +64,7 @@ user=> *1
 4
 ```
 
-Similarly, `*2` is bound to the second-to-last result, and `*3` to the one before that:
+同様に、`*2`は最後から2番目の結果に、`*3`はその前の結果を束縛する：
 
 ```clojure
 user=> "Austen"
@@ -78,9 +78,9 @@ user=> *3
 ```
 
 
-Finally there is `*e`, which the REPL binds to the last exception:
+最後に`*e`があり、これはREPLが最後の例外を束縛する：
 
-```
+```clojure
 user=> (/ 1 0)
 ArithmeticException Divide by zero clojure.lang.Numbers.divide
 (Numbers.java:158)
@@ -97,7 +97,7 @@ user=> *e
 ```
 
 
-Now you always have a reminder of your last programmatic screw-up!
+これで、前回のプログラムでの失敗をいつでも思い出すことができる！
 
 
 

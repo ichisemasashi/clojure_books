@@ -1,31 +1,31 @@
 
-### Namespaces, Symbols, and Keywords
+### 名前空間、シンボル、キーワード
 
-Like symbols and vars, namespaces are just ordinary Clojure values, accessible to the mortal Clojure programmer. You can, for example, get at the current namespace: it’s always bound to the symbol `*ns*`, so that
+シンボルや vars のように、名前空間は普通の Clojure 値で、Clojure プログラマがアクセスできます。例えば、カレントの名前空間を取得することができます: それは常にシンボル `*ns*` にバインドされています。
 
 ```clojure
 (println "Current ns:" *ns*)
 ```
 
-will print something like
+は次のように表示されます
 
-```
+```clojure
 Current ns: #object[clojure.lang.Namespace 0x76c706bf user]
 ```
 
-You can also look up any existing namespace by name:
+既存の名前空間を名前で検索することもできる：
 
 ```clojure
 (find-ns 'user) ; Get the namespace called 'user.
 ```
 
-With a namespace in hand, you can discover all the things defined in that namespace, so that this:
+名前空間が手に入れば、その名前空間で定義されているすべてのものを発見することができるようになる：このように：
 
 ```clojure
 (ns-map (find-ns 'user)) ; Includes all the predefined vars.
 ```
  
-will give you a very large map of symbols to vars, essentially everything the `user` namespace knows about:
+を使うと、シンボルとvarsの非常に大きなマップを得ることができる：
 
 ```clojure
 {primitives-classnames #'clojure.core/primitives-classnames,
@@ -36,38 +36,38 @@ will give you a very large map of symbols to vars, essentially everything the `u
 }
 ```
 
-Conveniently, `ns-map` will find the namespace for you if you pass in a symbol, so we can shorten our last example to this:
+便利なことに、`ns-map`はシンボルを渡すと名前空間を見つけてくれる：
 
 ```clojure
 (ns-map 'user)
 ```
 
-and still get a map of everything the namespace knows about.
+そして、その名前空間が認識しているすべてのマップを得ることができる。
 
-Namespaces and symbols have an interesting relationship. As we’ve seen, you can write fully qualified symbols by including a namespace name, followed by a slash, followed by the symbol proper: `pricing/discount-price`. The namespace is actually part of the symbol, a part that you can get at with the `namespace` function:
+名前空間とシンボルには興味深い関係がある。これまで見てきたように、名前空間名の後にスラッシュをつけ、その後に`pricing/discount-price`というようにシンボルを続けることで、完全修飾されたシンボルを書くことができます。名前空間は実はシンボルの一部で、`namespace`関数で取得できる部分です：
 
 ```clojure
 ;; Gives us "pricing".
 (namespace 'pricing/discount-print)
 ```
 
-The thing to keep in mind about the namespace part of a symbol is that it’s just a name, not a reference to a namespace value. Thus we can make up symbols with nonexistent namespaces, so that `'narnia/caspian` is a fine symbol even if the `narnia` namespace doesn’t actually exist. Of course, if you remove the quote, as in `narnia/caspian`, then you are trying to look up `caspian` in the `narnia` namespace, which had better be there.
+シンボルの名前空間部分について覚えておくべきことは、それは単なる名前であって、名前空間の値への参照ではないということです。したがって存在しない名前空間を持つシンボルを作ることができ、仮に `narnia` という名前空間が実際に存在しなくても、`'narnia/caspian` は正しいシンボルである。もちろん、`narnia/caspian` のように引用符を取り除くと、`narnia` 名前空間で `caspian` を探そうとするため、`narnia` 名前空間は存在する方がよい。
 
-Keywords also have room for a namespace, which you can add by either explicitly calling out the namespace:
+キーワードにも名前空間を指定するスペースがあり、名前空間を明示的に呼び出すことで追加することができます：
 
 ```clojure
 :blottsbooks.pricing/author
 ```
 
 
-or by doubling up the colon in the front:
+あるいは、手前のコロンを二重にする：
 
 ```clojure
 ::author
 ```
 
-If you double up the colon, the keyword will pick up the current namespace.
+コロンを二重 にすると、キーワードはカレント名前空間を使用するようになる。
 
-Given that there is no automatic lookup of keywords, adding a namespace to a keyword is mainly about preventing keyword collisions. Thus if you are worried that your `:book` may be confused with someone else’s `:book`, you can always slap an extra colon on it: `::book`. In practice most keywords go sans namespace.
+キーワードの自動検索がないことを考えると、キーワードに名前空間を追加するのは主にキーワードの衝突を防ぐためです。したがって、自分の`:book`が他の人の`:book`と混同されることを心配する場合は、いつでもコロンを追加することができる： ::book`とすればよい。実際には、ほとんどのキーワードは名前空間を使用しない。
 
 

@@ -1,7 +1,7 @@
 
-### Getting Less than Everything
+### すべてより少ないものを得る
 
-Conveniently, we don’t have to have a one-to-one correspondence between the names and the data. For example, if we are only interested in the first three elements of our four-item vector, we could say this:
+便利なことに、名前とデータを一対一に対応させる必要はない。例えば、4項目のベクターの最初の3要素にしか興味がない場合、次のように記述することができる：
 
 ```clojure
 (let [[painter novelist composer] artists]
@@ -10,9 +10,9 @@ Conveniently, we don’t have to have a one-to-one correspondence between the na
   (println "The composer is" composer))
 ```
 
-and simply ignore the leftover data, in this case `:dickinson`.
+この場合、`:dickinson`は無視される。
 
-But what if we wanted to ignore some of the leading items of the vector? No problem—we can put a dummy name in as a placeholder:
+しかし、ベクターの先頭の項目を無視したい場合はどうすればいいのだろう？問題ない。仮の名前を入れればいいのだ：
 
 ```clojure
 (let [[dummy dummy composer poet] artists]
@@ -20,7 +20,7 @@ But what if we wanted to ignore some of the leading items of the vector? No prob
   (println "The poet is" poet))
 ```
 
-There’s nothing special about the symbol `dummy`; we’re just using it to soak up the values for `:monet` and `:austen`. There’s also nothing earth-shattering about using the same name twice in a `let`. The name simply ends up bound to the last value, which is fine since we don’t care about either value. In fact, Clojure programmers have a convention for this sort of "I don’t really care about this" name. We use a symbol consisting of a single underscore. Thus, a better rendition of that last example would be as follows:
+`dummy`というシンボルには特別な意味はなく、`:monet`と`:austen`の値を吸収するために使っているだけだ。また、`let`の中で同じ名前を2回使っても、何も驚くようなことはない。名前は単に最後の値にバインドされるだけで、どちらの値も気にしないので問題ありません。実際、Clojureプログラマは、このような "私は本当にこれについて気にしない " 名前の規約を持っています。アンダースコア1つからなる記号を使います。したがって、最後の例のより良い表現は次のようになります：
 
 ```clojure
 (let [[_ _ composer poet] artists]
@@ -28,13 +28,13 @@ There’s nothing special about the symbol `dummy`; we’re just using it to soa
   (println "The poet is" poet))
 ```
 
-We’re also not limited to a single level of destructuring. If we started with this two-level vector:
+また、1レベルのデストラクチャリングに制限されることもない。もしこの2レベルのベクターから始めるとしたら：
 
 ```clojure
 (def pairs [[:monet :austen] [:beethoven :dickinson]])
 ```
 
-we could get hold of the first member of each pair with this:
+これを使えば、各ペアの最初のメンバーも手に入れることができる：
 
 ```clojure
 (let [[[painter] [composer]] pairs]
@@ -42,14 +42,14 @@ we could get hold of the first member of each pair with this:
   (println "The composer is" composer))
 ```
 
-Notice the two-level structure of the leftmost template vector mirrors the two-level structure of the `pairs` vector. Run the preceding code and you’ll see this:
+一番左のテンプレートベクターの2レベル構造は、`pairs` ベクターの2レベル構造を反映していることに注意してください。先のコードを実行すると、このようになる：
 
 ```
 The painter is :monet
 The composer is :beethoven
 ```
 
-Alternatively, you can mix things up and pull out the first item of the first pair and the second item of the second pair, so that if your were looking for `:monet` and `:dickinson` you could say:
+あるいは、物事を混ぜて、最初のペアの最初のアイテムと2番目のペアの2番目のアイテムを取り出すこともできる、つまり、`:monet`と`:dickinson`を探しているなら、こう言うことができる：
 
 ```clojure
 (let [[[painter] [_ poet]] pairs]
@@ -58,6 +58,6 @@ Alternatively, you can mix things up and pull out the first item of the first pa
 ```
 
 
-The idea behind destructuring is that instead of painfully navigating your way through a data structure, API call by API call, you provide a rough sketch of the data structure—a sketch that includes a programmatic arrow marking the data you’re looking for.
+デストラクチャリングの背後にある考え方は、APIコールごとにデータ構造を苦労してナビゲートする代わりに、データ構造の大雑把なスケッチを提供することだ。スケッチには、探しているデータを示すプログラム的な矢印が含まれている。
 
 

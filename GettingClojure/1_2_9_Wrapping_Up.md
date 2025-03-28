@@ -1,7 +1,7 @@
 
-### Wrapping Up
+### まとめ
 
-We kicked off this chapter by talking about vectors, Clojure’s almost an array sequential data structure. We then moved on to lists, which are Clojure’s other sequential data structure. We also explored some of the functions that can help you turn a data structure into useful information, and then on to how Clojure data structures are immutable. We discovered that you can make a vector or a list and fill it with whatever you want, but once it exists you ain’t changing it. We also looked at how you can get into trouble by forgetting just how immutable Clojure’s data structures are and at how the word persistent may not mean exactly what you think it means. Finally we had a look some real-world code to see vectors in action.
+この章では、Clojureのほぼ配列のシーケンシャル・データ構造であるベクターについて話しました。そして、Clojureのもう1つのシーケンシャルなデータ構造であるリストに進みました。また、データ構造を有用な情報に変換するのに役立つ関数のいくつかを調べ、Clojureデータ構造がどのように不変であるかを調べました。ベクターやリストを作り、好きなもので埋めることができますが、一度存在したら変更することはできません。また、Clojureのデータ構造が不変であることを忘れると、どのようなトラブルに巻き込まれるか、そして、永続という言葉が、あなたが思っているような意味ではないかもしれないことも調べました。最後に、ベクターが実際に動作するコードをいくつか見てみました。
 
-We are now ready to round out our toolkit of basic Clojure data structures with maps.
+マップを使って、基本的なClojureデータ構造のツールキットを完成させる準備ができました。
 

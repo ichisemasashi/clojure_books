@@ -1,27 +1,27 @@
 
-### Not Variable Assignment, but Close
+### 変数の割り当てではないが、まあ近い
 
-Once you get beyond the add a few numbers together stage you naturally start looking for a way to hang a name on the result. The most straightforward way to do that in Clojure is with `def`:
+いくつかの数値を足し合わせる段階を超えると、当然、その結果に名前をぶら下げる方法を探し始めます。Clojureでそれを行う最も簡単な方法は`def`である：
 
 ```clojure
 (def first-name "Russ")
 ```
 
-There are very few surprises in using def. You give it an identifier—Clojure calls this a symbol—and a value, and def will associate, or bind, the symbol to the value. In this example the symbol is `first-name` and the value is the string `"Russ"`. The value that you supply to def gets evaluated, so it can be any expression. So evaluating this
+defに識別子（Clojureはこれをシンボルと呼ぶ）と値を与えると、defはシンボルと値を関連付ける（束縛する）。この例では、シンボルは `first-name` で、値は文字列 `"Russ"` である。defに与えた値は評価されるので、どんな式でも構わない。そのため、これを評価すると
 
 ```clojure
 (def the-average (/ (+ 20 40.0) 2.0))
 ```
 
-Will bind `30.0` to `the-average`.
+`30.0` を `the-average` に束縛する。
 
-One thing that you might find surprising is that it’s `the-average` and not `theAverage` or `the_average` or even `TheAverage`. While the Clojure language is gloriously easygoing when it comes to the characters you can use in a symbol—`this&that|other` and `Much=M*re!` are both fine—Clojure programmers have adopted the `all-lower-case-with-words-separated-by-dashes` convention—also known as kebab case—when picking symbols, so it’s `first-name` and `the-average`.
+驚くかもしれないが、`the-average`であって、`theAverage`や`the_average`、あるいは`TheAverage`ではない。Clojure 言語はシンボルで使用できる文字に関しては非常に簡単で、`this&that|other` や `Much=M*re!` はどちらも問題ありません。Clojure プログラマはシンボルを選択するときに、ケバブケースとしても知られている `all-lower-case-with-words-separated-by-dashes` という規約を採用しているので、`first-name` と `the-average` になります。
 
-A note of caution: `def` is great when you’re just playing around or debugging in the REPL, but it’s not the direct analog of traditional variable assignment that it seems. We’ll get back to the distinction in "Def, Symbols, and Vars", but for now we’ll put that aside and continue to def things with wild abandon.
+注意点として、`def`はREPLで遊んでいるときやデバッグしているときには便利ですが、伝統的な変数代入のような直接的なアナログではありません。この区別については「def、シンボル、Vars」で触れることにするが、今はそれは置いておいて、このまま自由にdefを続けてみよう。
 
 >[!NOTE]
 > **Symbolic Rules?**
 > 
-> As I say, there are very few rules about the characters that can go into a symbol. But there are some: You can’t, for example include parentheses, square brackets, or braces in your symbols since these all have a special meaning to Clojure. For the same reason, you can’t use the `@` and `^` characters in your symbols.
-> There are also some special rules for the first character of your symbols: you can’t kick your symbol off with a digit—it would be too easily confused with a number—and symbols that start with a colon are not actually symbols but rather keywords, which we’ll talk about in "Maps, Keywords, and Sets".
+> 申し上げたように、シンボルに入れる文字にはほとんど決まりはありません。しかし、いくつかあります： 例えば、括弧、角括弧、中括弧はClojureにとって特別な意味を持つので、シンボルに含めることはできません。同じ理由で、`@` と `^` も記号に使えません。
+> さらに、シンボルの最初の文字にはいくつかの特別なルールがあります：シンボルを数字で始めることはできません（数字と混同されやすくなります）、また、コロンで始まるシンボルは実際にはシンボルではなくキーワードです、これについては「マップ、キーワード、およびセット」で説明します。
 

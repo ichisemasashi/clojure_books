@@ -1,7 +1,7 @@
 
-### The Record Advantage
+### レコードの利点
 
-So if records are just maps with some fields wired in, are they really worth the bother? As usual, the answer is it depends. One concrete advantage of records is that getting at the hard-wired fields is faster than getting at the equivalent fields in a map. Thus, if you had this:
+では、レコードが単なるマップにいくつかのフィールドを追加しただけのものだとしたら、わざわざレコードを作る価値があるのだろうか？いつものように、答えは場合による。レコードの具体的な利点のひとつは、ハードワイヤードされたフィールドにアクセスするのが、マップの同等のフィールドにアクセスするよりも速いということである。したがって、次のようなレコードがあったとする：
 
 ```clojure
 (def irene {:name "Irene Adler"
@@ -9,21 +9,21 @@ So if records are just maps with some fields wired in, are they really worth the
             :author "Doyle"})
 ```
   
-you would expect that this would be faster:
+その方が速いだろう：
     
 ```clojure
 (:name watson)
 ```
 
-than this:
+これよりも：
 
 ```clojure
 (:name irene)
 ```
 
-How much faster? Certainly not enough to matter if you are only dealing with a few novels—or a few tens of thousands. But if you are dealing with seriously large mounds of data, the performance advantages of records are something to consider.
+どのくらい速くなるのか？小説を数冊、あるいは数万冊扱うだけなら、確かに問題になるほどではない。しかし、本当に大量のデータを扱うのであれば、レコードのパフォーマンス上の利点は考慮すべき点である。
 
-Another reason to use records is the one that I touched on at the beginning of this chapter: they can help you make your code clearer. For example, a glance at this code:
+レコードを使うもう一つの理由は、この章の冒頭で触れた、コードをより明快にするのに役立つということだ。例えば、このコードを見てほしい：
 
 ```clojure
 ;; Define the record types.
@@ -37,14 +37,14 @@ Another reason to use records is the one that I touched on at the beginning of t
 (def watson-2 (->SuperComputer "Power7" 2880 4000))
 ```
 
-leaves no doubt that `watson-1` is a fictional detective’s assistant, while `watson-2` is an eerily intelligent quiz show–playing machine. And if you’re still puzzled about what kind of thing you’ve gotten hold of, you can always use the `class` function, which will return the type of the record.
+これを見れば、`watson-1` が架空の探偵の助手であり、`watson-2` が不気味なほど知的なクイズ番組出演マシンであることは間違いない。そして、もしまだ自分がどんなものを手に入れたのかわからない場合は、いつでも `class` 関数を使うことができ、これはレコードの型を返してくれる。
 
 ```clojure
 (class watson-1) ; user.FictionalCharacter
 (class watson-2) ; user.SuperComputer
 ```
 
-You can also use `instance?` to test if a value has a particular type:
+また、ある値が特定の型を持っているかどうかを調べるには `instance?`
 
 
 ```clojure
@@ -52,7 +52,7 @@ You can also use `instance?` to test if a value has a particular type:
 (instance? SuperComputer watson-2)      ; Nope.
 ```
 
-Keep in mind that while `class` and `instance?` are great tools for poking around in the REPL, you should generally avoid using them in real code. This sort of thing:
+なお、`class` や `instance?` は、REPLを使いこなすのに最適なツールではあるが、実際のコードで使うのは避けるべきであるということを覚えておいてほしい。
 
 ```clojure
 ;; Don't do this!
@@ -62,13 +62,13 @@ Keep in mind that while `class` and `instance?` are great tools for poking aroun
     (process-computer x)))
 ```
 
-is bound to lead you to spaghetti code and grief. Fortunately, Clojure has a better way of dealing with this sort of type-sensitive code: protocols.
+それはスパゲッティ・コードと悲しみにあなたを導くに違いない。幸いなことに、Clojureには、この種の型に敏感なコードを扱うより良い方法があります：プロトコルです。
 
 > [!NOTE]
 >
 > **Class?**
 >
-> The `class` function works for all values, not just records. A good rainy-day programming project is to spend some time feeding values into `class` to see what comes out.
+> `class` 関数はレコードだけでなく、すべての値に対して機能する。雨の日の良いプログラミング・プロジェクトは、`class`に値を入力して何が出てくるか見てみることだ。
 
 
 

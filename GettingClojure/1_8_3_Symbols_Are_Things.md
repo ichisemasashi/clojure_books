@@ -1,36 +1,36 @@
 
-### Symbols Are Things
+### シンボルとはモノである
 
-But what exactly is the "it" that is part of the environment? In other words, what does `def` do, precisely? The answer is implicit in the terminology: We say that `def` binds a symbol to a value. The thing to note here is that the word "symbol" is not just Clojure jargon for what most other languages call an identifier. The reason it’s not just jargon is that symbols are first-class "takes up bytes in memory" values in Clojure, similar to strings and keywords. So this expression:
+しかし、環境の一部である「それ」とは一体何なのだろうか？言い換えれば、`def`は正確には何をするのだろうか？その答えは用語の中に隠されている： `def`はシンボルと値を結びつけるという言い方をする。ここで注意しなければならないのは、"シンボル "という単語は、他のほとんどの言語が識別子と呼んでいるものに対する単なるClojureの専門用語ではないということです。単なる専門用語でない理由は、シンボルは文字列やキーワードと同様に、Clojureではファーストクラスの「メモリにバイトを占有する」値だからです。だからこの式は
 
 ```clojure
 (def author "Austen")
 ```
 
-involves "two" values: the string `"Austen"` and the symbol `author`.
+これは、文字列`"Austen"`とシンボル`author`という "2つの "値を含んでいる。
 
-Symbols have a lot in common with keywords: both are just strings of characters that are meaningful to humans. And both symbols and keywords stand for some value. The difference is that while keywords always stand for themselves—evaluate `:title` and you always get `:title` back—symbols are typically bound to some other value. So if you evaluate the symbol `author` you will get back the value to which it is bound, `"Austen"`. 
+シンボルはキーワードと共通点が多い。どちらも人間にとって意味のある文字列でしかない。そして、シンボルもキーワードも何らかの値を表す。違いは、キーワードが常にそれ自身を表す（`:title`を評価すると、常に`:title`が返ってきます）のに対して、シンボルは通常、他の値と結びついているということです。つまり、`author`というシンボルを評価すると、それがバインドされている値、`"Austen"`が返される。
 
-Since symbols are actual things in Clojure, you can, with a little effort, reach in and get at the symbol itself as opposed to the value that the symbol is bound to. All you need is our old friend the single quote to prevent the symbol from being evaluated:
+Clojureではシンボルは実在のモノなので、少しの努力で、シンボルが束縛されている値とは対照的に、シンボル自体に手を伸ばして取得することができます。必要なのは、シンボルが評価されないようにするための古い友人であるシングルクォートだけです：
 
 ```clojure
 'author ; The symbol author, not the string "Austen"
 'title ; A symbol that starts with a 't'.
 ```
 
-The idea is that symbols are not magical things that are built into the language. In Clojure, a symbol is just another kind of value. You can, for instance, turn them into strings:
+シンボルは言語に組み込まれた魔法のようなものではないということです。Clojureでは、シンボルは単なる値の一種です。例えば、それらを文字列に変えることができます：
 
 ```clojure
 (str 'author) ; The string "author".
 ```
 
-and compare them:
+そしてそれらを比較するのだ：
 
 ```clojure
 (= 'author 'some-other-symbol) ; Nope.
 (= 'title 'title)              ; Yup.
 ```
 
-Being a value also means that a symbol can exist on its own, without being bound to another value. You can, in fact, make stand-alone symbols as fast as you can type, so that `'some-other-symbol` and `'still-another-symbol` are perfectly good expressions, even if neither symbol has ever appeared in a `def`.
+値であるということは、シンボルが他の値に束縛されることなく、単独で存在できるということでもある。実際、文字を入力するのと同じくらい速く独立したシンボルを作ることができるので、`'some-other-symbol`と`'still-another-symbol`は、どちらのシンボルも`def`の中に登場したことがなくても、完全に正しい表現である。
 
 

@@ -1,38 +1,38 @@
            
-### Going Further
+### さらに先へ
 
-Destructuring is one of those convenience features that always seems to leave you wanting more. For instance, consider that when destructuring a map with keyword keys, people tend to use symbols that look just like the keys.  If, for example, we were working with maps that looked like this:
+デストラクチャリングは、便利な機能の1つであるが、常に「もっと欲しい」と思わせるものである。例えば、マップをキーワードのキーでデストラクチャするとき、人々はキーと同じようなシンボルを使いがちである。 例えば、次のようなマップを使っていたとしよう：
 
 ```clojure
 {:name "Romeo" :age 16 :gender :male}
 ```
 
-we might be inclined to bind the value of `:name` to `name`, `:age` to `age`, and `:gender` to `gender`:
+私たちは、`:name` の値を `name` に、`:age` の値を `age` に、`:gender` の値を `gender` にバインドしたくなるだろう：
          
 ```clojure
 (defn character-desc [{name :name age :age gender :gender}]
   (str "Name: " name " age: " age " gender: " gender))
 ```
 
-This does work, but there’s a lot of repetition in the code as we repeat our way through `name :name age :age gender :gender`. If only we could just say, Oh, and pull out `:name`, `:age`, and `:gender` as `name`, `age`, and `gender`. Turns out we can:
+これはうまくいくのだが、`name :name age :age gender :gender`を繰り返すので、コードに繰り返しが多くなる。ただ、`name`、`age`、`gender`として、`:name`、`:age`、`:gender`を取り出すことができればいいの です。それは可能だ：
 
 ```clojure
 (defn character-desc [{:keys [name age gender]}]
   (str "Name: " name " age: " age " gender: " gender))
 ```
 
-Essentially `:keys` says that you are going with the convention of using the keyword names as your local names. Instead of endlessly repeating the symbol and the keyword `(name :name)` you just list the values you want to extract in a vector following the `:keys`. 
+基本的に `:keys` は、キーワード名をローカル名として使用する規約に従うことを示します。シンボルとキーワード `(name :name)` を延々と繰り返す代わりに、抽出したい値を `:keys` に続くベクターに列挙するだけでいい。
 
-Even better, you can mix and match `:keys` with ordinary by hand destructuring; thus we could have said 
+さらに良いことに、`:keys`と通常の手作業によるデストラクチャを組み合わせて使うことができる。
 
 ```clojure
 (defn character-desc [{:keys [name gender] age-in-years :age}]
   (str "Name: " name " age: " age-in-years " gender: " gender))
 ```
 
-Don’t be fooled by the syntax. `:keys` is a special value, used by destructuring to mark off the "same symbol as key" vector. Destructuring knows this is a special value because when we’re doing normal destructuring we don’t have keywords (with their leading colon) on the left side of the destructuring equation.
+構文にだまされてはいけない。`:keys`は特別な値で、デストラクチャによって「キーと同じシンボル」のベクターを示すために使われる。通常のデストラクチャでは、デストラクチャ式の左辺にキーワード（先頭のコロン）がないため、デストラクチャはこれが特別な値であることを知っています。
 
-Another seeming drawback of destructuring, at least when used with functions, is that it eats the value you’re destructuring. Nowhere, for example, in the preceding code’s `character-desc` function do we have access to the complete name/gender/age map. You can certainly have your map and your destructuring too, with the proper application of `let`:
+デストラクチャのもう1つの欠点は、少なくとも関数で使用する場合、デストラクチャする値を食べてしまうことです。例えば、前のコードの `character-desc` 関数のどこにも、完全な名前・性別・年齢のマップにアクセスすることはできません。`let`を適切に使用すれば、マップとデストラクチャリングを同時に使用することができます：
 
 ```clojure
 (defn add-greeting [character]
@@ -42,9 +42,9 @@ Another seeming drawback of destructuring, at least when used with functions, is
            (str "Hello, my name is " name " and I am " age "."))))
 ```
 
-The `add-greeting` function in our code example wants to add a new key/value pair to the `character` map passed in, but the new value depends on some of the existing values (`:name` and `:age`). Thus it needs both the destructured name and age but also the whole, untouched `character` map.
+コード例の `add-greeting` 関数は、渡された `character` マップに新しいキーと値のペアを追加したいが、新しい値は既存の値（`:name` と `:age`）に依存している。従って、デストラクチャされた名前と年齢の両方が必要であるが、そのままの `character` マップ全体も必要である。
 
-Happily, destructuring provides a convenient shortcut for this, as well, in the form of `:as`.
+幸いなことに、デストラクチャリングは `:as` という便利なショートカットを提供してくれる。
 
 ```clojure
 (defn add-greeting [{:keys [name age] :as character}]
@@ -54,5 +54,5 @@ Happily, destructuring provides a convenient shortcut for this, as well, in the 
 ```
 
 
-In this last version of `add-greeting` we’re using `:as` to pick up the whole map without the need to write an additional `let`.
+この`add-greeting`の最後のバージョンでは、追加の`let`を書くことなくマップ全体をピックアップするために`:as`を使っている。
 

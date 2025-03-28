@@ -1,7 +1,7 @@
 
-### Varying Your Vars
+### Varsを変更する
 
-If vars are all about providing the global, stable environment for your code, you might wonder why vars are mutable. After all, Clojure loves immutability.  But we can `def` and `re-def` our vars with wild abandon. The answer is as simple as it is pragmatic: mutable vars make for more productive Clojure programmers. Most Clojure programming is done in some form of REPL or other. So while developing, we might start out by creating a couple of vars:
+もしvarsがあなたのコードにグローバルで安定した環境を提供するためのものであるなら、なぜvarsがミュータブルなのか不思議に思うかもしれません。結局のところ、Clojureは不変性を愛しています。 しかし、私たちは `def` と `re-def` を自由に行うことができます。答えは実用的であるのと同じくらい簡単です：ミュータブルなvarsは、より生産的なClojureプログラマのためになります。ほとんどのClojureプログラミングは、REPLなどの何らかの形で行われます。そのため、開発中に、いくつかのvarを作成することから始めることがあります：
 
 ```clojure
 user=> (def PI 3.14)
@@ -11,14 +11,14 @@ user=> (defn compute-area [diameter]
 #'user/compute-area
 ```
 
-and then realize that we need more precision:
+そして、もっと正確さが必要だと気づく：
 
 ```clojure
 user=> (def PI 3.14159)
 #'user/PI
 ```
   
-and we also got the calculation wrong:
+また、計算も間違っていた：
   
 ```clojure
 user=> (defn compute-area [diameter]
@@ -26,18 +26,18 @@ user=> (defn compute-area [diameter]
 #'user/compute-area
 ```
 
-While your code is under development, mutable vars are a gift from heaven.
+開発中のコードでは、可変varsは天からの贈り物です。
 
-Things are different in production. The vars in a production program are just as mutable as those in development, but "you should avoid changing them". In production code you should `def` (and `defn`) things and let them be.
+本番では事情が異なる。実運用プログラムの変数は開発中のものと同じように変更可能ですが、「変更は避けるべきです」。実運用コードでは、`def`（と `defn`）して、そのままにしておくべきです。
 
 > [!NOTE]
 >
-> **Changing State?**
+> **状態を変更するには？**
 >
-> So what’s a programmer to do if you have some state that you need to model and that state changes over time? The longer answer starts with the advice that you use atoms or refs or agents. The shorter answer is to read "Chapter 18, State, on page 215".
+> では、モデル化する必要のある状態があり、その状態が時間とともに変化する場合、プログラマーはどうすればいいのでしょうか？長い答えは、アトムや Ref やエージェントを使うというアドバイスから始まる。もっと短い答えは、「第18章状態（215ページ）」を読むことだ。
 
 
-Well, mostly you should leave your vars alone. There are times when it’s handy to be able to temporarily change the value bound in your vars. Imagine, for example, that you write a simple logging function that uses a var to turn the actual output off and on:
+まあ、たいていの場合は、varsはそのままにしておくべきです。一時的にvarsの値を変更できると便利な場合があります。例えば、単純なロギング関数を書いたとします：
 
 
 ```clojure
@@ -49,9 +49,9 @@ Well, mostly you should leave your vars alone. There are times when it’s handy
     (println msg)))
 ```
 
-But how do you turn the logging on without violating the Clojure prime directive of "no defs in a function?"
+しかし、"関数内でdefを使用しない "というClojureの基本方針に違反することなく、ロギングをオンにするにはどうすればよいでしょうか？
 
-It’s for situations like this that Clojure gives you `binding`. Syntactically a `binding` expression looks a lot like `let`: you supply `binding` with a vector containing pairs of symbols and values, along with one or more expressions that make up the body of the binding. The `binding` expression will temporarily set the vars corresponding to the symbols with the supplied values as it evaluates the expressions:
+このような状況のために、Clojureは `binding` を用意している。シンボルと値のペアを含むベクターと、束縛の本体を構成する1つ以上の式を `binding` に与えます。`binding`式は与えられた式を評価しながら、シンボルに対応するバーを一時的に与えられた値で設定します：
 
 
 ```clojure
@@ -62,9 +62,9 @@ It’s for situations like this that Clojure gives you `binding`. Syntactically 
 ```
 
 
-In the example, `debug-enabled` gets set to true while the calls to `debug` and `some-troublesome-function` are evaluated, so that we will actually see output from the `debug` function. Note that any function called by `some-troublesome-function` will also see the temporary value of `debug-enabled`, and so on down the call stack.
+この例では、 `debug` と `some-troublesome-function` の呼び出しが評価される間に `debug-enabled` が true に設定される。これにより、実際に `debug` 関数からの出力を見ることができる。 `some-troublesome-function` によって呼び出された関数も、一時的に `debug-enabled` の値を見ることになる。
 
-There is one other wrinkle to `binding`: Any var that we use in `binding` needs to be declared as "dynamic", like this:
+`binding` にはもう一つ厄介な点がある： `binding` で使用する var は、次のように "dynamic" として宣言する必要がある：
 
 ```clojure
 ;; Make debug-enabled a dynamic var.
@@ -72,7 +72,7 @@ There is one other wrinkle to `binding`: Any var that we use in `binding` needs 
 ```
 
 
-The `^:dynamic` adds a bit of metadata—which we’ll talk about in "Chapter 19, Read and Eval, on page 229"—to the `debug-enabled` var. For now just accept it as the incantation you need to do to enable you to use `binding`. Finally, there is a Clojure convention for naming dynamic vars. The convention is that dynamic vars should begin and end with *. So our final exercise in debugging is as follows:
+今のところ、`^:dynamic`は`debug-enabled` varにメタデータ(これについては "第19章 読み取りと評価(229ページ) "で説明します)を追加します。 今は、`binding`を使えるようにするために必要な呪文として受け入れてください。最後に、動的バーの命名にはClojureの慣例があります。その規約とは、動的なバーは \* で始まり、 \* で終わるというものです。というわけで、デバッグの最後の練習は次のようになります：
 
 ```clojure
 (def ^:dynamic *debug-enabled* false)
@@ -88,6 +88,6 @@ The `^:dynamic` adds a bit of metadata—which we’ll talk about in "Chapter 19
 ```
 
 
-By surrounding your dynamic vars with asterisks—charmingly referred to as "earmuffs"—you can tell at a glance which vars are usable inside of `binding` and which are not. Note that since being dynamic entails a bit more overhead, you should only hang the `^:dynamic` tag on vars that really need it.
+動的なバーをアスタリスクで囲むことで、どのバーが `binding` の中で使用可能で、どのバーが使用不可能なのかが一目でわかるようになります。動的であることは少しオーバーヘッドを伴うので、`^:dynamic`タグは本当に必要なvarにのみ付けるべきであることに注意してください。
 
 

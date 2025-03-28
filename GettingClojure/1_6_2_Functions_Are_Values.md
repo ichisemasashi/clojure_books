@@ -1,7 +1,7 @@
 
-### Functions Are Values
+### 関数は値である
 
-Let’s start our adventures in functional programming by imagining that we have decided to add price and genre to the maps we’ve been using to keep track of our books, like this:
+関数型プログラミングの冒険を始めるにあたって、これまで使ってきた本の管理用マップに価格とジャンルを追加することにしたと仮定しよう：
 
 
 functional/examples.clj
@@ -12,7 +12,7 @@ functional/examples.clj
               :genre :horror}) 
 ```
 
-Further, let’s imagine that we need to write some code to distinguish the books based on an arbitrary price:
+さらに、任意の価格に基づいて書籍を区別するコードを書く必要があるとしよう：
              
 ```clojure
 (defn cheap? [book]
@@ -26,7 +26,7 @@ Further, let’s imagine that we need to write some code to distinguish the book
 (pricey? dracula) ; No!
 ```
 
-or the genre: 
+あるいはジャンルについて： 
 
 
 ```clojure
@@ -41,9 +41,9 @@ or the genre:
 (adventure? dracula) ; Nope!
 ```
 
-The only halfway interesting thing about these functions is that they take advantage of Clojure’s truthy logic and return `nil` when the book fails the test, and the book map itself—which is truthy—when it passes.
+これらの関数で中途半端に面白いのは、Clojureの真理値ロジックを利用し、本がテストに失敗すると`nil`を返し、合格すると真理値であるブックマップ自体を返すことです。
 
-We might also be interested in combinations of price and genre:
+価格とジャンルに関する組み合わせにも興味があるかもしれない：
 
 
 ```clojure
@@ -57,44 +57,44 @@ We might also be interested in combinations of price and genre:
     book))
 ```
 
-We could write functions like this all day. What about cheap books by some author or the expensive books entitled Possession?
+このような機能は一日中書くことができる。どこかの作家の安い本や、『所有権』と題された高価な本はどうだろう？
 
 > [!NOTE]
 >
 > **Possession**
 >
-> It turns out there’s a remarkable number of novels called Possession, with at least a dozen in print as I write this.
+> Possessionと呼ばれる小説が驚くほどたくさんあることがわかった。
 
 
 
-The key—and unfortunate—word here is "write". When you are building real systems you don’t want to spend your time writing these kinds of combinations by hand. What you want is to code the basic operations and then create the combinations dynamically. Fortunately, all you need to get out of the handcoding business is to realize that in Clojure functions have something in common with numbers and strings and Booleans and vectors. Like these more mundane things, "functions are values".
+ここでのキーワードは残念ながら「書く」である。実際のシステムを構築する場合、この種の組み合わせを手で書くことに時間を費やしたくはないだろう。あなたが望むのは、基本的なオペレーションをコード化し、それから動的に組み合わせを作成することだ。幸いなことに、手作業によるコーディングから抜け出すために必要なことは、Clojureでは関数が数値や文字列、ブール値やベクターと共通するものを持っていることを理解することです。これらのありふれたもののように、"関数は値である"。
 
-This means that when you evaluate the name of a function you’ve defined with `defn`, perhaps like this:
+つまり、`defn`で定義した関数の名前を評価すると、おそらく次のようになる：
 
 ```
 cheap?
 ```
 
-you will see something like this:
+これを実行すると、このように表示される：
 
 ```
 #object[user$cheap_QMARK_ 0x71454b9d "user$cheap_QMARK_@71454b9d"]
 ```
 
 
-The `#object[user$cheap_QMARK_..."]` is the semi-intelligible string that gets output when Clojure tries to print the function that knows a cheap book from an expensive one. You can also bind that function value to another symbol:
+`#object[user$cheap_QMARK_..."]`は、Clojureが安い本と高い本を区別する関数を実行しようとしたときに出力される意味不明な文字列です。その関数の値を別のシンボルにバインドすることもできます：
 
 ```clojure
 (def reasonably-priced? cheap?)
 ```
 
-Do that, and `reasonably-priced?` is now an alternate name for our thrifty function:
+すると、`reasonably-priced?`は今や私たちの倹約関数の別名となる：
 
 ```clojure
 (reasonably-priced? dracula) ; Yes!
 ```
 
-You can also pass function values to other functions. To take a silly example, we could do this:
+関数の値を他の関数に渡すこともできる。くだらない例を挙げると、次のようになる：
 
 
 ```clojure
@@ -102,14 +102,14 @@ You can also pass function values to other functions. To take a silly example, w
   (f dracula))
 ```
 
-`run-with-dracula` does exactly what the name suggests: it evaluates a function with the `dracula` value as an argument. Which function? The one that you pass to `run-with-dracula`:
+`run-with-dracula`はその名の通り、`dracula`の値を引数として関数を評価する。どんな関数か？`run-with-dracula` に渡す関数である：
 
 ```clojure
 (run-with-dracula pricey?) ; Nope.
 (run-with-dracula horror?) ; Yes!
 ```
 
-More practically, this idea of functions as values gives us an easy way of combining our predicates:
+より現実的には、この関数を値とみなす考え方は、述語を組み合わせる簡単な方法を与えてくれる：
 
 
 ```clojure
@@ -122,6 +122,6 @@ More practically, this idea of functions as values gives us an easy way of combi
 (both? pricey? adventure? dracula) ; Nope!
 ```
 
-The only difference between the more general-purpose `both?` function and the very specific `cheap-horror?` is that `both?` lets you pass in your pair of predicate functions, which means you can use it to run your books by any two predicates you can cook up.
+より汎用的な`both?`関数と、非常に特殊な`cheap-horror?`関数との唯一の違いは、`both?`は述語関数のペアを渡すことができるということである、ということは、この関数を使えば、どんな2つの述語でもブックを実行することができるということだ。
 
 

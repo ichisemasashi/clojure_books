@@ -1,23 +1,23 @@
 
-### In the Wild
+### 野生の中で
 
-We can see one of the more useful applications of lazy sequences in [nREPL](https://github.com/clojure/tools.nrepl), a library that enables you to create a client/server rendition of a REPL, where the client sends Clojure expressions off to a server, which evaluates them and sends back the results. Here’s the sequence:
+[nREPL](https://github.com/clojure/tools.nrepl)はREPLのクライアント/サーバーの実装を作成できるライブラリで、クライアントがClojure式をサーバーに送り、サーバーがそれらを評価して結果を送り返す。以下はそのシーケンスである：
 
 ```clojure
 (repeatedly #(transport/recv transport timeout))
 ```
 
-The `repeatedly` function is the function-driven equivalent of `repeat`. Instead of returning the same value over and over, `repeatedly` calls the function you pass in over and over, returning a lazy sequence of the resulting values. The `repeatedly` function is useful in those situations where you are dealing with side effects —presumably you will get something different back from the repeated calls to the function. That’s certainly true in the preceding code, where `transport/recv` reads one message after another from some sort of message stream.
+`repeatedly`関数は `repeat` に相当する関数である。同じ値を何度も返す代わりに、 `repeatedly` 関数は渡された関数を何度も呼び出して、その結果の値を遅延シーケンスとして返します。`repeatedly`関数は、副作用を扱うような場面で役に立ちます - おそらく、関数を繰り返し呼び出すことで、何か違うものが返ってくるでしょう。先のコードでは、`transport/recv` がある種のメッセージストリームから次々とメッセージを読み込んでいる。
 
-The key thing here is that this code is converting a series of side effect–driven events—the messages showing up to be read—into a lazy sequence of values that can be then be processed further using the ordinary tools of Clojure programming.
+ここで重要なのは、このコードが一連の副作用主導のイベント（読み込まれるために現れるメッセージ）を、Clojureプログラミングの通常のツールを使ってさらに処理できる値の遅延シーケンスに変換しているということです。
 
-Lazy sequences—and the functions that produce them—are common enough in Clojure that it is probably more productive to point out some functions that are not lazy, functions that will try to immediately realize any sequence you hand them. Obviously there is `count`; try to count the elements of a sequence, and you’re going to realize the whole thing, or try to do this:
+遅延シーケンスとそれを生成する関数はClojureで十分に一般的なので、遅延ではない関数、つまりあなたが渡したシーケンスをすぐに実現しようとする関数をいくつか指摘する方が生産的でしょう。明らかに `count` があります。シーケンスの要素を数えようとすると、全体を実現しようとします：
 
 ```clojure
 ;; Say goodnight.
 (count (iterate inc 0))
 ```
 
-Similarly, it’s a bad idea to try to `sort` or `reduce` over an infinite sequence.
+同様に、無限列を `sort` や `reduce` しようとするのは悪い考えだ。
 
 

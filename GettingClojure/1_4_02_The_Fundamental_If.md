@@ -1,7 +1,7 @@
 
-### The Fundamental If
+### 基本的なif
 
-Clojure includes an `if` expression, and the good news is that there isn’t a lot to say about it: Clojure’s `if` is about as boring a programming-language feature as you are likely to come across. An `if` expression starts with the word `if`, which is followed by two other expressions: first a condition, then an expression to evaluate if the condition is true. The whole `if` expression is wrapped in round parentheses:
+Clojureには`if`式があり、良いニュースはそれについて言うことがあまりないということです： Clojureの `if` は、プログラミング言語としては退屈な機能です。if`式は `if` という単語で始まり、その後に2つの式が続きます：最初に条件、次に条件が真であった場合に評価する式です。if`式全体は丸括弧でくくられる：
 
 logic/examples.clj
 ```clojure
@@ -10,7 +10,7 @@ logic/examples.clj
     (println "Welcome back to Blotts Books!")))
 ```
 
-Call the function in that example with `true`, and you will get a warm greeting printed. Call it with false, and you will get silence. You can also add an optional third expression inside of your `if`, giving you the classic `if/then/else` expression, sans the `else` keyword:
+この例の関数を`true`で呼び出すと、温かい挨拶が表示される。一方、`false`で呼び出すと、沈黙が得られます。また、`if`の中にオプションで3つ目の式を追加することもでき、`else`キーワードを除いた古典的な`if/then/else`式になります：
 
 ```clojure
 (defn print-greeting [preferred-customer]
@@ -19,7 +19,7 @@ Call the function in that example with `true`, and you will get a warm greeting 
     (println "Welcome to Blotts Books!")))
 ```
 
-Notice that I keep talking about `if` expressions. I do this because a Clojure `if`, like everything else in the language, is a value-returning expression. Thus if preferred customers get free shipping while every one else pays 10 percent, we might come up with something like this:
+私が `if` 式について話し続けていることに注目してほしい。なぜなら、Clojureの`if`は、言語の他のすべてのものと同様に、値を返す式だからです。したがって、優先顧客(preferred-customer)は送料(shipping-charge)が無料になり、それ以外の顧客は10%支払う場合、次のようになります：
 
 ```clojure
 (defn shipping-charge [preferred-customer order-amount]
@@ -29,21 +29,21 @@ Notice that I keep talking about `if` expressions. I do this because a Clojure `
 ```
 
 
-The value returned from an `if` is the value returned from the last expression evaluated in the `if`. If you have a one-legged `if`—one with no else expression—and the condition is false, then the whole `if` expression will evaluate to `nil`. Thus this:
+`if` から返される値は、`if` の中で最後に評価された式から返される値である。もし1本足の `if` があり、else 式がなく、条件が false の場合、`if` 式全体が `nil` と評価されます。このように
 
 ```clojure
 (if preferred-customer
   "So nice to have you back!")
 ```
 
-will return either the string or `nil`, depending on the value of preferred-customer.
+は preferred-customer の値に応じて、文字列か `nil` のどちらかを返します。
 
-You should also note that Clojure programmers usually write short `if` expressions like the last example on a single line, so that this:
+また、Clojureプログラマは通常、前の例のような短い `if` 式を1行で書くことに注意してください：
 
 ```clojure
 (if preferred-customer "So nice to have you back!")
 ```
 
-is perfectly good Clojure.
+これは完全に良いClojureだ。
 
 

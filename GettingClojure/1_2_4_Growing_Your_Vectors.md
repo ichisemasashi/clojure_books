@@ -1,36 +1,30 @@
 
-### Growing Your Vectors
+### ベクターを育てる
 
-Now that we’ve seen how to get things out of a vector let’s move on to putting
-new things in. Again, you can’t actually change an existing vector, but you
-can make a new, slightly longer vector. One way to get a bigger vector is with
-the `conj`—short for conjunction—function:
+ベクターから何かを取り出す方法を見たので、次はベクターに新しい要素を入れてみましょう。繰り返しになりますが、既存のベクターを変更することはできませんが、新しく少し長いベクターを作ることはできます。より大きなベクターを得る一つの方法は、`conj`（ conjunction の略）関数を使うことです：
 
 ```clojure
 (conj novels "Carrie") ; Adds "Carrie" to our list of novels.
 ```
 
-Evaluate the preceding code and you will get back a new four-element vector:
+先のコードを評価すると、新しい4要素ベクターが返ってくる：
 
 ```clojure
 ["Emma" "Coma" "War and Peace" "Carrie"]
 ```
 
-Note that Stephen King’s guide to dealing with high-school conflict has landed
-at the end of the new vector. If you want to add an item to the front of your
-vector you can turn to the `cons`—as in construct—function:
+スティーブン・キングの『高校生の葛藤に対処するためのガイド』が新しいベクターの末尾にあることに注意してほしい。ベクターの先頭に項目を追加したい場合は、`cons`（constructの略）関数を使うことができる：
 
 ```clojure
 (cons "Carrie" novels)
 ```
 
-Evaluate the preceding code and you will get this:
+先のコードを評価するとこうなる：
 
 ```clojure
 ("Carrie" "Emma" "Coma" "War and Peace")
 ```
 
-Note that unlike `conj`, `cons` returns one of those round-parentheses sequence
-things. Again, let’s leave that until we’re ready to talk about sequences.
+ただし、`conj`とは異なり、`cons`は丸括弧で囲まれたシーケンスの一つを返す。繰り返しになるが、シーケンスの話をする準備ができるまで、それは置いておこう。
 
 

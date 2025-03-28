@@ -1,8 +1,8 @@
 
 ## CHAPTER 5 More Capable Functions
 
-One of the interesting things about Clojure—at least compared to more mainstream programming languages like Java or Python—is just how uniform Clojure code is. Look at a typical Java or Python program and you will find packages and classes and methods and annotations along with a menagerie of field declarations. Certainly Clojure sports analogs to many of these programming-language features, but real-world Clojure code consists mainly of one thing: functions. Lots of functions. There’s a simple reason for this: Clojure programs—and the entire Clojure programming language—is built around functions.
+Clojureの興味深い点の1つは、少なくともJavaやPythonのような主流のプログラミング言語と比較すると、Clojureのコードがいかに統一されているかということです。典型的なJavaやPythonのプログラムを見ると、パッケージやクラスやメソッドやアノテーションが、フィールド宣言の数々とともにあります。確かにClojureは、これらのプログラミング言語の特徴の多くに類似していますが、実世界のClojureコードは主に1つのもので構成されています：関数です。たくさんの関数です。これには単純な理由がある： ClojureプログラムとClojureプログラミング言語全体は、関数を中心に構築されています。
 
-If you’re going to construct a whole language around functions, then those functions had better have some serious talents. So in this chapter we’ll have a look at some features of Clojure that will enable you to supercharge your functions.
+関数を中心に言語全体を構築するのであれば、これらの関数には重大な能力が必要です。そこでこの章では、関数をスーパーチャージできるようにするClojureの特徴をいくつか見ていきます。
 
 

@@ -1,31 +1,31 @@
 
-### A Universal Interface
+### 共通のインターフェイス
 
-Getting at the contents of a sequence is easy—and familiar. You just call `first` to get the lead-off element:
+シーケンスの内容を取得するのは簡単で、なじみがある。先頭の要素を取得するには `first` を呼び出すだけです：
 
 ```clojure
 ;; Returns "Emma".
 (first (seq '("Emma" "Oliver Twist" "Robinson Crusoe")))
 ```
 
-and `rest` to get everything except the first element:
+そして、`rest`で、最初の要素以外を取得する：
 
 ```clojure
 ;; Returns the sequence ("Oliver Twist" "Robinson Crusoe")
 (rest (seq '("Emma" "Oliver Twist" "Robinson Crusoe")))
 ```
 
-Alternatively, you use `next` to get at the "all but the first" sequence. The difference between `next` and `rest` is that while `rest` of an empty sequence is an empty sequence, `next` of an empty sequence is `nil`. While most of the time rest works fine, occasionally `nil` comes in handy.
+別の方法として、`next` を使って「最初以外のすべて」のシーケンスを取得することもできる。`next` と `rest` の違いは、空のシーケンスの `rest` が空のシーケンスであるのに対して、空のシーケンスの `next` は `nil` であるということである。ほとんどの場合は rest で問題ないが、たまに `nil` が便利になることがある。
 
-You can also add a new element to the front of your sequence with `cons`:
+また、シーケンスの先頭に新しい要素を追加するには `cons` を使用する：
 
 ```clojure
 (cons "Emma" (seq '("Oliver Twist" "Robinson Crusoe")))
 ```
 
-And that’s it. Once you have a sequence, the only things you can do with it are get the first element with `first`, get the other ones with `next` or `rest`, and slap a new element on the front with `cons`.
+それで終わりだ。いったんシーケンスができたら、それを使ってできることは、最初の要素を `first` で取得し、他の要素を `next` または `rest` で取得し、新しい要素を `cons` で先頭に追加することだけである。
 
-Armed with all this, implementing `my-count` is reasonably straightforward:
+これだけあれば、 `my-count` を実装するのは簡単だ：
 
 ```clojure
 (defn my-count [col]
@@ -36,21 +36,21 @@ Armed with all this, implementing `my-count` is reasonably straightforward:
         n))))
 ```
 
-The first thing `my-count` does is turn the collection into a sequence (in the `let`).
+まず最初に `my-count` が行うのは、コレクションを（`let` の中で）シーケンスに変換することである。
 
-The rest is just a `loop` that runs through the sequence—using `rest`—counting as it goes. Notice there is no special-case code in `my-count` for vectors or maps or sets. Once we have the sequence we don’t need to worry about which kind of collection we have.
+残りはシーケンスを実行する `loop` で、`rest` を使ってカウントを行う。`my-count`にはベクターやマップや集合のための特別なコードがないことに注意してほしい。シーケンスさえあれば、どのような種類のコレクションを持っているかを気にする必要はない。
 
-The only remotely tricky thing going on in `my-count` is the way we determine when we’ve run out of items to count. We call seq on our sequence. If `seq` returns `nil` we know that we’re out of items, since `seq` of an empty sequence is `nil`.
+`my-count`で行われている唯一の微妙にトリッキーなことは、カウントするアイテムがなくなったときの判断方法である。シーケンスに対してseqを呼び出す。空のシーケンスの `seq` は `nil` なので、`seq` が `nil` を返したら、アイテムがなくなったことがわかる。
 
 
 > [!NOTE]
 >
-> **Watch Those nils!**
+> **複数のnilに気を付けろ！**
 >
-> If you’re thinking that `my-count` would be clearer if we simply checked whether `(first s)` was `nil`, consider trying to count the items in `[nil nil nil]`.
+> もし `(first s)` が `nil` かどうかをチェックするだけなら `my-count` の方がわかりやすいと思うのであれば、`[nil nil nil]` の中の項目を数えてみてください。
 
 
-Aside from the thrill of understanding how `count` works, there is a very practical reason for diving into all of this sequence talk. While functions like `count` and `first` can manage to keep their involvement with sequences quiet, the same is not true of functions like `rest`, `next`, and `cons`. These three functions always (aside from the occasional `nil`) return sequences:
+`count` がどのように動作するかを理解するわくわく感もさることながら、このようなシーケンスの話に飛び込むのには非常に実用的な理由がある。`count` や `first` のような関数はシーケンスとの関わりをなんとか穏便に保つことができるが、 `rest`、`next`、`cons` のような関数はそうはいかない。これら3つの関数は（たまに `nil` が返されることを除けば）常にシーケンスを返す：
 
 ```clojure
 (rest [1 2 3])                         ; A sequence!
@@ -60,7 +60,7 @@ Aside from the thrill of understanding how `count` works, there is a very practi
 (cons 0 #{1 2 3})                      ; And another.
 ```
 
-And now we finally have the explanation for why `(rest some-vector)` gives you back a collection that prints with round parentheses: the `rest` function always returns a sequence.
+そして、`(rest some-vector)`が丸括弧で表示されるコレクションを返す理由の説明がようやくできた：`rest`関数は常にシーケンスを返す。
 
 
 

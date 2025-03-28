@@ -1,9 +1,9 @@
   
-### Checking Properties 
+### プロパティのチェック 
       
-The final piece of the property-based testing puzzle is expressing the property.
+プロパティ・ベースのテスト・パズルの最後のピースは、プロパティを表現することです。
 
-Happily, `test.check` provides a lovely syntax for doing just that. To start with a simple example, here we’re stating that each positive integer is smaller than the next positive integer:
+幸いなことに、`test.check` はそのためのすばらしい構文を提供してくれます。簡単な例から始めると、ここでは各正整数が次の正整数より小さいことを述べている：
 
 test/sample_generators.clj
 ```clojure
@@ -11,7 +11,7 @@ test/sample_generators.clj
   (< i (inc i)))
 ```
   
-But we’re not quite done: since we’re defining a test and not a theorem, we need to supply a limit on the number of integers we’ll try. Here we pare the infinite run of positive integers down to the first 50 produced by the `pos-int` generator:
+しかし、まだ終わってはいない。定理ではなくテストを定義しているのだから、試す整数の数に制限を与える必要がある。ここでは、無限に続く正の整数を `pos-int` ジェネレーターが生成する最初の50個に絞る：
 
 ```clojure 
 (tc/quick-check 50
@@ -19,13 +19,13 @@ But we’re not quite done: since we’re defining a test and not a theorem, we 
     (< i (inc i))))
 ```
 
-There, the `quick-check` function will check the property that we specified for 50 randomly generated cases. The `quick-check` function returns a map describing the results, something like this:
+まず、`quick-check`関数が、ランダムに生成された50のケースについて、指定したプロパティをチェックします。この`quick-check`関数は、次のような結果をマップとして返す：
 
 ```clojure
 {:result true, :num-tests 50, :seed 1509151628189}
 ```
 
-Now (finally!) we can write the test for our inventory code:
+これで（やっと！）インベントリー・コードのテストを書くことができる：
 
 test/inventory/test/inventory/core_gen_test.clj
 ```clojure
@@ -35,9 +35,9 @@ test/inventory/test/inventory/core_gen_test.clj
       (:book i-and-b))))
 ```
 
-Conceptually we say, "For all the inventory/book combinations we care to generate, looking for a book in the inventory with a given title should produce a book with that title".
+概念的には、「インベントリとブックのすべての組み合わせが生成される場合、インベントリから、指定されたタイトルの本を探すと、そのタイトルの本が生成されるはずです」と言います。
 
-There is also a smooth integration with `clojure.test` in the form of `defspec`, found in yet another namespace, `clojure.test.check.clojure-test`. So do this:
+また、別の名前空間である `clojure.test.check.clojure-test` にある `defspec` という形で `clojure.test` とスムーズに統合できます。なので、こうしてください：
 
 ```clojure
 (ctest/defspec find-by-title-finds-books 50
@@ -46,7 +46,7 @@ There is also a smooth integration with `clojure.test` in the form of `defspec`,
       (:book i-and-b))))
 ```
 
-You end up with a `clojure.test` test that runs the property test.
+最終的に、プロパティテストを実行する `clojure.test` テストが作成されます。
 
-As you might imagine, there’s a lot more to `test.check`, but this is the basic idea: define your data (in the form of generators), combine it with statements about properties, and roll the whole thing into a test.
+ご想像の通り、`test.check`にはもっとたくさんの機能がありますが、これが基本的なアイデアです: (ジェネレータの形で) データを定義し、プロパティに関するステートメントと組み合わせ、全体をテストに組み込みます。
 

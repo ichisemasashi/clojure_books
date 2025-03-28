@@ -1,13 +1,13 @@
 
-### Behind the Scenes 
+### 舞台裏 
 
-Now that we have a feeling for how lazy sequences work from the outside, let’s look at how they are built. The key tool for building a lazy sequence from scratch is the aptly named `lazy-seq`. The `lazy-seq` function is similar to `seq`. Like with `seq`, you give `lazy-seq` an expression and it will turn it into a sequence. So this:
+さて、外側から見て遅延シーケンスがどのように機能するかを感じたところで、遅延シーケンスがどのように構築されるかを見てみよう。遅延シーケンスをゼロから構築するための重要なツールは `lazy-seq` という名前の関数です。`lazy-seq` 関数は `seq` に似ている。seq`と同じように、`lazy-seq`に式を与えると、それをシーケンスに変換してくれる。つまりこうだ：
 
 ```clojure
 (lazy-seq [1 2 3])
 ```          
 
-will give you the three-element sequence `(1 2 3)`. The difference is that `lazy-seq`, being lazy, will hold off on evaluating the expression until you actually start pulling things off the sequence that it returns. For example, if you wrapped your vector in a chatty function: 
+これは3要素のシーケンス `(1 2 3)` を返す。違いは、`lazy-seq`は怠惰であるため、それが返すシーケンスから実際にものを取り出し始めるまで、式の評価を保留することである。例えば、ベクターをchatty関数でラップしたとします： 
 
 ```clojure
 (defn chatty-vector []
@@ -15,14 +15,14 @@ will give you the three-element sequence `(1 2 3)`. The difference is that `lazy
   [1 2 3])
 ```
 
-and then made a lazy sequence out of it:
+そして、怠惰なシークエンスを作った：
 
 ```clojure
 ;; No output when we do this.
 (def s (lazy-seq (chatty-vector)))
 ```
 
-you would not immediately see the output from the `println`. It’s only seen when you start expanding the sequence, perhaps by pulling off the first element:
+`println`の出力をすぐに見ることはできません。それは、おそらく最初の要素を取り出すことによって、シーケンスを拡張し始めたときにのみ見られる：
 
 ```clojure
 ;; This will cause "Here we go!" to print.
@@ -30,11 +30,11 @@ you would not immediately see the output from the `println`. It’s only seen wh
 ```
 
 
-Under the hood, `lazy-seq` uses some macro magic (we’ll talk about macros in "Chapter 20, Macros, on page 241") to wrap its argument in an anonymous function, a function that only gets called when the time is right. And it’s this "delay until the last possible second" behavior that is the key to laziness.
+その裏では、`lazy-seq`はマクロのマジックを使って（マクロについては「第20章マクロ（241ページ）」で説明する）、引数を無名関数で包み込む、つまり、適切な時にだけ呼び出される関数である。そして、この「可能な限り最後の1秒まで遅延させる」という動作こそが、怠惰の鍵なのである。
 
-To see how it works in practice, we can implement our own version of `repeat`.  Recall that the `repeat` function takes a value and produces an infinite sequence of that value repeated over and over. How would we write our own `repeat`?
+実際にどのように動作するかを見るために、独自のバージョンの `repeat` を実装してみよう。 `repeat`関数は値を受け取り、その値を無限に繰り返すシーケンスを生成する。どうやって `repeat` を書くのだろうか？
 
-Like this:
+こんな感じだ：
 
 ```clojure
 ;; Note that the real `repeat` has a couple of arities
@@ -43,18 +43,18 @@ Like this:
   (cons x (lazy-seq (my-repeat x))))
 ```
 
-The `my-repeat` function starts reasonably enough—it returns a sequence, manufactured with `cons`. Recall that `cons` takes a value and a sequence and returns a new sequence consisting of the value followed by the contents of the old sequence. In `my-repeat` we use `cons` to build a sequence consisting of the value passed in followed by the sequence created by—wait for it—a call to `my-repeat`. And that sequence starts with the value passed in, followed by another call to `repeat`, and so on. The magic that prevents this from flying off into recursive Neverland is the delaying action of `lazy-seq`. The only time those additional calls to `my-repeat` get fired is when you start accessing the resulting sequence. Lazy sequences are concise, marvelous, and recursively insane.
+`my-repeat`関数は最初に `cons` で作られたシーケンスを返す。`cons`は値とシーケンスを受け取り、値の後に古いシーケンスの内容が続く新しいシーケンスを返すことを思い出してほしい。`my-repeat` では `cons` を使って、渡された値の後に `my-repeat` を呼び出して作成されたシーケンスからなるシーケンスを作成する。そして、そのシーケンスは渡された値から始まり、`repeat`をもう一回呼び出す。これが再帰的なネバーランドに飛んでいくのを防ぐ魔法が `lazy-seq` の遅延動作である。`my-repeat`の追加の呼び出しが発生するのは、結果のシーケンスにアクセスし始めるときだけです。遅延シーケンスは簡潔で、驚異的で、再帰的に狂気の沙汰である。
 
-Now that we have the hang of it, it’s not hard to implement some of the more involved functions. Here, for example, is a perfectly serviceable version of `iterate`:
+これでコツをつかんだので、より複雑な関数を実装するのは難しくない。例えば、`iterate`の完璧に使えるバージョンだ：
 
 ```clojure
 (defn my-iterate [f x]
   (cons x (lazy-seq (my-iterate f (f x)))))
 ```
 
-You start the sequence with the value passed in, followed by a new lazy sequence that starts with the function applied to the value, followed by the same again, ad infinitum.
+渡された値からシーケンスを開始し、その値に関数を適用して新しい遅延シーケンスを開始し、また同じことを繰り返す。
 
-Implementing a simple version of `map` is also not hard, and illustrates how to bring your lazy sequence to an end:
+`map`の単純なバージョンを実装するのも難しくないし、遅延シーケンスを終了させる方法を説明することもできる：
 
 ```clojure
 (defn my-map [f col]
@@ -63,7 +63,7 @@ Implementing a simple version of `map` is also not hard, and illustrates how to 
              (lazy-seq (my-map f (rest col))))))
 ```
 
-Like `my-repeat` and `my-iterate`, `my-map` will keep building as much of the sequence as it needs. The difference is that `my-map` is limited by the input collection.  When the `my-map` detects that there are no more elements in the input collection, it returns `nil`. This is the signal to `lazy-seq` that the end has arrived. Lazy sequences are indeed a bit mind-bending, so it’s not surprising that their implementations are, as well.
+`my-repeat` や `my-iterate` と同様に、 `my-map` は必要な分だけシーケンスを構築し続ける。違いは `my-map` が入力コレクションによって制限されることである。 `my-map` は入力コレクションに要素がなくなると `nil` を返す。これは `lazy-seq` に終わりが来たことを知らせるシグナルである。遅延シーケンスは確かに少し頭を使うので、その実装がそうなっても不思議ではない。
 
 
 

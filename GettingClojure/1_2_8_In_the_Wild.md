@@ -1,7 +1,7 @@
 
-### In the Wild
+### 野生の中で
 
-If you look at real-world code you will discover that Clojure programmers overwhelmingly choose the vector over the list for their sequential-data-structure needs. Thus, finding real-world uses of the vector brings new meaning to the word easy. Vectors are found at the heart of just about every Clojure program. Take, for example, this bit of real-world code:
+実際のコードを見ると、Clojureプログラマはシーケンシャルなデータ構造のニーズに対して、リストよりもベクターを圧倒的に選択していることがわかります。従って、ベクターの実際の使い方を見つけることは、簡単という言葉に新しい意味をもたらします。ベクターは、ほとんどすべてのClojureプログラムの中心にあります。例えば、実際のコードを見てみましょう：
 
 ```clojure
 (defn escape-html [string]
@@ -11,11 +11,11 @@ If you look at real-world code you will discover that Clojure programmers overwh
                        [">" "&gt;"]]))
 ```
 
-Clearly the preceding function—which I adopted from the [Clostache HTML templating library](https://github.com/fhd/clostache) defines a function called `escape-html`. Equally clear is that the `escape-html` function takes a single parameter with the less-than-enlightening name of `string`. The body of `escape-html` consists of a single call to the function `replace-all`, which takes the string and a vector of vectors.
+私が[Clostache HTMLテンプレート・ライブラリ](https://github.com/fhd/clostache)から採用した先の関数は、明らかに`escape-html`という関数を定義している。同様に、`escape-html` 関数は `string` というあまり面白くない名前の1つのパラメータを取ることも明らかである。関数 `escape-html` の本体は関数 `replace-all` の呼び出し1つで構成されており、この関数は文字列とベクターのベクターを受け取る。
 
-Step back a bit and it’s obvious what `escape-html` is all about—obvious, at least, to anyone who has ever tripped over an ampersand in the middle of a web page. The `escape-html` function is in the business of foiling those attempts to embed actual HTML in innocent-looking text. And it’s all done with vectors.
+ほんの少し後ろに下がってみれば、`escape-html` が何であるかは一目瞭然である-少なくとも、ウェブページの途中でアンパサンドにつまずいたことのある人なら誰でもわかるだろう。この`escape-html`関数は、何の変哲もないテキストに実際のHTMLを埋め込もうとする試みを阻止するためのものである。そしてそれはすべてベクターを使って行われる。
 
-You can find a similar use of vectors in this bit of code, lifted from the [Pedestal application framework examples](https://github.com/pedestal/samples/blob/master/template-server/src/template_server/service.clj):
+同様のベクターの使い方は、[Pedestalアプリケーションフレームワークの例](https://github.com/pedestal/samples/blob/master/template-server/src/template_server/service.clj)から引用したこのコードにもあります：
 
 
 ```clojure
@@ -28,11 +28,11 @@ You can find a similar use of vectors in this bit of code, lifted from the [Pede
      ["/comb" {:get comb-page}]]]])
 ```
 
-This bit of code contains Clojure features we haven’t covered yet: what, you might wonder, is this `defroutes` thing? (It’s a macro. See "Chapter 20, Macros, on page 241.") And what is this `^:interceptors` weirdness? (It’s metadata. See "Chapter 19, Read and Eval, on page 229.") Not to mention all the curly brackets.  (Those are maps. See "Chapter 3, Maps, Keywords, and Sets, on page 27".)
+このコードには、まだ説明したことのないClojureの特徴が含まれています。(これはマクロです。"第20章、マクロ、241ページ "を参照してください。)また、この`^:interceptors`の奇妙さは何ですか？(メタデータです。「第19章、読み込みと評価」(229ページ)を参照してください。)言うまでもなく、すべての波括弧もそうです。 (第3章マップ、キーワード、セット（27ページ）」を参照)。
 
-But skip over all that and focus on the vectors and, again, if you are at all familiar with web applications, it’s probably clear what is going on: the code is using the vectors to specify what the application should do when a get request comes on various URL paths: do this if someone points their browser at `"/hiccup"` and that if they hit `"/enlive"`. The lesson here is that even at this very early phase of our adventures in Clojure, we can look at some advanced code and glean a bit of what it’s up to. And that there are vectors everywhere.
+しかし、これらすべてをスキップして、ベクターに注目してください。繰り返しますが、もしあなたがウェブアプリケーションに少しでも詳しいのであれば、おそらく何が起こっているかは明らかでしょう：コードは、様々なURLパスでgetリクエストが来たときにアプリケーションが何をすべきかを指定するためにベクターを使っています：誰かがブラウザを`"/hiccup"`に向けたらこうしなさい、そして`"/enlive"`にぶつかったらこうしなさい。ここでの教訓は、Clojureでの冒険の非常に初期の段階であっても、先進的なコードを見て、それが何をしようとしているのかを少しは読み取ることができるということだ。そして、ベクターはどこにでもあるということだ。
 
-While Clojure programmers mostly rely on vectors, lists do get a fair bit of use, especially in those situations where you want to build your sequence by appending new items to the front as opposed to the back. Certainly it is no great leap to imagine `defroutes` with lists instead of vectors. But when there aren’t great algorithmic issues at stake, Clojure programmers generally reach for square brackets.
+Clojureプログラマはほとんどベクターに頼っていますが、リストは、特に、新しいアイテムを後ろではなく前に追加することでシーケンスを構築したい状況で、少なからず使用されます。確かに、ベクターの代わりにリストを使って `defroutes` を想像することは大きな飛躍ではない。しかし、アルゴリズムに大きな問題がない場合、Clojureプログラマーは一般的に角括弧に手を伸ばします。
 
-There is one giant exception to the mostly use vectors rule. Earlier we saw that you need the quote in front of your list to prevent it from being confused with Clojure code, specifically a function call. Clearly we don’t want to confuse `'("Emma" "Coma" "War and Peace")` which is data, with `(println "Emma" "Coma" "War and Peace")`, which is code. But as we’ll see in "Chapter 19, Read and Eval, on page 229", the similarity between lists and code is neither accidental nor skin-deep.  In fact we’ll discover that every time you write Clojure code you are really creating lists, lots of lists. Stay tuned.
+ほとんどベクターを使うというルールには1つ大きな例外があります。前に、Clojureコード、特に関数呼び出しと混同されるのを防ぐために、リストの前に引用符が必要であることを見ました。データである `'("Emma" "Coma" "War and Peace")` とコードである `(println "Emma" "Coma" "War and Peace")` を混同したくないのは明らかです。しかし、「第19章、読み取りと評価（229ページ）」で説明するように、リストとコードの類似性は偶然のものでもなければ、皮膚感覚的なものでもない。 実際、Clojureコードを書くたびに、あなたは本当にリストを、たくさんのリストを作成していることを発見するでしょう。ご期待ください。
 

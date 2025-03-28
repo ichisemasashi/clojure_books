@@ -1,7 +1,7 @@
 
-### Staying Out of Trouble
+### トラブルに巻き込まれないために
 
-While lazy—and particularly unbounded— sequences are a powerful programming tool, dealing with them in the REPL has its issues. You certainly don’t want to try to print an entire infinite sequence, either explicitly, like this:
+遅延シーケンス、特に無限シーケンスは強力なプログラミング・ツールですが、REPLでそれを扱うには問題があります。このように明示的に無限シーケンス全体を表示しようとするのは確かに避けたい：
 
 ```clojure
 user=> (def numbers (iterate inc 1)) 
@@ -9,13 +9,13 @@ user=> (def numbers (iterate inc 1))
 user=> (println numbers) ; Say goodnight!
 ```
 
-or implicitly:
+あるいは暗黙のうちに：
 
 ```clojure
 user=> numbers ; And that is it!
 ```
 
-Never try to stare into the face of the infinite. This is where the `*print-length*` dynamic var and `set!`, both of which we saw back in "Chapter 8, Def, Symbols, and Vars, on page 85", come in handy:
+決して無限の顔を見つめてはいけない。第8章 Def, Symbols, and Vars（85ページ）」で見た`*print-length*`ダイナミック変数と`set！`の両方が役に立つ：
 
 ```clojure
 user=> (set! *print-length* 10)
@@ -24,32 +24,31 @@ user=> numbers
 (1 2 3 4 5 6 7 8 9 10 ...)
 ```
 
-More subtly, you also need to be careful about side effects when dealing with lazy sequences, since your code might run at unexpected times. For example, imagine that we had the text for each chapter of a book stored in files with names like `chap1.txt` and `chap10.txt`. We could use the built-in Clojure function `slurp` (yes, that’s really the name) to read the contents of a chapter file into a string:
+さらに微妙なことだが、遅延シーケンスを扱うときには副作用にも注意する必要がある。例えば、本の各章のテキストが`chap1.txt`や`chap10.txt`のような名前のファイルに保存されているとします。Clojureの組み込み関数 `slurp` (そう、これが本当の名前です) を使って、章ファイルの内容を文字列に読み込むことができます：
 
 ```clojure 
 ;; Get the contents of the file as a string.
 (slurp "chap1.txt")
 ```
 
-Add in some `map` and `take` cleverness and we can create a sequence of the text
-of the first 10 chapters:
+`map`と`take`の巧みさを加えれば、最初の10章のテキストのシーケンスを作ることができる：
 
 ```clojure
 (def chapters (take 10 (map slurp (map #(str "chap" % ".txt") numbers))))
 ```
 
-Except that while we have just set up a pipeline for reading the files we haven’t actually read anything yet. Think about it: `take` and `map` both produce lazy sequences, so we need to actually do something with the elements of `chapters` before any slurping occurs. This can be a problem, because while Clojure’s collections are immutable, the contents of files are not.
+ただし、ファイルを読むためのパイプラインをセットアップしただけで、実際にはまだ何も読んでいない。`take`と`map`は遅延シーケンスを生成するので、ファイルの読み込みが行われる前に`chapters`の要素で実際に何かを行う必要がある。Clojureのコレクションはイミュータブルですが、ファイルの内容はイミュータブルではありません。
 
 > [!NOTE]
 >
-> **Slurp and Spit**
+>  **SlurpとSpit**
 >
-> The `slurp` function is the Clojure programmer’s universal "I need to read something" friend. Most notably, `slurp` will do exactly what you want if you hand it a URL: `(slurp "http://russolsen.com/index.html")`.
-> If your interest lies more in writing than reading, there is `spit`, which will take a path and a string to write the string to that file, as in: `(spit "/tmp/chapter1.txt" "It was a dark...")`.
-> As I say, these functions are your friends. The names … well, I guess you had to be there.
+> `slurp`関数は、Clojureプログラマの普遍的な "何かを読む必要がある “ときの友達です。特に、 `slurp` は URL を渡すと、あなたが望むことを正確に実行します： (slurp "http://russolsen.com/index.html")`.
+> 読み込みよりも書き込みに興味があるのであれば、`spit`がある： `(spit "/tmp/chapter1.txt" "It was a dark...")`.
+> これらの関数はあなたの友達です。名前は......まあ、その場にいなければならなかったのだろう。
 
 
-It’s for just these occasions that Clojure provides the `doall` function:
+Clojureが`doall`関数を提供しているのは、まさにこのような場面のためである：
 
 
 ```clojure
@@ -57,9 +56,9 @@ It’s for just these occasions that Clojure provides the `doall` function:
 (doall chapters)
 ```
 
-The `doall` function runs down your lazy sequence, accessing each element, and returns the sequence, effectively wringing the laziness out. If you want it done "right now", `doall` is your friend.
+`doall` 関数は遅延シーケンスを処理して各要素にアクセスし、シーケンスを返す。"今すぐに"実行したい場合には、 `doall` が便利である。
 
-Along the same lines is `doseq`, which realizes each item in a lazy sequence one at a time but doesn’t try to hold onto the whole thing. Syntactically, `doseq` looks a lot like `for`:
+同じようなものとして `doseq` があり、これは遅延シーケンスの各要素を一度に取り出すが、全体を保持しようとはしない。構文的には `doseq` は `for` に似ている：
 
 ```clojure
 ;; Read the chapters NOW!
@@ -67,7 +66,7 @@ Along the same lines is `doseq`, which realizes each item in a lazy sequence one
   (println "The chapter text is" c))
 ```
 
-The difference is that while `for` returns a lazy sequence—not much help when we’re trying to de-lazy our sequence—`doseq` is emphatically eager.
+違いは、`for`が遅延シーケンスを返すのに対して（シーケンスを遅延から解放しようとするときにはあまり役に立たない）、`doseq`は強調して熱心であることだ。
 
 
 

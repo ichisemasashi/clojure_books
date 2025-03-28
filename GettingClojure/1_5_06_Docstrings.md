@@ -1,9 +1,9 @@
 
 ### Docstrings
 
-One of the challenges of programming is that code has two audiences, one electronic and the other human. On one hand, code is the medium that we use to order the computer around, and we have to do that ordering with explicit, sometimes painful, precision. But code is also literature. It needs to communicate its intent and workings to the humans who maintain and enhance it.
+プログラミングの課題のひとつは、コードには電子的なものと人間的なもの、ふたつの聴衆がいるということだ。ひとつは、コードはコンピュータに命令するための媒体であり、私たちはその命令を明示的に、時には痛みを伴うほど正確に行わなければならない。しかし、コードは文学でもある。コードは、それを維持し強化する人間に対して、その意図と働きを伝える必要がある。
 
-The traditional way you help the people understand code is via comments. A comment is always as close as the semicolon key. Thus, if we wanted to add a bit of explanation to our average function we might do something like this:
+コードの理解を助ける伝統的な方法は、コメントである。コメントは常にセミコロンキーの数だけ存在する。したがって、平均的な関数にちょっとした説明を加えたい場合は、次のようにする：
     
 ```clojure
 ;; Return the average of the two parameters.
@@ -11,9 +11,9 @@ The traditional way you help the people understand code is via comments. A comme
   (/ (+ a b) 2.0))
 ```
 
-As every programmer knows, the beauty of comments is that they disappear early on in parsing. Thus you can gab away inside a comment, confident that whatever you say will be forgotten by the time the compiler gets down to business. But the early demise of comments has a downside. We don’t write comments for decorative purposes; we write them because we’re trying to say something helpful about the code. Wouldn’t it be nice if we could somehow hang those helpful descriptions on the function?
+プログラマーなら誰でも知っているように、コメントの優れた点は、解析の早い段階で消えてしまうことだ。そのため、コメントの中でおしゃべりをすれば、コンパイラが本題に入る頃には、何を言っても忘れ去られていることを確信できる。しかし、コメントが早い段階で消えてしまうことにはマイナス面もある。私たちがコメントを書くのは装飾のためではなく、コードについて役に立つことを言おうとしているからだ。その役に立つ説明を、どうにかして関数にぶら下げられたらいいと思いませんか？
 
-Helpful indeed, which is why Clojure provides documentation strings. A documentation string—or "docstring" for short—is a regular string that you can insert just after the function name in your defn:
+それがClojureがドキュメント文字列を提供する理由です。ドキュメント文字列、略して "docstring "は、defnの関数名の直後に挿入できる通常の文字列です：
 
 ```clojure
 (defn average
@@ -22,7 +22,7 @@ Helpful indeed, which is why Clojure provides documentation strings. A documenta
   (/ (+ a b) 2.0))
 ```
 
-Clojure will store the string along with the function. You can get at the docstring for any function with the built-in `doc` macro. To get at the docstring in the REPL, you just use `doc`:
+Clojureは関数と一緒にその文字列を保存します。組み込みの `doc` マクロを使えば、どの関数でも docstring を取得できます。REPLでdocstringを取得するには、`doc`を使用するだけです：
 
 ```
 user=> (doc average)
@@ -32,17 +32,17 @@ user/average
   Return the average of a and b.
 ```
 
-Note that Clojure even added the argument list to the documentation for free.
+Clojureは、引数リストも公式にドキュメントに追加している。
 
 > [!NOTE]
 >
 > **Docstrings for the House!**
 >
-> Docstrings are not just for functions. Other members of the Clojure menagerie, creatures like macros and records—which we’ll meet in later chapters—also support docstrings.
-> So you can also supply a docstring in a plain old `def: (def ISBN-LENGTH "Length of an ISBN code." 13)`.
+> Docstringsは関数だけのものではありません。Clojureの他のメンバー、マクロやレコードのような生き物（後の章で紹介します）もdocstringをサポートしています。
+> ですから、古い`def: (def ISBN-LENGTH "Length of an ISBN code." 13 )`でもdocstringを指定することができます。
 
 
-Adding docstrings to multi-arity functions is also easy. We could, for example, implement a well-documented number-averaging function that can average two or three numbers, like this:
+複数アリティの関数にdocstringを追加するのも簡単です。例えば、2つまたは3つの数値を平均することができる、十分に文書化された数値平均関数を実装することができる：
 
 ```clojure
 (defn multi-average
@@ -53,6 +53,6 @@ Adding docstrings to multi-arity functions is also easy. We could, for example, 
     (/ (+ a b c) 3.0)))
 ```
 
-Just remember that the docstring always comes after the function name.
+ただ、docstringは常に関数名の直後に来ることを覚えておいてほしい。
 
 

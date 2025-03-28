@@ -1,8 +1,8 @@
 
 ## CHAPTER 4 Logic
 
-There comes a time in the life of virtually every program when decisions need to made. If the bank account is overdrawn, then send a nasty email. If the denominator is zero, then best not to do that division. If this is a preferred customer, then give them a break on the shipping charge. Programs are so full of these kinds of decisions that it’s not surprising that we sometimes refer to them as logic.
+事実上すべてのプログラムにおいて、ある決定を下さなければならない時が来る。銀行口座の残高がオーバーしていたら、嫌なメールを送ろう。分母がゼロなら、その割り算はしない方がいい。優先顧客なら、送料を安くしてあげよう。プログラムはこのような判断に満ちているので、それをロジックと呼ぶことがあっても不思議ではありません。
 
-In this chapter we’ll look at how you make decisions in Clojure programs.  We’re going to start with the logic hammer suitable for most coding nails—the `if` expression—and then move on to the slightly more general `cond` expression.  Along the way we’ll discover that Clojure has its own ideas of what is true, what is false, and what things are equal, ideas that may surprise you.
+この章では、Clojureプログラムでどのように決定を下すかを見ていきます。 ほとんどのコーディングの釘に適した論理ハンマーである `if` 式から始めて、少し一般的な `cond` 式に進みます。 その過程で、Clojureには何が真で、何が偽で、何が等しいかという独自の考え方があることを発見するでしょう。
 
 

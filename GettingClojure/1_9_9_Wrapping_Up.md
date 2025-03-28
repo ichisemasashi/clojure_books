@@ -1,10 +1,10 @@
 
-### Wrapping Up
+### まとめ
 
-Congratulations: you’ve reached a milestone in your Clojure journey. Having read this far you know how about the basic Clojure data types. You know how to build flexible units of code in the form of functions. And you know how to assemble those functions into coherent packages called namespaces.
+おめでとうございます: Clojureの旅のマイルストーンに到達しました。ここまで読んで、あなたは基本的なClojureデータ型について知っています。関数の形でコードの柔軟なユニットを構築する方法を知っています。そして、それらの関数を名前空間と呼ばれる首尾一貫したパッケージに組み立てる方法を知っています。
 
-This means you have the fundamentals of Clojure covered. Certainly there is more to learn about Clojure and that will be true even when you finish the last page of this book. But you now have the basic outlines penciled in and from here on out it’s all about filling in the details.
+つまり、あなたはClojureの基礎をカバーしていることになります。確かに、Clojureについて学ぶべきことはまだまだありますし、本書の最後のページを読み終えたときでもそうでしょう。しかし、基本的なアウトラインは描けたので、ここからは細部を埋めていくだけです。
 
-And now we’ll turn to a lovely detail. In the next chapter we’ll take a look at sequences. In the same way that namespaces pull your code together, sequences unify the collection types.
+そして今、私たちは素敵な細部に目を向けるだろう。次の章ではシーケンスを取り上げます。名前空間がコードをまとめるのと同じように、シーケンスもコレクション・タイプを統一します。
 
 

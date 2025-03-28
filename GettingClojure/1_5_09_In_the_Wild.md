@@ -1,7 +1,7 @@
 
-### In the Wild
+### 野生の中で
 
-Our old friend the built-in `=` function is a great example of the function-related goodies we’ve been looking at in this chapter:
+私たちの古くからの友人である組み込みの `=` 関数は、この章で見てきた関数関連のグッズの素晴らしい例です：
 
 ```clojure
 ;; Code edited a bit for clarity.
@@ -21,21 +21,21 @@ Our old friend the built-in `=` function is a great example of the function-rela
       false)))
 ```
 
-The `=` function takes any number of arguments and returns `true` if they are all equal. Fortunately, `=` can turn to the lower-level `clojure.lang.Util/equiv` function to do most of the work. The catch is that `equiv` can only compare two values at a time.
+関数 `=` は任意の数の引数を取り、それらがすべて等しい場合に `true` を返します。幸いなことに、 `=` はほとんどの処理を低レベルの `clojure.lang.Util/equiv` 関数に任せることができます。ただし、`equiv`は一度に2つの値しか比較できません。
 
-Notice how the code breaks the job up into three arities. The single-argument arity is easy enough: evaluate `(= anything)` and you will always get back `true`. The two-argument arity is also pretty straightforward: just call `clojure.lang.Util/equiv`.
+コードがどのように仕事を3つのアリティに分割しているかに注目してください。単一引数の配列は簡単で、`(= anything)`を評価すれば常に`true`が返ってくる。2引数のアリティも非常に簡単で、`clojure.lang.Util/equiv`を呼び出すだけです。
 
-It’s the third arity, the one that deals with more than two arguments, where things get interesting. In this case the basic flow is to compare the first two or three arguments with `clojure.lang.Util/equiv` and to resort to `recur` if there are arguments left over.
+3番目のアリティ、つまり2つ以上の引数を扱うアリティが面白くなるところです。この場合、基本的なフローは、最初の2つまたは3つの引数を `clojure.lang.Util/equiv`で比較し、引数が残っている場合は `recur` に頼ることです。
 
 
 > [!NOTE]
 >
-> **Simple Equality?**
+> **シンプルな同等性？**
 >
-> This whole two- or three-argument dance in `=` appears to be there to improve performance. We could build a perfectly rational version of `=` that simply compares the first two arguments and resorts to recur if there are more than two.
+> この2つまたは3つの引数による `=` のダンスは、パフォーマンスを向上させるためにあるように見える。最初の2つの引数を単純に比較し、2つ以上ある場合は再帰に頼る、完全に合理的なバージョンの `=` を作ることもできる。
 
 
-The ClojureScript source code contains a lovely example of a multimethod in `to-url`. Here’s a somewhat simplified version of `to-url`:
+ClojureScriptのソースコードには、`to-url`のマルチメソッドの素敵な例が含まれています。以下は `to-url` のやや簡略化したバージョンである：
 
 ```clojure
 (defmulti to-url class)
@@ -44,6 +44,6 @@ The ClojureScript source code contains a lovely example of a multimethod in `to-
 (defmethod to-url String [s] (to-url (io/file s)))
 ```
 
-Like our `normalize-book` example, `to-url` is trying to bring order to a chaotic world by converting various URL-like things into a single data structure. Unlike the book example, `to-url` uses the built-in `class` function, which will return the underlying type of the value as its dispatch function. Essentially what we have here is a rough approximation of the class-based polymorphism that you find in many object-oriented programming languages, implemented in a handful of lines of code.
+`normalize-book`の例と同様に、`to-url`は様々なURLのようなものを単一のデータ構造に変換することで、混沌とした世界に秩序をもたらそうとしています。bookの例とは異なり、 `to-url` は組み込みの `class` 関数を使用し、ディスパッチ関数として値の基本型を返します。本質的に、ここにあるのは、多くのオブジェクト指向プログラミング言語で見られるクラスベースのポリモーフィズムの大まかな近似であり、ほんの一握りのコード行で実装されています。
 
 

@@ -1,8 +1,8 @@
 
-### Wrapping Up
+### まとめ
 
-In this chapter we looked at the basics of Clojure. We saw what the language looks like, and we’ve printed some strings, done some arithmetic, and defined some functions. We also had a quick look at setting up a new project with Leiningen. Along the way we ran into the Clojure rule about defining functions before we use them and learned a bit about formatting Clojure code and dealing with those pervasive parentheses.
+この章では、Clojureの基本を見てきました。言語がどのように見えるかを見て、いくつかの文字列を表示し、いくつかの演算を行い、いくつかの関数を定義しました。また、Leiningenを使って新しいプロジェクトをセットアップすることも簡単に見ました。その過程で、関数を使用する前に定義するというClojureのルールに遭遇し、Clojureコードの書式設定と蔓延する括弧の扱いについて少し学びました。
 
-As we continue our tour of Clojure we’re going to return to the topics we only managed to touch on in this chapter. For example, "Chapter 5, More Capable Functions, on page 49", and "Chapter 6, Functional Things, on page 63", are devoted to getting more out of your functions, while "Chapter 8, Def, Symbols, and Vars, on page 85", will look into the mechanism behind `def`, and "Chapter 19, Read and Eval, on page 229", will take a long look at Clojure’s syntax and how it got that way. But for the moment we’re going turn to the practicalities of handling data in quantities larger than a single string or number.
+Clojureのツアーを続けながら、私たちはこの章で触れることができたトピックに戻るつもりです。例えば、"第5章、より有能な関数、49ページ "と "第6章、関数的なもの、63ページ "は、あなたの関数からより多くを引き出すことに専念しています。"第8章、def、シンボル、およびVars、85ページ "は、`def`の背後にあるメカニズムに注目し、"第19章、ReadとEval、229ページ "は、Clojureの構文とそれがどのようにしてそのようになったかをじっくり見ていきます。しかし、当面は、1つの文字列や数値よりも大きな量のデータを扱う実用的なことに目を向けます。
 
 

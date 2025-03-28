@@ -1,29 +1,29 @@
 
-### Striking a More Specific Bargain with Records
+### レコードでより具体的な取引をする
 
-Happily, Clojure provides an alternative to maps that mitigates some of these shortcomings: the record. You can think of records as maps with some predefined keys. To make a record you need to first define the record type:
+幸いなことに、Clojureはこれらの欠点のいくつかを緩和するマップの代替手段を提供します：レコードです。レコードは定義済みのキーを持つマップと考えることができます。レコードを作るには、まずレコード型を定義する必要がある：
                                  
 ```clojure                       
 (defrecord FictionalCharacter[name appears-in author])
 ```
 
-As you can see from the code, the record type has a name and a list of the predefined fields. So if you evaluate the expression in our example, you end up with a record type called `FictionalCharacter` that has three fields, one for the character’s name, one for the name of the fictional work the character appears in, and one for the author. Behind the scenes, `defrecord` creates a couple of functions, whose names are based on the record type. In our example, we get `->FictionalCharacter` and `map->FictionalCharacter`.
+コードからわかるように、レコード型には名前と定義済みのフィールドのリストがあります。つまり、この例で示した式を評価すると、`FictionalCharacter`というレコード型ができあがり、そのレコード型は3つのフィールドを持つことになる。舞台裏では、`defrecord`がレコード型に応じた名前の関数をいくつか作っている。この例では、 `->FictionalCharacter` と `map->FictionalCharacter` がある。
                    
 > [!NOTE]
 >
 > **Instant Vars** 
 > 
-> Since `defrecord` begins with def it’s reasonable to assume that it is in the var-creation business. In fact, `defrecord` creates a number of vars.  There’s one for the record type, and one each for the two factory functions. The same is true of `defprotocol`, which we’ll meet presently.
+> `defrecord`はdefで始まるので、varを作る仕事をしていると考えるのが妥当だろう。実際、`defrecord`はいくつかのvarを作成する。 レコード型用に1つ、2つのファクトリー関数用にそれぞれ1つだ。同じことが `defprotocol` にも言える。
 
 
-There are a couple of ways to kick off the second stage of record creation, which is to create instances of your record type—actual fictional characters in our example. First, we can use the `->FictionalCharacter` function to create our first `FictionalCharacter` instance:
+レコード作成の第2段階を開始するには、いくつかの方法があります。それは、レコード型のインスタンス（この例では、実際のフィクションのキャラクター）を作成することです。まず、`->FictionalCharacter`関数を使って最初の`FictionalCharacter`インスタンスを作成します：
 
 ```clojure
 (def watson (->FictionalCharacter "John Watson" "Sign of the Four" "Doyle"))
 ```
 
 
-As you can see from the example, `->FictionalCharacter` takes values for each of the fields in the record, in the order that they were specified in `defrecord`, and gives you back a new record instance, which will print in the REPL like this:
+この例からわかるように、`->FictionalCharacter`はレコードの各フィールドに、`defrecord`で指定された順番に値を取り、新しいレコードのインスタンスを返す、REPLではこのように表示される：
 
 ```clojure
 #records.core.FictionalCharacter{:name "John Watson",
@@ -31,7 +31,7 @@ As you can see from the example, `->FictionalCharacter` takes values for each of
                                  :author "Doyle"}
 ```
 
-Alternatively, we can use `map->FictionalCharacter`, which expects its arguments rolled up in a map, like this:
+別の方法として、`map->FictionalCharacter`を使うこともできる。これは、次のように引数をマップにまとめることを期待する：
 
 ```clojure
 (def elizabeth (map->FictionalCharacter
@@ -41,6 +41,6 @@ Alternatively, we can use `map->FictionalCharacter`, which expects its arguments
 ```
 
 
-Just make sure the map you pass in has keyword arguments that match the names of the fields in the record.
+渡すマップのキーワード引数が、レコードのフィールド名と一致していることを確認してほしい。
 
 

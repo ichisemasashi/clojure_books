@@ -1,7 +1,7 @@
 
-### Staying Out of Trouble
+### トラブルに巻き込まれないために
   
-Depending on your programming background, the truthy/falsy approach to logic will seem either completely mundane or like an outrage to all that is right and moral. If you lean toward the outrage school of thought, please keep in mind that the "false and nil are false and everything else is true" rule is not a minor aberration that only pops up when some programmer isn’t careful.  There is a lot of code in Clojure that takes advantage of this behavior. For an example of this, look no further than `and`. While `(and true true)` does indeed evaluate to `true` and `(and false false)` is comfortably `false`, the `and` function can and will return some decidedly un-Boolean values:
+あなたのプログラミングの背景によって、論理に対するtuthy/falsyのアプローチは、まったく平凡なものに見えるか、あるいはすべての正義と道徳に対する暴挙のように見えるだろう。もしあなたが暴挙派に傾いているのであれば、「falseとnilはfalseであり、それ以外はすべてtrueである」というルールは、プログラマーが注意深くないときにだけ現れるような小さな異常ではないということを覚えておいてください。 Clojureには、この振る舞いを利用したコードがたくさんあります。その例として、`and` を見てほしい。(and true true)` は確かに `true` と評価され、`(and false false)` は快適に `false` と評価されますが、`and` 関数は明らかにブール値ではない値を返すことがあります：
 
 ```clojure
 (and true 1984)       ; Evaluates to 1984, which is truthy.
@@ -9,16 +9,16 @@ Depending on your programming background, the truthy/falsy approach to logic wil
 (and 2001 nil "Emma") ; Evaluates to nil, which is falsy.
 ``` 
     
-The point is that the behavior of `and` only makes sense if you look at it from the truthy/falsy point of view. Given this, you should avoid testing for true or `false` explicitly. For example, the condition part of this `if`:
+ポイントは、`and`の動作は、真偽の観点から見た場合にのみ意味をなすということだ。このことを考えると、明示的に真か偽かをテストすることは避けるべきである。例えば、この`if`の条件部分：
 
 ```clojure
 (if (= (some-predicate? some-argument) true)
   (some-other-function))
 ```
 
-isn’t just extra wordy; it’s wrong. The author of `some-predicate?`—like the author of `and`—may have decided to return something other than `true` to indicate truthyness. If it does, then this `if` will miss it. 
+は余計な言葉が多いだけでなく、間違っている。some-predicate?` の作者は、`and`の作者と同じように、真偽を示すために`true`以外のものを返すことにしたのかもしれない。もしそうなら、この `if` はそれを見逃すことになる。
 
-There’s also a stylist pothole that you should avoid: As you build functions that contain `if` and `cond` and do a bit of nesting, you’re going to find yourself needing to close off a lot of open parentheses as you get to the end. The convention is to close off the parentheses on the last line of your expression, the way we did with the three parentheses at the end of `shipping-charge`:
+また、避けるべき文体の落とし穴もある： `if`と`cond`を含む関数を作り、少し入れ子にしていくと、最後になるにつれて、たくさんの括弧を閉じなければならないことに気づくだろう。慣例としては、式の最後の行で括弧を閉じます。これは、`shipping-charge`の最後の3つの括弧でやった方法です：
 
 
 ```clojure
@@ -30,7 +30,7 @@ There’s also a stylist pothole that you should avoid: As you build functions t
     :else (* 0.1 order-amount))) ; Close, close, close.
 ```
 
-What you should not do is grant each closing parenthesis its own line, like this:
+やってはいけないのは、次のように閉じ括弧をそれぞれ独立した行にすることだ：
 
 ```clojure
 (defn shipping-charge [preferred-customer order-amount]
@@ -43,6 +43,6 @@ What you should not do is grant each closing parenthesis its own line, like this
 ) ; No!
 ```
 
-As you get used to Clojure’s parentheses-based syntax, all those closing parentheses will begin to fade into the psychological background. Don’t draw attention to them while you wait for that to happen.
+Clojureの括弧ベースの構文に慣れてくると、すべての閉じ括弧は心理的な背景の中に消えていきます。そうなるのを待つ間、それらに注意を向けないでください。
 
 

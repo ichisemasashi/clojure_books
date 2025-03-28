@@ -1,8 +1,8 @@
 
-### Wrapping Up
+### まとめ
 
-In this chapter we had our first look at the deeper ideas of functional programming. We saw that in Clojure functions are values—values that you can create, bind to names, and pass around. We also saw that closures allow you to create custom-tailored functions that remember the bindings that existed when they were created. We also looked at some of the helpers that Clojure provides to aid you in the task of creating just the function you need for the task at hand. Finally, we took a quick look at the idea of a pure function: a function that neither relies on nor generates side effects.
+この章では、関数型プログラミングの深いアイデアを初めて見ました。Clojureの関数は値であり、作成したり、名前にバインドしたり、渡したりすることができます。また、クロージャを使うことで、作成時に存在した束縛を記憶するカスタム仕立ての関数を作成することができます。また、Clojureが提供するヘルパーのいくつかを見て、手元のタスクに必要な関数を作成する作業を支援します。最後に、純粋関数、つまり副作用に依存せず、副作用も生成しない関数の考え方を簡単に見てみました。
 
-Now that you understand what makes Clojure a functional language, it’s time to turn to one of the stickiest issues of any programming language: naming things.
+Clojureが関数型言語であることを理解したところで、次はプログラミング言語の最も厄介な問題の1つである命名についてです。
 
 

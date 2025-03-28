@@ -1,7 +1,7 @@
 
-### Wrapping Up
+### まとめ
 
-In this chapter we had a look at the `let` expression and its friends `if-let` and `when-let`. We saw how `let` and company enable you to bind a name to a value as you compute it, a binding that lasts only as long as you need it. We’ve also seen how you can use `let` to organize and illuminate long sequences of computing by giving a name to each intermediate value. As usual, we also looked at some of the programming pits that you can fall into when using `let`—and happily discovered that those pits were both few in number and fairly easy to avoid.
+この章では `let` 式とその友人である `if-let` と `when-let` を見てきた。`let`とその仲間を使うことで、名前と値を結びつけて計算することができます。また、各中間値に名前をつけることで、`let` を使って長い一連の計算を整理したり、照らし出したりする方法も見てきた。いつものように、`let`を使うときに陥りやすいプログラミングの落とし穴も見てきましたが、嬉しいことに、それらの落とし穴は数が少なく、避けるのもかなり簡単であることがわかりました。
 
-Now that you know all about `let`, it’s time to dig deeper into Clojure’s other naming mechanism, `def`.
+さて、`let`についてすべてわかったところで、Clojureのもう一つの名前付けメカニズムである`def`についてもっと深く掘り下げてみましょう。
 

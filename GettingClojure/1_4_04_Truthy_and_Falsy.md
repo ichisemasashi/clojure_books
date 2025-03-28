@@ -1,7 +1,7 @@
 
-### Truthy and Falsy
+###Truthy と Falsy
 
-One notable aspect of Clojure’s handling of Booleans is that the language is willing to treat any value as a Boolean. This, for example is a perfectly good `if`:
+Clojureのブール値の扱いで特筆すべき点は、この言語がどんな値もブール値として扱うことを厭わないことです。例えば、これは完全に正しい `if` です：
  
 ```clojure
 (if 1
@@ -9,7 +9,7 @@ One notable aspect of Clojure’s handling of Booleans is that the language is w
   "I like mysteries!")
 ```
 
-As is this:
+これも同じだ：
 
 ```clojure
 (if "hello"
@@ -17,7 +17,7 @@ As is this:
   "I like mysteries!")
 ```
 
-And even this:
+そしてこれさえもだ：
 
 ```clojure
 (if [1 2 3]
@@ -25,19 +25,19 @@ And even this:
   "I like mysteries!")
 ```
 
-Not only are these good `if` statements, but in all three cases the winner is science fiction. The rule is simple: in an `if` statement and any other Boolean context, only `false` and `nil` get treated as false. Everything else is treated as true. Thus this expression will announce a love of mysteries:
+これらは正しい`if`文であるだけでなく、3つのケースとも勝者はscience fictionである。ルールは単純で、`if`文やその他のブーリアン文脈では、`false`と`nil`だけが偽として扱われる。それ以外はすべて真として扱われる。したがって、この式はミステリー好きを表明することになる：
 
 ```clojure
 (if false "I like scifi!" "I like mysteries!") ; Mysteries!
 ```
 
-And so will this one:
+そしてこれもそうなる：
 
 ```clojure
 (if nil "I like scifi!" "I like mysteries!") ; Mysteries!
 ```
 
-Since everything other than `false` and `nil`—and I do mean everything—gets treated as `true`, Clojure treats all strings, all numbers, and all keywords as `true`. Consequently, all of the following expressions will evaluate to `"yes"`:
+`false` と `nil` 以外のすべてのもの、つまりすべてのものが `true` として扱われるので、Clojure はすべての文字列、すべての数値、すべてのキーワードを `true` として扱います。その結果、以下の式はすべて `"yes"` と評価されます：
 
 ```clojure
 (if 0 "yes" "no")       ; Zero's not nil or false so "yes".
@@ -50,7 +50,7 @@ Since everything other than `false` and `nil`—and I do mean everything—gets 
 (if "nil" "yes" "no")   ; And the string "nil" ain't nil: "yes".
 ```
 
-The "anything else is true" rule also applies to collections. Thus, since no vector is equal to `false` nor is any vector equal to `nil`, all vectors—even empty ones—are treated as `true`:
+「それ以外は真」というルールはコレクションにも適用される。したがって、どのベクターも `false` と等しくなく、どのベクターも `nil` と等しくないので、空のベクターであってもすべて `true` として扱われます：
 
 ```clojure
 (if [] (println "An empty vector is true!"))
@@ -65,13 +65,13 @@ The "anything else is true" rule also applies to collections. Thus, since no vec
 ```
 
 
-All the `if` expressions in the preceding examples will produce some output.
+先ほどの例の`if`式はすべて何らかの出力を生成する。
 
-One issue with having a more or less infinite collection of true things along with two different false things is the terminology. When we say something is true, do we mean the specific value `true` or just true in the sense of not being `false` or `nil`? To avoid confusion, Clojurists sometimes refer to the values that are treated as true in the more general sense as being truthy. Thus, while only `true` is really `true`, `"hello"`, `1.0`, and `"Russ"` are all truthy. Similarly, we can use falsy to describe the metaphysical quality shared by `nil` and `false`. In Clojure there are exactly two falsy things—`false` and `nil`—and an infinite number of truthy things.
+多かれ少なかれ無限にある真のコレクションと2つの異なる偽のコレクションを持つことの1つの問題は、用語である。何かが真であると言うとき、特定の値 `true` を意味するのでしょうか、それとも `false` や `nil` ではないという意味での真なのでしょうか？混乱を避けるために、Clojuristsはより一般的な意味で真として扱われる値をtruthyと呼ぶことがある。したがって、`true`だけが本当に`true`ですが、`"hello"`、`1.0`、`"Russ"`はすべて真です。同様に、falsy を使って `nil` と `false` が共有する形而上学的な性質を表すことができる。Clojureでは、ちょうど2つのfalsyなもの-`false`と`nil`があり、無限のtruthyなものがある。
 
 > [!NOTE]
 >
 > **Falsy**
 >
-> Some Clojure programmers believe the proper spelling is falsey.  This belief is false.
+> 一部のClojureプログラマは、正しい綴りはfalseyだと信じている。 この信念は間違っている。
 
