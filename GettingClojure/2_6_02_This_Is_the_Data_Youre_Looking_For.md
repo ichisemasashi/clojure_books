@@ -1,13 +1,13 @@
 
-### This Is the Data You’re Looking For
+### これがあなたが探しているデータです
 
-To get a feeling for how `clojure.spec` works, let’s return to our book-store example and imagine that we’re writing code to process our familiar book maps, values that look like this:
+`clojure.spec`の動作を把握するために、ブックストアの例に戻り、おなじみのbookマップ（次のような値）を処理するコードを書くことを想像しましょう：
 
 ```clojure
 {:title "Getting Clojure" :author "Olsen" :copies 1000000}
 ```
 
-Further, imagine that we’re getting our book data from a not-terribly-reliable source, and we’ve decided that the first thing we need to do is validate that this value that claims to be a book is in fact a book-shaped value. Clearly we could write a function:
+さらに、書籍データを信頼性の低いソースから取得していると仮定し、最初に確認すべきことは、この値が「書籍である」と主張する値が実際に書籍の形式を持った値であるかどうかを検証することだとします。明らかに、次のような関数を記述できます：
 
 spec/inventory/src/inventory/core.clj
 ```clojure
@@ -19,11 +19,11 @@ spec/inventory/src/inventory/core.clj
     (pos-int? (:copies x))))
 ``` 
 
-While this does work, the "code it by hand" approach to validating data doesn’t scale well. In any sizable system we are likely to have a significant number of complicated data shapes, and writing functions like this for each one would quickly become tedious.
+この方法は機能しますが、データ検証を「手動でコードを書く」アプローチではスケーラビリティに欠けます。大規模なシステムでは、複雑なデータ構造が数多く存在し、それぞれに対してこのような関数を書き続けることはすぐに煩雑になります。
 
-Building this kind of data validation is why we have [`clojure.spec`](https://clojure.org/about/spec).  At its most basic, a `clojure.spec` is a sort of regular expression facility for Clojure data. In exactly the same way you can use a regular expression to express a pattern—perhaps an A followed by any number of Bs—that either will or won’t match some string, you can use clojure.spec to express a pattern—perhaps a collection consisting of only numbers—that either will or won’t match some Clojure data.
+このようなデータ検証を構築するために、［`clojure.spec`］（https://clojure.org/about/spec）が存在します。 最も基本的なレベルで、`clojure.spec`はClojureデータ用の正規表現のような機能です。正規表現でパターン（例えばAに続いて任意の数のB）を表現し、それが特定の文字列と一致するかしないかを判定するように、`clojure.spec`ではパターン（例えば数値のみからなるコレクション）を表現し、それが特定のClojureデータと一致するかしないかを判定できます。
 
-To see it in action you will need to load the `clojure.spec.alpha` namespace:
+動作を確認するには、`clojure.spec.alpha` 名前空間をロードする必要があります：
 
 
 ```clojure
@@ -31,23 +31,22 @@ To see it in action you will need to load the `clojure.spec.alpha` namespace:
 (:require [clojure.spec.alpha :as s]))
 ```
 
-The key function supplied by spec is `valid?`:
+spec が提供する主要な機能は `valid?` です：
 
 ```clojure
 (s/valid? number? 44)     ; Returns true.
 (s/valid? number? :hello) ; Returns false.
 ```
 
-As you can see, `valid?` takes a predicate function and a value and will tell you if the value passes the test posed by the function. If this seems less than impressive, well, yes. But it’s just the beginning.
+ご覧の通り、`valid?` は述語関数と値を受け取り、その値が関数が定義するテストに合格するかどうかを返します。これがそれほど印象的でないように思えるなら、その通りです。しかし、これはまだ始まりに過ぎません。
 
 > [!NOTE]
 >
 > **Clojure Dot Spec Dot Alpha?**
 >
-> As I write these words `clojure.spec` is in the process of being finished off, which explains the `alpha` in the namespace name. Depending on when you’re reading this, that `alpha` may or may not still be there.
-> Note also that while `clojure.spec` is well integrated with Clojure, it is delivered as a separate library. Thus if you are using Leiningen you will need an additional dependency entry in your project file.
+> この文章を書いている時点では、`clojure.spec` は最終段階の作業中です。これが名前空間名に `alpha` が付いている理由です。この文章を読んでいる時期によっては、その `alpha` が削除されている可能性があります。また、`clojure.spec`はClojureとよく統合されていますが、別々のライブラリとして提供されています。したがって、Leiningenを使用している場合は、プロジェクトファイルに追加の依存関係エントリが必要です。
 
-For example, by using `clojure.spec/and`, you can combine a couple of predicates into something that will test if the value is a number and greater than 10:
+例えば、`clojure.spec/and` を使用すると、複数の述語を組み合わせて、値が数値でありかつ10より大きいことをテストする式を作成できます：
 
 ```clojure
 (def n-gt-10 (s/and number? #(> % 10)))
@@ -57,16 +56,16 @@ For example, by using `clojure.spec/and`, you can combine a couple of predicates
 (s/valid? n-gt-10 11) ; True.
 ```
 
-Conveniently, `and` doesn’t limit you to just two predicates:
+幸いなことに、`and` は2つの述語に限定されません：
 
 ```clojure
 (def n-gt-10-lt-100
   (s/and number? #(> % 10) #(< % 100)))
 ```
 
-One thing to be aware of is that the terminology is a bit confusing: We generally refer to the pattern-matching values as specs. But people do sometimes refer to the whole `clojure.spec` library itself as spec. For clarity, I’ll stick to calling the library `clojure.spec` and the values specs.
+注意すべき点の一つは、用語がやや混乱しやすい点です。一般的には、パターンマッチングの値を「spec」と呼びます。しかし、`clojure.spec` ライブラリ自体を「spec」と呼ぶ場合もあります。明確さを保つため、ここではライブラリを `clojure.spec`、値を「spec」と呼ぶことにします。
 
-Along with and, `clojure.spec` also provides `or`, which lets you create a spec that will match either this or that. So if we needed a spec that would match either a number or a string, we might write the following:
+`clojure.spec` には `and` だけでなく `or` も提供されており、これにより「これかあれか」を一致させる spec を作成できます。例えば、数値か文字列のどちらかに一致する spec を作成したい場合、次のように書くことができます：
 
 ```clojure
 (def n-or-s (s/or :a-number number? :a-string string?))
@@ -76,9 +75,9 @@ Along with and, `clojure.spec` also provides `or`, which lets you create a spec 
 (s/valid? n-or-s 'foo)     ; No, it's a symbol.
 ```
 
-Notice the slight twist in using `or`. It requires its arguments in pairs, a keyword followed by a predicate. The keyword is required to help in producing coherent feedback when a spec fails to match.
+`or` の使用におけるわずかな違いに注意してください。この演算子は引数をペアで要求し、キーワードに続いて述語を指定する必要があります。キーワードは、仕様が一致しない場合に一貫したフィードバックを生成するために必要です。
 
-More significantly, both `and` and `or` will accept specs as well as simple predicate functions as arguments. This means we can build up arbitrarily complex specs, so that this defines a spec that will accept numbers greater than 10, or any symbol:
+より重要な点は、`and` と `or` の両方が、仕様だけでなく単純な述語関数も引数として受け付けることです。これにより、任意に複雑な仕様を構築することができ、例えば「10より大きい数、または任意のシンボル」を受け付ける仕様を定義できます。
 
 ```clojure
 (def n-gt-10-or-s (s/or :greater-10 n-gt-10 :a-symbol symbol?))

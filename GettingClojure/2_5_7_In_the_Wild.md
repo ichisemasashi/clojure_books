@@ -19,13 +19,13 @@
       ))           
 ```
 
-Note that as part of its meditations this test uses `are` instead of `is`. Essentially `are` lets you build parameterized tests. The key logic is the `(= x y)` at the top, while the bulk of the test specifies values for `x` and `y`.
+このテストでは、メディテーションの一部として`is`の代わりに、`are`を使用していることに注意してください。本質的には、`are`を使用することでパラメータ化されたテストを構築できます。重要なロジックは先頭の`(= x y)`であり、大部分のテストでは`x`と`y`の値を指定しています。
 
-And here we have a [test of the `cons` function](https://github.com/clojure/clojure/blob/master/test/clojure/test_clojure/sequences.clj).  Did you know that you could `cons` characters onto a string to get a sequence of characters?
+そして、ここでは [`cons` 関数のテスト](https://github.com/clojure/clojure/blob/master/test/clojure/test_clojure/sequences.clj) があります。文字列に文字を `cons` して文字のシーケンスを作成できることをご存知でしたか？
 
 ```clojure
 (deftest test-cons
-  ;; Some of the test omitted...
+  ;; 一部のテストは省略...
   (are [x y] (= x y)
     (cons 1 nil) '(1)
     (cons nil nil) '(nil)
@@ -36,11 +36,11 @@ And here we have a [test of the `cons` function](https://github.com/clojure/cloj
     (cons 1 '(2 3)) '(1 2 3)
     (cons 1 []) [1]
     (cons 1 [2 3]) [1 2 3]
-    ;; More of the test omitted...
+    ;; さらに多くのテストが省略されました...
     ))
 ```
 
-And in the same file we can see `test.check` in action:
+そして、同じファイルで、`test.check` の動作を確認できます。
 
 ```clojure
 (defspec longrange-equals-range 100
@@ -51,6 +51,6 @@ And in the same file we can see `test.check` in action:
                    (clojure.lang.LongRange/create start end step))))
 ```
 
-This test is out to show that instances of `clojure.lang.Range` and `clojure.lang.LongRange`, which represent ranges of numbers—and unsurprisingly are produced by the range function—are equivalent.
+このテストは、数値の範囲を表す `clojure.lang.Range` と `clojure.lang.LongRange` のインスタンスが等価であることを示すために実施されます。当然ながら、これらは range 関数によって生成されます。
 
 

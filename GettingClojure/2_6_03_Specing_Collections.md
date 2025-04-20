@@ -1,7 +1,7 @@
 
-### Spec’ing Collections
+### コレクションのSpecの作成
 
-We can also create specs for the various collections. The most basic here is `coll-of`, which specifies a collection of something:
+さまざまなコレクションのSpecを作成することも可能です。最も基本的なものは`coll-of`で、これは何かの一連のコレクションを指定します：
 
 ```clojure
 ;; Something like '("Alice" "In" "Wonderland").
@@ -10,16 +10,16 @@ We can also create specs for the various collections. The most basic here is `co
 (def coll-of-n-or-s (s/coll-of n-or-s))
 ```
 
-To produce tighter specifications on collections, we can reach for `cat`. Essentially `cat` lets you specify this should follow that in a collection. For example, if we wanted to match only four-element collections consisting of alternating strings and numbers we could say this:
+コレクションの要件をさらに厳格化するには、`cat` を使用できます。`cat` は、コレクション内で要素が特定の順序で続くように指定する機能を提供します。例えば、文字列と数字が交互に並ぶ4要素のコレクションのみを一致させたい場合、次のように指定できます：
 
 ```clojure
 (def s-n-s-n (s/cat :s1 string? :n1 number? :s2 string? :n2 number?))
 (s/valid? s-n-s-n ["Emma" 1815 "Jaws" 1974]) ; Yes!
 ```
 
-Note that like `or`, `cat` requires descriptive keywords.
+注意：`or` 同様、`cat` には説明的なキーワードが必要です。
 
-We can also write specs for maps using the `keys` function. Here, for example, is a spec for our familiar book map:
+マップのspecを記述するには、`keys` 関数を使用できます。例えば、以下の例は、おなじみの書籍マップのspecです：
 
 ```clojure
 (def book-s 
@@ -28,7 +28,7 @@ We can also write specs for maps using the `keys` function. Here, for example, i
           :inventory.core/copies]))
 ```
 
-The spec in that example will match any map that has `:title`, `:author`, and `:copies` keys:
+その例示のspecは、`:title`、`:author`、および`:copies`キーを持つ任意のマップと一致します：
   
 ```clojure
 ;; Yes!
@@ -39,6 +39,6 @@ The spec in that example will match any map that has `:title`, `:author`, and `:
 (s/valid? book-s {:title "2001" :author "Clarke" :copies 1 :published 1968})
 ```
 
-Note that there is something a bit odd going on with the `keys` function. We supplied namespace-qualified keys in the spec: it’s `:inventory.core/title`, not `:title`.  But having supplied namespace-qualified keywords, the `-un` part of `:req-un` says that when it comes time to match, the spec will look for unqualified keyword keys in the map. There is a method to this namespace madness, but to understand it we need to first talk about how you can register your specs.
+注意：`keys` 関数に少し奇妙な点があります。Spec では名前空間修飾されたキーを指定しています：`:inventory.core/title` ではなく `:title` です。 しかし、名前空間修飾されたキーワードを指定したため、`:req-un` の `-un` 部分では、一致処理時に仕様がマップ内で名前空間修飾されていないキーワードキーを検索するようになります。この名前空間の混乱には理由がありますが、それを理解するためには、まず仕様を登録する方法について説明する必要があります。
 
 

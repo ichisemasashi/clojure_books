@@ -1,9 +1,9 @@
 
-### One Function, Different Parameters
+### 1つの機能、異なるパラメータ
 
-Because Clojure—and Clojure programmers—do rely so heavily on functions, it’s not surprising that the language provides some extras to help you craft just the function that you want. For example, all the functions we’ve written so far have taken a fixed number of arguments. Sometimes it’s convenient to build functions that take a less doctrinaire view of how many arguments they are willing to accept. For example, we might want to create a "Hello, World"–style function that will let you supply a greeting or default to a plain old "Hello".
+Clojure、そしてClojureプログラマーは関数に大きく依存しているため、言語が望みの関数を作成するのに役立つ追加機能を提供しているのは驚くことではありません。例えば、これまで書いてきた関数はすべて固定数の引数を取ります。時には、引数の数を柔軟に受け入れる関数を作成するのが便利な場合があります。例えば、「Hello, World」のようなスタイルの関数を作成して、挨拶文を入力できるようにしたいかもしれません。または、デフォルトで昔ながらの「Hello」を表示するようにすることもできます。
 
-This is not hard:
+これは難しくありません。
 
 capable/examples.clj
 
@@ -13,25 +13,25 @@ capable/examples.clj
   ([message to-whom] (println message to-whom)))
 ```
 
-The `greet` function as defined here will accept either one or two parameters.  The single-argument version works like our original `say-welcome`, while the two-argument rendition takes a message along with the recipient. Notice how `greet` is essentially two function definitions in one, each with its own parameter list and body, each one wrapped in yet another set of round parentheses.
+ここで定義されている`greet`関数は、1つまたは2つのパラメータを受け取ります。1つの引数を持つバージョンは、オリジナルの`say-welcome`と同様に動作し、2つの引数を持つバージョンは、メッセージと受信者を受け取ります。`greet`は、本質的には1つで2つの関数定義であり、それぞれ独自のパラメータリストと本体を持ち、それぞれがさらに丸括弧で囲まれていることに注目してください。
 
-Armed with the preceding code, we can call greet with one argument, like this:
+このコードを参考に、引数を1つ指定してgreetを呼び出すことができます。次のようにです。
 
 ```clojure
 (greet "Dolly") ; Welcomes Dolly to Blotts Books. 
 ```
 
-or with two, like this:
+または、このように2つ：
 
 ```clojure 
-(greet "Howdy" "Stranger") ; Prints Howdy Stranger.
+(greet "Howdy" "Stranger") ; Howdy Stranger.
 ```
 
-The technical term for the number of arguments a function takes is arity, and so functions like `greet` are called multi-arity functions. A Clojure function can have as many arities as you like, but in practice people tend to limit themselves to three or four.
+関数の引数の数を表す専門用語は「arity（アリティ）」と言い、`greet`のような関数は「多アリティ関数」と呼ばれます。Clojure関数は、好きなだけ多くのアリティを持つことができますが、実際には3つか4つに制限することが多いようです。
 
-One problem with `greet` is that the two function bodies are reasonably redundant: both variations of `greet` print a message and a name. This is a fairly common occurrence in multi-arity functions. After all, each arity of the function should be doing more or less the same thing or we probably should have written two separate functions.
+`greet` の問題のひとつは、2つの関数本体が冗長的であることです。どちらの `greet` もメッセージと名前を表示します。これは多アリティ関数ではよくあることです。結局のところ、関数の各アリティは多かれ少なかれ同じことを行うべきであり、さもなければおそらくは2つの別々の関数として書くべきでしょう。
 
-The way to get rid of this redundancy is simple and equally common: just call one arity from the other:
+この冗長性を解消する方法はシンプルで、同様に一般的です。つまり、一方のアリティから他方を呼び出すのです。
 
 ```clojure
 (defn greet
@@ -39,7 +39,7 @@ The way to get rid of this redundancy is simple and equally common: just call on
   ([message to-whom] (println message to-whom)))
 ```
 
-The idea of this "filling in the defaults" technique is that you have one arity—usually the one with the most arguments—that really does something. All the other arities, the ones that take fewer arguments, call that main version, filling in the missing parameters as they go.
+この「デフォルト値を埋める」テクニックの考え方は次のとおりです。つまり、通常は最も多くの引数を持つ1つのarityが、実際に何らかの処理を行うということです。他のすべてのarity、つまり引数の数が少ないものは、メインバージョンを呼び出し、不足しているパラメータを必要に応じて埋めていきます。
 
 
 

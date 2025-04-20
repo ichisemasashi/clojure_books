@@ -1,8 +1,8 @@
 
-### Wrapping Up
+### まとめ
 
-In this chapter we covered some of the ways you can ensure that your Clojure code actually works. We took a quick look at writing traditional case-based unit tests with `clojure.test` and then moved on to generative tests with `test.check`.
+この章では、Clojureコードが実際に動作することを確認する方法をいくつか取り上げました。まず、`clojure.test` を使用した従来のケースベースのユニットテストの記述について簡単に説明し、その後、`test.check` を使用した生成テストに移りました。
 
-We also saw that the question of how you write your tests is much less important than the decision to write tests. Because when it comes to building working software, neither optimism nor hubris is a strategy.
+また、テストをどのように書くかという問題は、テストを書くか書かないかという決定よりも重要ではないことも確認しました。なぜなら、実際に動作するソフトウェアを構築するにあたっては、楽観主義も傲慢も戦略にはならないからです。
 
 
