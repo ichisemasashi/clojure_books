@@ -1,0 +1,135 @@
+Clojure 1.12.1
+Java 26.0.2.1
+LearnMacro thin-path prototype demos
+
+----- running ch01 -----
+
+==== Ch01 intro — and vs function ====
+function-style side effects: [false :ran]
+and macro side effects: [false]
+and (before): (and false :x)
+and (after macroexpand-1): (clojure.core/let
+ [and__5600__auto__ false]
+ (if and__5600__auto__ (clojure.core/and :x) and__5600__auto__))
+
+----- running ch02 -----
+
+==== Ch02 code as data ====
+assembled form: (+ 1 2)
+first/rest: [+ (1 2)]
+eval (demo only; not a macro substitute): 3
+
+----- running ch03 -----
+
+==== Ch03 quoting ====
+quote: (+ 1 2)
+syntax-quote + unquote: (clojure.core/+ 10 2)
+splicing: (clojure.core/+ 1 2 3)
+auto-gensym shape (safety in ch06): (clojure.core/let [a__201__auto__ 1] a__201__auto__)
+
+----- running ch04 -----
+
+==== Ch04 defmacro — unless ====
+unless (before): (learn-macro.ch04-defmacro/unless false :ok)
+unless (after macroexpand-1): (if (clojure.core/not false) (do :ok))
+skip when true: nil
+take when false: :yes
+
+----- running ch05 -----
+
+==== Ch05 expand tools ====
+when (before): (when true 1 2)
+when (after macroexpand-1): (if true (do 1 2))
+macroexpand when: (if true (do 1 2))
+nested when (before): (when true (when false 1))
+nested when (after macroexpand-all): (if true (do (if false (do 1))))
+note: "&form/&env: 通読版は存在紹介のみ（詳細は完全版）"
+
+----- running ch06 -----
+
+==== Ch06 hygiene / double evaluation ====
+let-once side-effect count: 1
+good-time (before): (learn-macro.ch06-hygiene/good-time (+ 1 2))
+good-time (after macroexpand-1): (clojure.core/let
+ [start__246__auto__
+  (java.lang.System/nanoTime)
+  ret__247__auto__
+  (+ 1 2)]
+ {:ret ret__247__auto__,
+  :ms
+  (clojure.core//
+   (clojure.core/double
+    (clojure.core/- (java.lang.System/nanoTime) start__246__auto__))
+   1000000.0)})
+good-time run: {:ret 3, :ms 0.002625}
+bad-time-double (do not ship) (before): (learn-macro.ch06-hygiene/bad-time-double (do (swap! n inc) @n))
+bad-time-double (do not ship) (after macroexpand-1): (clojure.core/let
+ [start__253__auto__ (java.lang.System/nanoTime)]
+ {:ret-again (do (swap! n inc) @n),
+  :ret (do (swap! n inc) @n),
+  :ms
+  (clojure.core//
+   (clojure.core/double
+    (clojure.core/- (java.lang.System/nanoTime) start__253__auto__))
+   1000000.0)})
+
+----- running ch07 -----
+
+==== Ch07 core read (excerpt) ====
+when (before): (when true :a :b)
+when (after macroexpand-1): (if true (do :a :b))
+or (before): (or false nil :ok)
+or (after macroexpand-1): (clojure.core/let
+ [or__5602__auto__ false]
+ (if or__5602__auto__ or__5602__auto__ (clojure.core/or nil :ok)))
+when-let (before): (when-let [x (first [1])] (inc x))
+when-let (after macroexpand-1): (clojure.core/let
+ [temp__5825__auto__ (first [1])]
+ (clojure.core/when
+  temp__5825__auto__
+  (clojure.core/let [x temp__5825__auto__] (inc x))))
+steal: "薄い本体・短絡・一度束縛してから本体へ渡す"
+
+----- running ch08 -----
+
+==== Ch08 unless revisit ====
+unless (before): (learn-macro.ch04-defmacro/unless (seq []) :run)
+unless (after macroexpand-1): (if (clojure.core/not (seq [])) (do :run))
+doc: "test が偽のとき body を評価する。"
+truthy test skips body: nil
+falsy test runs body: :shown
+
+----- running ch13 -----
+
+==== Ch13 Case A — unless / when-let-lite ====
+when-let-lite (before): (learn-macro.ch13-cases/when-let-lite [x (first [7])] (inc x))
+when-let-lite (after macroexpand-1): (clojure.core/let
+ [temp__300__auto__ (first [7])]
+ (clojure.core/when
+  temp__300__auto__
+  (clojure.core/let [x temp__300__auto__] (inc x))))
+run: 8
+nil: nil
+unless (before): (learn-macro.ch04-defmacro/unless false :ok)
+unless (after macroexpand-1): (if (clojure.core/not false) (do :ok))
+
+==== Ch13 Case B — labeled-time ====
+labeled-time (before): (learn-macro.ch13-cases/labeled-time "sum" (reduce + (range 1000)))
+labeled-time (after macroexpand-1): (clojure.core/let
+ [result__310__auto__
+  (learn-macro.ch06-hygiene/good-time (reduce + (range 1000)))]
+ (clojure.core/assoc result__310__auto__ :label "sum"))
+run: {:ret 499500, :ms 0.14675, :label "sum"}
+
+----- running ch14 -----
+
+==== Ch14 checklist (short) ====
+before-writing: ["評価順・短絡が本質か？" "新しい構文／束縛が必要か？" "データ＋関数では足りないか？" "呼び出し側にマクロ感染を強いないか？"]
+after-writing: ["変数捕獲はないか？（gensym / x#）"
+ "二重評価はないか？（let で一度）"
+ "展開結果は読めるか？"
+ "展開テストはあるか？"
+ "失敗時のメッセージは分かるか？"]
+
+==== ALL DEMOS OK ====
+Thin-path prototype finished.

@@ -1,2 +1,7 @@
 {:paths ["src" "notes"]
- :deps {org.clojure/clojure {:mvn/version "1.12.1"}}}
+ :deps {org.clojure/clojure {:mvn/version "1.12.1"}}
+ :aliases
+ {:run {:main-opts ["-m" "learn-macro.run"]}
+  :verify {:main-opts ["-m" "learn-macro.verify"]}
+  :test {:extra-paths ["test"]
+         :main-opts ["-m" "learn-macro.cases-test"]}}}
