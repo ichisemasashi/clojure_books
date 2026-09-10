@@ -1,6 +1,6 @@
 # 第4章 はじめての `defmacro`
 
-**状態:** 編集済 v0.2（工程7）  
+**状態:** 統合済 v0.3（工程8）  
 **サンプル:** `learn-macro.ch04-defmacro`  
 **前へ:** [第3章](./03_クォート.md) ／ **次へ:** [第5章](./05_展開を見る.md)
 
@@ -61,11 +61,11 @@
 1. **書く:** `when-not-lite`（`when-not` 相当）を実装し、展開と実行を確認せよ。  
 2. **判断:** その糖衣は、チームのコードベースで関数 API のままの方がよいか？
 
-骨組み: `exercises/ch04.clj`／解答: `answers/ch04.clj`
+骨組み: `src/learn_macro/exercises/ch04.clj`／解答: `src/learn_macro/answers/ch04.clj`
 
 ## 4.6 まとめ — 関数でよいか？
 
 呼び出し側に遅延（thunk）を強いてもよいなら関数で足りることが多い。  
 言語に新しい分岐構文を足したいときだけ `defmacro` を検討する。
 
-**サンプル:** `(learn-macro.ch04-defmacro/demo)`
+**実行:** `(learn-macro.ch04-defmacro/demo)`
