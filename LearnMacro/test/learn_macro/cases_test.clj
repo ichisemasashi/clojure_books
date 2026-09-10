@@ -1,7 +1,7 @@
 (ns learn-macro.cases-test
   (:require [clojure.test :refer [deftest is testing run-tests]]
             [learn-macro.ch04-defmacro :refer [unless]]
-            [learn-macro.ch13-cases :refer [when-let-lite labeled-time]]))
+            [learn-macro.ch13-cases :refer [when-let-lite labeled-time cond->lite emit-cond->]]))
 
 (deftest case-a-unless-and-when-let-lite
   (testing "unless"
@@ -19,6 +19,19 @@
     (is (= "sum" (:label result)))
     (is (= 45 (:ret result)))
     (is (number? (:ms result)))))
+
+(deftest case-c-cond->lite
+  (testing "matches core cond-> on a small example"
+    (is (= 6 (cond->lite 1 true inc false (* 10) true (* 3))))
+    (is (= (cond-> 1 true inc false (* 10) true (* 3))
+           (cond->lite 1 true inc false (* 10) true (* 3)))))
+  (testing "expr evaluated once"
+    (let [n (atom 0)]
+      (is (= 2 (cond->lite (do (swap! n inc) @n) true inc false (* 100))))
+      (is (= 1 @n))))
+  (testing "odd clause count fails at expand time"
+    (is (thrown-with-msg? Exception #"even number"
+                          (emit-cond-> 1 '(true))))))
 
 (defn -main [& _]
   (let [{:keys [fail error]} (run-tests 'learn-macro.cases-test)]
