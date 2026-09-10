@@ -8,4 +8,3 @@
   `(+ ~expr ~expr))
 
 ;; TODO: once-add として、expr を一度だけ評価する版を書け。
-)
