@@ -11,7 +11,8 @@
         routes))
 
 (defmacro defroutes-lite
-  "書き味用の薄い入口。中身はデータ＋ compile-routes。"
+  "書き味用の薄い入口。route-forms は展開時にデータとして埋め込む（リテラル想定）。
+  実行時に組み立てた表は compile-routes を関数として呼べ。"
   [name & route-forms]
   `(def ~name (compile-routes ~(vec route-forms))))
 

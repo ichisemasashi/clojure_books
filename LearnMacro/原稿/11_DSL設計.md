@@ -1,6 +1,6 @@
 # 第11章 DSL の設計判断
 
-**状態:** 粗稿 v0.1（完全版）  
+**状態:** 技術レビュー済 v0.2（工程6・完全版）  
 **サンプル:** `learn-macro.ch11-dsl`  
 **前へ:** [第10章](./10_コード生成.md) ／ **次へ:** [第12章](./12_テストとツール.md)
 
@@ -45,12 +45,14 @@ DSL と聞いてマクロを書き始めるのは早い。
         routes))
 
 ;; 入口だけ「書き味」を足す（任意）
+;; route-forms は展開時のフォーム（リテラル想定）。実行時に計算した表は compile-routes へ直接渡せ。
 (defmacro defroutes-lite
   [name & route-forms]
   `(def ~name (compile-routes ~(vec route-forms))))
 ```
 
-マクロが壊れても、`compile-routes` とデータは残る。
+マクロが壊れても、`compile-routes` とデータは残る。  
+`defroutes-lite` に渡す各ルートは **展開時にデータとして埋め込まれる**（典型はリテラルのベクタ）。実行時に組み立てた表を使いたいときは、入口マクロを使わず `compile-routes` を関数として呼ぶ。
 
 ## 11.5 事例観察（対比）
 
