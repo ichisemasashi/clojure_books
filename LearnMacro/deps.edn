@@ -1,0 +1,2 @@
+{:paths ["src" "notes"]
+ :deps {org.clojure/clojure {:mvn/version "1.12.1"}}}

@@ -1,0 +1,81 @@
+Clojure 1.12.1
+Java 26.0.2.1
+
+==== Ch1 and-as-function ====
+function-style side effects (no short-circuit): [false :ran]
+and macro side effects (short-circuit): [false]
+macroexpand-1 and: (clojure.core/let
+ [and__5600__auto__ false]
+ (if and__5600__auto__ (clojure.core/and :x) and__5600__auto__))
+
+==== Ch2 code-as-data ====
+form as data: (+ 1 2)
+eval: 3
+
+==== Ch3 quoting ====
+quote: (+ 1 2)
+syntax-quote+unquote: (clojure.core/+ 10 2)
+splicing: (clojure.core/+ 1 2 3)
+auto-gensym: (clojure.core/let [a__182__auto__ 1] a__182__auto__)
+
+==== Ch4 unless ====
+expand: (if (clojure.core/not false) (do :ok))
+skip: nil
+take: :yes
+
+==== Ch5 macroexpand ====
+macroexpand-1 when: (if true (do 1 2))
+macroexpand when: (if true (do 1 2))
+macroexpand-all nested when: (if true (do (if false (do 1))))
+
+==== Ch6 hygiene / double-eval ====
+double-embed expansion: (let* [x (do (swap! n inc) @n)] (+ x x))
+let-once side-effect count: 1
+captured-looking expand (uses gensym): (clojure.core/let
+ [start__163__auto__
+  (java.lang.System/nanoTime)
+  ret__164__auto__
+  (+ 1 2)]
+ {:ret ret__164__auto__,
+  :ms
+  (clojure.core//
+   (clojure.core/double
+    (clojure.core/- (java.lang.System/nanoTime) start__163__auto__))
+   1000000.0)})
+good-time run: {:ret 3, :ms 0.002792}
+
+==== Case A unless / when-let-lite ====
+when-let-lite expand: (clojure.core/let
+ [temp__153__auto__ (first [7])]
+ (clojure.core/when
+  temp__153__auto__
+  (clojure.core/let [x temp__153__auto__] (inc x))))
+run: 8
+nil branch: nil
+unless expand: (if (clojure.core/not false) (do :ok))
+
+==== Case B time-like ====
+run: {:ret 499500, :ms 0.175917, :label "sum"}
+
+==== Verify &env ====
+locals at real expansion site: [a b]
+macroexpand-1 alone: '[]
+conclusion: "&env is populated in real compilation/expansion context; inspecting via macroexpand alone can look empty."
+
+==== Verify foo# nesting ====
+same syntax-quote shares auto-gensym: (clojure.core/fn [x__196__auto__] [x__196__auto__ x__196__auto__])
+separate syntax-quotes get distinct symbols?: [true [x__197__auto__ x__198__auto__]]
+nested syntax-quote is a new gensym scope: (clojure.core/list 'learn-macro.verify/x__199__auto__ x__200__auto__)
+
+==== Verify macroexpand-all limits ====
+nested macros expanded: (if
+ true
+ (do
+  (let*
+   [or__5602__auto__ false]
+   (if or__5602__auto__ or__5602__auto__ 1))))
+reader fn already expanded by reader before walk: ((fn* [p1__202#] (+ p1__202# 1)) 2)
+special forms remain: (let* [x 1] x)
+
+==== DONE ====
+All verification sections executed.
