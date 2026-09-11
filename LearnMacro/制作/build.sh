@@ -15,6 +15,13 @@ PROD="$ROOT/制作"
 CJK_FONT="${LEARNMACRO_CJK_FONT:-Noto Sans CJK JP}"
 MONO_FONT="${LEARNMACRO_MONO_FONT:-JetBrains Mono}"
 BUILD_PDF="${LEARNMACRO_BUILD_PDF:-1}"
+# 商業／POD 寄りの A5 マージン（制作/商業入稿ガイド.md）
+PRINT_LAYOUT="${LEARNMACRO_PRINT_LAYOUT:-0}"
+if [[ "$PRINT_LAYOUT" == "1" ]]; then
+  PDF_GEOMETRY="paperwidth=148mm,paperheight=210mm,top=18mm,bottom=18mm,inner=20mm,outer=16mm"
+else
+  PDF_GEOMETRY="margin=22mm"
+fi
 
 mkdir -p "$DIST"
 
@@ -93,7 +100,7 @@ build_pdf() {
   local ebook="$DIST/_ebook_${label}.md"
   local src_md="$ebook"
   [[ -f "$src_md" ]] || src_md="$combined"
-  echo "==> PDF ($label) [xelatex / $CJK_FONT / $MONO_FONT]"
+  echo "==> PDF ($label) [xelatex / $CJK_FONT / $MONO_FONT / geometry=$PDF_GEOMETRY]"
   pandoc "$src_md" \
     --from markdown \
     --metadata-file="$PROD/メタデータ.yaml" \
@@ -104,7 +111,7 @@ build_pdf() {
     -V mainfont="$CJK_FONT" \
     -V sansfont="$CJK_FONT" \
     -V monofont="$MONO_FONT" \
-    -V geometry:margin=22mm \
+    -V geometry:"$PDF_GEOMETRY" \
     -V colorlinks=true \
     -o "$DIST/book-${label}.pdf"
   echo "    wrote book-${label}.pdf ($(wc -c < "$DIST/book-${label}.pdf") bytes)"
