@@ -63,11 +63,13 @@ build_one() {
   local label="$1"
   local src="$2"
   local combined="$DIST/_combined_${label}.md"
+  local ebook="$DIST/_ebook_${label}.md"
 
   cat "$FRONT" "$src" > "$combined"
+  python3 "$PROD/rewrite_ebook_links.py" "$combined" "$ebook"
 
   echo "==> HTML ($label)"
-  pandoc "$combined" \
+  pandoc "$ebook" \
     --from markdown \
     --to html5 \
     --standalone \
@@ -77,7 +79,7 @@ build_one() {
     -o "$DIST/book-${label}.html"
 
   echo "==> EPUB ($label)"
-  pandoc "$combined" \
+  pandoc "$ebook" \
     --from markdown \
     --to epub3 \
     --metadata-file="$PROD/メタデータ.yaml" \
@@ -88,8 +90,11 @@ build_one() {
 build_pdf() {
   local label="$1"
   local combined="$DIST/_combined_${label}.md"
+  local ebook="$DIST/_ebook_${label}.md"
+  local src_md="$ebook"
+  [[ -f "$src_md" ]] || src_md="$combined"
   echo "==> PDF ($label) [xelatex / $CJK_FONT / $MONO_FONT]"
-  pandoc "$combined" \
+  pandoc "$src_md" \
     --from markdown \
     --metadata-file="$PROD/メタデータ.yaml" \
     --toc --toc-depth=2 \
@@ -121,7 +126,8 @@ else
   rm -f "$DIST"/book-*.pdf
 fi
 
-rm -f "$DIST/_frontmatter.md" "$DIST/_combined_full.md" "$DIST/_combined_thin.md"
+rm -f "$DIST/_frontmatter.md" "$DIST/_combined_full.md" "$DIST/_combined_thin.md" \
+  "$DIST/_ebook_full.md" "$DIST/_ebook_thin.md"
 find "$DIST" -name '._*' -delete 2>/dev/null || true
 
 echo

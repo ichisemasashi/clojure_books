@@ -1,4 +1,4 @@
-# 第4章 はじめての `defmacro`
+# 第4章 はじめての `defmacro` {#ch04}
 
 **状態:** 確定版 v1.0（工程11）
 **サンプル:** `learn-macro.ch04-defmacro`  
