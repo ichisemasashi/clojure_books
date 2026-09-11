@@ -1,45 +1,44 @@
 # LearnMacro — Clojure マクロ教科書
 
 **題名:** Clojure マクロを読み、書き、控える  
-**副題:** 評価・衛生・DSL までを一冊で身につける教科書
+**副題:** 評価・衛生・DSL までを一冊で身につける教科書  
+**版:** 確定版 v1.0（`v1.0.0`）
 
-## 配布物（工程9–10・RC v1.0）
+リポジトリ: https://github.com/ichisemasashi/LearnMacro  
+フィードバック: [Issues](https://github.com/ichisemasashi/LearnMacro/issues)
+
+## 配布物
 
 | ファイル | 内容 |
 |----------|------|
-| [dist/book-full.html](./dist/book-full.html) | 完全版 HTML |
-| [dist/book-full.epub](./dist/book-full.epub) | 完全版 EPUB |
 | [dist/book-full.pdf](./dist/book-full.pdf) | 完全版 PDF |
-| [dist/book-thin.html](./dist/book-thin.html) | 通読版 HTML |
-| [dist/book-thin.epub](./dist/book-thin.epub) | 通読版 EPUB |
 | [dist/book-thin.pdf](./dist/book-thin.pdf) | 通読版 PDF |
-| [LICENSE](./LICENSE) | サンプルコード MIT |
-| [制作.md](./制作.md) | 制作記録（工程9） |
-| [校正.md](./校正.md) | 校正・品質確認（工程10） |
+| [dist/book-full.html](./dist/book-full.html) / [epub](./dist/book-full.epub) | 完全版 |
+| [dist/book-thin.html](./dist/book-thin.html) / [epub](./dist/book-thin.epub) | 通読版 |
+| [CHANGELOG.md](./CHANGELOG.md) | 変更履歴 |
+| [正誤表.md](./正誤表.md) | 正誤表 |
+| [次版バックログ.md](./次版バックログ.md) | 次版課題 |
 
-再ビルド: `./制作/build.sh`（既定で PDF も生成。スキップは `LEARNMACRO_BUILD_PDF=0`）
+再ビルド: `./制作/build.sh`  
+Release: https://github.com/ichisemasashi/LearnMacro/releases
 
-PDF フォント: `brew install --cask font-noto-sans-cjk-jp font-jetbrains-mono`（要 xelatex）
+## ライセンス
+
+| 対象 | ライセンス |
+|------|------------|
+| サンプルコード | [MIT](./LICENSE) |
+| 本文・企画・ノート | [CC BY-NC-SA 4.0](./LICENSE-TEXT.md) |
 
 ## 文書
 
 | 文書 | 役割 |
 |------|------|
 | [企画提案書.md](./企画提案書.md) | 企画の正本 |
-| [記述範囲.md](./記述範囲.md) | 概念の範囲地図 |
-| [構成設計.md](./構成設計.md) | TOC 正本 |
-| [調査素材.md](./調査素材.md) | 参照・検証・素材 |
-| [プロトタイプ.md](./プロトタイプ.md) | 工程4の記録 |
-| [本文ドラフト.md](./本文ドラフト.md) | 工程5（通読版） |
-| [完全版ドラフト.md](./完全版ドラフト.md) | 工程5（第9–12・ケースC） |
-| [技術レビュー.md](./技術レビュー.md) / [技術レビュー_完全版.md](./技術レビュー_完全版.md) | 工程6 |
-| [編集レビュー.md](./編集レビュー.md) / [編集レビュー_完全版.md](./編集レビュー_完全版.md) | 工程7 |
-| [全体統合.md](./全体統合.md) / [全体統合_完全版.md](./全体統合_完全版.md) | 工程8 |
-| [制作.md](./制作.md) | 工程9 |
-| [校正.md](./校正.md) | 工程10 |
-| [原稿/目次.md](./原稿/目次.md) | 目次 |
 | [工程表.md](./工程表.md) | 工程と進捗 |
-| [レビュー記録票.md](./レビュー記録票.md) | 文書レビュー |
+| [公開.md](./公開.md) | 工程11（公開記録） |
+| [校正.md](./校正.md) | 工程10 |
+| [制作.md](./制作.md) | 工程9 |
+| [原稿/目次.md](./原稿/目次.md) | 目次 |
 
 ## 環境
 
