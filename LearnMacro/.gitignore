@@ -3,3 +3,6 @@
 *.class
 .cpcache/
 .nrepl-port
+
+__pycache__/
+*.py[cod]
