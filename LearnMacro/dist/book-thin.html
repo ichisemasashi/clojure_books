@@ -115,12 +115,14 @@ id="toc-clojure-マクロを読み書き控える">Clojure
 </ul></li>
 <li><a href="#通し原稿通読版"
 id="toc-通し原稿通読版">通し原稿（通読版）</a></li>
-<li><a href="#はじめに統合済-v0.3"
-id="toc-はじめに統合済-v0.3">はじめに（統合済 v0.3）</a>
+<li><a href="#はじめにrc-v1.0工程10"
+id="toc-はじめにrc-v1.0工程10">はじめに（RC v1.0・工程10）</a>
 <ul>
 <li><a href="#対象読者" id="toc-対象読者">対象読者</a></li>
 <li><a href="#通読版の読み方"
 id="toc-通読版の読み方">通読版の読み方</a></li>
+<li><a href="#完全版の読み方"
+id="toc-完全版の読み方">完全版の読み方</a></li>
 <li><a href="#本書の約束" id="toc-本書の約束">本書の約束</a></li>
 </ul></li>
 <li><a href="#第1章-イントロダクション-関数では届かないこと"
@@ -243,9 +245,9 @@ id="toc-第8章-制御構文を自分で書く-unless-再訪">第8章
 <li><a href="#まとめ-関数でよいか-7" id="toc-まとめ-関数でよいか-7">8.6
 まとめ — 関数でよいか？</a></li>
 </ul></li>
-<li><a href="#第13章-ケーススタディ通読版-a-b"
-id="toc-第13章-ケーススタディ通読版-a-b">第13章 ケーススタディ（通読版:
-A / B）</a>
+<li><a href="#第13章-ケーススタディa-b-c"
+id="toc-第13章-ケーススタディa-b-c">第13章 ケーススタディ（A / B /
+C）</a>
 <ul>
 <li><a href="#進め方" id="toc-進め方">13.1 進め方</a></li>
 <li><a href="#ケース-a-unless-when-let-lite"
@@ -253,9 +255,12 @@ id="toc-ケース-a-unless-when-let-lite">13.2 ケース A —
 <code>unless</code> / <code>when-let-lite</code></a></li>
 <li><a href="#ケース-b-labeled-time" id="toc-ケース-b-labeled-time">13.3
 ケース B — <code>labeled-time</code></a></li>
-<li><a href="#振り返り" id="toc-振り返り">13.4 振り返り</a></li>
-<li><a href="#演習-6" id="toc-演習-6">13.5 演習</a></li>
-<li><a href="#まとめ-関数でよいか-8" id="toc-まとめ-関数でよいか-8">13.6
+<li><a href="#ケース-c-cond-lite完全版"
+id="toc-ケース-c-cond-lite完全版">13.4 ケース C —
+<code>cond-&gt;lite</code>（完全版）</a></li>
+<li><a href="#振り返り" id="toc-振り返り">13.5 振り返り</a></li>
+<li><a href="#演習-6" id="toc-演習-6">13.6 演習</a></li>
+<li><a href="#まとめ-関数でよいか-8" id="toc-まとめ-関数でよいか-8">13.7
 まとめ — 関数でよいか？</a></li>
 </ul></li>
 <li><a href="#第14章-アンチパターンとチェックリスト通読版短縮"
@@ -280,7 +285,7 @@ id="toc-まとめ-本書の約束の再確認">14.6 まとめ —
 までを一冊で身につける教科書</p>
 <p>読める・書ける・控えられる——展開を見て保守し、関数とデータの境界を先に決める教科書。</p>
 <ul>
-<li><strong>版:</strong> 制作物 v0.9（工程9）</li>
+<li><strong>版:</strong> RC v1.0（工程10）</li>
 <li><strong>対象環境:</strong> Clojure 1.12.x／推奨 JDK 21</li>
 <li><strong>読み順（完全版）:</strong> はじめに → 第1–14章</li>
 <li><strong>読み順（通読版）:</strong> はじめに → 1–8 → 13(A/B) →
@@ -291,7 +296,7 @@ id="toc-まとめ-本書の約束の再確認">14.6 まとめ —
 <p><strong>書名:</strong> Clojure マクロを読み、書き、控える<br />
 <strong>副題:</strong> 評価・衛生・DSL
 までを一冊で身につける教科書<br />
-<strong>版:</strong> 制作物 v0.9（工程9・自費公開用ドラフト）<br />
+<strong>版:</strong> RC v1.0（工程10・自費公開前）<br />
 <strong>発行日:</strong> 2026-09-11<br />
 <strong>リポジトリ:</strong> LearnMacro（本ディレクトリ）</p>
 <h2 id="ライセンス">ライセンス</h2>
@@ -326,24 +331,25 @@ id="toc-まとめ-本書の約束の再確認">14.6 まとめ —
 </ul>
 <h2 id="制作物の場所">制作物の場所</h2>
 <ul>
-<li>HTML / EPUB: <code>dist/</code></li>
+<li>HTML / EPUB / PDF: <code>dist/</code></li>
 <li>通し原稿: <code>原稿/通し原稿_完全版.md</code> /
 <code>原稿/通し原稿_通読版.md</code></li>
-<li>ビルド手順: <code>制作/build.sh</code></li>
+<li>ビルド手順: <code>制作/build.sh</code>（PDF は Noto Sans CJK JP +
+JetBrains Mono）</li>
 </ul>
 <h2 id="免責">免責</h2>
 <p>本書およびサンプルは学習目的で提供する。本番利用前に各自で検証すること。</p>
 <hr />
 <h1 id="通し原稿通読版">通し原稿（通読版）</h1>
-<p><strong>版:</strong> 統合済 v0.3（工程8） <strong>題名:</strong>
-Clojure マクロを読み、書き、控える <strong>副題:</strong>
-評価・衛生・DSL までを一冊で身につける教科書</p>
-<p>章ファイルを通読順に連結した一冊分。編集の正本は各章ファイル。 目次:
-<a href="./目次.md">目次.md</a> ／ 用語集: <a
+<p><strong>版:</strong> RC v1.0（工程10） <strong>題名:</strong> Clojure
+マクロを読み、書き、控える <strong>副題:</strong> 評価・衛生・DSL
+までを一冊で身につける教科書</p>
+<p>章ファイルを通読順に連結。編集の正本は各章ファイル。 目次: <a
+href="./目次.md">目次.md</a> ／ 用語集: <a
 href="./用語集.md">用語集.md</a> ／ 索引: <a
 href="./索引.md">索引.md</a></p>
 <hr />
-<h1 id="はじめに統合済-v0.3">はじめに（統合済 v0.3）</h1>
+<h1 id="はじめにrc-v1.0工程10">はじめに（RC v1.0・工程10）</h1>
 <p><strong>題名:</strong> Clojure マクロを読み、書き、控える<br />
 <strong>副題:</strong> 評価・衛生・DSL までを一冊で身につける教科書</p>
 <p>本書は、Clojure のマクロを
@@ -358,6 +364,10 @@ href="./索引.md">索引.md</a></p>
 <p>1 → 2 → 3 → 4 → 5 → 6 → 7（抜粋）→ 8 → <strong>13</strong>（ケース
 A/B）→ 14</p>
 <p><strong>第9–12章は通読版では飛ばす</strong>（束縛の深掘り、コード生成、DSL、ツールは完全版）。番号が飛ぶのはそのためである。</p>
+<h2 id="完全版の読み方">完全版の読み方</h2>
+<p>通読版に続けて（または第8章の次から）次を読む。</p>
+<p>1 → … → 8 → <strong>9 → 10 → 11 → 12</strong> → 13 → 14</p>
+<p>目次: <a href="./目次.md"><code>目次.md</code></a></p>
 <p>サンプルコードはリポジトリで動く。</p>
 <div class="sourceCode" id="cb1"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">clojure</span> <span class="at">-M:run</span></span>
@@ -371,8 +381,11 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="
 <p>用語は <a href="./用語統一表.md"><code>用語統一表.md</code></a>
 に従う。定義は <a
 href="./用語集.md"><code>用語集.md</code></a>、章一覧は <a
-href="./目次.md"><code>目次.md</code></a>、通し読みは <a
-href="./通し原稿_通読版.md"><code>通し原稿_通読版.md</code></a>。</p>
+href="./目次.md"><code>目次.md</code></a>。<br />
+通し読み: <a
+href="./通し原稿_通読版.md"><code>通し原稿_通読版.md</code></a>（薄い一本）／
+<a href="./通し原稿_完全版.md"><code>通し原稿_完全版.md</code></a>（1–14
+通し）。</p>
 <h2 id="本書の約束">本書の約束</h2>
 <ol type="1">
 <li><code>clojure.core</code>
@@ -387,8 +400,8 @@ href="./通し原稿_通読版.md"><code>通し原稿_通読版.md</code></a>。
 <hr />
 <h1 id="第1章-イントロダクション-関数では届かないこと">第1章
 イントロダクション — 関数では届かないこと</h1>
-<p><strong>状態:</strong> 統合済 v0.3（工程8）<br />
-<strong>サンプル:</strong> <code>learn-macro.ch01-intro</code></p>
+<p><strong>状態:</strong> RC v1.0（工程10） <strong>サンプル:</strong>
+<code>learn-macro.ch01-intro</code></p>
 <h2 id="動機">1.1 動機</h2>
 <p>Clojure
 では、ほとんどの抽象は関数で足りる。それでもマクロが残る理由は単純で、<strong>引数の評価を呼び出し側の都合で止めたり、並べ替えたりできる</strong>からである。関数は呼ばれた時点で引数がすでに値になっている。</p>
@@ -446,8 +459,8 @@ class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb4-1"><a 
 <hr />
 <h1 id="第2章-コードはデータ-読み込みと評価">第2章 コードはデータ —
 読み込みと評価</h1>
-<p><strong>状態:</strong> 統合済 v0.3（工程8）<br />
-<strong>サンプル:</strong> <code>learn-macro.ch02-data</code></p>
+<p><strong>状態:</strong> RC v1.0（工程10） <strong>サンプル:</strong>
+<code>learn-macro.ch02-data</code></p>
 <h2 id="動機-1">2.1 動機</h2>
 <p>マクロを理解する鍵は、「プログラムのテキスト」と「評価された値」のあいだに、<strong>フォームというデータ</strong>があることだ。マクロはそのデータを受け取り、別のフォームを返す。</p>
 <h2 id="段階">2.2 段階</h2>
@@ -517,8 +530,8 @@ class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb5-1"><a 
 <hr />
 <h1 id="第3章-クォート構文引用アンクォート">第3章
 クォート、構文引用、アンクォート</h1>
-<p><strong>状態:</strong> 統合済 v0.3（工程8）<br />
-<strong>サンプル:</strong> <code>learn-macro.ch03-quoting</code></p>
+<p><strong>状態:</strong> RC v1.0（工程10） <strong>サンプル:</strong>
+<code>learn-macro.ch03-quoting</code></p>
 <h2 id="動機-2">3.1 動機</h2>
 <p>マクロの本体は、多くの場合 <strong>テンプレート</strong>
 でフォームを組み立てる。そのテンプレート言語がクォート族である。</p>
@@ -592,8 +605,8 @@ class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb9-1"><a 
 <hr />
 <h1 id="第4章-はじめての-defmacro">第4章 はじめての
 <code>defmacro</code></h1>
-<p><strong>状態:</strong> 統合済 v0.3（工程8）<br />
-<strong>サンプル:</strong> <code>learn-macro.ch04-defmacro</code></p>
+<p><strong>状態:</strong> RC v1.0（工程10） <strong>サンプル:</strong>
+<code>learn-macro.ch04-defmacro</code></p>
 <h2 id="動機-3">4.1 動機</h2>
 <p>クォートでフォームを組めるようになったら、次はそれを
 <strong>呼び出しのたびに差し込む</strong> 仕組みが <code>defmacro</code>
@@ -655,8 +668,8 @@ class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb13-1"><a
 <code>(learn-macro.ch04-defmacro/demo)</code></p>
 <hr />
 <h1 id="第5章-展開を見る読む試す">第5章 展開を見る・読む・試す</h1>
-<p><strong>状態:</strong> 統合済 v0.3（工程8）<br />
-<strong>サンプル:</strong> <code>learn-macro.ch05-expand</code></p>
+<p><strong>状態:</strong> RC v1.0（工程10） <strong>サンプル:</strong>
+<code>learn-macro.ch05-expand</code></p>
 <h2 id="動機-4">5.1 動機</h2>
 <p>マクロのデバッグで最初にやることは、実行結果をいじることより
 <strong>展開結果を見ること</strong> である。</p>
@@ -737,8 +750,8 @@ class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb15-1"><a
 <code>(learn-macro.ch05-expand/demo)</code></p>
 <hr />
 <h1 id="第6章-衛生gensym二重評価">第6章 衛生、gensym、二重評価</h1>
-<p><strong>状態:</strong> 統合済 v0.3（工程8）<br />
-<strong>サンプル:</strong> <code>learn-macro.ch06-hygiene</code></p>
+<p><strong>状態:</strong> RC v1.0（工程10） <strong>サンプル:</strong>
+<code>learn-macro.ch06-hygiene</code></p>
 <h2 id="動機-5">6.1 動機</h2>
 <p>マクロはフォームを繋ぎ合わせる。そのとき名前が衝突したり、同じ式が二度評価されたりする。<br />
 Clojure のマクロは <strong>デフォルトでは衛生的ではない</strong>（Common
@@ -780,7 +793,7 @@ class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb18-1"><a
 <p>展開結果に、利用者が束縛している名前や、マクロ作者がベタ書きした名前が意図せず混ざるとバグになる。<br />
 対策の基本は <code>gensym</code> または <code>foo#</code> である。</p>
 <p>意図的に <code>it</code> などをキャプチャする anaphoric
-マクロは、通読版では推奨しない（完全版で賛否付き）。</p>
+マクロは、本書では推奨しない（賛否付きの深掘りは選択ケース／付録候補）。</p>
 <h2 id="演習直す">6.4 演習（直す）</h2>
 <p><code>broken-twice</code> は式を二度埋め込む。<code>once-add</code>
 として一度だけ評価する版を書け。</p>
@@ -799,8 +812,8 @@ href="../notes/載せない失敗例.md"><code>notes/載せない失敗例.md</c
 <hr />
 <h1 id="第7章-標準マクロを分解する抜粋">第7章
 標準マクロを分解する（抜粋）</h1>
-<p><strong>状態:</strong> 統合済 v0.3（工程8）<br />
-<strong>サンプル:</strong> <code>learn-macro.ch07-core-read</code></p>
+<p><strong>状態:</strong> RC v1.0（工程10） <strong>サンプル:</strong>
+<code>learn-macro.ch07-core-read</code></p>
 <h2 id="動機-6">7.1 動機</h2>
 <p>自分で書く前に、<code>clojure.core</code> の短いマクロから
 <strong>型を盗む</strong>。<br />
@@ -848,15 +861,16 @@ class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb21-1"><a
 <hr />
 <h1 id="第8章-制御構文を自分で書く-unless-再訪">第8章
 制御構文を自分で書く — <code>unless</code> 再訪</h1>
-<p><strong>状態:</strong> 統合済 v0.3（工程8）<br />
-<strong>サンプル:</strong> <code>learn-macro.ch08-unless</code>（実装は
+<p><strong>状態:</strong> RC v1.0（工程10） <strong>サンプル:</strong>
+<code>learn-macro.ch08-unless</code>（実装は
 <code>ch04-defmacro</code>）</p>
 <h2 id="動機-7">8.1 動機</h2>
 <p>第4章で作った <code>unless</code>
 を、<strong>設計手順つきで見直し</strong>、doc
 と展開の読みやすさを確認する（再掲は意図的である）。<br />
-通読版ではここに留め、独自 <code>cond</code> や <code>cond-&gt;</code>
-は完全版へ送る。</p>
+通読版はここで制御構文パートを一旦区切る。独自の <code>cond</code>
+拡張や <code>cond-&gt;</code> の自作は、完全版では <a
+href="./13_ケーススタディ.md">第13章ケース C</a> で扱う。</p>
 <h2 id="設計手順再掲">8.2 設計手順（再掲）</h2>
 <ol type="1">
 <li>動機を一文で書く（評価制御か？）<br />
@@ -899,18 +913,24 @@ class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb23-1"><a
 <p><strong>実行:</strong>
 <code>(learn-macro.ch08-unless/demo)</code></p>
 <hr />
-<h3 id="通読版の次へ">通読版の次へ</h3>
-<p>このあと <strong>第9–12章は飛ばし</strong>、<a
-href="./13_ケーススタディ.md">第13章
-ケーススタディ</a>（A/B）へ進む。<br />
-束縛の深掘り・コード生成・DSL・ツールは完全版の範囲である。</p>
+<h3 id="読み方の分岐">読み方の分岐</h3>
+<ul>
+<li><strong>通読版:</strong> このあと
+<strong>第9–12章は飛ばし</strong>、<a
+href="./13_ケーススタディ.md">第13章</a>（A/B）へ進む。<br />
+</li>
+<li><strong>完全版:</strong> <a href="./09_束縛とリソース.md">第9章
+束縛とリソース</a> へ進み、10→11→12→13→14 と読む。</li>
+</ul>
 <hr />
-<h1 id="第13章-ケーススタディ通読版-a-b">第13章 ケーススタディ（通読版:
-A / B）</h1>
-<p><strong>状態:</strong> 統合済 v0.3（工程8）<br />
-<strong>サンプル:</strong> <code>learn-macro.ch13-cases</code><br />
+<h1 id="第13章-ケーススタディa-b-c">第13章 ケーススタディ（A / B /
+C）</h1>
+<p><strong>状態:</strong> RC v1.0（工程10） <strong>サンプル:</strong>
+<code>learn-macro.ch13-cases</code><br />
 <strong>テスト:</strong> <code>clojure -M:test</code></p>
-<p>通読版ではケース A と B のみ扱う。C 以降は完全版。</p>
+<p>通読版の必須はケース A / B。<strong>ケース C（簡易
+<code>cond-&gt;</code>）は完全版</strong>（推奨）。選択ケース（定義マクロ／小さな
+DSL など）は後続でも可。</p>
 <hr />
 <h2 id="進め方">13.1 進め方</h2>
 <ol type="1">
@@ -984,7 +1004,93 @@ class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb27-1"><a
 class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>(labeled-time <span class="st">&quot;sum&quot;</span> (<span class="kw">reduce</span> <span class="kw">+</span> (<span class="kw">range</span> <span class="dv">1000</span>)))</span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co">;; =&gt; {:ret 499500, :ms …, :label &quot;sum&quot;}</span></span></code></pre></div>
 <hr />
-<h2 id="振り返り">13.4 振り返り</h2>
+<h2 id="ケース-c-cond-lite完全版">13.4 ケース C —
+<code>cond-&gt;lite</code>（完全版）</h2>
+<h3 id="仕様-2">仕様</h3>
+<p>初期値 <code>expr</code> を <strong>一度だけ</strong> 評価し、続く
+<code>test</code> / <code>form</code>
+の対（対句）について、<code>test</code> が真ならその時点の値を
+<code>form</code> へ <code>-&gt;</code> でスレッドする。<br />
+<code>test</code>
+にはスレッド中の値は渡さない（<code>clojure.core/cond-&gt;</code>
+と同じ契約）。</p>
+<div class="sourceCode" id="cb29"><pre
+class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>(cond-&gt;lite <span class="dv">1</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="va">true</span>  <span class="kw">inc</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="va">false</span> (<span class="kw">*</span> <span class="dv">10</span>)</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="va">true</span>  (<span class="kw">*</span> <span class="dv">3</span>))</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="co">;; =&gt; 6</span></span></code></pre></div>
+<h3 id="展開形先に書く">展開形（先に書く）</h3>
+<div class="sourceCode" id="cb30"><pre
+class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co">;; 概念（core に近い let 再束縛）</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>(<span class="kw">let</span> [cond__auto__ <span class="dv">1</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>      cond__auto__ (<span class="kw">if</span> <span class="va">true</span> (<span class="kw">-&gt;</span> cond__auto__ <span class="kw">inc</span>) cond__auto__)</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>      cond__auto__ (<span class="kw">if</span> <span class="va">false</span> (<span class="kw">-&gt;</span> cond__auto__ (<span class="kw">*</span> <span class="dv">10</span>)) cond__auto__)</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>      cond__auto__ (<span class="kw">if</span> <span class="va">true</span> (<span class="kw">-&gt;</span> cond__auto__ (<span class="kw">*</span> <span class="dv">3</span>)) cond__auto__)]</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  cond__auto__)</span></code></pre></div>
+<h3 id="実装要旨-1">実装（要旨）</h3>
+<p>第10章の型どおり、<strong>生成は関数・入口だけマクロ</strong>にする。</p>
+<div class="sourceCode" id="cb31"><pre
+class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> emit-cond-&gt;</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  [expr clauses]</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">when-not</span> (<span class="kw">even?</span> (<span class="kw">count</span> clauses))</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">throw</span> (ex-info <span class="st">&quot;cond-&gt;lite expects even number of test/form clauses&quot;</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>                    {<span class="at">:count</span> (<span class="kw">count</span> clauses)})))</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> [g (<span class="kw">gensym</span> <span class="st">&quot;cond&quot;</span>)</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>        steps (<span class="kw">map</span> (<span class="kw">fn</span> [[<span class="kw">test</span> step]]</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>                     `(<span class="kw">if</span> <span class="at">~test</span> (<span class="kw">-&gt;</span> <span class="at">~g</span> <span class="at">~step</span>) <span class="at">~g</span>))</span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>                   (<span class="kw">partition</span> <span class="dv">2</span> clauses))]</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>    `(<span class="kw">let</span> [<span class="at">~g</span> <span class="at">~expr</span></span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>           <span class="at">~@</span>(<span class="kw">mapcat</span> (<span class="kw">fn</span> [step] [g step]) steps)]</span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">~g</span>)))</span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defmacro</span><span class="fu"> cond-&gt;lite</span></span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>  [expr &amp; clauses]</span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>  (emit-cond-&gt; expr clauses))</span></code></pre></div>
+<h3 id="検証ポイント-1">検証ポイント</h3>
+<div class="sourceCode" id="cb32"><pre
+class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">=</span> <span class="dv">6</span> (cond-&gt;lite <span class="dv">1</span> <span class="va">true</span> <span class="kw">inc</span> <span class="va">false</span> (<span class="kw">*</span> <span class="dv">10</span>) <span class="va">true</span> (<span class="kw">*</span> <span class="dv">3</span>)))</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>(<span class="kw">=</span> (cond-&gt; <span class="dv">1</span> <span class="va">true</span> <span class="kw">inc</span> <span class="va">false</span> (<span class="kw">*</span> <span class="dv">10</span>) <span class="va">true</span> (<span class="kw">*</span> <span class="dv">3</span>))</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>   (cond-&gt;lite <span class="dv">1</span> <span class="va">true</span> <span class="kw">inc</span> <span class="va">false</span> (<span class="kw">*</span> <span class="dv">10</span>) <span class="va">true</span> (<span class="kw">*</span> <span class="dv">3</span>)))</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="co">;; expr の副作用は1回</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>(<span class="kw">let</span> [n (<span class="kw">atom</span> <span class="dv">0</span>)]</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>  (cond-&gt;lite (<span class="kw">do</span> (<span class="kw">swap!</span> n <span class="kw">inc</span>) <span class="at">@n</span>) <span class="va">true</span> <span class="kw">inc</span>)</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">@n</span>) <span class="co">; =&gt; 1</span></span></code></pre></div>
+<p>条項（<code>test</code> /
+<code>form</code>）の個数が奇数で対句にならないときは、展開時に
+<code>ex-info</code> で落とす（第12章のエラー設計と接続）。</p>
+<h3 id="学びどころ">学びどころ</h3>
+<table>
+<thead>
+<tr>
+<th>点</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>コード形状</td>
+<td>対句を <code>if</code>＋<code>-&gt;</code> の列へ変換する</td>
+</tr>
+<tr>
+<td>衛生</td>
+<td>累積値は <code>gensym</code>（<code>cond__…</code>）</td>
+</tr>
+<tr>
+<td>二重評価</td>
+<td>初期 <code>expr</code> を一度束縛してから使う</td>
+</tr>
+<tr>
+<td>薄いマクロ</td>
+<td><code>emit-cond-&gt;</code> を単体で試せる</td>
+</tr>
+</tbody>
+</table>
+<p>実務では <code>clojure.core/cond-&gt;</code>
+を使い、自作は「同じ型を再現できたか」の確認に留める。</p>
+<hr />
+<h2 id="振り返り">13.5 振り返り</h2>
 <table>
 <thead>
 <tr>
@@ -1004,9 +1110,14 @@ class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb28-1"><a
 <td>式を「書く場所」で一度だけ評価</td>
 <td>時間計測の算術</td>
 </tr>
+<tr>
+<td>C</td>
+<td>対句構文 → <code>if</code>/<code>-&gt;</code> への形状変換</td>
+<td>各ステップの計算そのもの</td>
+</tr>
 </tbody>
 </table>
-<h2 id="演習-6">13.5 演習</h2>
+<h2 id="演習-6">13.6 演習</h2>
 <ol type="1">
 <li><code>when-let-lite</code>
 を二重評価する間違った版をわざと書き、テストで撃て。<br />
@@ -1015,21 +1126,35 @@ class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb28-1"><a
 <code>~label</code> は
 <strong>実行時に評価される式</strong>ですでによい。では、(a)
 展開時に決まる定数だけ許す設計、(b)
-計測結果からラベルを後付けする設計、では引数の置き方がどう違うか？</li>
+計測結果からラベルを後付けする設計、では引数の置き方がどう違うか？<br />
+</li>
+<li><strong>（ケース C）</strong> <code>cond-&gt;lite</code>
+の対句を1組減らした／増やしたときの展開を手で書き、<code>emit-cond-&gt;</code>
+の結果と照合せよ。条項が奇数個で例外になることも確認せよ。</li>
 </ol>
-<h2 id="まとめ-関数でよいか-8">13.6 まとめ — 関数でよいか？</h2>
-<p>両ケースとも「呼び出し構文と評価回数」が本質だった。<br />
-ログに残す数値の計算だけなら、関数で十分なことが多い。</p>
-<p>ケース
-C（<code>cond-&gt;</code>）以降は完全版原稿へ送る（通読版の範囲外）。</p>
+<h2 id="まとめ-関数でよいか-8">13.7 まとめ — 関数でよいか？</h2>
+<p>A/B/C
+いずれも「呼び出し構文と評価回数／コード形状」が本質だった。<br />
+ログの数値計算や、すでに手元にある値への
+<code>if</code>＋<code>-&gt;</code>
+の適用だけなら、関数で十分なことが多い。<br />
+<code>cond-&gt;</code> 相当が必要なら、まず <strong>core
+を使う</strong>。自作は学習と、本当に違う契約が要るときだけ。</p>
+<p>選択ケース（定義マクロ／小さな
+DSL／入口のみ）はレポート形式でも可（<a
+href="../構成設計.md"><code>構成設計.md</code></a>
+の第13章・選択ケース）。</p>
+<p><strong>実行:</strong> <code>(learn-macro.ch13-cases/demo)</code> ／
+<strong>テスト:</strong> <code>clojure -M:test</code></p>
 <hr />
 <h1 id="第14章-アンチパターンとチェックリスト通読版短縮">第14章
 アンチパターンとチェックリスト（通読版短縮）</h1>
-<p><strong>状態:</strong> 統合済 v0.3（工程8）<br />
-<strong>サンプル:</strong> <code>learn-macro.ch14-checklist</code></p>
+<p><strong>状態:</strong> RC v1.0（工程10） <strong>サンプル:</strong>
+<code>learn-macro.ch14-checklist</code></p>
 <h2 id="動機-8">14.1 動機</h2>
 <p>マクロを増やすほど、読む人・ツール・オンボーディングのコストが上がる。<br />
-通読版の締めは、<strong>書く前と書いた後のチェックリスト</strong>である。</p>
+通読版・完全版とも、締めは
+<strong>書く前と書いた後のチェックリスト</strong> である。</p>
 <h2 id="書く前">14.2 書く前</h2>
 <ol type="1">
 <li>評価順・短絡が本質か？<br />

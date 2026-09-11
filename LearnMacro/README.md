@@ -3,18 +3,23 @@
 **題名:** Clojure マクロを読み、書き、控える  
 **副題:** 評価・衛生・DSL までを一冊で身につける教科書
 
-## 配布物（工程9）
+## 配布物（工程9–10・RC v1.0）
 
 | ファイル | 内容 |
 |----------|------|
 | [dist/book-full.html](./dist/book-full.html) | 完全版 HTML |
 | [dist/book-full.epub](./dist/book-full.epub) | 完全版 EPUB |
+| [dist/book-full.pdf](./dist/book-full.pdf) | 完全版 PDF |
 | [dist/book-thin.html](./dist/book-thin.html) | 通読版 HTML |
 | [dist/book-thin.epub](./dist/book-thin.epub) | 通読版 EPUB |
+| [dist/book-thin.pdf](./dist/book-thin.pdf) | 通読版 PDF |
 | [LICENSE](./LICENSE) | サンプルコード MIT |
-| [制作.md](./制作.md) | 制作記録 |
+| [制作.md](./制作.md) | 制作記録（工程9） |
+| [校正.md](./校正.md) | 校正・品質確認（工程10） |
 
-再ビルド: `./制作/build.sh`
+再ビルド: `./制作/build.sh`（既定で PDF も生成。スキップは `LEARNMACRO_BUILD_PDF=0`）
+
+PDF フォント: `brew install --cask font-noto-sans-cjk-jp font-jetbrains-mono`（要 xelatex）
 
 ## 文書
 
@@ -31,6 +36,7 @@
 | [編集レビュー.md](./編集レビュー.md) / [編集レビュー_完全版.md](./編集レビュー_完全版.md) | 工程7 |
 | [全体統合.md](./全体統合.md) / [全体統合_完全版.md](./全体統合_完全版.md) | 工程8 |
 | [制作.md](./制作.md) | 工程9 |
+| [校正.md](./校正.md) | 工程10 |
 | [原稿/目次.md](./原稿/目次.md) | 目次 |
 | [工程表.md](./工程表.md) | 工程と進捗 |
 | [レビュー記録票.md](./レビュー記録票.md) | 文書レビュー |

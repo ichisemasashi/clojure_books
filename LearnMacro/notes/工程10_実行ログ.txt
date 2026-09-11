@@ -1,0 +1,89 @@
+LearnMacro 工程10 実行ログ
+日時: 2026-09-11 09:37:09 +0900
+Clojure: {:version "1.12.6.1673"
+ :config-files ["/Volumes/ONE/homebrew/Cellar/clojure/1.12.6.1673/deps.edn" "/Users/ichisemasashi/.clojure/deps.edn" "deps.edn" ]
+ :config-user "/Users/ichisemasashi/.clojure/deps.edn"
+ :config-project "deps.edn"
+ :install-dir "/Volumes/ONE/homebrew/Cellar/clojure/1.12.6.1673"
+Java: openjdk version "26.0.2.1" 2026-08-18
+
+=== clojure -M:test ===
+
+Testing learn-macro.cases-test
+
+Ran 3 tests containing 14 assertions.
+0 failures, 0 errors.
+
+=== clojure -M:run (tail) ===
+run: {:ret 499500, :ms 0.128417, :label "sum"}
+
+==== Ch13 Case C — cond->lite ====
+emit-cond->: (clojure.core/let
+ [cond495
+  1
+  cond495
+  (if true (clojure.core/-> cond495 inc) cond495)
+  cond495
+  (if false (clojure.core/-> cond495 (* 10)) cond495)
+  cond495
+  (if true (clojure.core/-> cond495 (* 3)) cond495)]
+ cond495)
+cond->lite (before): (learn-macro.ch13-cases/cond->lite 1 true inc false (* 10) true (* 3))
+cond->lite (after macroexpand-1): (clojure.core/let
+ [cond496
+  1
+  cond496
+  (if true (clojure.core/-> cond496 inc) cond496)
+  cond496
+  (if false (clojure.core/-> cond496 (* 10)) cond496)
+  cond496
+  (if true (clojure.core/-> cond496 (* 3)) cond496)]
+ cond496)
+run: 6
+core cond->: 6
+expr side-effect once: 1
+
+----- running ch14 -----
+
+==== Ch14 checklist (short) ====
+before-writing: ["評価順・短絡が本質か？" "新しい構文／束縛が必要か？" "データ＋関数では足りないか？" "呼び出し側にマクロ感染を強いないか？"]
+after-writing: ["変数捕獲はないか？（gensym / x#）"
+ "二重評価はないか？（let で一度）"
+ "展開結果は読めるか？"
+ "展開テストはあるか？"
+ "失敗時のメッセージは分かるか？"]
+
+==== ALL DEMOS OK ====
+Prototype finished.
+
+=== clojure -M:verify (tail) ===
+  (clojure.core/let [x temp__153__auto__] (inc x))))
+run: 8
+nil branch: nil
+unless expand: (if (clojure.core/not false) (do :ok))
+
+==== Case B time-like ====
+run: {:ret 499500, :ms 0.15375, :label "sum"}
+
+==== Verify &env ====
+locals at real expansion site: [a b]
+macroexpand-1 alone: '[]
+conclusion: "&env is populated in real compilation/expansion context; inspecting via macroexpand alone can look empty."
+
+==== Verify foo# nesting ====
+same syntax-quote shares auto-gensym: (clojure.core/fn [x__196__auto__] [x__196__auto__ x__196__auto__])
+separate syntax-quotes get distinct symbols?: [true [x__197__auto__ x__198__auto__]]
+nested syntax-quote is a new gensym scope: (clojure.core/list 'learn-macro.verify/x__199__auto__ x__200__auto__)
+
+==== Verify macroexpand-all limits ====
+nested macros expanded: (if
+ true
+ (do
+  (let*
+   [or__5602__auto__ false]
+   (if or__5602__auto__ or__5602__auto__ 1))))
+reader fn already expanded by reader before walk: ((fn* [p1__202#] (+ p1__202# 1)) 2)
+special forms remain: (let* [x 1] x)
+
+==== DONE ====
+All verification sections executed.

@@ -115,9 +115,8 @@ id="toc-clojure-マクロを読み書き控える">Clojure
 </ul></li>
 <li><a href="#通し原稿完全版"
 id="toc-通し原稿完全版">通し原稿（完全版）</a></li>
-<li><a href="#はじめに統合済-v0.4完全版パス反映"
-id="toc-はじめに統合済-v0.4完全版パス反映">はじめに（統合済
-v0.4・完全版パス反映）</a>
+<li><a href="#はじめにrc-v1.0工程10"
+id="toc-はじめにrc-v1.0工程10">はじめに（RC v1.0・工程10）</a>
 <ul>
 <li><a href="#対象読者" id="toc-対象読者">対象読者</a></li>
 <li><a href="#通読版の読み方"
@@ -374,7 +373,7 @@ id="toc-まとめ-本書の約束の再確認">14.6 まとめ —
 までを一冊で身につける教科書</p>
 <p>読める・書ける・控えられる——展開を見て保守し、関数とデータの境界を先に決める教科書。</p>
 <ul>
-<li><strong>版:</strong> 制作物 v0.9（工程9）</li>
+<li><strong>版:</strong> RC v1.0（工程10）</li>
 <li><strong>対象環境:</strong> Clojure 1.12.x／推奨 JDK 21</li>
 <li><strong>読み順（完全版）:</strong> はじめに → 第1–14章</li>
 <li><strong>読み順（通読版）:</strong> はじめに → 1–8 → 13(A/B) →
@@ -385,7 +384,7 @@ id="toc-まとめ-本書の約束の再確認">14.6 まとめ —
 <p><strong>書名:</strong> Clojure マクロを読み、書き、控える<br />
 <strong>副題:</strong> 評価・衛生・DSL
 までを一冊で身につける教科書<br />
-<strong>版:</strong> 制作物 v0.9（工程9・自費公開用ドラフト）<br />
+<strong>版:</strong> RC v1.0（工程10・自費公開前）<br />
 <strong>発行日:</strong> 2026-09-11<br />
 <strong>リポジトリ:</strong> LearnMacro（本ディレクトリ）</p>
 <h2 id="ライセンス">ライセンス</h2>
@@ -420,28 +419,25 @@ id="toc-まとめ-本書の約束の再確認">14.6 まとめ —
 </ul>
 <h2 id="制作物の場所">制作物の場所</h2>
 <ul>
-<li>HTML / EPUB: <code>dist/</code></li>
+<li>HTML / EPUB / PDF: <code>dist/</code></li>
 <li>通し原稿: <code>原稿/通し原稿_完全版.md</code> /
 <code>原稿/通し原稿_通読版.md</code></li>
-<li>ビルド手順: <code>制作/build.sh</code></li>
+<li>ビルド手順: <code>制作/build.sh</code>（PDF は Noto Sans CJK JP +
+JetBrains Mono）</li>
 </ul>
 <h2 id="免責">免責</h2>
 <p>本書およびサンプルは学習目的で提供する。本番利用前に各自で検証すること。</p>
 <hr />
 <h1 id="通し原稿完全版">通し原稿（完全版）</h1>
-<p><strong>版:</strong> 統合済 v0.4（工程8・完全版パス）
-<strong>題名:</strong> Clojure マクロを読み、書き、控える
-<strong>副題:</strong> 評価・衛生・DSL までを一冊で身につける教科書</p>
-<p>読み順: はじめに → 1–14（第9–12章を含む）。
-章ファイルを通読順に連結した一冊分。編集の正本は各章ファイル。
-通読版（9–12スキップ）: <a
-href="./通し原稿_通読版.md">通し原稿_通読版.md</a> 目次: <a
+<p><strong>版:</strong> RC v1.0（工程10） <strong>題名:</strong> Clojure
+マクロを読み、書き、控える <strong>副題:</strong> 評価・衛生・DSL
+までを一冊で身につける教科書</p>
+<p>章ファイルを通読順に連結。編集の正本は各章ファイル。 目次: <a
 href="./目次.md">目次.md</a> ／ 用語集: <a
 href="./用語集.md">用語集.md</a> ／ 索引: <a
 href="./索引.md">索引.md</a></p>
 <hr />
-<h1 id="はじめに統合済-v0.4完全版パス反映">はじめに（統合済
-v0.4・完全版パス反映）</h1>
+<h1 id="はじめにrc-v1.0工程10">はじめに（RC v1.0・工程10）</h1>
 <p><strong>題名:</strong> Clojure マクロを読み、書き、控える<br />
 <strong>副題:</strong> 評価・衛生・DSL までを一冊で身につける教科書</p>
 <p>本書は、Clojure のマクロを
@@ -492,8 +488,8 @@ href="./通し原稿_通読版.md"><code>通し原稿_通読版.md</code></a>（
 <hr />
 <h1 id="第1章-イントロダクション-関数では届かないこと">第1章
 イントロダクション — 関数では届かないこと</h1>
-<p><strong>状態:</strong> 統合済 v0.3（工程8）<br />
-<strong>サンプル:</strong> <code>learn-macro.ch01-intro</code></p>
+<p><strong>状態:</strong> RC v1.0（工程10） <strong>サンプル:</strong>
+<code>learn-macro.ch01-intro</code></p>
 <h2 id="動機">1.1 動機</h2>
 <p>Clojure
 では、ほとんどの抽象は関数で足りる。それでもマクロが残る理由は単純で、<strong>引数の評価を呼び出し側の都合で止めたり、並べ替えたりできる</strong>からである。関数は呼ばれた時点で引数がすでに値になっている。</p>
@@ -551,8 +547,8 @@ class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb4-1"><a 
 <hr />
 <h1 id="第2章-コードはデータ-読み込みと評価">第2章 コードはデータ —
 読み込みと評価</h1>
-<p><strong>状態:</strong> 統合済 v0.3（工程8）<br />
-<strong>サンプル:</strong> <code>learn-macro.ch02-data</code></p>
+<p><strong>状態:</strong> RC v1.0（工程10） <strong>サンプル:</strong>
+<code>learn-macro.ch02-data</code></p>
 <h2 id="動機-1">2.1 動機</h2>
 <p>マクロを理解する鍵は、「プログラムのテキスト」と「評価された値」のあいだに、<strong>フォームというデータ</strong>があることだ。マクロはそのデータを受け取り、別のフォームを返す。</p>
 <h2 id="段階">2.2 段階</h2>
@@ -622,8 +618,8 @@ class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb5-1"><a 
 <hr />
 <h1 id="第3章-クォート構文引用アンクォート">第3章
 クォート、構文引用、アンクォート</h1>
-<p><strong>状態:</strong> 統合済 v0.3（工程8）<br />
-<strong>サンプル:</strong> <code>learn-macro.ch03-quoting</code></p>
+<p><strong>状態:</strong> RC v1.0（工程10） <strong>サンプル:</strong>
+<code>learn-macro.ch03-quoting</code></p>
 <h2 id="動機-2">3.1 動機</h2>
 <p>マクロの本体は、多くの場合 <strong>テンプレート</strong>
 でフォームを組み立てる。そのテンプレート言語がクォート族である。</p>
@@ -697,8 +693,8 @@ class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb9-1"><a 
 <hr />
 <h1 id="第4章-はじめての-defmacro">第4章 はじめての
 <code>defmacro</code></h1>
-<p><strong>状態:</strong> 統合済 v0.3（工程8）<br />
-<strong>サンプル:</strong> <code>learn-macro.ch04-defmacro</code></p>
+<p><strong>状態:</strong> RC v1.0（工程10） <strong>サンプル:</strong>
+<code>learn-macro.ch04-defmacro</code></p>
 <h2 id="動機-3">4.1 動機</h2>
 <p>クォートでフォームを組めるようになったら、次はそれを
 <strong>呼び出しのたびに差し込む</strong> 仕組みが <code>defmacro</code>
@@ -760,8 +756,8 @@ class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb13-1"><a
 <code>(learn-macro.ch04-defmacro/demo)</code></p>
 <hr />
 <h1 id="第5章-展開を見る読む試す">第5章 展開を見る・読む・試す</h1>
-<p><strong>状態:</strong> 統合済 v0.3（工程8）<br />
-<strong>サンプル:</strong> <code>learn-macro.ch05-expand</code></p>
+<p><strong>状態:</strong> RC v1.0（工程10） <strong>サンプル:</strong>
+<code>learn-macro.ch05-expand</code></p>
 <h2 id="動機-4">5.1 動機</h2>
 <p>マクロのデバッグで最初にやることは、実行結果をいじることより
 <strong>展開結果を見ること</strong> である。</p>
@@ -842,8 +838,8 @@ class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb15-1"><a
 <code>(learn-macro.ch05-expand/demo)</code></p>
 <hr />
 <h1 id="第6章-衛生gensym二重評価">第6章 衛生、gensym、二重評価</h1>
-<p><strong>状態:</strong> 統合済 v0.3（工程8）<br />
-<strong>サンプル:</strong> <code>learn-macro.ch06-hygiene</code></p>
+<p><strong>状態:</strong> RC v1.0（工程10） <strong>サンプル:</strong>
+<code>learn-macro.ch06-hygiene</code></p>
 <h2 id="動機-5">6.1 動機</h2>
 <p>マクロはフォームを繋ぎ合わせる。そのとき名前が衝突したり、同じ式が二度評価されたりする。<br />
 Clojure のマクロは <strong>デフォルトでは衛生的ではない</strong>（Common
@@ -904,8 +900,8 @@ href="../notes/載せない失敗例.md"><code>notes/載せない失敗例.md</c
 <hr />
 <h1 id="第7章-標準マクロを分解する抜粋">第7章
 標準マクロを分解する（抜粋）</h1>
-<p><strong>状態:</strong> 統合済 v0.3（工程8）<br />
-<strong>サンプル:</strong> <code>learn-macro.ch07-core-read</code></p>
+<p><strong>状態:</strong> RC v1.0（工程10） <strong>サンプル:</strong>
+<code>learn-macro.ch07-core-read</code></p>
 <h2 id="動機-6">7.1 動機</h2>
 <p>自分で書く前に、<code>clojure.core</code> の短いマクロから
 <strong>型を盗む</strong>。<br />
@@ -953,8 +949,8 @@ class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb21-1"><a
 <hr />
 <h1 id="第8章-制御構文を自分で書く-unless-再訪">第8章
 制御構文を自分で書く — <code>unless</code> 再訪</h1>
-<p><strong>状態:</strong> 統合済 v0.4（工程8・完全版パス再通読）<br />
-<strong>サンプル:</strong> <code>learn-macro.ch08-unless</code>（実装は
+<p><strong>状態:</strong> RC v1.0（工程10） <strong>サンプル:</strong>
+<code>learn-macro.ch08-unless</code>（実装は
 <code>ch04-defmacro</code>）</p>
 <h2 id="動機-7">8.1 動機</h2>
 <p>第4章で作った <code>unless</code>
@@ -1016,8 +1012,8 @@ href="./13_ケーススタディ.md">第13章</a>（A/B）へ進む。<br />
 </ul>
 <hr />
 <h1 id="第9章-束縛とリソースのマクロ">第9章 束縛とリソースのマクロ</h1>
-<p><strong>状態:</strong> 統合済 v0.4（工程8・完全版）<br />
-<strong>サンプル:</strong> <code>learn-macro.ch09-binding</code></p>
+<p><strong>状態:</strong> RC v1.0（工程10） <strong>サンプル:</strong>
+<code>learn-macro.ch09-binding</code></p>
 <h2 id="動機-8">9.1 動機</h2>
 <p>第8章までで制御構文の設計手順を見た。次の定番が
 <strong>束縛マクロ</strong> である。<br />
@@ -1114,8 +1110,8 @@ class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb27-1"><a
 <hr />
 <h1 id="第10章-コード生成の定石とヘルパー関数への委譲">第10章
 コード生成の定石とヘルパー関数への委譲</h1>
-<p><strong>状態:</strong> 統合済 v0.4（工程8・完全版）<br />
-<strong>サンプル:</strong> <code>learn-macro.ch10-codegen</code></p>
+<p><strong>状態:</strong> RC v1.0（工程10） <strong>サンプル:</strong>
+<code>learn-macro.ch10-codegen</code></p>
 <h2 id="動機-9">10.1 動機</h2>
 <p>マクロ本体にロジックを詰め込むと、テストもデバッグも難しくなる。<br />
 定石は <strong>マクロを薄くし、変換は関数に委譲する</strong>
@@ -1199,8 +1195,8 @@ op」として展開時に落とせる（後述の第12章へ続く）。</p>
 <code>(learn-macro.ch10-codegen/demo)</code></p>
 <hr />
 <h1 id="第11章-dsl-の設計判断">第11章 DSL の設計判断</h1>
-<p><strong>状態:</strong> 統合済 v0.4（工程8・完全版）<br />
-<strong>サンプル:</strong> <code>learn-macro.ch11-dsl</code></p>
+<p><strong>状態:</strong> RC v1.0（工程10） <strong>サンプル:</strong>
+<code>learn-macro.ch11-dsl</code></p>
 <h2 id="動機-10">11.1 動機</h2>
 <p>「DSL だからマクロ」と決め打ちするのは早い。<br />
 本章の目標は、<strong>マクロ DSL とデータ駆動 API
@@ -1342,8 +1338,8 @@ HTML をマクロ構文にしたくなったら、まず Hiccup
 <hr />
 <h1 id="第12章-テストエラーツールチェーン">第12章
 テスト、エラー、ツールチェーン</h1>
-<p><strong>状態:</strong> 統合済 v0.4（工程8・完全版）<br />
-<strong>サンプル:</strong> <code>learn-macro.ch12-tooling</code></p>
+<p><strong>状態:</strong> RC v1.0（工程10） <strong>サンプル:</strong>
+<code>learn-macro.ch12-tooling</code></p>
 <h2 id="動機-11">12.1 動機</h2>
 <p>マクロは「動いた」だけでは足りない。<br />
 <strong>展開形</strong>と<strong>実行時挙動</strong>を分けてテストし、失敗時に利用者が原因を追えるようにする。</p>
@@ -1433,8 +1429,8 @@ class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb33-1"><a
 <hr />
 <h1 id="第13章-ケーススタディa-b-c">第13章 ケーススタディ（A / B /
 C）</h1>
-<p><strong>状態:</strong> 統合済 v0.7（工程8・完全版／ケースC）<br />
-<strong>サンプル:</strong> <code>learn-macro.ch13-cases</code><br />
+<p><strong>状態:</strong> RC v1.0（工程10） <strong>サンプル:</strong>
+<code>learn-macro.ch13-cases</code><br />
 <strong>テスト:</strong> <code>clojure -M:test</code></p>
 <p>通読版の必須はケース A / B。<strong>ケース C（簡易
 <code>cond-&gt;</code>）は完全版</strong>（推奨）。選択ケース（定義マクロ／小さな
@@ -1657,11 +1653,12 @@ href="../構成設計.md"><code>構成設計.md</code></a>
 <hr />
 <h1 id="第14章-アンチパターンとチェックリスト通読版短縮">第14章
 アンチパターンとチェックリスト（通読版短縮）</h1>
-<p><strong>状態:</strong> 統合済 v0.3（工程8）<br />
-<strong>サンプル:</strong> <code>learn-macro.ch14-checklist</code></p>
+<p><strong>状態:</strong> RC v1.0（工程10） <strong>サンプル:</strong>
+<code>learn-macro.ch14-checklist</code></p>
 <h2 id="動機-12">14.1 動機</h2>
 <p>マクロを増やすほど、読む人・ツール・オンボーディングのコストが上がる。<br />
-通読版の締めは、<strong>書く前と書いた後のチェックリスト</strong>である。</p>
+通読版・完全版とも、締めは
+<strong>書く前と書いた後のチェックリスト</strong> である。</p>
 <h2 id="書く前">14.2 書く前</h2>
 <ol type="1">
 <li>評価順・短絡が本質か？<br />

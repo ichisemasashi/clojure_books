@@ -1,13 +1,20 @@
 #!/usr/bin/env bash
-# LearnMacro 制作物ビルド（工程9）
-# 依存: pandoc 3.x
-# 主成果物: HTML / EPUB（PDF は CJK フォント設定が必要で任意）
+# LearnMacro 制作物ビルド（工程9–10）
+# 依存: pandoc 3.x、PDF 時は xelatex + 日本語フォント（下記）
+# 成果物: HTML / EPUB / PDF（完全版・通読版）
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 DIST="$ROOT/dist"
 MANUSCRIPT="$ROOT/原稿"
 PROD="$ROOT/制作"
+
+# PDF 用フォント（Homebrew cask 推奨）
+#   brew install --cask font-noto-sans-cjk-jp font-jetbrains-mono
+# LEARNMACRO_BUILD_PDF=0 で PDF をスキップ。未設定または 1 なら生成を試みる。
+CJK_FONT="${LEARNMACRO_CJK_FONT:-Noto Sans CJK JP}"
+MONO_FONT="${LEARNMACRO_MONO_FONT:-JetBrains Mono}"
+BUILD_PDF="${LEARNMACRO_BUILD_PDF:-1}"
 
 mkdir -p "$DIST"
 
@@ -78,26 +85,39 @@ build_one() {
     -o "$DIST/book-${label}.epub"
 }
 
+build_pdf() {
+  local label="$1"
+  local combined="$DIST/_combined_${label}.md"
+  echo "==> PDF ($label) [xelatex / $CJK_FONT / $MONO_FONT]"
+  pandoc "$combined" \
+    --from markdown \
+    --metadata-file="$PROD/メタデータ.yaml" \
+    --toc --toc-depth=2 \
+    --pdf-engine=xelatex \
+    -V CJKmainfont="$CJK_FONT" \
+    -V CJKsansfont="$CJK_FONT" \
+    -V mainfont="$CJK_FONT" \
+    -V sansfont="$CJK_FONT" \
+    -V monofont="$MONO_FONT" \
+    -V geometry:margin=22mm \
+    -V colorlinks=true \
+    -o "$DIST/book-${label}.pdf"
+  echo "    wrote book-${label}.pdf ($(wc -c < "$DIST/book-${label}.pdf") bytes)"
+}
+
 build_one "full" "$MANUSCRIPT/通し原稿_完全版.md"
 build_one "thin" "$MANUSCRIPT/通し原稿_通読版.md"
 
-# PDF は任意（日本語フォントが必要）。LEARNMACRO_BUILD_PDF=1 で試行。
-if [[ "${LEARNMACRO_BUILD_PDF:-}" == "1" ]]; then
-  echo "==> PDF attempt (xelatex + Hiragino Sans)"
+if [[ "$BUILD_PDF" == "1" ]]; then
+  if ! command -v xelatex >/dev/null 2>&1; then
+    echo "ERROR: xelatex not found (install MacTeX / BasicTeX)." >&2
+    exit 1
+  fi
   for label in full thin; do
-    pandoc "$DIST/_combined_${label}.md" \
-      --metadata-file="$PROD/メタデータ.yaml" \
-      --toc --toc-depth=2 \
-      --pdf-engine=xelatex \
-      -V CJKmainfont="Hiragino Sans" \
-      -V mainfont="Hiragino Sans" \
-      -o "$DIST/book-${label}.pdf" \
-      && echo "    wrote book-${label}.pdf" \
-      || echo "    PDF failed for $label"
+    build_pdf "$label"
   done
 else
-  echo "==> PDF skipped (set LEARNMACRO_BUILD_PDF=1 to try)."
-  echo "    Primary deliverables are HTML and EPUB."
+  echo "==> PDF skipped (LEARNMACRO_BUILD_PDF=0)."
   rm -f "$DIST"/book-*.pdf
 fi
 
