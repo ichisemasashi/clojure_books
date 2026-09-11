@@ -44,6 +44,7 @@ docstring が付いていることも確認する（`-> #'unless meta :doc`）�
 
 第4章の `when-not-lite` を、本章の設計手順でレビューせよ（展開・doc・命名）。
 
+たたき台: `src/learn_macro/exercises/ch08.clj`／解答: `src/learn_macro/answers/ch08.clj`
 ## 8.6 まとめ — 関数でよいか？
 
 `unless` は教育用にはよいが、実務では `when-not` で足りることがほとんどである。  

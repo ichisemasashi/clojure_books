@@ -4,6 +4,16 @@
 
 形式は [Keep a Changelog](https://keepachangelog.com/ja/1.1.0/) に近い。版番号はセマンティック（文書・配布物向け）。
 
+## [1.0.1] — 2026-09-11
+
+### Added
+
+- JDK 21 再検証ログ（`notes/JDK21_実行ログ.txt`）
+- GitHub Actions CI（JDK 21 で test / run / verify）
+- 演習・解答の拡充（ch02 / 03 / 05 / 07 / 08 / 13 / 14）
+- 第7章に `cond` / `->` の展開観察とソース検索方針
+- 選択ケース・anaphoric の次版メモ（`notes/選択ケースとanaphoricメモ.md`）
+
 ## [1.0.0] — 2026-09-11
 
 ### Added
@@ -30,5 +40,6 @@
 
 - 制作物（HTML / EPUB）、MIT ライセンス、タグ `LearnMacro-v0.9.0`（工程9）
 
+[1.0.1]: https://github.com/ichisemasashi/LearnMacro/compare/v1.0.0...HEAD
 [1.0.0]: https://github.com/ichisemasashi/LearnMacro/releases/tag/v1.0.0
 [0.9.0]: https://github.com/ichisemasashi/clojure_books/releases/tag/LearnMacro-v0.9.0

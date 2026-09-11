@@ -1,0 +1,43 @@
+LearnMacro JDK 21 再検証ログ（次版バックログ N-01）
+日時: 2026-09-11 12:20:43 +0900
+Java: openjdk version "21.0.12.1" 2026-08-18
+JAVA_HOME=/Volumes/ONE/homebrew/opt/openjdk@21
+Clojure: 1.12.1
+
+=== clojure -M:test ===
+
+Testing learn-macro.cases-test
+
+Ran 3 tests containing 14 assertions.
+0 failures, 0 errors.
+
+=== clojure -M:run (tail) ===
+core cond->: 6
+expr side-effect once: 1
+
+----- running ch14 -----
+
+==== Ch14 checklist (short) ====
+before-writing: ["評価順・短絡が本質か？" "新しい構文／束縛が必要か？" "データ＋関数では足りないか？" "呼び出し側にマクロ感染を強いないか？"]
+after-writing: ["変数捕獲はないか？（gensym / x#）"
+ "二重評価はないか？（let で一度）"
+ "展開結果は読めるか？"
+ "展開テストはあるか？"
+ "失敗時のメッセージは分かるか？"]
+
+==== ALL DEMOS OK ====
+Prototype finished.
+
+=== clojure -M:verify (tail) ===
+==== Verify macroexpand-all limits ====
+nested macros expanded: (if
+ true
+ (do
+  (let*
+   [or__5602__auto__ false]
+   (if or__5602__auto__ or__5602__auto__ 1))))
+reader fn already expanded by reader before walk: ((fn* [p1__202#] (+ p1__202# 1)) 2)
+special forms remain: (let* [x 1] x)
+
+==== DONE ====
+All verification sections executed.
