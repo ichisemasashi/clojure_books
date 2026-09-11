@@ -25,6 +25,8 @@ APPENDIX = {
 
 
 def chapter_id(filename: str) -> str | None:
+    if filename.startswith("付録_CLJS") or filename == "付録_CLJS補注.md":
+        return "app-cljs"
     m = re.match(r"(00|0[1-9]|1[0-4])_", filename)
     if not m:
         return None

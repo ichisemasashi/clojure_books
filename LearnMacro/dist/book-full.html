@@ -334,6 +334,22 @@ id="toc-ケース-c-cond-lite完全版">13.4 ケース C —
 よくある失敗（短く）</a></li>
 <li><a href="#演習判断-1" id="toc-演習判断-1">14.5 演習（判断）</a></li>
 </ul></li>
+<li><a href="#app-cljs" id="toc-app-cljs">付録 A — ClojureScript
+補注</a>
+<ul>
+<li><a href="#a.1-まず押さえること" id="toc-a.1-まず押さえること">A.1
+まず押さえること</a></li>
+<li><a href="#a.2-jvm-clojure-との差実務で刺さる点"
+id="toc-a.2-jvm-clojure-との差実務で刺さる点">A.2 JVM Clojure
+との差（実務で刺さる点）</a></li>
+<li><a href="#a.3-やってよい控えるcljs-文脈"
+id="toc-a.3-やってよい控えるcljs-文脈">A.3 やってよい／控える（CLJS
+文脈）</a></li>
+<li><a href="#a.4-最小スケッチイメージ"
+id="toc-a.4-最小スケッチイメージ">A.4 最小スケッチ（イメージ）</a></li>
+<li><a href="#a.5-この付録の止め方" id="toc-a.5-この付録の止め方">A.5
+この付録の止め方</a></li>
+</ul></li>
 </ul>
 </nav>
 <h1 id="clojure-マクロを読み書き控える">Clojure
@@ -396,6 +412,8 @@ href="https://github.com/ichisemasashi/LearnMacro">ichisemasashi/LearnMacro</a><
 <code>原稿/通し原稿_通読版.md</code></li>
 <li>ビルド手順: <code>制作/build.sh</code>（PDF は Noto Sans CJK JP +
 JetBrains Mono）</li>
+<li>商業分岐: <code>./商業入稿ガイド.md</code> ／
+<code>./表紙_商業案.md</code></li>
 </ul>
 <h2 id="正誤更新">正誤・更新</h2>
 <ul>
@@ -407,12 +425,13 @@ JetBrains Mono）</li>
 <p>本書およびサンプルは学習目的で提供する。本番利用前に各自で検証すること。</p>
 <hr />
 <h1 id="通し原稿完全版">通し原稿（完全版）</h1>
-<p><strong>版:</strong> 確定版 v1.0＋次版追記 <strong>題名:</strong>
-Clojure マクロを読み、書き、控える <strong>副題:</strong>
-評価・衛生・DSL までを一冊で身につける教科書</p>
+<p><strong>版:</strong> 確定版 v1.0＋次版追記（N-09/N-10）
+<strong>題名:</strong> Clojure マクロを読み、書き、控える
+<strong>副題:</strong> 評価・衛生・DSL までを一冊で身につける教科書</p>
 <p>章ファイルを通読順に連結。編集の正本は各章ファイル。 目次:
 <strong>目次.md</strong> ／ 用語集: <strong>用語集.md</strong> ／ 索引:
-<strong>索引.md</strong> ／ 図表: <strong>図表一覧.md</strong></p>
+<strong>索引.md</strong> ／ 図表: <strong>図表一覧.md</strong> ／ 付録:
+<a href="#app-cljs">付録_CLJS補注.md</a></p>
 <hr />
 <h1 id="ch00">はじめに（確定版 v1.0）</h1>
 <p><strong>題名:</strong> Clojure マクロを読み、書き、控える<br />
@@ -447,7 +466,10 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="
 <strong><code>用語集.md</code></strong>、章一覧は
 <strong><code>目次.md</code></strong>。<br />
 通し読み: <strong><code>通し原稿_通読版.md</code></strong>（薄い一本）／
-<strong><code>通し原稿_完全版.md</code></strong>（1–14 通し）。</p>
+<strong><code>通し原稿_完全版.md</code></strong>（1–14 通し）。<br />
+ClojureScript との差分だけは <a
+href="#app-cljs"><code>付録_CLJS補注.md</code></a> を参照（本文は JVM
+Clojure 前提）。</p>
 <h2 id="本書の約束">本書の約束</h2>
 <ol type="1">
 <li><code>clojure.core</code>
@@ -1765,6 +1787,113 @@ DSL／入口のみ）はレポート形式でも可（<code>../構成設計.md</
 <p>通読版はここで一区切り。完全版では束縛・DSL・ツール章が続く。</p>
 <p><strong>実行:</strong>
 <code>(learn-macro.ch14-checklist/demo)</code></p>
+<hr />
+<h1 id="app-cljs">付録 A — ClojureScript 補注</h1>
+<p><strong>版:</strong> N-10（確定版への追記）<br />
+<strong>位置づけ:</strong> 本書本文は <strong>JVM Clojure</strong>
+を前提とする。CLJS でマクロを触るときの差分だけを短く置く。完全な CLJS
+ガイドではない。</p>
+<hr />
+<h2 id="a.1-まず押さえること">A.1 まず押さえること</h2>
+<ol type="1">
+<li><strong>マクロはコンパイル時だけ</strong><br />
+ブラウザ上の実行時に <code>defmacro</code> が増えるわけではない。展開は
+cljs コンパイラ（または self-host のコンパイル段階）で起きる。</li>
+<li><strong>マクロ定義の置き場</strong><br />
+よくある形は <code>.clj</code> / <code>.cljc</code>
+にマクロを置き、<code>.cljs</code> から <code>(:require-macros …)</code>
+または <code>.cljc</code> のリーダー条件で参照する。</li>
+<li><strong><code>.cljc</code> とリーダー条件</strong><br />
+<code>#?(:clj … :cljs …)</code>
+でホスト差を分ける。マクロ本体が両ホストで意味を持つか、clj
+側だけの展開か、を意識する。</li>
+</ol>
+<hr />
+<h2 id="a.2-jvm-clojure-との差実務で刺さる点">A.2 JVM Clojure
+との差（実務で刺さる点）</h2>
+<table>
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 52%" />
+<col style="width: 37%" />
+</colgroup>
+<thead>
+<tr>
+<th>点</th>
+<th>JVM Clojure（本書）</th>
+<th>ClojureScript</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>評価の場</td>
+<td>同じプロセスで REPL 展開しやすい</td>
+<td>コンパイル単位・モジュール境界が強い</td>
+</tr>
+<tr>
+<td>名前空間</td>
+<td><code>ns</code> とマクロが同居しやすい</td>
+<td>マクロ専用 ns / <code>require-macros</code> が必要になりやすい</td>
+</tr>
+<tr>
+<td>相互運用</td>
+<td>Java クラス</td>
+<td>JS オブジェクト・goog / npm</td>
+</tr>
+<tr>
+<td><code>macroexpand</code></td>
+<td>REPL で即試せる</td>
+<td>ツールやコンパイルログ、cljs REPL の手順が環境依存</td>
+</tr>
+<tr>
+<td>自己ホスト</td>
+<td>通常は不要</td>
+<td>self-hosted cljs では「誰が展開するか」がさらに分岐</td>
+</tr>
+</tbody>
+</table>
+<p>本書の衛生・二重評価・展開を見る型は
+<strong>そのまま使える</strong>。変わるのは主に
+<strong>モジュールとコンパイルの手続き</strong> である。</p>
+<hr />
+<h2 id="a.3-やってよい控えるcljs-文脈">A.3 やってよい／控える（CLJS
+文脈）</h2>
+<ul>
+<li><strong>よい:</strong> 薄い糖衣、評価制御、<code>.cljc</code>
+で共有する小さなマクロ<br />
+</li>
+<li><strong>控える:</strong> JS ランタイムの都合を隠す巨大
+DSL、マクロ感染で cljs 側の解析・最適化を壊すこと<br />
+</li>
+<li><strong>データ優先:</strong> Hiccup 的 UI
+やクエリがデータで足りるなら、CLJS
+でもマクロにしない（第11・14章と同じ判断）</li>
+</ul>
+<hr />
+<h2 id="a.4-最小スケッチイメージ">A.4 最小スケッチ（イメージ）</h2>
+<div class="sourceCode" id="cb43"><pre
+class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co">;; macros.cljc（概念例）</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>(<span class="kw">ns</span> learn-macro.cljs-sketch.macros)</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defmacro</span><span class="fu"> unless </span>[<span class="kw">test</span> &amp; body]</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  `(<span class="kw">if</span> (<span class="kw">not</span> <span class="at">~test</span>) (<span class="kw">do</span> <span class="at">~@body</span>)))</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a><span class="co">;; usage.cljs（概念例）</span></span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>(<span class="kw">ns</span> learn-macro.cljs-sketch.usage</span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>  (<span class="at">:require-macros</span> [learn-macro.cljs-sketch.macros <span class="at">:refer</span> [unless]]))</span></code></pre></div>
+<p>実際のプロジェクトではビルドツール（shadow-cljs / figwheel
+等）のマクロ解決ルールに従う。</p>
+<hr />
+<h2 id="a.5-この付録の止め方">A.5 この付録の止め方</h2>
+<ul>
+<li>analyzer やコンパイラ内部、高度な self-host
+は扱わない（企画の「書かないこと」）<br />
+</li>
+<li>詳細は公式の ClojureScript
+ドキュメントと、利用中のビルドツールのマクロ節へ</li>
+</ul>
+<p>本文の演習・ケーススタディは JVM 上の <code>deps.edn</code>
+プロジェクトで続けるのが確実である。</p>
 <hr />
 </body>
 </html>
