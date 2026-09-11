@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.11" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="LearnMacro" />
+  <title>Clojure マクロを読み、書き、控える</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Clojure マクロを読み、書き、控える</h1>
+<p class="subtitle">評価・衛生・DSL までを一冊で身につける教科書</p>
+<p class="author">LearnMacro</p>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#clojure-マクロを読み書き控える"
+id="toc-clojure-マクロを読み書き控える">Clojure
+マクロを読み、書き、控える</a></li>
+<li><a href="#奥付" id="toc-奥付">奥付</a>
+<ul>
+<li><a href="#ライセンス" id="toc-ライセンス">ライセンス</a></li>
+<li><a href="#環境" id="toc-環境">環境</a></li>
+<li><a href="#制作物の場所" id="toc-制作物の場所">制作物の場所</a></li>
+<li><a href="#免責" id="toc-免責">免責</a></li>
+</ul></li>
+<li><a href="#通し原稿通読版"
+id="toc-通し原稿通読版">通し原稿（通読版）</a></li>
+<li><a href="#はじめに統合済-v0.3"
+id="toc-はじめに統合済-v0.3">はじめに（統合済 v0.3）</a>
+<ul>
+<li><a href="#対象読者" id="toc-対象読者">対象読者</a></li>
+<li><a href="#通読版の読み方"
+id="toc-通読版の読み方">通読版の読み方</a></li>
+<li><a href="#本書の約束" id="toc-本書の約束">本書の約束</a></li>
+</ul></li>
+<li><a href="#第1章-イントロダクション-関数では届かないこと"
+id="toc-第1章-イントロダクション-関数では届かないこと">第1章
+イントロダクション — 関数では届かないこと</a>
+<ul>
+<li><a href="#動機" id="toc-動機">1.1 動機</a></li>
+<li><a href="#対照実験-and-を関数で書く"
+id="toc-対照実験-and-を関数で書く">1.2 対照実験: <code>and</code>
+を関数で書く</a></li>
+<li><a href="#マクロが解く問題の型" id="toc-マクロが解く問題の型">1.3
+マクロが解く問題の型</a></li>
+<li><a href="#演習判断" id="toc-演習判断">1.4 演習（判断）</a></li>
+<li><a href="#まとめ-関数でよいか" id="toc-まとめ-関数でよいか">1.5
+まとめ — 関数でよいか？</a></li>
+</ul></li>
+<li><a href="#第2章-コードはデータ-読み込みと評価"
+id="toc-第2章-コードはデータ-読み込みと評価">第2章 コードはデータ —
+読み込みと評価</a>
+<ul>
+<li><a href="#動機-1" id="toc-動機-1">2.1 動機</a></li>
+<li><a href="#段階" id="toc-段階">2.2 段階</a></li>
+<li><a href="#フォームを手で組む" id="toc-フォームを手で組む">2.3
+フォームを手で組む</a></li>
+<li><a href="#特殊形式マクロ関数" id="toc-特殊形式マクロ関数">2.4
+特殊形式・マクロ・関数</a></li>
+<li><a href="#演習" id="toc-演習">2.5 演習</a></li>
+<li><a href="#まとめ-関数でよいか-1" id="toc-まとめ-関数でよいか-1">2.6
+まとめ — 関数でよいか？</a></li>
+</ul></li>
+<li><a href="#第3章-クォート構文引用アンクォート"
+id="toc-第3章-クォート構文引用アンクォート">第3章
+クォート、構文引用、アンクォート</a>
+<ul>
+<li><a href="#動機-2" id="toc-動機-2">3.1 動機</a></li>
+<li><a href="#quote" id="toc-quote">3.2 <code>quote</code> /
+<code>'</code></a></li>
+<li><a href="#構文引用syntax-quote" id="toc-構文引用syntax-quote">3.3
+構文引用（syntax-quote） <code>`</code></a></li>
+<li><a href="#アンクォート-とスプライシング"
+id="toc-アンクォート-とスプライシング">3.4 アンクォート <code>~</code>
+とスプライシング <code>~@</code></a></li>
+<li><a href="#自動-gensym-foo予告" id="toc-自動-gensym-foo予告">3.5 自動
+gensym <code>foo#</code>（予告）</a></li>
+<li><a href="#よくある混乱" id="toc-よくある混乱">3.6
+よくある混乱</a></li>
+<li><a href="#演習-1" id="toc-演習-1">3.7 演習</a></li>
+<li><a href="#まとめ-関数でよいか-2" id="toc-まとめ-関数でよいか-2">3.8
+まとめ — 関数でよいか？</a></li>
+</ul></li>
+<li><a href="#第4章-はじめての-defmacro"
+id="toc-第4章-はじめての-defmacro">第4章 はじめての
+<code>defmacro</code></a>
+<ul>
+<li><a href="#動機-3" id="toc-動機-3">4.1 動機</a></li>
+<li><a href="#最小のマクロ-unless" id="toc-最小のマクロ-unless">4.2
+最小のマクロ: <code>unless</code></a></li>
+<li><a href="#関数ではなぜ足りないか"
+id="toc-関数ではなぜ足りないか">4.3 関数ではなぜ足りないか</a></li>
+<li><a href="#ドキュメント" id="toc-ドキュメント">4.4
+ドキュメント</a></li>
+<li><a href="#演習-2" id="toc-演習-2">4.5 演習</a></li>
+<li><a href="#まとめ-関数でよいか-3" id="toc-まとめ-関数でよいか-3">4.6
+まとめ — 関数でよいか？</a></li>
+</ul></li>
+<li><a href="#第5章-展開を見る読む試す"
+id="toc-第5章-展開を見る読む試す">第5章 展開を見る・読む・試す</a>
+<ul>
+<li><a href="#動機-4" id="toc-動機-4">5.1 動機</a></li>
+<li><a href="#道具" id="toc-道具">5.2 道具</a></li>
+<li><a href="#予想-展開-差分" id="toc-予想-展開-差分">5.3 予想 → 展開 →
+差分</a></li>
+<li><a href="#form-env通読版は存在だけ"
+id="toc-form-env通読版は存在だけ">5.4 <code>&amp;form</code> /
+<code>&amp;env</code>（通読版は存在だけ）</a></li>
+<li><a href="#罠-展開確認用フォームの作り方"
+id="toc-罠-展開確認用フォームの作り方">5.5 罠:
+展開確認用フォームの作り方</a></li>
+<li><a href="#演習-3" id="toc-演習-3">5.6 演習</a></li>
+<li><a href="#まとめ-関数でよいか-4" id="toc-まとめ-関数でよいか-4">5.7
+まとめ — 関数でよいか？</a></li>
+</ul></li>
+<li><a href="#第6章-衛生gensym二重評価"
+id="toc-第6章-衛生gensym二重評価">第6章 衛生、gensym、二重評価</a>
+<ul>
+<li><a href="#動機-5" id="toc-動機-5">6.1 動機</a></li>
+<li><a href="#二重評価" id="toc-二重評価">6.2 二重評価</a></li>
+<li><a href="#変数捕獲" id="toc-変数捕獲">6.3 変数捕獲</a></li>
+<li><a href="#演習直す" id="toc-演習直す">6.4 演習（直す）</a></li>
+<li><a href="#まとめ-関数でよいか-5" id="toc-まとめ-関数でよいか-5">6.5
+まとめ — 関数でよいか？</a></li>
+</ul></li>
+<li><a href="#第7章-標準マクロを分解する抜粋"
+id="toc-第7章-標準マクロを分解する抜粋">第7章
+標準マクロを分解する（抜粋）</a>
+<ul>
+<li><a href="#動機-6" id="toc-動機-6">7.1 動機</a></li>
+<li><a href="#when" id="toc-when">7.2 <code>when</code></a></li>
+<li><a href="#or短絡" id="toc-or短絡">7.3
+<code>or</code>（短絡）</a></li>
+<li><a href="#when-let" id="toc-when-let">7.4
+<code>when-let</code></a></li>
+<li><a href="#通読版での止め方" id="toc-通読版での止め方">7.5
+通読版での止め方</a></li>
+<li><a href="#演習-4" id="toc-演習-4">7.6 演習</a></li>
+<li><a href="#まとめ-関数でよいか-6" id="toc-まとめ-関数でよいか-6">7.7
+まとめ — 関数でよいか？</a></li>
+</ul></li>
+<li><a href="#第8章-制御構文を自分で書く-unless-再訪"
+id="toc-第8章-制御構文を自分で書く-unless-再訪">第8章
+制御構文を自分で書く — <code>unless</code> 再訪</a>
+<ul>
+<li><a href="#動機-7" id="toc-動機-7">8.1 動機</a></li>
+<li><a href="#設計手順再掲" id="toc-設計手順再掲">8.2
+設計手順（再掲）</a></li>
+<li><a href="#再確認" id="toc-再確認">8.3 再確認</a></li>
+<li><a href="#やりすぎの兆候" id="toc-やりすぎの兆候">8.4
+やりすぎの兆候</a></li>
+<li><a href="#演習-5" id="toc-演習-5">8.5 演習</a></li>
+<li><a href="#まとめ-関数でよいか-7" id="toc-まとめ-関数でよいか-7">8.6
+まとめ — 関数でよいか？</a></li>
+</ul></li>
+<li><a href="#第13章-ケーススタディ通読版-a-b"
+id="toc-第13章-ケーススタディ通読版-a-b">第13章 ケーススタディ（通読版:
+A / B）</a>
+<ul>
+<li><a href="#進め方" id="toc-進め方">13.1 進め方</a></li>
+<li><a href="#ケース-a-unless-when-let-lite"
+id="toc-ケース-a-unless-when-let-lite">13.2 ケース A —
+<code>unless</code> / <code>when-let-lite</code></a></li>
+<li><a href="#ケース-b-labeled-time" id="toc-ケース-b-labeled-time">13.3
+ケース B — <code>labeled-time</code></a></li>
+<li><a href="#振り返り" id="toc-振り返り">13.4 振り返り</a></li>
+<li><a href="#演習-6" id="toc-演習-6">13.5 演習</a></li>
+<li><a href="#まとめ-関数でよいか-8" id="toc-まとめ-関数でよいか-8">13.6
+まとめ — 関数でよいか？</a></li>
+</ul></li>
+<li><a href="#第14章-アンチパターンとチェックリスト通読版短縮"
+id="toc-第14章-アンチパターンとチェックリスト通読版短縮">第14章
+アンチパターンとチェックリスト（通読版短縮）</a>
+<ul>
+<li><a href="#動機-8" id="toc-動機-8">14.1 動機</a></li>
+<li><a href="#書く前" id="toc-書く前">14.2 書く前</a></li>
+<li><a href="#書いた後" id="toc-書いた後">14.3 書いた後</a></li>
+<li><a href="#よくある失敗短く" id="toc-よくある失敗短く">14.4
+よくある失敗（短く）</a></li>
+<li><a href="#演習判断-1" id="toc-演習判断-1">14.5 演習（判断）</a></li>
+<li><a href="#まとめ-本書の約束の再確認"
+id="toc-まとめ-本書の約束の再確認">14.6 まとめ —
+本書の約束の再確認</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="clojure-マクロを読み書き控える">Clojure
+マクロを読み、書き、控える</h1>
+<p><strong>副題:</strong> 評価・衛生・DSL
+までを一冊で身につける教科書</p>
+<p>読める・書ける・控えられる——展開を見て保守し、関数とデータの境界を先に決める教科書。</p>
+<ul>
+<li><strong>版:</strong> 制作物 v0.9（工程9）</li>
+<li><strong>対象環境:</strong> Clojure 1.12.x／推奨 JDK 21</li>
+<li><strong>読み順（完全版）:</strong> はじめに → 第1–14章</li>
+<li><strong>読み順（通読版）:</strong> はじめに → 1–8 → 13(A/B) →
+14</li>
+</ul>
+<hr />
+<h1 id="奥付">奥付</h1>
+<p><strong>書名:</strong> Clojure マクロを読み、書き、控える<br />
+<strong>副題:</strong> 評価・衛生・DSL
+までを一冊で身につける教科書<br />
+<strong>版:</strong> 制作物 v0.9（工程9・自費公開用ドラフト）<br />
+<strong>発行日:</strong> 2026-09-11<br />
+<strong>リポジトリ:</strong> LearnMacro（本ディレクトリ）</p>
+<h2 id="ライセンス">ライセンス</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 66%" />
+</colgroup>
+<thead>
+<tr>
+<th>対象</th>
+<th>ライセンス</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>サンプルコード（<code>src/</code> / <code>test/</code> /
+<code>exercises</code> / <code>answers</code>）</td>
+<td><a href="../LICENSE">MIT</a></td>
+</tr>
+<tr>
+<td>本文・ノート・企画文書</td>
+<td>著作権は著者に帰属。再配布・改変の条件は公開時に確定する（現時点はリポジトリ閲覧用）</td>
+</tr>
+</tbody>
+</table>
+<h2 id="環境">環境</h2>
+<ul>
+<li>Clojure <strong>1.12.1</strong>（<code>deps.edn</code>）</li>
+<li>推奨 JDK
+<strong>21</strong>（制作検証は環境により異なる場合あり）</li>
+</ul>
+<h2 id="制作物の場所">制作物の場所</h2>
+<ul>
+<li>HTML / EPUB: <code>dist/</code></li>
+<li>通し原稿: <code>原稿/通し原稿_完全版.md</code> /
+<code>原稿/通し原稿_通読版.md</code></li>
+<li>ビルド手順: <code>制作/build.sh</code></li>
+</ul>
+<h2 id="免責">免責</h2>
+<p>本書およびサンプルは学習目的で提供する。本番利用前に各自で検証すること。</p>
+<hr />
+<h1 id="通し原稿通読版">通し原稿（通読版）</h1>
+<p><strong>版:</strong> 統合済 v0.3（工程8） <strong>題名:</strong>
+Clojure マクロを読み、書き、控える <strong>副題:</strong>
+評価・衛生・DSL までを一冊で身につける教科書</p>
+<p>章ファイルを通読順に連結した一冊分。編集の正本は各章ファイル。 目次:
+<a href="./目次.md">目次.md</a> ／ 用語集: <a
+href="./用語集.md">用語集.md</a> ／ 索引: <a
+href="./索引.md">索引.md</a></p>
+<hr />
+<h1 id="はじめに統合済-v0.3">はじめに（統合済 v0.3）</h1>
+<p><strong>題名:</strong> Clojure マクロを読み、書き、控える<br />
+<strong>副題:</strong> 評価・衛生・DSL までを一冊で身につける教科書</p>
+<p>本書は、Clojure のマクロを
+<strong>読める・書ける・控えられる</strong>
+ようになるための通読書である。<br />
+「すごい構文」を集める本ではない。展開結果を見て保守し、関数やデータで足りるときはマクロを選ばない判断まで含める。</p>
+<h2 id="対象読者">対象読者</h2>
+<p>Clojure
+の基本（関数・コレクション・名前空間・<code>if</code>/<code>let</code>/<code>fn</code>/<code>def</code>）を一通り使える人。</p>
+<h2 id="通読版の読み方">通読版の読み方</h2>
+<p>初版の「薄い一本」は次の順である。</p>
+<p>1 → 2 → 3 → 4 → 5 → 6 → 7（抜粋）→ 8 → <strong>13</strong>（ケース
+A/B）→ 14</p>
+<p><strong>第9–12章は通読版では飛ばす</strong>（束縛の深掘り、コード生成、DSL、ツールは完全版）。番号が飛ぶのはそのためである。</p>
+<p>サンプルコードはリポジトリで動く。</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">clojure</span> <span class="at">-M:run</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">clojure</span> <span class="at">-M:test</span></span></code></pre></div>
+<p><strong>対象環境:</strong> Clojure
+<strong>1.12.x</strong>（サンプルは <code>deps.edn</code> の
+<strong>1.12.1</strong>）。推奨 JDK は
+<strong>21</strong>（検証実測は環境により異なる場合あり）。<br />
+展開例に出てくる gensym 名（<code>temp__123__auto__</code>
+等）は実行ごとに変わるので、形だけを追う。</p>
+<p>用語は <a href="./用語統一表.md"><code>用語統一表.md</code></a>
+に従う。定義は <a
+href="./用語集.md"><code>用語集.md</code></a>、章一覧は <a
+href="./目次.md"><code>目次.md</code></a>、通し読みは <a
+href="./通し原稿_通読版.md"><code>通し原稿_通読版.md</code></a>。</p>
+<h2 id="本書の約束">本書の約束</h2>
+<ol type="1">
+<li><code>clojure.core</code>
+と、対比用の定番ライブラリ入口を、展開や設計境界付きで読める<br />
+</li>
+<li>制御構文・束縛・薄い糖衣を、衛生に配慮して書ける<br />
+</li>
+<li>「関数／データで足りる」と判断できる</li>
+</ol>
+<p>詳細な企画は <code>企画提案書.md</code>、目次の正本は
+<code>構成設計.md</code> を参照してほしい。</p>
+<hr />
+<h1 id="第1章-イントロダクション-関数では届かないこと">第1章
+イントロダクション — 関数では届かないこと</h1>
+<p><strong>状態:</strong> 統合済 v0.3（工程8）<br />
+<strong>サンプル:</strong> <code>learn-macro.ch01-intro</code></p>
+<h2 id="動機">1.1 動機</h2>
+<p>Clojure
+では、ほとんどの抽象は関数で足りる。それでもマクロが残る理由は単純で、<strong>引数の評価を呼び出し側の都合で止めたり、並べ替えたりできる</strong>からである。関数は呼ばれた時点で引数がすでに値になっている。</p>
+<h2 id="対照実験-and-を関数で書く">1.2 対照実験: <code>and</code>
+を関数で書く</h2>
+<p>次の「関数版 <code>and</code>」は、見かけは似ていても短絡しない。</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">;; 関数は両引数を先に評価する</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>((<span class="kw">fn</span> [a b] (<span class="kw">if</span> a b a))</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a> (<span class="kw">do</span> (<span class="kw">println</span> <span class="st">&quot;left&quot;</span>) <span class="va">false</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a> (<span class="kw">do</span> (<span class="kw">println</span> <span class="st">&quot;right&quot;</span>) <span class="at">:ran</span>))</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">;; =&gt; left と right の両方が印字される</span></span></code></pre></div>
+<p>本物の <code>and</code> は左が偽なら右を評価しない。</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">and</span> (<span class="kw">do</span> (<span class="kw">println</span> <span class="st">&quot;left&quot;</span>) <span class="va">false</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>     (<span class="kw">do</span> (<span class="kw">println</span> <span class="st">&quot;right&quot;</span>) <span class="at">:ran</span>))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">;; =&gt; left だけ</span></span></code></pre></div>
+<p>展開の一端は次のとおりである（環境により gensym 名は異なる）。</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">;; before</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>(<span class="kw">and</span> <span class="va">false</span> <span class="at">:x</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">;; after macroexpand-1（概念）</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>(<span class="kw">let</span> [and__auto__ <span class="va">false</span>]</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> and__auto__ (<span class="kw">and</span> <span class="at">:x</span>) and__auto__))</span></code></pre></div>
+<p>リポジトリでは <code>clojure -M:run</code> の Ch01
+で副作用の差を確認できる。</p>
+<h2 id="マクロが解く問題の型">1.3 マクロが解く問題の型</h2>
+<ol type="1">
+<li><strong>評価の制御</strong> — 短絡、遅延、条件付き実行<br />
+</li>
+<li><strong>構文の拡張</strong> — 新しい制御構造・束縛<br />
+</li>
+<li><strong>コード形状の変換</strong> —
+見た目を領域向けにし、中身は通常の Clojure へ<br />
+</li>
+<li>（慎重に）<strong>コンパイル時の定型生成</strong></li>
+</ol>
+<p>対して、ただの計算やコレクション変換は関数の仕事である。</p>
+<h2 id="演習判断">1.4 演習（判断）</h2>
+<p>次をマクロ／関数のどちらかに分類し、一文で理由を書け。</p>
+<ol type="1">
+<li>値を印字して返すデバッグ用 API<br />
+</li>
+<li>lookup が non-nil のときだけ本体を走らせる束縛<br />
+</li>
+<li>マップのキーをキーワード化する純変換</li>
+</ol>
+<p>解答例: <code>src/learn_macro/answers/ch01.clj</code></p>
+<h2 id="まとめ-関数でよいか">1.5 まとめ — 関数でよいか？</h2>
+<p>短絡や「まだ評価したくない式」が本質ならマクロ（または特殊形式）の領域に近い。<br />
+値がすでに手元にあり、変換するだけなら関数でよい。</p>
+<p>マクロを増やしすぎると呼び出し側にも特殊な書き方を強いることがある（<strong>マクロ感染</strong>）。判断のチェックリストは
+<a href="./14_チェックリスト.md">第14章</a> でまとめる。</p>
+<hr />
+<h1 id="第2章-コードはデータ-読み込みと評価">第2章 コードはデータ —
+読み込みと評価</h1>
+<p><strong>状態:</strong> 統合済 v0.3（工程8）<br />
+<strong>サンプル:</strong> <code>learn-macro.ch02-data</code></p>
+<h2 id="動機-1">2.1 動機</h2>
+<p>マクロを理解する鍵は、「プログラムのテキスト」と「評価された値」のあいだに、<strong>フォームというデータ</strong>があることだ。マクロはそのデータを受け取り、別のフォームを返す。</p>
+<h2 id="段階">2.2 段階</h2>
+<p>おおまかには次の流れである。</p>
+<ol type="1">
+<li><strong>Read</strong> — テキスト →
+データ（リスト・シンボル・リテラル等）<br />
+</li>
+<li><strong>Macroexpand</strong> —
+マクロ呼び出しを、別のフォームへ書き換え<br />
+</li>
+<li><strong>Compile / Eval</strong> — 実行可能な形へ／値を得る</li>
+</ol>
+<p>「いつ形が変わるか」を意識すると、<code>macroexpand</code>
+の結果と実行結果を混同しにくくなる。</p>
+<h2 id="フォームを手で組む">2.3 フォームを手で組む</h2>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> form </span>(<span class="kw">list</span> <span class="at">&#39;+</span> <span class="dv">1</span> <span class="dv">2</span>))</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>(<span class="kw">first</span> form)  <span class="co">; =&gt; +</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>(<span class="kw">rest</span> form)   <span class="co">; =&gt; (1 2)</span></span></code></pre></div>
+<p>これは「コードをデータとして触っている」状態である。<br />
+<code>eval</code> すれば <code>3</code>
+になるが、<strong><code>eval</code>
+はマクロの代わりではない</strong>。タイミングも、必要な文脈も、安全モデルも違う。本書ではデモ以外で
+<code>eval</code> に頼らない。</p>
+<h2 id="特殊形式マクロ関数">2.4 特殊形式・マクロ・関数</h2>
+<table>
+<thead>
+<tr>
+<th>種類</th>
+<th>引数の評価</th>
+<th>拡張</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>特殊形式</td>
+<td>独自規則</td>
+<td>言語組み込み</td>
+</tr>
+<tr>
+<td>マクロ</td>
+<td>まず展開（引数は未評価のフォーム）</td>
+<td>ユーザが追加可</td>
+</tr>
+<tr>
+<td>関数</td>
+<td>すべて評価してから本体</td>
+<td>ユーザが追加可</td>
+</tr>
+</tbody>
+</table>
+<p>エラーや奇妙な挙動に出会ったら、まずこのどれかを切り分ける。</p>
+<h2 id="演習">2.5 演習</h2>
+<ol type="1">
+<li><strong>読む:</strong> <code>(when true (println 1) 2)</code>
+が、read / expand / eval のどこで何になるかラベルを付けよ。<br />
+</li>
+<li><strong>書く:</strong> <code>list</code> だけで <code>(+ 1 2)</code>
+相当のフォームを組み立て、<code>eval</code>
+せずに構造だけ検査せよ。</li>
+</ol>
+<h2 id="まとめ-関数でよいか-1">2.6 まとめ — 関数でよいか？</h2>
+<p>データ変換としてコードを触る必要がなければ、無理にフォームを組むな。<br />
+マクロは「評価前の形」を扱う道具であり、通常のビジネスロジックの置き場ではない。</p>
+<p><strong>実行:</strong> <code>(learn-macro.ch02-data/demo)</code></p>
+<hr />
+<h1 id="第3章-クォート構文引用アンクォート">第3章
+クォート、構文引用、アンクォート</h1>
+<p><strong>状態:</strong> 統合済 v0.3（工程8）<br />
+<strong>サンプル:</strong> <code>learn-macro.ch03-quoting</code></p>
+<h2 id="動機-2">3.1 動機</h2>
+<p>マクロの本体は、多くの場合 <strong>テンプレート</strong>
+でフォームを組み立てる。そのテンプレート言語がクォート族である。</p>
+<h2 id="quote">3.2 <code>quote</code> / <code>'</code></h2>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>&#39;(<span class="kw">+</span> <span class="dv">1</span> <span class="dv">2</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">;; =&gt; (+ 1 2)  ; 評価されないリスト</span></span></code></pre></div>
+<h2 id="構文引用syntax-quote">3.3 構文引用（syntax-quote）
+<code>`</code></h2>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>`(<span class="kw">+</span> <span class="dv">1</span> <span class="dv">2</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">;; =&gt; (clojure.core/+ 1 2)  ; 名前が名前空間修飾される</span></span></code></pre></div>
+<p>修飾が付くことで、展開先でも意図した <code>+</code>
+を指しやすくなる。</p>
+<h2 id="アンクォート-とスプライシング">3.4 アンクォート <code>~</code>
+とスプライシング <code>~@</code></h2>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">let</span> [x <span class="dv">10</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>      ys [<span class="dv">1</span> <span class="dv">2</span> <span class="dv">3</span>]]</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  `(<span class="kw">+</span> <span class="at">~x</span> <span class="dv">2</span>)    <span class="co">; =&gt; (clojure.core/+ 10 2)</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  `(<span class="kw">+</span> <span class="at">~@ys</span>))   <span class="co">; =&gt; (clojure.core/+ 1 2 3)</span></span></code></pre></div>
+<ul>
+<li><code>~</code> …
+テンプレート内に、評価結果を1個埋め込む（<strong>アンクォート</strong>）<br />
+</li>
+<li><code>~@</code> …
+列を親リストに繋ぎ込む（<strong>スプライシング</strong>）</li>
+</ul>
+<p>標準用語は上表どおり。混同しやすいので「反引用」は使わない（<a
+href="./用語統一表.md"><code>用語統一表.md</code></a>）。</p>
+<h2 id="自動-gensym-foo予告">3.5 自動 gensym
+<code>foo#</code>（予告）</h2>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>`(<span class="kw">let</span> [<span class="at">a#</span> <span class="dv">1</span>] <span class="at">a#</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">;; =&gt; (clojure.core/let [a__123__auto__ 1] a__123__auto__)</span></span></code></pre></div>
+<p>同一の構文引用内では同じ <code>a#</code> が同じシンボルになる。<br />
+<strong>安全に使う演習は第6章まで待つ。</strong>
+ここでは「一意な名前が付く」ことだけ覚える。</p>
+<h2 id="よくある混乱">3.6 よくある混乱</h2>
+<table>
+<thead>
+<tr>
+<th>混同</th>
+<th>実際</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>'</code> と <code>`</code> は同じ</td>
+<td>修飾と <code>~</code> の可否が違う</td>
+</tr>
+<tr>
+<td><code>~</code> の外でも評価が止まる</td>
+<td><code>~</code> の中だけが「穴」</td>
+</tr>
+</tbody>
+</table>
+<h2 id="演習-1">3.7 演習</h2>
+<ol type="1">
+<li><strong>書く:</strong> 局所 <code>x</code> とベクタ <code>ys</code>
+から <code>`(str ~x ~@ys)</code> 相当を作れ。<br />
+</li>
+<li><strong>直す:</strong> <code>~</code> と <code>~@</code>
+を取り違えたテンプレートを直せ。</li>
+</ol>
+<h2 id="まとめ-関数でよいか-2">3.8 まとめ — 関数でよいか？</h2>
+<p>すでに値が手元にあり、単に呼び出すだけならクォートは不要。<br />
+<strong>まだ評価したくない形をデータとして保持・変形する</strong>とき、クォートが必要になる。</p>
+<p><strong>実行:</strong>
+<code>(learn-macro.ch03-quoting/demo)</code></p>
+<hr />
+<h1 id="第4章-はじめての-defmacro">第4章 はじめての
+<code>defmacro</code></h1>
+<p><strong>状態:</strong> 統合済 v0.3（工程8）<br />
+<strong>サンプル:</strong> <code>learn-macro.ch04-defmacro</code></p>
+<h2 id="動機-3">4.1 動機</h2>
+<p>クォートでフォームを組めるようになったら、次はそれを
+<strong>呼び出しのたびに差し込む</strong> 仕組みが <code>defmacro</code>
+である。</p>
+<h2 id="最小のマクロ-unless">4.2 最小のマクロ: <code>unless</code></h2>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defmacro</span><span class="fu"> unless</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;test が偽のとき body を評価する。&quot;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  [<span class="kw">test</span> &amp; body]</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  `(<span class="kw">if</span> (<span class="kw">not</span> <span class="at">~test</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>     (<span class="kw">do</span> <span class="at">~@body</span>)))</span></code></pre></div>
+<p>ポイント:</p>
+<ul>
+<li>引数 <code>test</code> や <code>body</code> は
+<strong>まだ評価されていないフォーム</strong><br />
+</li>
+<li>戻り値は、コンパイラが代わりに使う
+<strong>展開後フォーム</strong></li>
+</ul>
+<h3 id="展開前後">展開前後</h3>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">;; before</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>(unless <span class="va">false</span> <span class="at">:ok</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">;; after macroexpand-1</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>(<span class="kw">if</span> (clojure.core/not <span class="va">false</span>) (<span class="kw">do</span> <span class="at">:ok</span>))</span></code></pre></div>
+<h3 id="実行">実行</h3>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>(unless <span class="va">true</span> <span class="at">:no</span>)   <span class="co">; =&gt; nil（本体は走らない）</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>(unless <span class="va">false</span> <span class="at">:yes</span>) <span class="co">; =&gt; :yes</span></span></code></pre></div>
+<h2 id="関数ではなぜ足りないか">4.3 関数ではなぜ足りないか</h2>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> unless-fn </span>[<span class="kw">test</span> body-fn]</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">when-not</span> <span class="kw">test</span> (body-fn)))</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>(unless-fn <span class="va">false</span> (<span class="kw">fn</span> [] <span class="at">:yes</span>))</span></code></pre></div>
+<p>動くが、呼び出し側が常に <code>(fn [] …)</code> を強いられる。<br />
+<strong>構文として <code>unless</code>
+と書きたい</strong>ならマクロ（または同等の特殊形式）が要る。</p>
+<h2 id="ドキュメント">4.4 ドキュメント</h2>
+<p><code>defmacro</code> にも docstring
+を付ける。利用者と未来の自分が展開の意図を追うときの手がかりになる。</p>
+<h2 id="演習-2">4.5 演習</h2>
+<ol type="1">
+<li><strong>書く:</strong>
+<code>when-not-lite</code>（<code>when-not</code>
+相当）を実装し、展開と実行を確認せよ。<br />
+</li>
+<li><strong>判断:</strong> その糖衣は、チームのコードベースで関数 API
+のままの方がよいか？</li>
+</ol>
+<p>骨組み: <code>src/learn_macro/exercises/ch04.clj</code>／解答:
+<code>src/learn_macro/answers/ch04.clj</code></p>
+<h2 id="まとめ-関数でよいか-3">4.6 まとめ — 関数でよいか？</h2>
+<p>呼び出し側に遅延（thunk）を強いてもよいなら関数で足りることが多い。<br />
+言語に新しい分岐構文を足したいときだけ <code>defmacro</code>
+を検討する。</p>
+<p><strong>実行:</strong>
+<code>(learn-macro.ch04-defmacro/demo)</code></p>
+<hr />
+<h1 id="第5章-展開を見る読む試す">第5章 展開を見る・読む・試す</h1>
+<p><strong>状態:</strong> 統合済 v0.3（工程8）<br />
+<strong>サンプル:</strong> <code>learn-macro.ch05-expand</code></p>
+<h2 id="動機-4">5.1 動機</h2>
+<p>マクロのデバッグで最初にやることは、実行結果をいじることより
+<strong>展開結果を見ること</strong> である。</p>
+<h2 id="道具">5.2 道具</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>関数</th>
+<th>意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>macroexpand-1</code></td>
+<td>先頭がマクロなら <strong>一段だけ</strong> 展開</td>
+</tr>
+<tr>
+<td><code>macroexpand</code></td>
+<td>先頭がマクロのあいだ繰り返し（<strong>入れ子の内側は見ない</strong>）</td>
+</tr>
+<tr>
+<td><code>clojure.walk/macroexpand-all</code></td>
+<td>木を歩き、内側も展開（限界あり）</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">macroexpand-1</span> &#39;(<span class="kw">when</span> <span class="va">true</span> <span class="dv">1</span> <span class="dv">2</span>))</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co">;; =&gt; (if true (do 1 2))</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>(clojure.walk/macroexpand-all</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  &#39;(<span class="kw">when</span> <span class="va">true</span> (<span class="kw">when</span> <span class="va">false</span> <span class="dv">1</span>)))</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co">;; =&gt; (if true (do (if false (do 1))))</span></span></code></pre></div>
+<h2 id="予想-展開-差分">5.3 予想 → 展開 → 差分</h2>
+<p>ワークシートの型:</p>
+<ol type="1">
+<li>手で展開形を書く<br />
+</li>
+<li><code>macroexpand-1</code> する<br />
+</li>
+<li>差分を一言でメモする</li>
+</ol>
+<p>この型を、後述の第7章「標準マクロを読む」でも使う。</p>
+<h2 id="form-env通読版は存在だけ">5.4 <code>&amp;form</code> /
+<code>&amp;env</code>（通読版は存在だけ）</h2>
+<p><code>defmacro</code> 内では特殊な名前
+<code>&amp;form</code>（呼び出し全体）と
+<code>&amp;env</code>（局所束縛の情報）が使える。<br />
+通読版では「ある」と知るだけでよい。<code>macroexpand</code> だけで
+<code>&amp;env</code>
+を覗くと空に見えることがあり、実コンパイル時と差が出る（<a
+href="../notes/核検証メモ.md"><code>notes/核検証メモ.md</code></a>）。</p>
+<h2 id="罠-展開確認用フォームの作り方">5.5 罠:
+展開確認用フォームの作り方</h2>
+<p><code>`(my-macro [x ...])</code> のように
+<strong>構文引用で引数まで書く</strong> と、<code>x</code>
+が先に名前空間修飾され、展開結果が本番とずれる。<br />
+確認は次のようにする。</p>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">macroexpand-1</span> (<span class="kw">list</span> <span class="at">`my-macro</span> &#39;[x (<span class="kw">first</span> [<span class="dv">1</span>])] &#39;(<span class="kw">inc</span> x)))</span></code></pre></div>
+<h2 id="演習-3">5.6 演習</h2>
+<ol type="1">
+<li><strong>読む:</strong> <code>(or false nil :ok)</code>
+の展開を予想してから照合せよ。<br />
+</li>
+<li><strong>書く:</strong> 自作 <code>unless</code>
+の展開テストを1本書け（<code>=</code> でフォーム比較でよい）。</li>
+</ol>
+<h2 id="まとめ-関数でよいか-4">5.7 まとめ — 関数でよいか？</h2>
+<p>展開を見る習慣はマクロ専用の技能である。<br />
+関数のデバッグに <code>macroexpand</code>
+は不要——そのときは値とスタックを見よ。</p>
+<p><strong>実行:</strong>
+<code>(learn-macro.ch05-expand/demo)</code></p>
+<hr />
+<h1 id="第6章-衛生gensym二重評価">第6章 衛生、gensym、二重評価</h1>
+<p><strong>状態:</strong> 統合済 v0.3（工程8）<br />
+<strong>サンプル:</strong> <code>learn-macro.ch06-hygiene</code></p>
+<h2 id="動機-5">6.1 動機</h2>
+<p>マクロはフォームを繋ぎ合わせる。そのとき名前が衝突したり、同じ式が二度評価されたりする。<br />
+Clojure のマクロは <strong>デフォルトでは衛生的ではない</strong>（Common
+Lisp と同様。Scheme の hygienic macro とは違う）。<br />
+名前空間修飾と <code>gensym</code>／<code>foo#</code> で
+<strong>自分で守る。</strong></p>
+<h2 id="二重評価">6.2 二重評価</h2>
+<p>悪い発想（教材用・<strong>骨格の完全形</strong>。完成 API
+としては載せない）:</p>
+<div class="sourceCode" id="cb16"><pre
+class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defmacro</span><span class="fu"> bad-time-double</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;【載せない失敗例】expr が二度現れる。&quot;</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  [expr]</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  `(<span class="kw">let</span> [<span class="at">start#</span> (System/nanoTime)]</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>     {<span class="at">:ms</span> (<span class="kw">/</span> (<span class="kw">double</span> (<span class="kw">-</span> (System/nanoTime) <span class="at">start#</span>)) <span class="fl">1.0e6</span>)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">:ret</span> <span class="at">~expr</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">:ret-again</span> <span class="at">~expr</span>}))</span></code></pre></div>
+<p><code>expr</code> に副作用があると二度走る。<br />
+定石は <strong>一度 <code>let</code> に束縛してから使う</strong>
+ことである。</p>
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defmacro</span><span class="fu"> good-time </span>[expr]</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  `(<span class="kw">let</span> [<span class="at">start#</span> (System/nanoTime)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">ret#</span> <span class="at">~expr</span>]</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>     {<span class="at">:ms</span> (<span class="kw">/</span> (<span class="kw">double</span> (<span class="kw">-</span> (System/nanoTime) <span class="at">start#</span>)) <span class="fl">1.0e6</span>)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">:ret</span> <span class="at">ret#</span>}))</span></code></pre></div>
+<p><code>start#</code> / <code>ret#</code> は auto-gensym
+で、利用者の局所名とぶつかりにくい。</p>
+<h3 id="展開の骨格">展開の骨格</h3>
+<div class="sourceCode" id="cb18"><pre
+class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co">;; before</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>(good-time (<span class="kw">+</span> <span class="dv">1</span> <span class="dv">2</span>))</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co">;; after（概念）</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>(<span class="kw">let</span> [start__auto__ (System/nanoTime)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>      ret__auto__ (<span class="kw">+</span> <span class="dv">1</span> <span class="dv">2</span>)]</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  {<span class="at">:ms</span> … <span class="at">:ret</span> ret__auto__})</span></code></pre></div>
+<h2 id="変数捕獲">6.3 変数捕獲</h2>
+<p>展開結果に、利用者が束縛している名前や、マクロ作者がベタ書きした名前が意図せず混ざるとバグになる。<br />
+対策の基本は <code>gensym</code> または <code>foo#</code> である。</p>
+<p>意図的に <code>it</code> などをキャプチャする anaphoric
+マクロは、通読版では推奨しない（完全版で賛否付き）。</p>
+<h2 id="演習直す">6.4 演習（直す）</h2>
+<p><code>broken-twice</code> は式を二度埋め込む。<code>once-add</code>
+として一度だけ評価する版を書け。</p>
+<ul>
+<li>たたき台: <code>src/learn_macro/exercises/ch06.clj</code><br />
+</li>
+<li>解答: <code>src/learn_macro/answers/ch06.clj</code></li>
+</ul>
+<h2 id="まとめ-関数でよいか-5">6.5 まとめ — 関数でよいか？</h2>
+<p>二重評価も捕獲も、マクロ特有のコストである。<br />
+同じことを高階関数で書けるなら、その方がデバッグもテストも楽なことが多い。</p>
+<p><strong>実行:</strong>
+<code>(learn-macro.ch06-hygiene/demo)</code><br />
+<strong>載せない例の一覧:</strong> <a
+href="../notes/載せない失敗例.md"><code>notes/載せない失敗例.md</code></a></p>
+<hr />
+<h1 id="第7章-標準マクロを分解する抜粋">第7章
+標準マクロを分解する（抜粋）</h1>
+<p><strong>状態:</strong> 統合済 v0.3（工程8）<br />
+<strong>サンプル:</strong> <code>learn-macro.ch07-core-read</code></p>
+<h2 id="動機-6">7.1 動機</h2>
+<p>自分で書く前に、<code>clojure.core</code> の短いマクロから
+<strong>型を盗む</strong>。<br />
+読み方は第5章と同じく「予想 → <code>macroexpand-1</code> →
+メモ」である。</p>
+<h2 id="when">7.2 <code>when</code></h2>
+<div class="sourceCode" id="cb19"><pre
+class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">macroexpand-1</span> &#39;(<span class="kw">when</span> <span class="va">true</span> <span class="at">:a</span> <span class="at">:b</span>))</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co">;; =&gt; (if true (do :a :b))</span></span></code></pre></div>
+<p>盗む点: 複数ボディを <code>do</code> にまとめる薄い糖衣。</p>
+<h2 id="or短絡">7.3 <code>or</code>（短絡）</h2>
+<div class="sourceCode" id="cb20"><pre
+class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">macroexpand-1</span> &#39;(<span class="kw">or</span> <span class="va">false</span> <span class="va">nil</span> <span class="at">:ok</span>))</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co">;; =&gt; (let [or__auto__ false]</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co">;;      (if or__auto__ or__auto__ (or nil :ok)))</span></span></code></pre></div>
+<p>盗む点: 一度束縛してから分岐し、<strong>残りの <code>or</code>
+を再帰的に展開</strong>する。二重評価を避けつつ短絡する。</p>
+<h2 id="when-let">7.4 <code>when-let</code></h2>
+<div class="sourceCode" id="cb21"><pre
+class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">macroexpand-1</span> &#39;(<span class="kw">when-let</span> [x (<span class="kw">first</span> [<span class="dv">1</span>])] (<span class="kw">inc</span> x)))</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co">;; =&gt; (let [temp__auto__ (first [1])]</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co">;;      (when temp__auto__</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co">;;        (let [x temp__auto__] (inc x))))</span></span></code></pre></div>
+<p>盗む点:
+テスト式を一時束縛し、真のときだけユーザの名前に渡す。第13章のケース A
+で再実装する。</p>
+<h2 id="通読版での止め方">7.5 通読版での止め方</h2>
+<p>ここでは3つに留める。<br />
+完全版では <code>cond</code> / <code>-&gt;</code> /
+<code>with-open</code>
+などを同様の型で追加し、ソースの版と行を明記する。</p>
+<h2 id="演習-4">7.6 演習</h2>
+<ol type="1">
+<li><strong>読む:</strong>
+上記3マクロについて「盗む点」を各1行で書け。<br />
+</li>
+<li><strong>判断:</strong> どれが関数にできないか、一言で述べよ。</li>
+</ol>
+<h2 id="まとめ-関数でよいか-6">7.7 まとめ — 関数でよいか？</h2>
+<p><code>when</code> や <code>when-let</code>
+がマクロなのは、評価制御と束縛が本質だからである。<br />
+同じ見た目を関数で無理に真似ると、呼び出し側が thunk だらけになる。</p>
+<p><strong>実行:</strong>
+<code>(learn-macro.ch07-core-read/demo)</code></p>
+<hr />
+<h1 id="第8章-制御構文を自分で書く-unless-再訪">第8章
+制御構文を自分で書く — <code>unless</code> 再訪</h1>
+<p><strong>状態:</strong> 統合済 v0.3（工程8）<br />
+<strong>サンプル:</strong> <code>learn-macro.ch08-unless</code>（実装は
+<code>ch04-defmacro</code>）</p>
+<h2 id="動機-7">8.1 動機</h2>
+<p>第4章で作った <code>unless</code>
+を、<strong>設計手順つきで見直し</strong>、doc
+と展開の読みやすさを確認する（再掲は意図的である）。<br />
+通読版ではここに留め、独自 <code>cond</code> や <code>cond-&gt;</code>
+は完全版へ送る。</p>
+<h2 id="設計手順再掲">8.2 設計手順（再掲）</h2>
+<ol type="1">
+<li>動機を一文で書く（評価制御か？）<br />
+</li>
+<li>関数＋thunk で足りるか試す<br />
+</li>
+<li><strong>先に展開形を書く</strong><br />
+</li>
+<li><code>defmacro</code> でテンプレート化する<br />
+</li>
+<li><code>macroexpand-1</code> と実行で検証する</li>
+</ol>
+<h2 id="再確認">8.3 再確認</h2>
+<div class="sourceCode" id="cb22"><pre
+class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>(unless (<span class="kw">seq</span> [<span class="dv">1</span>]) <span class="at">:hidden</span>) <span class="co">; =&gt; nil</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>(unless (<span class="kw">seq</span> []) <span class="at">:shown</span>)   <span class="co">; =&gt; :shown</span></span></code></pre></div>
+<p>展開:</p>
+<div class="sourceCode" id="cb23"><pre
+class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">if</span> (clojure.core/not (<span class="kw">seq</span> [])) (<span class="kw">do</span> <span class="at">:shown</span>))</span></code></pre></div>
+<p>docstring
+が付いていることも確認する（<code>-&gt; #'unless meta :doc</code>）。</p>
+<h2 id="やりすぎの兆候">8.4 やりすぎの兆候</h2>
+<ul>
+<li>似た分岐マクロがチーム内に増殖している<br />
+</li>
+<li>展開結果が読めない<br />
+</li>
+<li>テストが実行時挙動だけで、展開を見ていない</li>
+</ul>
+<p>そのときは <a href="./14_チェックリスト.md">第14章</a>
+のチェックリストに戻る。</p>
+<h2 id="演習-5">8.5 演習</h2>
+<p>第4章の <code>when-not-lite</code>
+を、本章の設計手順でレビューせよ（展開・doc・命名）。</p>
+<h2 id="まとめ-関数でよいか-7">8.6 まとめ — 関数でよいか？</h2>
+<p><code>unless</code> は教育用にはよいが、実務では
+<code>when-not</code> で足りることがほとんどである。<br />
+<strong>既存の core
+に無い評価制御が本当に必要か</strong>を、追加前に疑え。</p>
+<p><strong>実行:</strong>
+<code>(learn-macro.ch08-unless/demo)</code></p>
+<hr />
+<h3 id="通読版の次へ">通読版の次へ</h3>
+<p>このあと <strong>第9–12章は飛ばし</strong>、<a
+href="./13_ケーススタディ.md">第13章
+ケーススタディ</a>（A/B）へ進む。<br />
+束縛の深掘り・コード生成・DSL・ツールは完全版の範囲である。</p>
+<hr />
+<h1 id="第13章-ケーススタディ通読版-a-b">第13章 ケーススタディ（通読版:
+A / B）</h1>
+<p><strong>状態:</strong> 統合済 v0.3（工程8）<br />
+<strong>サンプル:</strong> <code>learn-macro.ch13-cases</code><br />
+<strong>テスト:</strong> <code>clojure -M:test</code></p>
+<p>通読版ではケース A と B のみ扱う。C 以降は完全版。</p>
+<hr />
+<h2 id="進め方">13.1 進め方</h2>
+<ol type="1">
+<li>仕様を一文で書く<br />
+</li>
+<li>展開形を先に書く<br />
+</li>
+<li>実装する<br />
+</li>
+<li>罠（二重評価・捕獲）を潰す<br />
+</li>
+<li>実行と展開テストを残す</li>
+</ol>
+<hr />
+<h2 id="ケース-a-unless-when-let-lite">13.2 ケース A —
+<code>unless</code> / <code>when-let-lite</code></h2>
+<h3 id="仕様">仕様</h3>
+<ul>
+<li><code>unless</code> … 第4・8章の再掲（評価制御）<br />
+</li>
+<li><code>when-let-lite</code> … 単一束縛。テスト式は
+<strong>一度だけ</strong> 評価し、真なら本体へ渡す</li>
+</ul>
+<h3 id="実装要旨">実装（要旨）</h3>
+<div class="sourceCode" id="cb24"><pre
+class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defmacro</span><span class="fu"> when-let-lite</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  [[sym <span class="kw">test</span>] &amp; body]</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  `(<span class="kw">let</span> [<span class="at">temp#</span> <span class="at">~test</span>]</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>     (<span class="kw">when</span> <span class="at">temp#</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>       (<span class="kw">let</span> [<span class="at">~sym</span> <span class="at">temp#</span>]</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">~@body</span>))))</span></code></pre></div>
+<h3 id="展開前後-1">展開前後</h3>
+<div class="sourceCode" id="cb25"><pre
+class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co">;; before</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>(when-let-lite [x (<span class="kw">first</span> [<span class="dv">7</span>])] (<span class="kw">inc</span> x))</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="co">;; after</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>(<span class="kw">let</span> [temp__auto__ (<span class="kw">first</span> [<span class="dv">7</span>])]</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">when</span> temp__auto__</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">let</span> [x temp__auto__]</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">inc</span> x))))</span></code></pre></div>
+<h3 id="検証ポイント">検証ポイント</h3>
+<div class="sourceCode" id="cb26"><pre
+class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>(when-let-lite [x (<span class="kw">first</span> [<span class="dv">7</span>])] (<span class="kw">inc</span> x)) <span class="co">; =&gt; 8</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>(when-let-lite [x <span class="va">nil</span>] (<span class="kw">inc</span> x))         <span class="co">; =&gt; nil</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co">;; テスト式の副作用は1回</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>(<span class="kw">let</span> [n (<span class="kw">atom</span> <span class="dv">0</span>)]</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  (when-let-lite [x (<span class="kw">do</span> (<span class="kw">swap!</span> n <span class="kw">inc</span>) <span class="at">@n</span>)] x)</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">@n</span>) <span class="co">; =&gt; 1</span></span></code></pre></div>
+<p><code>clojure.core/when-let</code>
+と同じ型を、小さな実装で体感するのが目的である。</p>
+<hr />
+<h2 id="ケース-b-labeled-time">13.3 ケース B —
+<code>labeled-time</code></h2>
+<h3 id="仕様-1">仕様</h3>
+<p>式を一度評価し、経過時間(ms)・戻り値・ラベルを返す。</p>
+<div class="sourceCode" id="cb27"><pre
+class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defmacro</span><span class="fu"> labeled-time </span>[label expr]</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  `(<span class="kw">let</span> [<span class="at">result#</span> (good-time <span class="at">~expr</span>)]</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>     (<span class="kw">assoc</span> <span class="at">result#</span> <span class="at">:label</span> <span class="at">~label</span>)))</span></code></pre></div>
+<p><code>good-time</code> は第6章の衛生的な計測マクロである。<br />
+一段の <code>macroexpand-1</code> では外側が <code>let</code>
+になった時点で止まり、<strong>内側の <code>good-time</code>
+は残る</strong>（先頭だけを見るため）。<br />
+内側まで見るときは <code>macroexpand-all</code>
+か、<code>(good-time …)</code> 部分だけを取り出して
+<code>macroexpand-1</code> する。</p>
+<h3 id="実行例">実行例</h3>
+<div class="sourceCode" id="cb28"><pre
+class="sourceCode clojure"><code class="sourceCode clojure"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>(labeled-time <span class="st">&quot;sum&quot;</span> (<span class="kw">reduce</span> <span class="kw">+</span> (<span class="kw">range</span> <span class="dv">1000</span>)))</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co">;; =&gt; {:ret 499500, :ms …, :label &quot;sum&quot;}</span></span></code></pre></div>
+<hr />
+<h2 id="振り返り">13.4 振り返り</h2>
+<table>
+<thead>
+<tr>
+<th>ケース</th>
+<th>マクロが必要だった点</th>
+<th>関数で足りた点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td>評価制御＋束縛の構文</td>
+<td>一時値の計算そのもの</td>
+</tr>
+<tr>
+<td>B</td>
+<td>式を「書く場所」で一度だけ評価</td>
+<td>時間計測の算術</td>
+</tr>
+</tbody>
+</table>
+<h2 id="演習-6">13.5 演習</h2>
+<ol type="1">
+<li><code>when-let-lite</code>
+を二重評価する間違った版をわざと書き、テストで撃て。<br />
+</li>
+<li><code>labeled-time</code> のラベルについて判断せよ。現状の
+<code>~label</code> は
+<strong>実行時に評価される式</strong>ですでによい。では、(a)
+展開時に決まる定数だけ許す設計、(b)
+計測結果からラベルを後付けする設計、では引数の置き方がどう違うか？</li>
+</ol>
+<h2 id="まとめ-関数でよいか-8">13.6 まとめ — 関数でよいか？</h2>
+<p>両ケースとも「呼び出し構文と評価回数」が本質だった。<br />
+ログに残す数値の計算だけなら、関数で十分なことが多い。</p>
+<p>ケース
+C（<code>cond-&gt;</code>）以降は完全版原稿へ送る（通読版の範囲外）。</p>
+<hr />
+<h1 id="第14章-アンチパターンとチェックリスト通読版短縮">第14章
+アンチパターンとチェックリスト（通読版短縮）</h1>
+<p><strong>状態:</strong> 統合済 v0.3（工程8）<br />
+<strong>サンプル:</strong> <code>learn-macro.ch14-checklist</code></p>
+<h2 id="動機-8">14.1 動機</h2>
+<p>マクロを増やすほど、読む人・ツール・オンボーディングのコストが上がる。<br />
+通読版の締めは、<strong>書く前と書いた後のチェックリスト</strong>である。</p>
+<h2 id="書く前">14.2 書く前</h2>
+<ol type="1">
+<li>評価順・短絡が本質か？<br />
+</li>
+<li>新しい構文／束縛が必要か？<br />
+</li>
+<li>データ＋関数では足りないか？<br />
+</li>
+<li>呼び出し側にマクロ感染を強いないか？</li>
+</ol>
+<p>一つでも「いいえ」なら、まず関数またはデータ API を設計する。</p>
+<h2 id="書いた後">14.3 書いた後</h2>
+<ol type="1">
+<li>変数捕獲はないか？（<code>gensym</code> / <code>x#</code>）<br />
+</li>
+<li>二重評価はないか？（<code>let</code> で一度）<br />
+</li>
+<li>展開結果は読めるか？<br />
+</li>
+<li>展開テストはあるか？<br />
+</li>
+<li>失敗時のメッセージは分かるか？</li>
+</ol>
+<h2 id="よくある失敗短く">14.4 よくある失敗（短く）</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>失敗</th>
+<th>症状</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>マクロ感染</td>
+<td>使う側もマクロや特殊な呼び出しを強いられる</td>
+</tr>
+<tr>
+<td>第一級扱い</td>
+<td>マクロを値として <code>map</code> しようとして詰まる</td>
+</tr>
+<tr>
+<td>データで足りるもののマクロ化</td>
+<td>HTML／SQL／ルートを全部構文にしてしまう</td>
+</tr>
+</tbody>
+</table>
+<p>対比の観察は <a
+href="../notes/ライブラリ観察_L3_L4_L5.md"><code>notes/ライブラリ観察_L3_L4_L5.md</code></a>（Hiccup
+/ HoneySQL / ルーティング）。</p>
+<h2 id="演習判断-1">14.5 演習（判断）</h2>
+<p>実務でありがちな次の案を、チェックリストで判定せよ（各2–3行）。</p>
+<ol type="1">
+<li>社内の <code>defroute</code> マクロ<br />
+</li>
+<li>設定マップを生成するだけの <code>defconfig</code> マクロ<br />
+</li>
+<li>テスト用に式の実行時間を測るマクロ<br />
+</li>
+<li>レコードのアクセサを一括生成するマクロ<br />
+</li>
+<li><code>if</code> の糖衣をチーム独自に増やすマクロ</li>
+</ol>
+<h2 id="まとめ-本書の約束の再確認">14.6 まとめ — 本書の約束の再確認</h2>
+<ul>
+<li><strong>読む</strong> … 展開を見る<br />
+</li>
+<li><strong>書く</strong> … 衛生を守る<br />
+</li>
+<li><strong>控える</strong> … 関数とデータの境界を先に決める</li>
+</ul>
+<p>通読版はここで一区切り。完全版では束縛・DSL・ツール章が続く。</p>
+<p><strong>実行:</strong>
+<code>(learn-macro.ch14-checklist/demo)</code></p>
+<hr />
+</body>
+</html>

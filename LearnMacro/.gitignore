@@ -1,7 +1,5 @@
-.cpcache/
-.nrepl-port
-.rebel_readline_history
-*.class
-target/
 ._*
 .DS_Store
+*.class
+.cpcache/
+.nrepl-port
